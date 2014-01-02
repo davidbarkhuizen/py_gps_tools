@@ -77,10 +77,12 @@ def construct_datastruct_from_xml_string(xml_tree):
   
     # track info
     
+    gpx_track = gpx.Track()
+    
     ## track name
     
-    track_name = find('trk/name').text
-    print('track name - %s' % track_name)
+    gpx_track.name = find('trk/name').text
+    print('track name - %s' % gpx_track.name)
     
     ## track segments
     
@@ -88,29 +90,43 @@ def construct_datastruct_from_xml_string(xml_tree):
     print('track segment count = %i ' % len(track_segments))
     
     for track_segment in track_segments:
+        
+        gpx_tracksegment = gpx.TrackSegment()
+        
         for track_point in track_segment:
           
             lat = float(track_point.get('lat'))
-            print('lat %f' % lat)
-            
             lon = float(track_point.get('lon'))
-            print('lon %f' % lon)            
-            
             elevation = float(track_point.find(ns + 'ele').text)
-            print('elevation %f' % elevation)
-            
             time = datetime.datetime.strptime((track_point.find(ns + 'time').text), DATE_TIME_FORMAT)
-            print(time)
             
-            track_point = gpx.TrackPoint(lat, lon, elevation, time) 
-  
-def write_to_csv_file(data_struct, dest_file_path):
-    return None
+            gpx_trackpoint = gpx.TrackPoint(lat, lon, elevation, time)
+            
+            gpx_tracksegment.trackpoints.append(gpx_trackpoint) 
+
+        print('trackpoint count = %i' % len(gpx_tracksegment.trackpoints))
+
+        gpx_tracksegment.trackpoints = sorted(gpx_tracksegment.trackpoints, key=lambda x : x.time)
+        print('started @ %s' % gpx_tracksegment.trackpoints[0].time)
+        print('ended @ %s' % gpx_tracksegment.trackpoints[len(gpx_tracksegment.trackpoints) - 1].time)  
+
+        gpx_track.tracksegments.append(gpx_tracksegment)
+
+        return gpx_track
+
+def write_to_csv_file(gpx_track, dest_file_path):
+    
+    f = open(dest_file_path, 'tw')
+    f.write('time, latitude, longitude, elevation' + '\n')
+    for segment in gpx_track.tracksegments:
+        for point in segment.trackpoints:
+            f.write('%s,%f,%f,%f' % (point.time, point.lat, point.lon, point.ele) + '\n')
+    f.close()
 
 def main():
     xml_tree, dest_file_path = construct_xml_tree_from_file_arguments()
-    data_struct = construct_datastruct_from_xml_string(xml_tree)
-    write_to_csv_file(data_struct, dest_file_path)
+    gpx_track = construct_datastruct_from_xml_string(xml_tree)
+    write_to_csv_file(gpx_track, dest_file_path)
 
 if __name__ == '__main__':
     main()

@@ -4,3 +4,23 @@ class TrackPoint(object):
         self.lon = lon
         self.ele = ele
         self.time = time
+
+class TrackSegment(object):
+    def __init__(self, trackpoints = []):
+        self.trackpoints = trackpoints
+        
+class Track(object):
+    def __init__(self, name = '', tracksegments = []):
+        self.name = name
+        self.tracksegments = tracksegments
+
+
+
+
+
+
+
+
+
+
+
