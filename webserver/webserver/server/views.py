@@ -15,6 +15,12 @@ class GpxFileUploadForm(forms.Form):
         help_text='G*rmin GPX Format'
     )
 
+# get
+def app(request):
+    t = 'server/app.html'
+    d = {}
+    return render_to_response(t, d, context_instance=RequestContext(request))
+
 def upload(request):
     
     # FILE UPLOAD
