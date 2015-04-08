@@ -1,0 +1,83 @@
+
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Upload .GPX GPS File</title>   
+    </head>
+    <body>
+
+        <div>
+            <h3>existing files:</h3>
+            {% if files %}
+                <ul>
+                {% for file in files %}
+                    <li>{{ file.Name }}</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>none.</p>
+            {% endif %}
+        </div>
+
+        <hr width='50pc'/>
+
+        <div>
+            <h3>upload a new gpx file</h3>
+
+            <form
+                action="{% url 'upload' %}" 
+                method="post" 
+                enctype="multipart/form-data">
+                    
+                {% csrf_token %}
+
+                <input name = "gpx_file" type="file" />
+                |
+                <input type="submit" value="upload"/>
+            </form>
+        </div>
+
+    </body>
+</html>
+
+<!--
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Upload .GPX GPS File</title>   
+    </head>
+    <body>
+
+    {% if files %}
+        <ul>
+        {% for file in files %}
+            <li><a href="{{ file.File.url }}">{{ file.File.name }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No files.</p>
+    {% endif %}
+
+        <form
+            action="{% url 'upload' %}" 
+            method="post" 
+            enctype="multipart/form-data"
+            >
+            {% csrf_token %}
+            <p>{{ form.non_field_errors }}</p>
+            <p>{{ form.File.label_tag }} {{ form.File.help_text }}</p>
+            <p>
+                {{ form.File.errors }}
+                {{ form.File }}
+            </p>
+            <p><input type="submit" value="Upload" /></p>
+        </form>
+    </body>
+</html>
+
+-->
