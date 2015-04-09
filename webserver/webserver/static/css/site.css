@@ -1,6 +1,5 @@
 body 
 { 
-    
     color: green; 
     background-color: black;
     
@@ -9,7 +8,11 @@ body
     font-weight:bold;
 }
 
-h3
+.panel
+{
+}
+
+.panel-header
 {
     font-size: 162%;
 }

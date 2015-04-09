@@ -15,32 +15,40 @@
 	</head>
 	<body ng-app='geoNodeTekApp' ng-controller="MapCtrl">
 
- 		<div style="width: 100%;">
-           
-            <div class='leftPanel'>
-                <h3>canvas</h3>
-                goes here
-           </div>
-        
-            <div class='rightPanel'>            
+		<div class=vertical-split-panel>
 
-                <h3>map</h3>
-                <div class='container-fluid'>
-				    <input type="text" ng-model="selectedMap" typeahead="x for x in y | filter:$viewValue | limitTo:8" class="form-control"/>
-				</div>
+	 		<div style="width: 100%;">
+	           
+	            <div class='panel leftPanel'>
+	                <div class='panel-header'>available maps</div>
 
-				<div ng-repeat="map in maps">
-					<span>{{map.name}}</span>
-				</div>
+					<div ng-repeat="map in maps">
+						<span>{{map.name}}</span>
+					</div>
+	            </div>
+	        
+	            <div class='panel rightPanel'>            
+	
+					<div class='panel-header'>select a map</div>
 
-                <br/>
-                <br/>
+	            	<div>type to select</div>
+	            	<input ng-model='mapSearchToken' ng-keyup='onMapSearchTokenChanged();' type='text'/>
+	
+	            	<div>selected</div>
+					<div>- {{ selectedMap.name }}</div>
 
-           </div>
+					<div>matching<div>
+					<div ng-repeat="map in matchingMaps">
+						<span>{{map.name}}</span>
+					</div>
 
-        </div>
+	           </div>
 
-        <div style="clear:both"></div>
+	        </div>
+
+	        <div style="clear:both"></div>
+
+	    </div>
 
    		<div style=' text-align: center;'>
             <a href='/upload/'>switch to UPLOAD</a>

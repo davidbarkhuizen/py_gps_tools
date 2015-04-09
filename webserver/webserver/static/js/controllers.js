@@ -2,11 +2,30 @@ var geoNodeTekApp = angular.module('geoNodeTekApp', []);
 
 geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 
-  $scope.maps = [ 'dog', 'cat' ];
+	$scope.maps = [];
+	$scope.mapSearchToken = '';
+	$scope.matchingMaps = [];
+	$scope.selectedMap = undefined;
 
-  $scope.y = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
+	$scope.onMapSearchTokenChanged = function() {
 
-  $scope.selectedMap = undefined;
+		matches = [];
+		for(var i in $scope.maps) {
+			if ($scope.maps[i].name.toUpperCase().indexOf($scope.mapSearchToken.toUpperCase()) !== -1) {
+				matches.push($scope.maps[i]);
+			}
+		}
+
+		$scope.matchingMaps.length = 0;
+		for(var i in matches) {
+			$scope.matchingMaps.push(matches[i]);
+		}
+
+		if (matches.length > 0) {
+			var bestMatch = $scope.matchingMaps[0]; 
+			$scope.selectedMap = bestMatch;
+		}
+	};
 
   $http({
     url: "/getMaps/",
