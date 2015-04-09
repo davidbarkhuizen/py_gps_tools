@@ -1,3 +1,6 @@
+MEDIA_ROOT = '~/data/websites/geonodeztek/media_root/'
+MEDIA_URL = '/MEDIA/'
+
 """
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
@@ -6,9 +9,6 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
-MEDIA_ROOT = '/home/david/data/websites/isivivane/media_root/'
-MEDIA_URL = '/media/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
@@ -22,7 +22,6 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -55,7 +54,7 @@ WSGI_APPLICATION = 'webserver.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/home/david/data/websites/isivivane/isivivane.db.sqlite3',
+        'NAME': '/home/david/data/websites/geonodeztek/geonodeztek.db.sqlite3',
     }
 }
 

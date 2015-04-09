@@ -13,12 +13,12 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 			{
 				headers: { "Content-Type": "charset=utf-8" },
 				method: 'GET',
-				url: '/map/get/',
+				url: '/map/get/3/',
 				data: { 'Id' : mapId }
 			}
 			).success(
-				function(response) {
-					$scope.loadMapList(response.maps);				
+				function(data) {
+					console.log(data);				
 				}
 			).error(
 				function(error){
@@ -33,7 +33,6 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 		if (($scope.selectedMap == undefined) || ($scope.selectedMap.length == 0)) {
 		}
 		else {
-			console.log($scope.selectedMap[0].id);	
 			$scope.makeGetMapCall($scope.selectedMap[0].id);		
 		}
 	};
@@ -53,7 +52,7 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 
 		$http(
 			{
-				url: "/getMaps/",
+				url: "/maps/get/",
 				headers: { "Content-Type": "charset=utf-8" }
 			}
 			).success(

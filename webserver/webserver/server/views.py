@@ -17,17 +17,6 @@ def app(request):
 from django.utils import simplejson
 from django.core import serializers
 
-def getMaps(request):
-
-    gpx_files = GpxFile.objects.all()
-    resp_dict = { 'maps' : []}
-    for x in gpx_files:
-        d = { 'name' : x.Name, 'id' : x.id }
-        resp_dict['maps'].append(d)
-    data = simplejson.dumps(resp_dict)
-    return HttpResponse(data, mimetype='application/json')
-
-
 def upload(request):
     
     # FILE UPLOAD
@@ -50,13 +39,13 @@ def upload(request):
         # post-redirect-get
         return HttpResponseRedirect(reverse('server.views.upload'))
 
-    # Load documents for the list page
-    existing_gpx_files = GpxFile.objects.all()
+    else:
 
-    return render_to_response(
-        'server/upload.html',
-        {
-            'files' : existing_gpx_files,
-        },
-        context_instance=RequestContext(request)
-    )
+        # Load documents for the list page
+        existing_gpx_files = GpxFile.objects.all()
+
+        return render_to_response(
+            'server/upload.html',
+            { 'files' : existing_gpx_files },
+            context_instance=RequestContext(request)
+        )
