@@ -4,28 +4,35 @@ from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 
 from django import forms
 from server.models import GpxFile
 
-class GpxFileUploadForm(forms.Form):
-    File = forms.FileField(
-        label='*.gpx',
-        help_text='G*rmin GPX Format'
-    )
-
 # get
 def app(request):
-    t = 'server/app.html'
-    d = {}
-    return render_to_response(t, d, context_instance=RequestContext(request))
+    return HttpResponseRedirect('/static/app.html')
+
+from django.utils import simplejson
+from django.core import serializers
+
+def getMaps(request):
+
+    gpx_files = GpxFile.objects.all()
+    resp_dict = { 'maps' : []}
+    for x in gpx_files:
+        d = { 'name' : x.Name, 'id' : x.id }
+        resp_dict['maps'].append(d)
+    data = simplejson.dumps(resp_dict)
+    return HttpResponse(data, mimetype='application/json')
+
 
 def upload(request):
     
     # FILE UPLOAD
     #
-    if request.method == 'POST':        
+    if request.method == 'POST':
 
         name = request.FILES['gpx_file'] 
         file_string = request.FILES['gpx_file'].read() 

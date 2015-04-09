@@ -1,0 +1,36 @@
+body 
+{ 
+    
+    color: green; 
+    background-color: black;
+    
+    font-family: courier;
+    font-size: 125%;
+    font-weight:bold;
+}
+
+h3
+{
+    font-size: 162%;
+}
+
+.leftPanel
+{
+    border-right-color:green;
+    border-right-width:1px;
+    border-right-style:solid;
+
+    padding-right:20px;
+
+    float:left; 
+    width: 50%; 
+    text-align:right;
+}
+
+.rightPanel
+{
+    float:left;
+
+    margin-left: 1px;
+    padding-left:20px;
+}

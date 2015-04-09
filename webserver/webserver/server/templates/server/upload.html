@@ -2,79 +2,62 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Upload .GPX GPS File</title>   
+        <title>Upload .GPX GPS File</title>
+
+        <!-- angular.js -->
+        <script src="/static/js/angular/angular.1.3.15.js"></script> 
+        
+        <!-- bootstrap angular.js -->
+        <script src="/static/js/bootstrap/ui-bootstrap-tpls-0.12.1.js"></script>
+        <link href="/static/css/bootstrap/bootstrap.css" rel="stylesheet">
+
+        <!-- custom css -->
+        <link rel="stylesheet" type="text/css" href="/static/css/site.css" />
+
     </head>
     <body>
 
-        <div>
-            <h3>existing files:</h3>
-            {% if files %}
-                <ul>
-                {% for file in files %}
-                    <li>{{ file.Name }}</li>
-                {% endfor %}
-                </ul>
-            {% else %}
-                <p>none.</p>
-            {% endif %}
+
+        <div style="width: 100%;">
+           
+            <div class='leftPanel'>
+                <h3>existing files</h3>
+                {% if files %}
+                    {% for file in files %}
+                        <div>{{ file.Name }}</div>
+                    {% endfor %}
+                {% else %}
+                    <p>none.</p>
+                {% endif %}
+           </div>
+        
+            <div class='rightPanel'>            
+
+                <h3>upload a new gpx file</h3>
+
+                <form
+                    action="{% url 'upload' %}" 
+                    method="post" 
+                    enctype="multipart/form-data">
+                        
+                    {% csrf_token %}
+
+                    <input name = "gpx_file" type="file" />
+                    <br/>
+                    <input type="submit" value="upload"/>
+                </form>
+
+                <br/>
+                <br/>
+
+           </div>
+
         </div>
 
-        <hr width='50%' align='left'/>
+        <div style="clear:both"></div>
 
-        <div>
-            <h3>upload a new gpx file</h3>
-
-            <form
-                action="{% url 'upload' %}" 
-                method="post" 
-                enctype="multipart/form-data">
-                    
-                {% csrf_token %}
-
-                <input name = "gpx_file" type="file" />
-                |
-                <input type="submit" value="upload"/>
-            </form>
+        <div style=' text-align: center;'>
+            <a href='/static/app.html'>switch to EDIT</a>
         </div>
-
     </body>
 </html>
-
-<!--
-
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Upload .GPX GPS File</title>   
-    </head>
-    <body>
-
-    {% if files %}
-        <ul>
-        {% for file in files %}
-            <li><a href="{{ file.File.url }}">{{ file.File.name }}</a></li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No files.</p>
-    {% endif %}
-
-        <form
-            action="{% url 'upload' %}" 
-            method="post" 
-            enctype="multipart/form-data"
-            >
-            {% csrf_token %}
-            <p>{{ form.non_field_errors }}</p>
-            <p>{{ form.File.label_tag }} {{ form.File.help_text }}</p>
-            <p>
-                {{ form.File.errors }}
-                {{ form.File }}
-            </p>
-            <p><input type="submit" value="Upload" /></p>
-        </form>
-    </body>
-</html>
-
--->
