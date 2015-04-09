@@ -15,43 +15,49 @@
 	</head>
 	<body ng-app='geoNodeTekApp' ng-controller="MapCtrl">
 
-		<div class=vertical-split-panel>
+		<div style='width: 100%;text-align: center;'>
 
-	 		<div style="width: 100%;text-align:center;">
+			<div ng-show='loadingMap'>
 
-				<div class='selected-text panel-header' >{{ selectedMap[0].name || 'no map selected' }}</div>
-				<input 
-					autofocus
-					placeholder='type here to filter map list and auto-select a map' 
-					ng-model='mapSearchToken' 
-					ng-keyup='onMapSearchTokenChanged();' 
-					size='32'
-					type='text'/>
-			</div>
+		 		<div style="width: 100%;">
+		           
+		            <div class='panel leftPanel'>
+		          
+						<input 
+							autofocus
+							placeholder='type here to filter map list and auto-select a map' 
+							ng-model='mapSearchToken' 
+							ng-keyup='onMapSearchTokenChanged();' 
+							size='32'
+							type='text'/>
 
-	 		<div style="width: 100%;">
-	           
-	            <div class='panel leftPanel'>
-	          
-	            	<div style='min-height:200px;max-height:200px;overflow:auto;'>
+		            	<div style='min-height:200px;max-height:200px;overflow:auto;'>
 
-						<div ng-repeat="map in filteredMapList">
-							<span>{{map.name}}</span>
+							<div ng-repeat="map in filteredMapList">
+								<span ng-class='selectedMap[0].id == map.id ? "selected-text" : "";'>{{map.name}}</span>
+							</div>
+
 						</div>
+		            </div>
+		        
+		            <div class='panel rightPanel'>
+						<a href='#' ng-click='loadSelectedMap();'>load map</a>
+		           </div>
 
-					</div>
+		        </div>
 
-	            </div>
-	        
-	            <div class='panel rightPanel'>
-					<a href='#' ng-click='loadSelectedMap();'>load map</a>
-	           </div>
-
-	        </div>
-
-	        <div style="clear:both"></div>
+		        <div style="clear:both"></div>
+		    </div>
 
 	    </div>
+
+		<div ng-show='showCanvas' style='width: 100%;margin: 0 auto;text-align: center;'>
+			<div>
+				{{ selectedMap[0].name }}
+			</div>
+			<canvas id="canvas" width='800px' height='600px' style='display:inline-block;'>
+			</canvas>
+		</div>
 
 	</body>
 </html>

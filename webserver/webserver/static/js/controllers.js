@@ -2,6 +2,18 @@ var geoNodeTekApp = angular.module('geoNodeTekApp', []);
 
 geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 
+ 	var canvas = document.getElementById("canvas");
+    
+	if (canvas.getContext) {
+		var ctx = canvas.getContext("2d");
+
+		ctx.fillStyle = "rgba(100, 100, 100, 0.5)";
+		ctx.fillRect (0, 0, 800, 600);
+	}
+
+	$scope.loadingMap = true;
+	$scope.showCanvas = false;
+
 	$scope.mapList = [];
 	$scope.mapSearchToken = '';
 	$scope.filteredMapList = [];
@@ -53,7 +65,10 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 						}
 					}	
 
-					console.log('point count = ' + points.length);		
+					console.log('point count = ' + points.length);	
+
+					$scope.loadingMap = false;
+					$scope.showCanvas = true;	
 				}
 			).error(
 				function(error){
