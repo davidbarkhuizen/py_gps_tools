@@ -8,14 +8,32 @@ body
     font-weight:bold;
 }
 
+body a 
+{
+    color:yellow;
+}
+
 .panel
 {
+    padding-top: 10px;
+    margin-top: 10px;
+}
+
+.selected-text
+{
+    color:white;
 }
 
 .panel-header
 {
     font-size: 162%;
 }
+
+.panel-sub-header
+{
+    font-size: 120%;
+}
+
 
 .leftPanel
 {
@@ -29,6 +47,13 @@ body
     width: 50%; 
     text-align:right;
 }
+
+.leftPanel input {
+    text-align: right;
+}
+
+
+
 
 .rightPanel
 {

@@ -17,31 +17,34 @@
 
 		<div class=vertical-split-panel>
 
+	 		<div style="width: 100%;text-align:center;">
+
+				<div class='selected-text panel-header' >{{ selectedMap[0].name || 'no map selected' }}</div>
+				<input 
+					autofocus
+					placeholder='type here to filter map list and auto-select a map' 
+					ng-model='mapSearchToken' 
+					ng-keyup='onMapSearchTokenChanged();' 
+					size='32'
+					type='text'/>
+			</div>
+
 	 		<div style="width: 100%;">
 	           
 	            <div class='panel leftPanel'>
-	                <div class='panel-header'>available maps</div>
+	          
+	            	<div style='min-height:200px;max-height:200px;overflow:auto;'>
 
-					<div ng-repeat="map in maps">
-						<span>{{map.name}}</span>
+						<div ng-repeat="map in filteredMapList">
+							<span>{{map.name}}</span>
+						</div>
+
 					</div>
+
 	            </div>
 	        
-	            <div class='panel rightPanel'>            
-	
-					<div class='panel-header'>select a map</div>
-
-	            	<div>type to select</div>
-	            	<input ng-model='mapSearchToken' ng-keyup='onMapSearchTokenChanged();' type='text'/>
-	
-	            	<div>selected</div>
-					<div>- {{ selectedMap.name }}</div>
-
-					<div>matching<div>
-					<div ng-repeat="map in matchingMaps">
-						<span>{{map.name}}</span>
-					</div>
-
+	            <div class='panel rightPanel'>
+					<a href='#' ng-click='loadSelectedMap();'>load map</a>
 	           </div>
 
 	        </div>
@@ -49,10 +52,6 @@
 	        <div style="clear:both"></div>
 
 	    </div>
-
-   		<div style=' text-align: center;'>
-            <a href='/upload/'>switch to UPLOAD</a>
-        </div>
 
 	</body>
 </html>
