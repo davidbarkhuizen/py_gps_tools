@@ -22,7 +22,8 @@ urlpatterns = [
     url(r'^map/upload/index.html', mmap.upload_index),
 
     url(r'^maps/get/', maps.get),
-    #url(r'^map/get/$', mmap.get, name=id),
     url(r'^map/get/(\d+)/$', mmap.get),
     url(r'^map/post/', mmap.post),
+
+    #url(r'^map/get/$', mmap.get, name=id),
     ]

@@ -11,19 +11,30 @@ from django.core.urlresolvers import reverse
 
 import models
 
+from logic import gpx
+
 def get(request, id):
 
     existing_gpx_files = GpxFile.objects.all()
-    match = [x for x in existing_gpx_files if str(x.id) == id]
-    data = simplejson.dumps({ 'name' : match[0].name } )
-    return HttpResponse(data, mimetype='application/json')
+    match = [x for x in existing_gpx_files if str(x.id) == id][0]
+
+    track = gpx.parse_string_to_track(match.xml_string)
+    track_dict = gpx.track_to_dict(track)
+
+    track_json = simplejson.dumps(track_dict)
+    return HttpResponse(track_json, mimetype='application/json')
 
 def post(request):
     
     if request.method != 'POST':
         raise Error(request.method)
 
-    name = request.FILES['gpx_file'] 
+    name = None
+    try:
+        name = request.FILES['gpx_file'] 
+    except Exception, e:
+        return HttpResponseRedirect(reverse('server.mmap.upload_index'))
+
     file_string = request.FILES['gpx_file'].read() 
     
     already_exists = False

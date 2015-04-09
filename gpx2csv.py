@@ -75,7 +75,7 @@ def construct_datastruct_from_xml_string(xml_tree):
   
     print('metadata - time @ %s' % meta_data_time)
   
-    # track info
+    # track
     
     gpx_track = gpx.Track()
     
@@ -118,8 +118,8 @@ def write_to_csv_file(gpx_track, dest_file_path):
     
     f = open(dest_file_path, 'tw')
     f.write('time, latitude, longitude, elevation' + '\n')
-    for segment in gpx_track.tracksegments:
-        for point in segment.trackpoints:
+    for segment in gpx_track.segments:
+        for point in segment.points:
             f.write('%s,%f,%f,%f' % (point.time, point.lat, point.lon, point.ele) + '\n')
     f.close()
 
