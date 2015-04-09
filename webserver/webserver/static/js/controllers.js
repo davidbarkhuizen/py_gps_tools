@@ -7,8 +7,25 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 	$scope.filteredMapList = [];
 	$scope.selectedMap = [];
 
-	$scope.loadMap = function(mapId) {
-		
+	$scope.makeGetMapCall = function(mapId) {
+
+		$http(
+			{
+				headers: { "Content-Type": "charset=utf-8" },
+				method: 'GET',
+				url: '/map/get/',
+				data: { 'Id' : mapId }
+			}
+			).success(
+				function(response) {
+					$scope.loadMapList(response.maps);				
+				}
+			).error(
+				function(error){
+					console.log('error');
+			    	$scope.error = error;
+				}
+			);
 	};
 
 	$scope.loadSelectedMap = function(){
@@ -16,7 +33,8 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 		if (($scope.selectedMap == undefined) || ($scope.selectedMap.length == 0)) {
 		}
 		else {
-			console.log($scope.selectedMap[0].name);			
+			console.log($scope.selectedMap[0].id);	
+			$scope.makeGetMapCall($scope.selectedMap[0].id);		
 		}
 	};
 

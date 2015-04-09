@@ -1,3 +1,3 @@
 cd webserver/webserver
-sudo python manage.py runserver
+python manage.py runserver
 cd ../..
