@@ -27,8 +27,10 @@ def track_to_dict(track):
     for segment in track.segments:
         seg = { 'name' : 'segment', 'points' : []}
         for point in segment.points:
-            p = '%s|%f|%f|%f' % (point.time, point.lat, point.lon, point.ele)
-            seg['points'].append(p)       
+            # p = '%s|%f|%f|%f' % (point.time, point.lat, point.lon, point.ele)
+            p = '%f|%f|%f' % (point.lat, point.lon, point.ele)
+            seg['points'].append(p)    
+
         trk['segments'].append(seg)
 
     return trk

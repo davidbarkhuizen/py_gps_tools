@@ -54,17 +54,20 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 				// 2014-10-26 11:06:15|-25.938111|27.592123|1329.160000
 				// time, lat, lon, ele
 
-				var timeStr = datum[0];
+				//var timeStr = datum[0];
 
-				var lat = parseFloat(datum[1]);
-				var lon = parseFloat(datum[2]);
-				var ele = parseFloat(datum[3]);
+				var lat = parseFloat(datum[0]);
+				var lon = parseFloat(datum[1]);
+				var ele = parseFloat(datum[2]);
 
 				points.push([lat,lon,ele]);
 			}
 		}	
 
 		console.log('point count = ' + points.length);
+
+		var p = points[0];
+		console.log('point @ lat, lon = ', p[0], p[1]);
 
 		var getMinMax = function(seriesArray, seriesIndex) {
 
@@ -90,6 +93,10 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 		var minMaxLon = getMinMax(points, 1);
 		var minMaxEle = getMinMax(points, 2);
 
+		var latDiff = minMaxLat.max - minMaxLat.min;
+		var lonDiff = minMaxLon.max - minMaxLon.min;
+		var latlonAR = lonDiff / latDiff;
+
 		// --------------------------------------
 
 		var logMinMax = function(token, minMax) {
@@ -103,6 +110,63 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 		logMinMax('ELE', minMaxEle);		
 
 		// --------------------------------------
+
+		// viewport
+
+		var viewPortHeight = 500.0;
+		var viewPortWidth = 800.0;
+
+		var vpHalfHeight = viewPortHeight / 2.0;
+		var vpHalfWidth  = viewPortWidth / 2.0;
+
+		var vpAR = viewPortWidth / viewPortHeight;
+
+		var scale = undefined;
+		if (latlonAR <= vpAR) {
+			// too tall, use y to scale
+			scale = viewPortHeight / latDiff;
+		}
+		else
+		{
+			// too wide, use x to scale
+			scale = viewPortWidth / lonDiff;
+		}
+
+		var midLat = 0.5 * (minMaxLat.max + minMaxLat.min);
+		var midLon = 0.5 * (minMaxLon.max + minMaxLon.min);
+
+		var transformPoint = function(lat, lon) {
+
+			// translate to center around origin
+			var centeredLat = lat - midLat;
+			var centeredLon = lon - midLon;
+
+			// scale
+			var scaledX = centeredLon * scale;
+			var scaledY = centeredLat * scale;
+
+			// translate to viewpoint center
+			var x = vpHalfWidth + scaledX;
+			var y = vpHalfHeight - scaledY;
+
+			return { 'x' : x, 'y' : y };
+		};
+
+		var canvasPoints = [];
+		for(var i in points) {
+			var xy = transformPoint(points[i][0], points[i][1]);
+			canvasPoints.push(xy);
+		}
+
+		$scope.context.beginPath();
+	    for (var i in canvasPoints) {	
+	    	var pt = canvasPoints[i];
+
+    		$scope.context.fillRect(pt.x, pt.y, 1, 1);  
+
+	    };	    
+        $scope.context.stroke();
+
 	};
 
 	// ------------------------------------------------
