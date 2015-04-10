@@ -2,17 +2,110 @@ var geoNodeTekApp = angular.module('geoNodeTekApp', []);
 
 geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 
- 	var canvas = document.getElementById("canvas");
-    
-	if (canvas.getContext) {
-		var ctx = canvas.getContext("2d");
+	// state ------------------------------------------
 
-		ctx.fillStyle = "rgba(100, 100, 100, 0.5)";
-		ctx.fillRect (0, 0, 800, 600);
+	$scope.globalState = undefined;
+	$scope.loadingState = 'loading';
+	$scope.processingState = 'processing';
+	$scope.viewingState = 'viewing';
+
+	$scope.globalState = $scope.loadingState;
+
+	// canvas & context -------------------------------
+
+	$scope.canvas = undefined;
+	$scope.context = undefined;
+
+	$scope.initCanvas = function() {
+
+		$scope.canvas = document.getElementById("canvas");
+	    
+		if ($scope.canvas.getContext) {
+			$scope.context = $scope.canvas.getContext("2d");
+		}
 	}
 
-	$scope.loadingMap = true;
-	$scope.showCanvas = false;
+	$scope.initCanvas();
+ 	
+	// ------------------------------------------------
+
+	$scope.processIncomingMapData = function(mapData) {
+
+		console.log('makeGetMapCall - ajax return');
+
+		var trackName = mapData.name;
+		console.log(mapData.name);
+
+		var segmentCount = mapData.segments.length;
+		console.log(segmentCount + ' segments');
+
+		console.log('parsing points');
+
+		points = [];
+
+		for(var i in mapData.segments) {
+
+			seg = mapData.segments[i];
+
+			for(var j in seg.points) {
+				var pointString = seg.points[j];
+				var datum = pointString.split("|")		
+
+				// 2014-10-26 11:06:15|-25.938111|27.592123|1329.160000
+				// time, lat, lon, ele
+
+				var timeStr = datum[0];
+
+				var lat = parseFloat(datum[1]);
+				var lon = parseFloat(datum[2]);
+				var ele = parseFloat(datum[3]);
+
+				points.push([lat,lon,ele]);
+			}
+		}	
+
+		console.log('point count = ' + points.length);
+
+		var getMinMax = function(seriesArray, seriesIndex) {
+
+			var max = undefined;
+			var min = undefined;
+
+			for (var i = seriesArray.length - 1; i >= 0; i--) {
+				
+				var val = seriesArray[i][seriesIndex];
+
+				if ((max == undefined) || (val > max)) { 
+					max = val; 
+				}
+				if ((min == undefined) || (val < min)) { 
+					min = val; 
+				}
+			};
+
+			return { 'max' : max, 'min' : min };
+		}		
+
+		var minMaxLat = getMinMax(points, 0);
+		var minMaxLon = getMinMax(points, 1);
+		var minMaxEle = getMinMax(points, 2);
+
+		// --------------------------------------
+
+		var logMinMax = function(token, minMax) {
+			console.log(token);
+			console.log('min @ ' + minMax.min);
+			console.log('max @ ' + minMax.max);
+		};
+
+		logMinMax('LAT', minMaxLat);
+		logMinMax('LON', minMaxLon);
+		logMinMax('ELE', minMaxEle);		
+
+		// --------------------------------------
+	};
+
+	// ------------------------------------------------
 
 	$scope.mapList = [];
 	$scope.mapSearchToken = '';
@@ -30,45 +123,9 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 				url: '/map/get/' + id,
 			}
 			).success(
-				function(x) {
-					
-					console.log('makeGetMapCall - ajax return');
-
-					var trackName = x.name;
-					console.log(x.name);
-
-					var points = [];
-
-					var segmentCount = x.segments.length;
-					console.log(segmentCount + ' segments');
-
-					console.log('parsing points');
-
-					for(var i in x.segments) {
-
-						seg = x.segments[i];
-
-						for(var j in seg.points) {
-							var pointString = seg.points[j];
-							var datum = pointString.split("|")		
-
-							// 2014-10-26 11:06:15|-25.938111|27.592123|1329.160000
-							// time, lat, lon, ele
-
-							var timeStr = datum[0];
-
-							var lat = parseFloat(datum[1]);
-							var lon = parseFloat(datum[2]);
-							var ele = parseFloat(datum[3]);
-
-							points.push([lat,lon,ele]);
-						}
-					}	
-
-					console.log('point count = ' + points.length);	
-
-					$scope.loadingMap = false;
-					$scope.showCanvas = true;	
+				function(data) {
+					$scope.globalState = $scope.processingState;
+					$scope.processIncomingMapData(data);							
 				}
 			).error(
 				function(error){

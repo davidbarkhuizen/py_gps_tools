@@ -17,7 +17,7 @@
 
 		<div style='width: 100%;text-align: center;'>
 
-			<div ng-show='loadingMap'>
+			<div ng-show='globalState == loadingState'>
 
 		 		<div style="width: 100%;">
 		           
@@ -51,12 +51,25 @@
 
 	    </div>
 
-		<div ng-show='showCanvas' style='width: 100%;margin: 0 auto;text-align: center;'>
+		<div ng-show='(globalState == viewingState) || (globalState == processingState)' style='width: 100%;margin: 0 auto;text-align: center;'>
 			<div>
 				{{ selectedMap[0].name }}
 			</div>
-			<canvas id="canvas" width='800px' height='600px' style='display:inline-block;'>
+			
+			<canvas 
+				id="canvas"
+				width='800px'
+				height='600px'
+				style='display:inline-block;border-style:solid;border-width:1px;border-color:lightgrey;'
+
+				>
+
 			</canvas>
+
+			<div class='info-text'>
+				status
+			</div>
+
 		</div>
 
 	</body>
