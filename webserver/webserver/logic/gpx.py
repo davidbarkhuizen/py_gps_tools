@@ -6,11 +6,11 @@ class Point(object):
         self.time = time
 
 class Segment(object):
-    def __init__(self, points = []):
+    def __init__(self, points):
         self.points = points
         
 class Track(object):
-    def __init__(self, name = '', segments = []):
+    def __init__(self, name, segments):
         self.name = name
         self.segments = segments
 
@@ -26,6 +26,7 @@ def track_to_dict(track):
 
     for segment in track.segments:
         seg = { 'name' : 'segment', 'points' : []}
+
         for point in segment.points:
             # p = '%s|%f|%f|%f' % (point.time, point.lat, point.lon, point.ele)
             p = '%f|%f|%f' % (point.lat, point.lon, point.ele)
@@ -73,7 +74,7 @@ def parse_string_to_track(xml_string):
   
     # track
     
-    gpx_track = Track()
+    gpx_track = Track('', [])
     
     ## track name
     
@@ -87,8 +88,10 @@ def parse_string_to_track(xml_string):
     
     for track_segment in track_segments:
         
-        gpx_tracksegment = Segment()
+        gpx_tracksegment = Segment([])
         
+        i = 0
+
         for track_point in track_segment:
           
             lat = float(track_point.get('lat'))
@@ -99,6 +102,9 @@ def parse_string_to_track(xml_string):
             gpx_trackpoint = Point(lat, lon, elevation, time)
             
             gpx_tracksegment.points.append(gpx_trackpoint) 
+            i = i + 1
+
+        print(i)
 
         print('trackpoint count = %i' % len(gpx_tracksegment.points))
 

@@ -26,6 +26,8 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 	}
 
 	$scope.initCanvas();
+
+	$scope.points = [];
  	
 	// ------------------------------------------------
 
@@ -41,7 +43,7 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 
 		console.log('parsing points');
 
-		points = [];
+		$scope.points.length = 0;
 
 		for(var i in mapData.segments) {
 
@@ -60,13 +62,13 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 				var lon = parseFloat(datum[1]);
 				var ele = parseFloat(datum[2]);
 
-				points.push([lat,lon,ele]);
+				$scope.points.push([lat,lon,ele]);
 			}
 		}	
 
-		console.log('point count = ' + points.length);
+		console.log('point count = ' + $scope.points.length);
 
-		var p = points[0];
+		var p = $scope.points[0];
 		console.log('point @ lat, lon = ', p[0], p[1]);
 
 		var getMinMax = function(seriesArray, seriesIndex) {
@@ -89,9 +91,9 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 			return { 'max' : max, 'min' : min };
 		}		
 
-		var minMaxLat = getMinMax(points, 0);
-		var minMaxLon = getMinMax(points, 1);
-		var minMaxEle = getMinMax(points, 2);
+		var minMaxLat = getMinMax($scope.points, 0);
+		var minMaxLon = getMinMax($scope.points, 1);
+		var minMaxEle = getMinMax($scope.points, 2);
 
 		var latDiff = minMaxLat.max - minMaxLat.min;
 		var lonDiff = minMaxLon.max - minMaxLon.min;
@@ -153,8 +155,8 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 		};
 
 		var canvasPoints = [];
-		for(var i in points) {
-			var xy = transformPoint(points[i][0], points[i][1]);
+		for(var i in $scope.points) {
+			var xy = transformPoint($scope.points[i][0], $scope.points[i][1]);
 			canvasPoints.push(xy);
 		}
 
