@@ -23,12 +23,13 @@
 		           
 		            <div class='panel leftPanel'>
 		          
-						<input 
-							autofocus
+						<input
+							id='MapListFilterToken'
 							placeholder='type here to filter map list and auto-select a map' 
 							ng-model='mapSearchToken' 
 							ng-keyup='onMapSearchTokenChanged();' 
-							type='text'/>
+							type='text'
+							/>
 							<!-- size='32' -->
 
 						<!--<div style='min-height:200px;max-height:200px;overflow:auto;'>-->
@@ -62,13 +63,12 @@
 				width='800px'
 				height='500px'
 				style='display:inline-block;border-style:solid;border-width:1px;border-color:lightgrey;'
-
 				>
 
 			</canvas>
 
 			<div class='info-text'>
-				<a ng-click="globalState = loadingState;" href="#" >view another map</a>
+				<a ng-click="findAnotherMap();" href="#" >find another map</a>
 			</div>
 
 		</div>

@@ -1,6 +1,6 @@
 var geoNodeTekApp = angular.module('geoNodeTekApp', []);
 
-geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
+geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 
 	// state ------------------------------------------
 
@@ -34,13 +34,11 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 
 	$scope.processIncomingMapData = function(mapData) {
 
-		console.log('makeGetMapCall - ajax return');
-
 		var trackName = mapData.name;
 		console.log(mapData.name);
 
 		var segmentCount = mapData.segments.length;
-		console.log(segmentCount + ' segments');
+		console.log('segments:  ' + segmentCount);
 
 		console.log('parsing points');
 
@@ -67,10 +65,8 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 			}
 		}	
 
-		console.log('point count = ' + $scope.points.length);
-
-		var p = $scope.points[0];
-		console.log('point @ lat, lon = ', p[0], p[1]);
+		var pointCount = $scope.points.length;
+		console.log('point count:  ' + pointCount);
 
 		var getMinMax = function(seriesArray, seriesIndex) {
 
@@ -103,14 +99,12 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 		// --------------------------------------
 
 		var logMinMax = function(token, minMax) {
-			console.log(token);
-			console.log('min @ ' + minMax.min);
-			console.log('max @ ' + minMax.max);
+			console.log(token + ' E [' + minMax.min + ', ' + minMax.max + ']');
 		};
 
-		logMinMax('LAT', minMaxLat);
-		logMinMax('LON', minMaxLon);
-		logMinMax('ELE', minMaxEle);		
+		logMinMax('Lat', minMaxLat);
+		logMinMax('Lon', minMaxLon);
+		logMinMax('Ele', minMaxEle);		
 
 		// --------------------------------------
 
@@ -292,5 +286,20 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 
 	};
 
+	// -------------------------------------------------------
+	// navigation functions
+
+	$scope.findAnotherMap = function() {
+
+		$scope.globalState = $scope.loadingState;
+  	    
+		$timeout(function() { document.getElementById("MapListFilterToken").focus(); }, 0 );
+
+  	    
+	};
+
+	// -------------------------------------------------------
+
 	$scope.getAndLoadMapList();
+	document.getElementById("MapListFilterToken").focus();
 });
