@@ -28,20 +28,22 @@
 							placeholder='type here to filter map list and auto-select a map' 
 							ng-model='mapSearchToken' 
 							ng-keyup='onMapSearchTokenChanged();' 
-							size='32'
+							style='width:100%; border:none;'
 							type='text'/>
+							<!-- size='32' -->
 
-		            	<div style='min-height:200px;max-height:200px;overflow:auto;'>
+						<!--<div style='min-height:200px;max-height:200px;overflow:auto;'>-->
+		            	<div>
 
 							<div ng-repeat="map in filteredMapList">
-								<span ng-class='selectedMap[0].id == map.id ? "selected-text" : "";'>{{map.name}}</span>
+								<span ng-class='selectedMap[0].id == map.id ? "selected-text" : "";'>{{map.name.toLowerCase()}}</span>
 							</div>
 
 						</div>
 		            </div>
 		        
 		            <div class='panel rightPanel'>
-						<a href='#' ng-click='loadSelectedMap();'>load map</a>
+						<a ng-class="selectedMap.length == 0 ? 'inactive' : 'active'" href='#' ng-click='loadSelectedMap();'>load map</a>
 		           </div>
 
 		        </div>
@@ -67,7 +69,7 @@
 			</canvas>
 
 			<div class='info-text'>
-				status
+				<a ng-click="globalState = loadingState;" href="#" >view another map</a>
 			</div>
 
 		</div>

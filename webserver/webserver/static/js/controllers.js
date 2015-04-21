@@ -27,7 +27,8 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 
 	$scope.initCanvas();
 
-	$scope.points = [];
+	$scope.points = [];	
+	$scope.canvasPoints = [];	
  	
 	// ------------------------------------------------
 
@@ -154,21 +155,26 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http) {
 			return { 'x' : x, 'y' : y };
 		};
 
-		var canvasPoints = [];
+		$scope.canvasPoints.length = 0;
+
 		for(var i in $scope.points) {
 			var xy = transformPoint($scope.points[i][0], $scope.points[i][1]);
-			canvasPoints.push(xy);
+			$scope.canvasPoints.push(xy);
 		}
 
+		// draw to canvas
+		$scope.context.fillStyle = '#FFFFFF';
+  		$scope.context.fillRect(0,0,viewPortWidth,viewPortHeight);
+		//$scope.context.fillRect(0, 0, $scope.viewPortWidth-5, $scope.viewPortHeight-5;
+
+		$scope.context.fillStyle = '#000000';
 		$scope.context.beginPath();
-	    for (var i in canvasPoints) {	
-	    	var pt = canvasPoints[i];
-
-    		$scope.context.fillRect(pt.x, pt.y, 1, 1);  
-
+	    for (var i in $scope.canvasPoints) {	
+	    	var pt = $scope.canvasPoints[i];
+    		$scope.context.fillRect(pt.x, pt.y, 3, 3);
 	    };	    
-        $scope.context.stroke();
 
+        $scope.context.stroke();
 	};
 
 	// ------------------------------------------------

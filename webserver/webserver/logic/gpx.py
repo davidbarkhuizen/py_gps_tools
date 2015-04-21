@@ -19,18 +19,24 @@ import datetime
 
 DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
 
-def track_to_dict(track):
+def track_to_dict(track, take = 1):
 
     trk = {}
     trk = { 'name' : track.name, 'segments' : [] }
 
     for segment in track.segments:
+        
         seg = { 'name' : 'segment', 'points' : []}
+
+        i = take - 1
 
         for point in segment.points:
             # p = '%s|%f|%f|%f' % (point.time, point.lat, point.lon, point.ele)
             p = '%f|%f|%f' % (point.lat, point.lon, point.ele)
-            seg['points'].append(p)    
+
+            i = i + 1
+            if i % take == 0:
+                seg['points'].append(p)    
 
         trk['segments'].append(seg)
 
@@ -90,8 +96,6 @@ def parse_string_to_track(xml_string):
         
         gpx_tracksegment = Segment([])
         
-        i = 0
-
         for track_point in track_segment:
           
             lat = float(track_point.get('lat'))
@@ -102,9 +106,6 @@ def parse_string_to_track(xml_string):
             gpx_trackpoint = Point(lat, lon, elevation, time)
             
             gpx_tracksegment.points.append(gpx_trackpoint) 
-            i = i + 1
-
-        print(i)
 
         print('trackpoint count = %i' % len(gpx_tracksegment.points))
 

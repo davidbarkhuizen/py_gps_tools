@@ -1,6 +1,6 @@
 body 
 { 
-    font-family: courier;
+    font-family: helvetica;
     font-size: 125%;
     font-weight:bold;
 }
@@ -8,6 +8,16 @@ body
 body a 
 {
     color:purple;
+}
+
+.active
+{
+    color:purple;
+}
+
+.inactive
+{
+    color:darkgrey;
 }
 
 .panel
@@ -47,7 +57,7 @@ body a
 .rightPanel
 {
     float:left;
-
+    text-align: left;
     padding-left:10px;
 }
 
