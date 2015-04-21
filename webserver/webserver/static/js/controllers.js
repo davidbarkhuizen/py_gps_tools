@@ -173,25 +173,44 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 		$scope.context.fillStyle = '#FFFFFF';
   		$scope.context.fillRect(0,0,viewPortWidth,viewPortHeight);
 
-  		var colorScaled = true;
+        // elevation halo
+        
+        var drawElevationHalo = function(thickness) {
 
-  		// default to black
-  		//
-  		if (colorScaled == false) {
-			$scope.context.fillStyle = '#000000';
-  		}
-		
-		$scope.context.beginPath();
-	    for (var i in $scope.canvasPoints) {	
-	    	var pt = $scope.canvasPoints[i];
-	    	
-	    	if (colorScaled == true)
-	    		$scope.context.fillStyle = pt.rgb;		
-    		
-    		$scope.context.fillRect(pt.x, pt.y, 3, 3);
-	    };	    
+			$scope.context.beginPath();
+		    
+			var offSet = Math.floor(thickness / 2.0);
 
-        $scope.context.stroke();
+		    for (var i in $scope.canvasPoints) {	
+		    	var pt = $scope.canvasPoints[i];
+	    		$scope.context.fillStyle = pt.rgb;	
+				$scope.context.fillRect(pt.x - offSet, pt.y - offSet, thickness, thickness);	
+		    };	   
+
+	        $scope.context.stroke();
+        };
+
+        var drawTrail = function(thickness) {		
+
+	  		// black
+	  		var colorString = '#000000'; 
+
+			$scope.context.beginPath();
+			$scope.context.fillStyle = colorString;
+
+			var offSet = Math.floor(thickness / 2.0);
+
+		    for (var i in $scope.canvasPoints) {	
+		    	var pt = $scope.canvasPoints[i];
+	    			$scope.context.fillRect(pt.x - offSet, pt.y - offSet, thickness, thickness);
+		    };	    
+
+	        $scope.context.stroke();
+
+    	};
+
+		drawElevationHalo(5);
+    	drawTrail(2);
 	};
 
 	// ------------------------------------------------
