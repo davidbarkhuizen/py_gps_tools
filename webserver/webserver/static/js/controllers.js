@@ -92,6 +92,8 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 		var minMaxLon = getMinMax($scope.points, 1);
 		var minMaxEle = getMinMax($scope.points, 2);
 
+		var eleDiff = minMaxEle.max - minMaxEle.min;
+
 		var latDiff = minMaxLat.max - minMaxLat.min;
 		var lonDiff = minMaxLon.max - minMaxLon.min;
 		var latlonAR = lonDiff / latDiff;
@@ -110,8 +112,8 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 
 		// viewport
 
-		var viewPortHeight = 500.0;
-		var viewPortWidth = 800.0;
+		var viewPortHeight = 550.0;
+		var viewPortWidth = 880.0;
 
 		var vpHalfHeight = viewPortHeight / 2.0;
 		var vpHalfWidth  = viewPortWidth / 2.0;
@@ -131,8 +133,13 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 
 		var midLat = 0.5 * (minMaxLat.max + minMaxLat.min);
 		var midLon = 0.5 * (minMaxLon.max + minMaxLon.min);
+		var midEle = 0.5 * (minMaxEle.max + minMaxEle.min);
 
-		var transformPoint = function(lat, lon) {
+		var toRgbString = function(r, g, b) {
+			return 'rgb(' + r + ',' + g + ',' + b + ')';
+		};
+
+		var transformPoint = function(lat, lon, ele) {
 
 			// translate to center around origin
 			var centeredLat = lat - midLat;
@@ -146,25 +153,41 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 			var x = vpHalfWidth + scaledX;
 			var y = vpHalfHeight - scaledY;
 
-			return { 'x' : x, 'y' : y };
+			// COLOR			
+			var red = Math.floor(255.0 * (ele - minMaxEle.min) / eleDiff);
+			var rgbString = toRgbString(red, 255 - red, 0);
+
+			return { 'x' : x, 'y' : y, 'rgb' : rgbString };
 		};
 
+		// render points to canvas space
+		//
 		$scope.canvasPoints.length = 0;
-
 		for(var i in $scope.points) {
-			var xy = transformPoint($scope.points[i][0], $scope.points[i][1]);
-			$scope.canvasPoints.push(xy);
+			var canvasPoint = transformPoint($scope.points[i][0], $scope.points[i][1], $scope.points[i][2]);
+			$scope.canvasPoints.push(canvasPoint);
 		}
 
-		// draw to canvas
+		// draw from canvas space to canvas
+		//
 		$scope.context.fillStyle = '#FFFFFF';
   		$scope.context.fillRect(0,0,viewPortWidth,viewPortHeight);
-		//$scope.context.fillRect(0, 0, $scope.viewPortWidth-5, $scope.viewPortHeight-5;
 
-		$scope.context.fillStyle = '#000000';
+  		var colorScaled = true;
+
+  		// default to black
+  		//
+  		if (colorScaled == false) {
+			$scope.context.fillStyle = '#000000';
+  		}
+		
 		$scope.context.beginPath();
 	    for (var i in $scope.canvasPoints) {	
 	    	var pt = $scope.canvasPoints[i];
+	    	
+	    	if (colorScaled == true)
+	    		$scope.context.fillStyle = pt.rgb;		
+    		
     		$scope.context.fillRect(pt.x, pt.y, 3, 3);
 	    };	    
 
