@@ -4,10 +4,13 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 
 	// state ------------------------------------------
 
+	$scope.showImportSection = false;
+
 	$scope.globalState = undefined;
 	$scope.loadingState = 'loading';
 	$scope.processingState = 'processing';
 	$scope.viewingState = 'viewing';
+	$scope.importingState = 'importing';
 
 	$scope.mapIsLoadedAndActive = false;
 
@@ -16,6 +19,73 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 	$scope.returnToActiveMap = function() {
 		if ($scope.mapIsLoadedAndActive == true)
 			$scope.globalState = $scope.viewingState;
+	};
+
+	// CSRF -------------
+
+	$scope.getCookie = function (name) {
+	    var cookieValue = null;
+	    if (document.cookie && document.cookie != '') {
+	        var cookies = document.cookie.split(';');
+	        for (var i = 0; i < cookies.length; i++) {
+	            var cookie = cookies[i].trim();
+	            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+	                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+	                break;
+	            }
+	        }
+	    }
+
+	    return cookieValue;
+	};
+
+	$scope.genCsrfTokenDict = function() {
+		var headerDict = { 'X-CSRFToken': $scope.getCookie('csrftoken') };
+		return headerDict;
+	};
+
+	// import map data
+
+	$scope.importMapDataFile = function() {
+
+ 		var file = document.getElementById('file').files[0];
+  		if(file){
+			var reader = new FileReader();  
+			reader.readAsText(file, "UTF-8");
+
+			var fileName = file.name;
+
+			reader.onload = function(evt) {
+
+				var fileString = evt.target.result;
+
+				var packet = {
+					'fileName' : fileName,
+					'fileString' : fileString
+				};
+
+				$http({
+				    url: '/mapfile/',
+				    method: "POST",
+				    data: packet,
+ 					headers: $scope.genCsrfTokenDict()
+				}).success(function(data, status, headers, config) {
+				    console.log(data);
+				}).error(function(data, status, headers, config) {
+				    var x = data;
+				    console.log(data);
+				});
+
+			};
+
+			reader.onerror = function(evt) {
+				console.log('error reading file @ ' + file);
+				console.log(evt);
+			};
+		}
+		else {
+			console.log("can't find file");
+		}	
 	};
 
 	// canvas & context -------------------------------

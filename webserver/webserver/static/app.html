@@ -17,12 +17,15 @@
 
 		<div style='width: 100%;text-align: center;'>
 
-			<div ng-show='globalState == loadingState'>
+			<div ng-show='globalState == loadingState || globalState == importingState'>
 
 		 		<div style="width: 100%;">
 		           
 		            <div class='panel leftPanel'>
 		          
+						<a ng-class="selectedMap.length == 0 ? 'inactive' : 'active'" href='#' ng-click='loadSelectedMap();'>load map</a>
+		           		<br/>
+
 						<input
 							id='MapListFilterToken'
 							placeholder='type here to filter map list and auto-select a map' 
@@ -49,9 +52,16 @@
 		            </div>
 		        
 		            <div class='panel rightPanel'>
-						<a ng-class="selectedMap.length == 0 ? 'inactive' : 'active'" href='#' ng-click='loadSelectedMap();'>load map</a>
-		           		<br/>
-		           		<a ng-class="mapIsLoadedAndActive == true ? 'active' : 'inactive'" href='#' ng-click='returnToActiveMap();'>return</a>
+		            	<div ng-class='showImportSection ? "active-section" : ""'>
+			            	<a ng-class='active' href='#' ng-click='showImportSection = !showImportSection;'>import map data file</a>
+			           		<br/>
+			           		<div ng-show='showImportSection'>
+			           			<input type="file" id="file" name="file"/>
+			           			<br/>
+								<button ng-click="importMapDataFile()">import selected file</button>
+			           		</div>
+		           		</div>
+		           		<a ng-class="mapIsLoadedAndActive == true ? 'active' : 'inactive'" href='#' ng-click='returnToActiveMap();'>return to active map</a>
 		           </div>
 
 		        </div>
