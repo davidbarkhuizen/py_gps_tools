@@ -29,14 +29,19 @@
 							ng-model='mapSearchToken' 
 							ng-keyup='onMapSearchTokenChanged();' 
 							type='text'
+							size='32'
 							/>
 							<!-- size='32' -->
 
-						<!--<div style='min-height:200px;max-height:200px;overflow:auto;'>-->
-		            	<div>
+		            	<div id='FilteredMapList'>
 
 							<div ng-repeat="map in filteredMapList">
-								<span ng-class='selectedMap[0].id == map.id ? "selected-text" : "";'>{{map.name.toLowerCase()}}</span>
+								<span 
+									ng-class='selectedMap[0].id == map.id ? "selected-text" : "";'
+									ng-click='mapListItemClicked(map.id);'
+									>
+									{{map.name.toLowerCase()}}
+								</span>
 							</div>
 
 						</div>

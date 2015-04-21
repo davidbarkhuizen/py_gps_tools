@@ -40,7 +40,6 @@ body a
     font-size: 120%;
 }
 
-
 .leftPanel
 {
     float:left; 
@@ -52,7 +51,7 @@ body a
 .leftPanel input {
     text-align: right;
     margin-bottom: 5px;
-    width:62.5%;
+    /*width:62.5%;*/
 
     border-color: lightgrey !important;
     border:none;
@@ -71,3 +70,10 @@ body a
     color: lightgrey;
 }
 
+/* -------------------------------------------------------*/
+
+#FilteredMapList {
+    min-height:500px;
+    max-height:500px;
+    overflow:auto;
+}

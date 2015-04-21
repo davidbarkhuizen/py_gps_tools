@@ -206,7 +206,7 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 		if (($scope.selectedMap == undefined) || ($scope.selectedMap.length == 0)) {
 		}
 		else {
-			$scope.makeGetMapCall($scope.selectedMap[0].id);		
+			$scope.makeGetMapCall($scope.selectedMap[0].id);
 		}
 	};
 
@@ -281,9 +281,24 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 		}
 		else {
 			$scope.selectedMap.length = 0;
-			$scope.selectedMap.push($scope.filteredMapList[0]); 		
+			$scope.selectedMap.push($scope.filteredMapList[0]);
 		}
 
+	};
+
+	$scope.mapListItemClicked = function(mapId) {
+
+		// set $scope.selectedMap
+		//
+		for (var i in $scope.filteredMapList) {
+			if ($scope.filteredMapList[i].id == mapId) {
+				$scope.selectedMap.length = 0;
+				$scope.selectedMap.push($scope.filteredMapList[i]);
+				break;
+			}
+		}
+
+		$scope.makeGetMapCall($scope.selectedMap[0].id);
 	};
 
 	// -------------------------------------------------------
@@ -293,13 +308,11 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 
 		$scope.globalState = $scope.loadingState;
   	    
-		$timeout(function() { document.getElementById("MapListFilterToken").focus(); }, 0 );
-
-  	    
+		$timeout(function() { document.getElementById("MapListFilterToken").focus(); }, 0 );  	    
 	};
 
 	// -------------------------------------------------------
 
 	$scope.getAndLoadMapList();
-	document.getElementById("MapListFilterToken").focus();
+	$timeout(function() { document.getElementById("MapListFilterToken").focus(); }, 0 );
 });
