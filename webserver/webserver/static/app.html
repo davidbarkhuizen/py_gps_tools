@@ -30,6 +30,7 @@
 							ng-keyup='onMapSearchTokenChanged();' 
 							type='text'
 							size='32'
+							ng-class='(mapSearchToken == "") || (filteredMapList.length == 0) ? "action-required" : "no-action-required"'
 							/>
 							<!-- size='32' -->
 
@@ -49,6 +50,8 @@
 		        
 		            <div class='panel rightPanel'>
 						<a ng-class="selectedMap.length == 0 ? 'inactive' : 'active'" href='#' ng-click='loadSelectedMap();'>load map</a>
+		           		<br/>
+		           		<a ng-class="mapIsLoadedAndActive == true ? 'active' : 'inactive'" href='#' ng-click='returnToActiveMap();'>return</a>
 		           </div>
 
 		        </div>
@@ -73,7 +76,7 @@
 			</canvas>
 
 			<div class='info-text'>
-				<a ng-click="findAnotherMap();" href="#" >find another map</a>
+				<a ng-click="gotoOptions();" href="#" >options</a>
 			</div>
 
 		</div>

@@ -9,7 +9,14 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 	$scope.processingState = 'processing';
 	$scope.viewingState = 'viewing';
 
+	$scope.mapIsLoadedAndActive = false;
+
 	$scope.globalState = $scope.loadingState;
+
+	$scope.returnToActiveMap = function() {
+		if ($scope.mapIsLoadedAndActive == true)
+			$scope.globalState = $scope.viewingState;
+	};
 
 	// canvas & context -------------------------------
 
@@ -211,6 +218,8 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 
 		drawElevationHalo(5);
     	drawTrail(2);
+
+    	$scope.mapIsLoadedAndActive = true;
 	};
 
 	// ------------------------------------------------
@@ -251,6 +260,8 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 			$scope.makeGetMapCall($scope.selectedMap[0].id);
 		}
 	};
+
+	// MAP LIST = get/load, filter , item-clicked -----------
 
 	$scope.loadMapList = function(mapList) {
 
@@ -346,10 +357,9 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 	// -------------------------------------------------------
 	// navigation functions
 
-	$scope.findAnotherMap = function() {
+	$scope.gotoOptions = function() {
 
-		$scope.globalState = $scope.loadingState;
-  	    
+		$scope.globalState = $scope.loadingState;  	    
 		$timeout(function() { document.getElementById("MapListFilterToken").focus(); }, 0 );  	    
 	};
 

@@ -58,6 +58,14 @@ body a
     border-bottom: dashed;
 }
 
+.action-required{
+    color:red;
+}
+
+.no-action-required{
+    color:green;
+}
+
 .rightPanel
 {
     float:left;
