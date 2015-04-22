@@ -57,7 +57,7 @@
 			            	<a ng-class='active' href='#' ng-click='showImportSection = !showImportSection;'>import map data file</a>
 			           		<br/>
 			           		<div ng-show='showImportSection'>
-			           			<input type="file" id="ImportMapFileInput" name="file"/>
+			           			<input type="file" multiple id="ImportMapFileInput" name="file"/>
 			           			<br/>
 								<button ng-click="importMapDataFile()">import selected file</button>
 			           		</div>

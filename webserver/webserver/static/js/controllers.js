@@ -48,6 +48,68 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 
 	$scope.importMapDataFile = function() {
 
+		var files = document.getElementById('ImportMapFileInput').files;
+		for (var i = 0; i < files.length; i++) {
+			
+			var file = files[i];
+
+			var reader = new FileReader();  
+
+			var genOnLoad = function(fileName) {
+
+				return function(evt) {
+
+					var fileString = evt.target.result;
+
+					var packet = {
+						'fileName' : fileName,
+						'fileString' : fileString
+					};
+
+					$http({
+					    url: '/mapfile/',
+					    method: "POST",
+					    data: packet,
+	 					headers: $scope.genCsrfTokenDict()
+					}).success(function(data, status, headers, config) {
+
+						if (data.code == 'ok') {
+
+							var input = document.getElementById('ImportMapFileInput');
+							try{
+							    input.value = '';
+							    if(input.value){
+							        input.type = "text";
+							        input.type = "file";
+							    }
+							}catch(e){}
+
+							$scope.showImportSection = false;
+
+					    	$scope.getAndLoadMapList();
+
+					    	// set selected map
+						}
+					}).error(function(data, status, headers, config) {
+					    var x = data;
+					    console.log(data);
+					});
+
+				};
+
+			}
+
+			reader.onload = genOnLoad(file.name.toString());
+
+			reader.onerror = function(evt) {
+				console.log('error reading file @ ' + file);
+				console.log(evt);
+			};
+
+			reader.readAsText(file, "UTF-8");
+		};
+
+		/*
  		var file = document.getElementById('ImportMapFileInput').files[0];
   		if(file){
 			var reader = new FileReader();  
@@ -102,7 +164,8 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 		}
 		else {
 			console.log("can't find file");
-		}	
+		}
+		*/
 	};
 
 	// canvas & context -------------------------------
@@ -366,6 +429,7 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
     		// black
 	  		var colorString = '#000000';			
 			$scope.context.fillStyle = colorString;
+			$scope.context.font = "15px helvetica";
 
 		    for (var i in $scope.canvasWaypoints) {	
 		    	
@@ -380,8 +444,7 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
     			$scope.context.beginPath();
     			$scope.context.arc(pt.x,pt.y,10,0,Math.PI*2,true);    
 				$scope.context.stroke();	
-
-				$scope.context.font = "10px helvetica";
+				
 				$scope.context.fillText(pt.name, pt.x + 20, pt.y);		
 		    };	   	        
     	};
