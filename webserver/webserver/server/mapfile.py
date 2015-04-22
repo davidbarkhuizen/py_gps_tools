@@ -15,9 +15,7 @@ def routing(request):
 
 def post(request):
 	
-	json_data = simplejson.loads(request.body)
-
-	
+	json_data = simplejson.loads(request.body)	
 
 	file_name = None
 	file_string = None
@@ -33,18 +31,20 @@ def post(request):
 
 		already_exists = False
 		for f in GpxFile.objects.all():
-		    if (str(f.xml_string) == file_string):
+		    if str(f.xml_string) == str(file_string):
 		        already_exists = True
 		        break
 		if (already_exists):
-			msg = 'already exists'  
-	except Error:
+			msg = 'already exists'
+			raise Exception(msg)
+	except Exception:
 		error_return = { 'code' : 'fail', 'msg' : msg }
-		jsonString = simplejson.dumps(error_return)
-		return HttpResponse(jsontring)
+		json_string = simplejson.dumps(error_return)
+		return HttpResponse(json_string)
 
-
-	gpx_file = GpxFile(name = name, xml_string = file_string)
+	gpx_file = GpxFile(name = file_name, xml_string = file_string)
 	gpx_file.save()
 
-	return HttpResponse('ok')
+	ok_return = { 'code' : 'ok', 'id' : gpx_file.id }
+	json_string = simplejson.dumps(ok_return)
+	return HttpResponse(json_string)

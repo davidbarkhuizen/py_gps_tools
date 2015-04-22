@@ -48,7 +48,7 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 
 	$scope.importMapDataFile = function() {
 
- 		var file = document.getElementById('file').files[0];
+ 		var file = document.getElementById('ImportMapFileInput').files[0];
   		if(file){
 			var reader = new FileReader();  
 			reader.readAsText(file, "UTF-8");
@@ -70,7 +70,24 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 				    data: packet,
  					headers: $scope.genCsrfTokenDict()
 				}).success(function(data, status, headers, config) {
-				    console.log(data);
+
+					if (data.code == 'ok') {
+
+						var input = document.getElementById('ImportMapFileInput');
+						try{
+						    input.value = '';
+						    if(input.value){
+						        input.type = "text";
+						        input.type = "file";
+						    }
+						}catch(e){}
+
+						$scope.showImportSection = false;
+
+				    	$scope.getAndLoadMapList();
+
+				    	// set selected map
+					}
 				}).error(function(data, status, headers, config) {
 				    var x = data;
 				    console.log(data);
