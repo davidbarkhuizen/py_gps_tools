@@ -24,3 +24,7 @@ class WayPoint(models.Model):
 	name = models.CharField(max_length=1024)
 	lat = models.DecimalField(max_digits=9, decimal_places=6)
 	lon = models.DecimalField(max_digits=9, decimal_places=6)
+	ele = models.DecimalField(max_digits=12, decimal_places=6)
+
+	def __str__(self):
+		return '%s (%f %f) @ %f m' % (self.name, self.lat, self.lon, self.ele)

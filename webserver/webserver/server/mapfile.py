@@ -2,8 +2,10 @@ from django.http import HttpResponse
 
 from django.utils import simplejson
 
-from server.models import GpxFile
 from logic import gpx
+
+from server.models import GpxFile
+from server.models import WayPoint
 
 def routing(request):
     
@@ -20,6 +22,9 @@ def post(request):
 
 	file_name = None
 	xml_string = None
+
+	track = None
+	way_points = None
 
 	msg = None
 	try:
@@ -45,14 +50,15 @@ def post(request):
 
 		# check that xml file can be parsed to either track or waypoint
 		#
-		
-		track = None
 		try:
 			track = gpx.parse_string_to_track(xml_string)
-		except:
+		except Exception, e:
 			pass
 
-		way_points = None
+		try:
+			way_points = gpx.parse_string_to_waypoints(xml_string)
+		except Exception, e:
+			pass
 
 		if (track == None) and (way_points == None):
 			msg = 'file not recognised as either a track or waypoints'
@@ -65,9 +71,49 @@ def post(request):
 		json_string = simplejson.dumps(error_return)
 		return HttpResponse(json_string)
 
-	gpx_file = GpxFile(name = file_name, xml_string = xml_string)
-	gpx_file.save()
+	# -----------
 
-	ok_return = { 'code' : 'ok', 'id' : gpx_file.id }
+	ok_return = ok_return = { 'code' : 'ok' }
+
+	# create track
+	#
+	if track != None:
+		gpx_file = GpxFile(name = file_name, xml_string = xml_string)
+		gpx_file.save()
+		ok_return['id'] = gpx_file.id
+
+	# create waypoints
+	#
+	if way_points != None:
+
+		for incoming_way_point in way_points:
+
+			wp = WayPoint(name = incoming_way_point.name.lower().strip(), lat = incoming_way_point.lat, lon = incoming_way_point.lon, ele = incoming_way_point.ele)
+
+			already_exists = False
+			matches = WayPoint.objects.filter(lat=wp.lat, lon=wp.lon, ele=wp.ele)
+			if (len(matches) > 0):	
+				already_exists = True
+
+			'''
+			for ep in WayPoint.objects.all():
+				if (ep.name == wp.name):
+					print('existing:  ' + str(ep))
+					print('candidate:  ' + str(wp))
+					print('ele:  ' + str(ep.ele == wp.ele))
+
+				if (wp.lat == ep.lat) and (wp.lon == ep.lon) and (wp.ele == ep.ele):
+					print('point %s, matches already existing point %s' % wp.name, ep.name)
+					already_exists = True
+					break
+			'''
+
+			if (already_exists):
+				print('%s already exists, skipping' % wp.name)
+				continue
+
+			wp.save()
+			print('created point %s' % wp.name)
+	
 	json_string = simplejson.dumps(ok_return)
 	return HttpResponse(json_string)
