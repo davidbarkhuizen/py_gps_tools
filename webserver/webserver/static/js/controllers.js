@@ -219,8 +219,8 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 
 		// viewport
 
-		var viewPortHeight = $scope.windowHeight;
-		var viewPortWidth = $scope.windowWidth;
+		var viewPortHeight = $scope.windowHeight * 1.0;
+		var viewPortWidth = $scope.windowWidth * 1.0;
 
 		var vpHalfHeight = viewPortHeight / 2.0;
 		var vpHalfWidth  = viewPortWidth / 2.0;

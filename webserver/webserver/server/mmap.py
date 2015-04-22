@@ -18,8 +18,6 @@ def get(request, id):
     existing_gpx_files = GpxFile.objects.all()
     match = [x for x in existing_gpx_files if str(x.id) == id][0]
 
-    print(match.name)
-
     track = gpx.parse_string_to_track(match.xml_string)
     track_dict = gpx.track_to_dict(track)
 

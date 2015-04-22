@@ -14,10 +14,18 @@ class Track(object):
         self.name = name
         self.segments = segments
 
+class WayPoint(Point):
+    def __init__(self, name, lat, lon, ele, time):
+        self.name = name
+        super(WayPoint,self).__init__(lat, lon, ele, time)
+
 import xml.etree.ElementTree as ET
 import datetime
 
 DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
+
+def def_log_fn(s):
+    print(s)
 
 def track_to_dict(track, take = 1):
 
@@ -42,7 +50,7 @@ def track_to_dict(track, take = 1):
 
     return trk
 
-def parse_string_to_track(xml_string):
+def parse_string_to_track(xml_string, log = def_log_fn):
 
     root = ET.fromstring(xml_string)
     
@@ -76,7 +84,7 @@ def parse_string_to_track(xml_string):
     metadata_time_stamp_string = find('metadata/time').text
     meta_data_time = datetime.datetime.strptime(metadata_time_stamp_string, DATE_TIME_FORMAT)    
   
-    print('metadata - time @ %s' % meta_data_time)
+    log('metadata - time @ %s' % meta_data_time)
   
     # track
     
@@ -85,12 +93,12 @@ def parse_string_to_track(xml_string):
     ## track name
     
     gpx_track.name = find('trk/name').text
-    print('track name - %s' % gpx_track.name)
+    log('track name - %s' % gpx_track.name)
     
     ## track segments
     
     track_segments = findall('trk/trkseg')
-    print('track segment count = %i ' % len(track_segments))
+    log('track segment count = %i ' % len(track_segments))
     
     for track_segment in track_segments:
         
@@ -107,12 +115,16 @@ def parse_string_to_track(xml_string):
             
             gpx_tracksegment.points.append(gpx_trackpoint) 
 
-        print('trackpoint count = %i' % len(gpx_tracksegment.points))
+        log('trackpoint count = %i' % len(gpx_tracksegment.points))
 
         gpx_tracksegment.points = sorted(gpx_tracksegment.points, key=lambda x : x.time)
-        print('started @ %s' % gpx_tracksegment.points[0].time)
-        print('ended @ %s' % gpx_tracksegment.points[len(gpx_tracksegment.points) - 1].time)  
+        log('started @ %s' % gpx_tracksegment.points[0].time)
+        log('ended @ %s' % gpx_tracksegment.points[len(gpx_tracksegment.points) - 1].time)  
 
         gpx_track.segments.append(gpx_tracksegment)
 
-    return gpx_track
+    return gpx_trac
+
+def parse_waypoints(xml_string, log = def_log_fn):
+    raise Exception('nyie')
+    
