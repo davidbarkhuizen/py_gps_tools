@@ -5,19 +5,63 @@ class Point(object):
         self.ele = ele
         self.time = time
 
+    def __str__(self):
+        return '%f|%f|%f' % (self.lat, self.lon, self.ele)        
+
 class Segment(object):
     def __init__(self, points):
         self.points = points
         
 class Track(object):
-    def __init__(self, name, segments):
+
+    def __init__(self, name, segments, waypoints = []):
+
         self.name = name
         self.segments = segments
+        self.waypoints = waypoints
+
+        self.maxEle = 0.0
+        self.minEle = 0.0
+        self.maxLat = 0.0
+        self.minLat = 0.0
+        self.maxLon = 0.0
+        self.minLon = 0.0
+
+        self.calc_min_maxes()
+
+    def gen_pt_iterator(self):
+
+        def pt_itr():
+            for segment in self.segments:
+                for point in segment.points:
+                    yield point
+
+        return pt_itr
+
+    def calc_min_maxes(self):
+        pt_itr = self.gen_pt_iterator()
+
+        if (len(self.segments) == 0):
+            return
+
+        self.max_lat = max([pt.lat for pt in pt_itr()])
+        self.min_lat = min([pt.lat for pt in pt_itr()])
+        self.max_lon = max([pt.lon for pt in pt_itr()])
+        self.min_lon = min([pt.lon for pt in pt_itr()])
+        self.max_ele = max([pt.ele for pt in pt_itr()])
+        self.min_ele = min([pt.ele for pt in pt_itr()])
+
+    def __str__(self):
+        return 'lat E (%f, %f), lon E (%f, %f), ele E (%f, %f)' % (self.min_lat, self.max_lat, self.min_lon, self.max_lon, self.min_ele, self.max_ele)
 
 class WayPoint(Point):
+
     def __init__(self, name, lat, lon, ele, time):
         self.name = name
         super(WayPoint,self).__init__(lat, lon, ele, time)
+
+    def __str__(self):
+        return '%f|%f|%f|%s' % (self.lat, self.lon, self.ele, self.name)  
 
 import datetime
 DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
@@ -30,7 +74,7 @@ import xml.etree.ElementTree as ET
 def track_to_dict(track, take = 1):
 
     trk = {}
-    trk = { 'name' : track.name, 'segments' : [] }
+    trk = { 'name' : track.name, 'segments' : [], 'waypoints' : [] }
 
     for segment in track.segments:
         
@@ -39,14 +83,16 @@ def track_to_dict(track, take = 1):
         i = take - 1
 
         for point in segment.points:
-            # p = '%s|%f|%f|%f' % (point.time, point.lat, point.lon, point.ele)
-            p = '%f|%f|%f' % (point.lat, point.lon, point.ele)
 
             i = i + 1
             if i % take == 0:
-                seg['points'].append(p)    
+                seg['points'].append(str(point))    
 
         trk['segments'].append(seg)
+
+    for mwp in track.waypoints:
+        wp = WayPoint(name=mwp.name, lat=mwp.lat, lon=mwp.lon, ele=mwp.ele, time=None)
+        trk['waypoints'].append(str(wp))  
 
     return trk
 

@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 
 from server.models import GpxFile
+from server.models import WayPoint
 
 from django.utils import simplejson
 
@@ -19,6 +20,14 @@ def get(request, id):
     match = [x for x in existing_gpx_files if str(x.id) == id][0]
 
     track = gpx.parse_string_to_track(match.xml_string)
+    
+    # waypoints
+    #
+    track.calc_min_maxes()
+    waypoints = WayPoint.objects.filter(lat__lte=track.max_lat, lat__gte=track.min_lat,lon__lte=track.max_lon, lon__gte=track.min_lon)
+
+    track.waypoints = waypoints
+
     track_dict = gpx.track_to_dict(track)
 
     track_json = simplejson.dumps(track_dict)

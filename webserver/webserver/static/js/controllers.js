@@ -129,8 +129,11 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 
 	$scope.initCanvas();
 
-	$scope.points = [];	
-	$scope.canvasPoints = [];	
+	$scope.points = [];		
+	$scope.canvasPoints = [];
+
+	$scope.waypoints = [];
+	$scope.canvasWaypoints = [];	
  	
 	// ------------------------------------------------
 
@@ -144,18 +147,41 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 		$scope.trackName = mapData.name;
 		console.log($scope.trackName);
 
+		// waypoints
+		//
+		for(var j in mapData.waypoints) {
+			
+			var pointString = mapData.waypoints[j];
+			var datum = pointString.split("|")		
+
+			// 2014-10-26 11:06:15|-25.938111|27.592123|1329.160000
+			// time, lat, lon, ele
+
+			//var timeStr = datum[0];
+
+			var lat = parseFloat(datum[0]);
+			var lon = parseFloat(datum[1]);
+			var ele = parseFloat(datum[2]);
+			var name = datum[3];
+
+			$scope.waypoints.push([lat,lon,ele,name]);
+		}
+
+		// segment
+		//
 		$scope.trackSegmentCount = mapData.segments.length;
 		console.log('segments:  ' + $scope.trackSegmentCount);
 
 		console.log('parsing points');
-
+		// points
+		//
 		$scope.points.length = 0;
-
 		for(var i in mapData.segments) {
 
 			seg = mapData.segments[i];
 
 			for(var j in seg.points) {
+
 				var pointString = seg.points[j];
 				var datum = pointString.split("|")		
 
@@ -246,7 +272,7 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 			return 'rgb(' + r + ',' + g + ',' + b + ')';
 		};
 
-		var transformPoint = function(lat, lon, ele) {
+		var transformPoint = function(lat, lon, ele, name) {
 
 			// translate to center around origin
 			var centeredLat = lat - midLat;
@@ -264,7 +290,13 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 			var red = Math.floor(255.0 * (ele - minMaxEle.min) / eleDiff);
 			var rgbString = toRgbString(red, 255 - red, 0);
 
-			return { 'x' : x, 'y' : y, 'rgb' : rgbString };
+			d =  { 'x' : x, 'y' : y, 'rgb' : rgbString };
+
+			if (name) {
+				d['name'] = name;				
+			}
+
+			return d;
 		};
 
 		// render points to canvas space
@@ -273,6 +305,14 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 		for(var i in $scope.points) {
 			var canvasPoint = transformPoint($scope.points[i][0], $scope.points[i][1], $scope.points[i][2]);
 			$scope.canvasPoints.push(canvasPoint);
+		}
+
+		// render waypoints to canvas space
+		//
+		$scope.canvasWaypoints.length = 0;
+		for(var i in $scope.waypoints) {
+			var canvasWaypoint = transformPoint($scope.waypoints[i][0], $scope.waypoints[i][1], $scope.waypoints[i][2], $scope.waypoints[i][3]);
+			$scope.canvasWaypoints.push(canvasWaypoint);
 		}
 
 		// draw from canvas space to canvas
@@ -321,8 +361,34 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 			$scope.context.fillText($scope.trackName.toUpperCase(), 5, 20);
     	};
 
+    	var drawWaypoints = function() {
+
+    		// black
+	  		var colorString = '#000000';			
+			$scope.context.fillStyle = colorString;
+
+		    for (var i in $scope.canvasWaypoints) {	
+		    	
+		    	var pt = $scope.canvasWaypoints[i];
+
+				$scope.context.beginPath();
+
+		    	$scope.context.moveTo(pt.x, pt.y);
+    			$scope.context.fillRect(pt.x, pt.y, 1, 1);
+    			$scope.context.stroke();
+    			
+    			$scope.context.beginPath();
+    			$scope.context.arc(pt.x,pt.y,10,0,Math.PI*2,true);    
+				$scope.context.stroke();	
+
+				$scope.context.font = "10px helvetica";
+				$scope.context.fillText(pt.name, pt.x + 20, pt.y);		
+		    };	   	        
+    	};
+
 		drawElevationHalo(5);
     	drawTrail(2);
+    	drawWaypoints();
     	drawTitle();
 
     	$scope.mapIsLoadedAndActive = true;
