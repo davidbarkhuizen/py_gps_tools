@@ -107,16 +107,24 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 
 	// canvas & context -------------------------------
 
-	$scope.canvas = undefined;
-	$scope.context = undefined;
-
 	$scope.initCanvas = function() {
+
+		// get window dimensions
+		//
+		$scope.windowWidth = window.innerWidth * 0.95; // window.screen.availWidth; // window.innerWidth;
+		$scope.windowHeight = window.innerHeight * 0.90; // window.screen.availHeight; //  window.innerHeight;
+
+		$scope.canvas = undefined;
+		$scope.context = undefined;
 
 		$scope.canvas = document.getElementById("canvas");
 	    
 		if ($scope.canvas.getContext) {
 			$scope.context = $scope.canvas.getContext("2d");
 		}
+
+		$scope.context.canvas.width  = $scope.windowWidth;
+		$scope.context.canvas.height = $scope.windowHeight;
 	}
 
 	$scope.initCanvas();
@@ -126,13 +134,18 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
  	
 	// ------------------------------------------------
 
+	// track attributes & stats
+
+	$scope.trackName = '';
+	$scope.trackSegmentCount = 0;
+
 	$scope.processIncomingMapData = function(mapData) {
 
-		var trackName = mapData.name;
-		console.log(mapData.name);
+		$scope.trackName = mapData.name;
+		console.log($scope.trackName);
 
-		var segmentCount = mapData.segments.length;
-		console.log('segments:  ' + segmentCount);
+		$scope.trackSegmentCount = mapData.segments.length;
+		console.log('segments:  ' + $scope.trackSegmentCount);
 
 		console.log('parsing points');
 
@@ -206,8 +219,8 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 
 		// viewport
 
-		var viewPortHeight = 550.0;
-		var viewPortWidth = 880.0;
+		var viewPortHeight = $scope.windowHeight;
+		var viewPortWidth = $scope.windowWidth;
 
 		var vpHalfHeight = viewPortHeight / 2.0;
 		var vpHalfWidth  = viewPortWidth / 2.0;
@@ -303,8 +316,14 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 
     	};
 
+    	var drawTitle = function() {
+			$scope.context.font = "20px helvetica";
+			$scope.context.fillText($scope.trackName.toUpperCase(), 5, 20);
+    	};
+
 		drawElevationHalo(5);
     	drawTrail(2);
+    	drawTitle();
 
     	$scope.mapIsLoadedAndActive = true;
 	};

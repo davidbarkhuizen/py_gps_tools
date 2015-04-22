@@ -1,0 +1,1 @@
+shared model, each app is a controller, e.g. mapfile, maps, map & assoc. routing
