@@ -1,29 +1,21 @@
 var geoNodeTekApp = angular.module('geoNodeTekApp', []);
 
-geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
+geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeout) {
+
+	// state ------------------------------------------
+
+	$scope.mapIsLoadedAndActive = false;
 
 	// hide/show ui section ---------------------------
 
 	$scope.showImportSection = false;
-
-
-	// state ------------------------------------------
-
-
-
-	$scope.globalState = undefined;
-	$scope.loadingState = 'loading';
-	$scope.processingState = 'processing';
-	$scope.viewingState = 'viewing';
-	$scope.importingState = 'importing';
-
-	$scope.mapIsLoadedAndActive = false;
-
-	$scope.globalState = $scope.loadingState;
+	$scope.showControls = true;
+	$scope.showMap = false;
 
 	$scope.returnToActiveMap = function() {
 		if ($scope.mapIsLoadedAndActive == true)
-			$scope.globalState = $scope.viewingState;
+			$scope.showControls = false;
+			$scope.showMap = true;
 	};
 
 	// CSRF -------------
@@ -49,7 +41,9 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 		return headerDict;
 	};
 
-	// import map data
+	// import map data file ---------------------------------
+
+	// TODO = chain calls to be sequential, not parallel
 
 	$scope.importMapDataFile = function() {
 
@@ -96,8 +90,7 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 					    	// set selected map
 						}
 					}).error(function(data, status, headers, config) {
-					    var x = data;
-					    console.log(data);
+					    console.log('ERROR:  ' + data);
 					});
 
 				};
@@ -297,8 +290,9 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 			var x = vpHalfWidth + scaledX;
 			var y = vpHalfHeight - scaledY;
 
-			// COLOR			
+			// COLOR
 			var red = Math.floor(255.0 * (ele - minMaxEle.min) / eleDiff);
+			//var rgbString = toRgbString(red, 255 - red, 125);
 			var rgbString = toRgbString(red, 255 - red, 0);
 
 			d =  { 'x' : x, 'y' : y, 'rgb' : rgbString };
@@ -396,6 +390,8 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 
 			var hideOverlappingPoints = true;
 
+			$scope.context.font = "20px helvetica";
+
 		    for (var i in $scope.canvasWaypoints) {	
 		    	
 		    	var pt = $scope.canvasWaypoints[i];		    	
@@ -410,19 +406,14 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 			    	}
 			    }
 
-		    	if (drawPoint == true) {
+		    	if (drawPoint == true) {					
 
-					$scope.context.beginPath();
-
-			    	$scope.context.moveTo(pt.x, pt.y);
-	    			$scope.context.fillRect(pt.x, pt.y, 1, 1);
+			    	$scope.context.moveTo(pt.x - 5, pt.y - 5);
+			    	$scope.context.beginPath();
+	    			$scope.context.fillRect(pt.x - 5, pt.y - 5, 10, 10);
 	    			$scope.context.stroke();
 	    			
-	    			$scope.context.beginPath();
-	    			$scope.context.arc(pt.x,pt.y,10,0,Math.PI*2,true);    
-					$scope.context.stroke();	
-					
-					$scope.context.fillText(pt.name, pt.x + 20, pt.y);	
+					$scope.context.fillText(pt.name, pt.x - 5, pt.y - 10);	
 				}	
 		    };	   	        
     	};
@@ -432,6 +423,8 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
     	drawWaypoints();
 
     	$scope.mapIsLoadedAndActive = true;
+    	$scope.showControls = false;
+    	$scope.showMap = true;
 	};
 
 	// ------------------------------------------------
@@ -456,7 +449,6 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 			}
 			).success(
 				function(data) {
-					$scope.globalState = $scope.processingState;
 					$scope.processIncomingMapData(data);							
 				}
 			).error(
@@ -573,9 +565,11 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 	// -------------------------------------------------------
 	// navigation functions
 
-	$scope.gotoOptions = function() {
+	$scope.gotoControls = function() {
 
-		$scope.globalState = $scope.loadingState;  	    
+		$scope.showMap = false;
+		$scope.showControls = true;
+
 		$timeout(function() { document.getElementById("MapListFilterToken").focus(); }, 0 );  	    
 	};
 
@@ -584,3 +578,7 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 	$scope.getAndLoadMapList();
 	$timeout(function() { document.getElementById("MapListFilterToken").focus(); }, 0 );
 });
+
+// meta panel - upload file(s), load map, overlay map
+// import map
+// draw to canvas 
