@@ -2,9 +2,14 @@ var geoNodeTekApp = angular.module('geoNodeTekApp', []);
 
 geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 
-	// state ------------------------------------------
+	// hide/show ui section ---------------------------
 
 	$scope.showImportSection = false;
+
+
+	// state ------------------------------------------
+
+
 
 	$scope.globalState = undefined;
 	$scope.loadingState = 'loading';
@@ -362,11 +367,6 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 
     	};
 
-    	var drawTitle = function() {
-			$scope.context.font = "20px helvetica";
-			$scope.context.fillText($scope.trackName.toUpperCase(), 5, 20);
-    	};
-
     	var drawWaypoints = function() {
 
     		// black
@@ -374,28 +374,62 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 			$scope.context.fillStyle = colorString;
 			$scope.context.font = "15px helvetica";
 
+	    	var displayedPoints = [];
+
+			var contains = function(container, contained, radius) {
+
+				var containsX = ((container.x + 2*radius >= contained.x) && (container.x - 2*radius <= contained.x));
+				var containsY = ((container.y + 2*radius >= contained.y) && (container.y - 2*radius <= contained.y));
+			
+				return containsX && containsY;
+			};
+
+			var displayedPointsContains = function(contained, radius) {
+
+				for(var i in displayedPoints) {
+					if (contains(displayedPoints[i], contained, radius))
+						return true;
+				}
+
+				return false;
+			};
+
+			var hideOverlappingPoints = true;
+
 		    for (var i in $scope.canvasWaypoints) {	
 		    	
-		    	var pt = $scope.canvasWaypoints[i];
+		    	var pt = $scope.canvasWaypoints[i];		    	
 
-				$scope.context.beginPath();
+		    	var drawPoint = true;
 
-		    	$scope.context.moveTo(pt.x, pt.y);
-    			$scope.context.fillRect(pt.x, pt.y, 1, 1);
-    			$scope.context.stroke();
-    			
-    			$scope.context.beginPath();
-    			$scope.context.arc(pt.x,pt.y,10,0,Math.PI*2,true);    
-				$scope.context.stroke();	
-				
-				$scope.context.fillText(pt.name, pt.x + 20, pt.y);		
+		    	if (hideOverlappingPoints) {
+			    	if (displayedPointsContains(pt, 10) == true) {
+			    		drawPoint = false;
+			    	} else {
+			    		displayedPoints.push(pt);
+			    	}
+			    }
+
+		    	if (drawPoint == true) {
+
+					$scope.context.beginPath();
+
+			    	$scope.context.moveTo(pt.x, pt.y);
+	    			$scope.context.fillRect(pt.x, pt.y, 1, 1);
+	    			$scope.context.stroke();
+	    			
+	    			$scope.context.beginPath();
+	    			$scope.context.arc(pt.x,pt.y,10,0,Math.PI*2,true);    
+					$scope.context.stroke();	
+					
+					$scope.context.fillText(pt.name, pt.x + 20, pt.y);	
+				}	
 		    };	   	        
     	};
 
 		drawElevationHalo(5);
     	drawTrail(2);
     	drawWaypoints();
-    	drawTitle();
 
     	$scope.mapIsLoadedAndActive = true;
 	};
