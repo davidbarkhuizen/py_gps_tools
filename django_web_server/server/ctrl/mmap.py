@@ -10,9 +10,21 @@ from django.utils import simplejson
 
 from django.core.urlresolvers import reverse
 
-import models
+from .. import models
 
 from logic import gpx
+
+def routing(request, qs):
+
+    id = request.GET.get('id', '')
+
+    # if request.is_ajax():
+    if request.method == 'POST':
+        return post(request)
+    elif request.method == 'GET':
+        return get(request, id)
+
+    raise Error(request.method)
 
 def get(request, id):
 
@@ -57,16 +69,3 @@ def post(request):
         gpx_file.save()
 
     return HttpResponseRedirect(reverse('server.mmap.upload_index'))
-
-def upload_index(request):
-
-    if request.method != 'GET':
-        raise Error(request.method)
-
-    existing_gpx_files = GpxFile.objects.all()
-
-    return render_to_response('server/upload.html',
-        { 'files' : existing_gpx_files, },
-        context_instance=RequestContext(request)
-    )
-

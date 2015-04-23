@@ -68,7 +68,7 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 
 					$http({
 					    url: '/mapfile/',
-					    method: "POST",
+					    method: 'POST',
 					    data: packet,
 	 					headers: $scope.genCsrfTokenDict()
 					}).success(function(data, status, headers, config) {
@@ -109,63 +109,6 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 			reader.readAsText(file, "UTF-8");
 		};
 
-		/*
- 		var file = document.getElementById('ImportMapFileInput').files[0];
-  		if(file){
-			var reader = new FileReader();  
-			reader.readAsText(file, "UTF-8");
-
-			var fileName = file.name;
-
-			reader.onload = function(evt) {
-
-				var fileString = evt.target.result;
-
-				var packet = {
-					'fileName' : fileName,
-					'fileString' : fileString
-				};
-
-				$http({
-				    url: '/mapfile/',
-				    method: "POST",
-				    data: packet,
- 					headers: $scope.genCsrfTokenDict()
-				}).success(function(data, status, headers, config) {
-
-					if (data.code == 'ok') {
-
-						var input = document.getElementById('ImportMapFileInput');
-						try{
-						    input.value = '';
-						    if(input.value){
-						        input.type = "text";
-						        input.type = "file";
-						    }
-						}catch(e){}
-
-						$scope.showImportSection = false;
-
-				    	$scope.getAndLoadMapList();
-
-				    	// set selected map
-					}
-				}).error(function(data, status, headers, config) {
-				    var x = data;
-				    console.log(data);
-				});
-
-			};
-
-			reader.onerror = function(evt) {
-				console.log('error reading file @ ' + file);
-				console.log(evt);
-			};
-		}
-		else {
-			console.log("can't find file");
-		}
-		*/
 	};
 
 	// canvas & context -------------------------------
@@ -468,11 +411,14 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 
 		console.log('makeGetMapCall - ajax');
 
+		var packet = { 'id' : id };
+
 		$http(
 			{
 				headers: { "Content-Type": "charset=utf-8" },
 				method: 'GET',
-				url: '/map/get/' + id,
+				url: '/map/',
+				params: packet
 			}
 			).success(
 				function(data) {
@@ -513,7 +459,8 @@ geoNodeTekApp.controller('MapCtrl', function ($scope, $http, $timeout) {
 
 		$http(
 			{
-				url: "/maps/get/",
+				method: 'GET',
+				url: "/maplist/",
 				headers: { "Content-Type": "charset=utf-8" }
 			}
 			).success(

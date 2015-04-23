@@ -54,7 +54,7 @@ WSGI_APPLICATION = 'webserver.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '~/data/websites/geonodeztek/geonodeztek.db.sqlite3',
+        'NAME': '/home/david/data/websites/geonodeztek/geonodeztek.db.sqlite3',
     }
 }
 
