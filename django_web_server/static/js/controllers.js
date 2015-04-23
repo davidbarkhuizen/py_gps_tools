@@ -2,26 +2,12 @@ var geoNodeTekApp = angular.module('geoNodeTekApp', []);
 
 geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeout) {
 
-	// state ------------------------------------------
-
-	$scope.mapIsLoadedAndActive = false;
-
-	// hide/show ui section ---------------------------
-
-	$scope.showImportSection = false;
-	$scope.showMetaOptions = true;
-	$scope.showMap = false;
-
-	$scope.returnToActiveMap = function() {
-		if ($scope.mapIsLoadedAndActive == true)
-			$scope.showMetaOptions = false;
-			$scope.showMap = true;
-	};
-
-	// CSRF -------------
+	// django anti-CSRF token -------------
 
 	$scope.getCookie = function (name) {
+	    
 	    var cookieValue = null;
+
 	    if (document.cookie && document.cookie != '') {
 	        var cookies = document.cookie.split(';');
 	        for (var i = 0; i < cookies.length; i++) {
@@ -41,9 +27,154 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 		return headerDict;
 	};
 
-	// import map data file ---------------------------------
+	// map list, filter token, filtered list, selected item ------------
 
-	// TODO = chain calls to be sequential, not parallel
+	$scope.mapList = [];
+	$scope.mapSearchToken = '';
+	$scope.filteredMapList = [];
+	$scope.selectedMap = [];
+
+	// MAP LIST -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	$scope.getMapList = function() {
+
+		var headers = { "Content-Type": "charset=utf-8" };
+		var request = { method: 'GET', url: "/maplist/", headers: headers };
+
+		var successFn = function(response) { 
+			$scope.loadMapList(response.maps); 
+		};
+		var errorFn = function(error){
+			console.log('error');
+			$scope.error = error;
+			throw error;
+		};
+
+		$http(request).success(successFn).error(errorFn);
+	};
+
+	$scope.loadMapList = function(mapList) {
+
+		$scope.mapList.length = 0;
+		for(var i in mapList){
+			$scope.mapList.push(mapList[i]);
+		}
+
+		$scope.filterMapList();
+	};
+
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	$scope.filterMapList = function() {		
+
+		matches = [];
+
+		// filter to matches
+		//
+		for(var i in $scope.mapList) {
+			if ($scope.mapList[i].name.toUpperCase().indexOf($scope.mapSearchToken.toUpperCase()) !== -1) {
+				matches.push($scope.mapList[i]);
+			}
+		}
+
+		// sort matches
+		//
+		matches.sort(function(a, b) { return a > b; });
+
+		// update filtered map list
+		//
+		$scope.filteredMapList.length = 0;
+		if (matches.length > 0) {			
+			for(var i in matches) {
+				$scope.filteredMapList.push(matches[i]);
+			}
+		}
+
+		// auto-select from matches
+		//
+		$scope.selectedMap.length = 0;
+		if (($scope.filteredMapList == undefined) || ($scope.filteredMapList.length == 0)) {
+			$scope.selectedMap.push($scope.filteredMapList[0]);
+		}
+	};
+
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	$scope.mapIsLoadedAndActive = false;
+
+	// show/hide ui sections and navigation ---------------------------
+
+	$scope.showMetaOptions = true;
+	$scope.showMap = false;
+	$scope.showImportSection = false;
+
+	$scope.returnToActiveMap = function() {
+		if ($scope.mapIsLoadedAndActive == true) {
+			$scope.showMetaOptions = false;
+			$scope.showMap = true;
+		}
+	};
+
+	$scope.gotoControls = function() {
+		$scope.showMap = false;
+		$scope.showMetaOptions = true;
+		$timeout(function() { document.getElementById("MapListFilterToken").focus(); }, 0 );  	    
+	};
+
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	$scope.getMap = function(id) {
+
+		var req =
+			{
+				headers: { "Content-Type": "charset=utf-8" },
+				method: 'GET',
+				url: '/map/',
+				params: { 'id' : id }
+			};
+
+		var successFn = function(data) { 
+			$scope.processIncomingMapData(data); 
+		};
+
+		var errorFn = function(error){
+			console.log('error');
+			$scope.error = error;
+		};
+
+		$http(req)
+		.success(successFn)
+		.error(errorFn);
+	};	
+
+	$scope.loadSelectedMap = function(){
+
+		if (($scope.selectedMap == undefined) || ($scope.selectedMap.length == 0))
+			return;
+
+		$scope.getMap($scope.selectedMap[0].id);
+	};
+	
+	$scope.selectMapById = function(id) {
+
+		if ($scope.selectedMap.id == id)
+			return;
+
+		for (var i in $scope.filteredMapList) {
+			if ($scope.filteredMapList[i].id == id) {
+				$scope.selectedMap.length = 0;
+				$scope.selectedMap.push($scope.filteredMapList[i]);
+				break;
+			}
+		}
+	};
+
+	$scope.mapListItemClicked = function(mapId) {
+		$scope.selectMapById(mapId);
+		$scope.loadSelectedMap();
+	};
+
+	// -------------------------------------------------------
 
 	$scope.importMapDataFile = function() {
 
@@ -85,7 +216,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 							$scope.showImportSection = false;
 
-					    	$scope.getAndLoadMapList();
+					    	$scope.getMapList();
 
 					    	// set selected map
 						}
@@ -427,158 +558,6 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
     	$scope.showMap = true;
 	};
 
-	// ------------------------------------------------
-
-	$scope.mapList = [];
-	$scope.mapSearchToken = '';
-	$scope.filteredMapList = [];
-	$scope.selectedMap = [];
-
-	$scope.makeGetMapCall = function(id) {
-
-		console.log('makeGetMapCall - ajax');
-
-		var packet = { 'id' : id };
-
-		$http(
-			{
-				headers: { "Content-Type": "charset=utf-8" },
-				method: 'GET',
-				url: '/map/',
-				params: packet
-			}
-			).success(
-				function(data) {
-					$scope.processIncomingMapData(data);							
-				}
-			).error(
-				function(error){
-					console.log('error');
-			    	$scope.error = error;
-				}
-			);
-	};
-
-	$scope.loadSelectedMap = function(){
-
-		if (($scope.selectedMap == undefined) || ($scope.selectedMap.length == 0)) {
-		}
-		else {
-			$scope.makeGetMapCall($scope.selectedMap[0].id);
-		}
-	};
-
-	// MAP LIST = get/load, filter , item-clicked -----------
-
-	$scope.loadMapList = function(mapList) {
-
-		$scope.mapList.length = 0;
-		$scope.filteredMapList.length = 0;
-
-		for(var i in mapList){
-			$scope.mapList.push(mapList[i]);
-			$scope.filteredMapList.push(mapList[i]);
-		}
-	};
-
-	$scope.getAndLoadMapList = function() {
-
-		$http(
-			{
-				method: 'GET',
-				url: "/maplist/",
-				headers: { "Content-Type": "charset=utf-8" }
-			}
-			).success(
-				function(response) {
-					$scope.loadMapList(response.maps);				
-				}
-			).error(
-				function(error){
-					console.log('error');
-			    	$scope.error = error;
-				}
-			);
-	};
-
-	$scope.onMapSearchTokenChanged = function() {
-
-		matches = [];
-
-		// filter
-		for(var i in $scope.mapList) {
-			if ($scope.mapList[i].name.toUpperCase().indexOf($scope.mapSearchToken.toUpperCase()) !== -1) {
-				matches.push($scope.mapList[i]);
-			}
-		}
-
-		// sort
-		matches.sort(function(a, b) { return a > b; });
-
-		// update fitered map list
-
-		$scope.filteredMapList.length = 0;
-
-		if (matches.length > 0) {
-			
-			for(var i in matches) {
-				$scope.filteredMapList.push(matches[i]);
-			}
-		}
-
-		// update selected map / autop-select map
-
-		var tokenIsBlank = ($scope.mapSearchToken == '') 
-			|| ($scope.mapSearchToken == undefined); 
-
-		$scope.selectedMap.length = 0;
-
-		if (
-			(tokenIsBlank)
-			|| ($scope.filteredMapList == undefined)
-			|| ($scope.filteredMapList.length == 0)
-			) {
-			
-		}
-		else {
-			$scope.selectedMap.length = 0;
-			$scope.selectedMap.push($scope.filteredMapList[0]);
-		}
-
-	};
-
-	$scope.mapListItemClicked = function(mapId) {
-
-		// set $scope.selectedMap
-		//
-		for (var i in $scope.filteredMapList) {
-			if ($scope.filteredMapList[i].id == mapId) {
-				$scope.selectedMap.length = 0;
-				$scope.selectedMap.push($scope.filteredMapList[i]);
-				break;
-			}
-		}
-
-		$scope.makeGetMapCall($scope.selectedMap[0].id);
-	};
-
-	// -------------------------------------------------------
-	// navigation functions
-
-	$scope.gotoControls = function() {
-
-		$scope.showMap = false;
-		$scope.showMetaOptions = true;
-
-		$timeout(function() { document.getElementById("MapListFilterToken").focus(); }, 0 );  	    
-	};
-
-	// -------------------------------------------------------
-
-	$scope.getAndLoadMapList();
+	$scope.getMapList();
 	$timeout(function() { document.getElementById("MapListFilterToken").focus(); }, 0 );
 });
-
-// meta panel - upload file(s), load map, overlay map
-// import map
-// draw to canvas 

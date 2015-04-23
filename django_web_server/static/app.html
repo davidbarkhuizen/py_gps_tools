@@ -21,7 +21,7 @@
 					id='MapListFilterToken'
 					placeholder='type here to filter map list and auto-select a map' 
 					ng-model='mapSearchToken' 
-					ng-keyup='onMapSearchTokenChanged();' 
+					ng-keyup='filterMapList();' 
 					type='text'
 					size='32'
 					ng-class='(mapSearchToken == "") || (filteredMapList.length == 0) ? "action-required" : "no-action-required"'
