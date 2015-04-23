@@ -9,12 +9,12 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 	// hide/show ui section ---------------------------
 
 	$scope.showImportSection = false;
-	$scope.showControls = true;
+	$scope.showMetaOptions = true;
 	$scope.showMap = false;
 
 	$scope.returnToActiveMap = function() {
 		if ($scope.mapIsLoadedAndActive == true)
-			$scope.showControls = false;
+			$scope.showMetaOptions = false;
 			$scope.showMap = true;
 	};
 
@@ -423,7 +423,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
     	drawWaypoints();
 
     	$scope.mapIsLoadedAndActive = true;
-    	$scope.showControls = false;
+    	$scope.showMetaOptions = false;
     	$scope.showMap = true;
 	};
 
@@ -568,7 +568,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 	$scope.gotoControls = function() {
 
 		$scope.showMap = false;
-		$scope.showControls = true;
+		$scope.showMetaOptions = true;
 
 		$timeout(function() { document.getElementById("MapListFilterToken").focus(); }, 0 );  	    
 	};
