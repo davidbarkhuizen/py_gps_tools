@@ -4,7 +4,6 @@ from . import mapfile
 
 from . import maps
 from . import mmap
-from . import views
 
 urlpatterns = [
 
