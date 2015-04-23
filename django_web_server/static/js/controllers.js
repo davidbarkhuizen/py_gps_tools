@@ -93,7 +93,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 		// auto-select from matches
 		//
 		$scope.selectedMap.length = 0;
-		if (($scope.filteredMapList == undefined) || ($scope.filteredMapList.length == 0)) {
+		if (!(($scope.filteredMapList == undefined) || ($scope.filteredMapList.length == 0))) {
 			$scope.selectedMap.push($scope.filteredMapList[0]);
 		}
 	};
@@ -176,24 +176,52 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 	// -------------------------------------------------------
 
-	$scope.importMapDataFile = function() {
+	$scope.postMapDataFiles = function() {
 
-		var files = document.getElementById('ImportMapFileInput').files;
-		for (var i = 0; i < files.length; i++) {
-			
-			var file = files[i];
+		var postMapDataFilesRecursive = function(files) {
 
-			var reader = new FileReader();  
+			var file = files[0];
 
-			var genOnLoad = function(fileName) {
+			var remainder = [];
+			for (var i = 1; i < files.length; i++) {
+				remainder.push(files[i])
+			};
 
-				return function(evt) {
+			var clearInput = function(id) {
 
-					var fileString = evt.target.result;
+				var input = document.getElementById(id);
+				try{
+				    input.value = '';
+				    if(input.value){
+				        input.type = "text";
+				        input.type = "file";
+				    }
+				} catch(e){
+
+				}
+			};
+
+			var onLoad = function(evt) {
 
 					var packet = {
-						'fileName' : fileName,
-						'fileString' : fileString
+						'fileName' : file.name,
+						'fileString' : evt.target.result
+					};
+
+					var successFn = function(data, status, headers, config) {
+
+						if (data.code == 'ok') {
+
+					    	$scope.getMapList();
+
+					    	if (remainder.length == 0) {
+				    			$scope.showImportSection = false;
+				    		}
+				    	}						
+
+				    	if (remainder.length > 0) {
+				    		postMapDataFilesRecursive(remainder);
+				    	}
 					};
 
 					$http({
@@ -201,43 +229,27 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 					    method: 'POST',
 					    data: packet,
 	 					headers: $scope.genCsrfTokenDict()
-					}).success(function(data, status, headers, config) {
-
-						if (data.code == 'ok') {
-
-							var input = document.getElementById('ImportMapFileInput');
-							try{
-							    input.value = '';
-							    if(input.value){
-							        input.type = "text";
-							        input.type = "file";
-							    }
-							}catch(e){}
-
-							$scope.showImportSection = false;
-
-					    	$scope.getMapList();
-
-					    	// set selected map
-						}
-					}).error(function(data, status, headers, config) {
+					}).success(successFn).error(function(data, status, headers, config) {
 					    console.log('ERROR:  ' + data);
 					});
 
 				};
 
-			}
+			var reader = new FileReader(); 
 
-			reader.onload = genOnLoad(file.name.toString());
+			reader.onload = onLoad; 
 
 			reader.onerror = function(evt) {
 				console.log('error reading file @ ' + file);
 				console.log(evt);
+				console.log('terminating');
 			};
 
 			reader.readAsText(file, "UTF-8");
 		};
 
+		var files = document.getElementById('ImportMapFileInput').files;
+		postMapDataFilesRecursive(files);
 	};
 
 	// canvas & context -------------------------------
