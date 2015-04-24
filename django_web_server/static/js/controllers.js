@@ -276,10 +276,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 	$scope.initCanvas();
 
-	$scope.points = [];		
 	$scope.canvasPoints = [];
-
-	$scope.waypoints = [];
 	$scope.canvasWaypoints = [];	
  	
 	// ------------------------------------------------
