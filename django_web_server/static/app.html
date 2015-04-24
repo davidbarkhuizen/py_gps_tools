@@ -11,68 +11,104 @@
 	    <script src="/static/js/gfx.js"></script>	    
 		<script src="/static/js/controllers.js"></script> 
 	</head>
-	<body ng-app='geoNodeTekApp' ng-controller="GeoNodeTekController">
+	<body ng-app='geoNodeTekApp' ng-controller="GeoNodeTekController" style='height:100%;'>
 
-		<div class='panel' ng-show='showMetaOptions'>
-	 	          
-            <div class='leftPanel'>
-          
-				<a ng-class="selectedMap.length == 0 ? 'inactive' : 'active'" href='#' ng-click='loadSelectedMap();'>load map</a>
-           		<br/>
+		<div id="wrapper">
 
-				<input
-					id='MapListFilterToken'
-					placeholder='type here to filter map list and auto-select a map' 
-					ng-model='mapSearchToken' 
-					ng-keyup='filterMapList();' 
-					type='text'
-					size='32'
-					ng-class='(mapSearchToken == "") || (filteredMapList.length == 0) ? "action-required" : "no-action-required"'
-					/>
+		    <div id="top">
+		        <div id="topleft">
+		        </div>
+		        <div id="topright">
+		        	{{ track.name.toLowerCase() }}
+	        	</div>
+		    </div>
 
-            	<div id='FilteredMapList'>
+		    <div id="middle">
+		        <div id="middleleft">
 
-					<div ng-repeat="map in filteredMapList">
-						<span 
-							ng-class='selectedMap[0].id == map.id ? "selected-text" : "";'
-							ng-click='mapListItemClicked(map.id);'
-							>
-							{{map.name.toLowerCase()}}
-						</span>
+			        <div class='margin-right-10px'>
+
+				        <a ng-class="(mapIsLoadedAndActive == true) && (showMap == false) ? 'active' : 'inactive'" href='#' ng-click='returnToActiveMap();'>return to active map</a>
+		           		<br/>
+
+						<a ng-class="selectedMap.length == 0 ? 'inactive' : 'active'" href='#' ng-click='switchToLoadMap();'>load map</a>
+		           		<br/>
+
+		           		<a ng-class='active' href='#' ng-click='launchFileImport();'>import map data file</a>
+		           		<br/>
+
+		           	</div>
+
+		        </div>
+		        <div id="middleright">
+
+	          		<div ng-show='showMapList'>
+						<input
+							id='MapListFilterToken'
+							placeholder='type here to filter map list and auto-select a map' 
+							ng-model='mapSearchToken' 
+							ng-keyup='filterMapList();' 
+							type='text'
+							size='32'
+							class='dashed-line-text-input'
+							ng-class='(mapSearchToken == "") || (filteredMapList.length == 0) ? "action-required" : "no-action-required"'
+							/>
+
+		            	<div class='map-list'>
+							<div ng-repeat="map in filteredMapList">
+								<span 
+									ng-class='selectedMap[0].id == map.id ? "selected-text" : "";'
+									ng-click='mapListItemClicked(map.id);'
+									>
+									{{map.name.toLowerCase()}}
+								</span>
+							</div>
+						</div>
 					</div>
 
-				</div>
-            </div>
-        
-            <div class='rightPanel'>
-            	<div ng-class='showImportSection ? "active-section" : ""'>
-	            	<a ng-class='active' href='#' ng-click='showImportSection = !showImportSection;'>import map data file</a>
-	           		<br/>
-	           		<div ng-show='showImportSection'>
-	           			<input type="file" multiple id="ImportMapFileInput" name="file"/>
-	           			<br/>
-						<button ng-click="postMapDataFiles()">import selected file</button>
+	            	<div>
+		           		<div ng-show='showImportSection'>
+		           			<input style='align:right;' type="file" multiple id="ImportMapFileInput" name="file"/>
+		           			<br/>
+							<button ng-click="postMapDataFiles()">import selected file</button>
+		           		</div>
 	           		</div>
-           		</div>
-           		<a ng-class="mapIsLoadedAndActive == true ? 'active' : 'inactive'" href='#' ng-click='returnToActiveMap();'>return to active map</a>
-            </div>
-	
-	        <div style="clear:both">	        	
-	        </div>
 
-	    </div>
+					<div id='mapPanel' ng-show='showMap' class="panel" style='height:100%;width100%'>
 
-		<div ng-show='showMap' class="panel">
+						<canvas id="canvas" class="map-canvas">
+						</canvas>
+
+					</div>
+
+	        	</div>
+		    </div>
+
+		    <div id="bottom">
+		        <div id="bottomleft">	
+     	
+		        </div>
+		        <div id="bottomright">
+		        </div>
+		    </div>
+		</div>
+
+		<!--
+
+
+		<div id='mapPanel' ng-show='showMap' class="panel" style='height:100%;width100%'>
+
+			<canvas id="canvas" class="map-canvas">
+			</canvas>
 
 			<div>			
 				<a style='color:blue;'>	{{ track.name.toLowerCase() }}</a>
 				<br/>
 				<a ng-click="gotoControls();" href="#" >options</a>			
-			</div>
-
-			<canvas id="canvas" class="map-canvas">
-			</canvas>
+			</div>			
 		</div>
+
+		-->
 
 	</body>
 </html>

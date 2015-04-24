@@ -34,6 +34,14 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 	$scope.filteredMapList = [];
 	$scope.selectedMap = [];
 
+	$scope.mapIsLoadedAndActive = false;
+
+	// show/hide ui sections and navigation ---------------------------
+
+	$scope.showMapList = true;
+	$scope.showMap = false;
+	$scope.showImportSection = false;
+
 	// MAP LIST -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 	$scope.getMapList = function() {
@@ -100,25 +108,12 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-	$scope.mapIsLoadedAndActive = false;
-
-	// show/hide ui sections and navigation ---------------------------
-
-	$scope.showMetaOptions = true;
-	$scope.showMap = false;
-	$scope.showImportSection = false;
-
 	$scope.returnToActiveMap = function() {
 		if ($scope.mapIsLoadedAndActive == true) {
-			$scope.showMetaOptions = false;
 			$scope.showMap = true;
+			$scope.showImportSection = false;
+			$scope.showMapList = false;
 		}
-	};
-
-	$scope.gotoControls = function() {
-		$scope.showMap = false;
-		$scope.showMetaOptions = true;
-		$timeout(function() { document.getElementById("MapListFilterToken").focus(); }, 0 );  	    
 	};
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -146,6 +141,11 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 		.success(successFn)
 		.error(errorFn);
 	};	
+
+	$scope.switchToLoadMap = function() {
+		$scope.showMap = false;
+		$scope.showMapList = true;
+	}
 
 	$scope.loadSelectedMap = function(){
 
@@ -175,6 +175,13 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 	};
 
 	// -------------------------------------------------------
+
+	$scope.launchFileImport = function() {
+
+		$scope.showImportSection = true;
+		$scope.showMapList = false;
+		$scope.showMap = false;
+	};
 
 	$scope.postMapDataFiles = function() {
 
@@ -211,15 +218,14 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 					var successFn = function(data, status, headers, config) {
 
 						if (data.code == 'ok') {
-
 					    	$scope.getMapList();
-
-					    	if (remainder.length == 0) {
-				    			$scope.showImportSection = false;
-				    		}
 				    	}						
 
-				    	if (remainder.length > 0) {
+				    	if (remainder.length == 0) {
+			    			$scope.showImportSection = false;
+			    			$scope.showMapList = true;
+			    		}
+				    	else {
 				    		postMapDataFilesRecursive(remainder);
 				    	}
 					};
@@ -230,6 +236,8 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 					    data: packet,
 	 					headers: $scope.genCsrfTokenDict()
 					}).success(successFn).error(function(data, status, headers, config) {
+						$scope.showImportSection = false;
+						$scope.showMapList = true;
 					    console.log('ERROR:  ' + data);
 					});
 
@@ -260,8 +268,9 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 		$scope.gfx.draw($scope.track);
 
     	$scope.mapIsLoadedAndActive = true;
-    	$scope.showMetaOptions = false;
     	$scope.showMap = true;
+    	$scope.showMapList = false;
+    	$scope.showImportSection = false;
 	};
 
 	$scope.gfx = new Gfx('canvas');

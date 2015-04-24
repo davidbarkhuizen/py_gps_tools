@@ -2,18 +2,6 @@ function Gfx(canvasId) {
 
 	var that = this;
 
-	var getWindowDims = function() {
-
-		that.windowWidth = window.innerWidth; // window.screen.availWidth; // window.innerWidth;
-		that.windowHeight = window.innerHeight; // window.screen.availWidth; //  window.innerHeight;
-	
-		console.log('window.innerWidth ' + window.innerWidth);
-		console.log('window.innerHeight ' + window.innerHeight);
-
-		console.log('window.screen.availWidth ' + window.screen.availWidth);
-		console.log('window.screen.availHeight ' + window.screen.availHeight);
-	};
-
 	var constructContext = function() {
 		
 		that.canvas = document.getElementById(canvasId);
@@ -23,37 +11,8 @@ function Gfx(canvasId) {
 		}
 	};
 
-	var sizeCanvas = function(windowScale) {
-
-		// calc canvas dims
-		//
-		that.width = that.windowWidth * windowScale;
-		that.height = that.windowHeight * windowScale;
-
-		// set canvas dims
-		//
-		that.context.canvas.width  = that.width;
-		that.context.canvas.height = that.height;	
-
-		console.log('canvas (x, y) = ', that.width, that.height);
-	};
-
-	var initViewPort = function() {
-
-		that.viewPortHeight = that.height * 1.0;
-		that.viewPortWidth = that.width * 1.0;
-
-		that.vpHalfHeight = that.height / 2.0;
-		that.vpHalfWidth  = that.width / 2.0;
-
-		that.vpAR = that.viewPortWidth / that.viewPortHeight;
-	};
-
 	var init = function() {
-		getWindowDims();
 		constructContext();
-		sizeCanvas(0.90);
-		initViewPort();
 	};
 
 	init();
@@ -61,6 +20,47 @@ function Gfx(canvasId) {
 	// ----------------
 
 	this.draw = function(track) {
+
+		var getWindowDims = function() {
+
+			that.windowWidth = document.getElementById(canvasId).parentNode.parentNode.clientWidth;
+			that.windowHeight = document.getElementById(canvasId).parentNode.parentNode.clientHeight;
+		
+			console.log(that.windowWidth);
+			console.log(that.windowHeight);
+
+			console.log('window.innerWidth ' + window.innerWidth);
+			console.log('window.innerHeight ' + window.innerHeight);
+
+			console.log('window.screen.availWidth ' + window.screen.availWidth);
+			console.log('window.screen.availHeight ' + window.screen.availHeight);
+		};
+
+		var sizeCanvas = function() {
+
+			// calc canvas dims
+			//
+			that.width = that.windowWidth * 0.98;
+			that.height = that.windowHeight * 0.98;
+
+			// set canvas dims
+			//
+			that.context.canvas.width  = that.width;
+			that.context.canvas.height = that.height;	
+
+			console.log('canvas (x, y) = ', that.width, that.height);
+		};
+
+		var initViewPort = function() {
+
+			that.viewPortHeight = that.height * 1.0;
+			that.viewPortWidth = that.width * 1.0;
+
+			that.vpHalfHeight = that.height / 2.0;
+			that.vpHalfWidth  = that.width / 2.0;
+
+			that.vpAR = that.viewPortWidth / that.viewPortHeight;
+		};
 
 		// pick scale based on aspect ratios
 		//
@@ -231,10 +231,16 @@ function Gfx(canvasId) {
 		    };	   	        
 		};
 
+		getWindowDims();
+		sizeCanvas(0.90);
+		initViewPort();
 		determineScaleFromAspectRatios();
+
 		renderTrackPointsToCanvasSpace();
 		renderWayPointsToCanvasSpace();
+		
 		blankCanvas();
+		
 		drawElevationHalo(5);
 		drawTrail('#000000', 2);
 		drawWaypoints('#000000', '15px helvetica');
