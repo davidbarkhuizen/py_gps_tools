@@ -143,10 +143,16 @@ function Track(data) {
 		// calcs from range
 
 		that.eleDiff = that.minMaxEle.max - that.minMaxEle.min;
-
 		that.latDiff = that.minMaxLat.max - that.minMaxLat.min;
 		that.lonDiff = that.minMaxLon.max - that.minMaxLon.min;
-		that.latlonAR = that.lonDifflonDiff / that.lonDifflatDiff; // x / y
+
+		// AR = x / y
+		//
+		that.latlonAR = that.lonDifflonDiff / that.lonDifflatDiff;
+
+		that.midLat = 0.5 * (that.minMaxLat.max + that.minMaxLat.min);
+		that.midLon = 0.5 * (that.minMaxLon.max + that.minMaxLon.min);
+		that.midEle = 0.5 * (that.minMaxEle.max + that.minMaxEle.min);
 	};
 
 	calcTrackStats();
