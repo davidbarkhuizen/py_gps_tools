@@ -134,7 +134,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 			};
 
 		var successFn = function(data) { 
-			$scope.processIncomingMapData(data); 
+			$scope.processIncomingTrackData(data); 
 		};
 
 		var errorFn = function(error){
@@ -286,104 +286,9 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 	$scope.trackName = '';
 	$scope.trackSegmentCount = 0;
 
-	$scope.processIncomingMapData = function(mapData) {
+	$scope.processIncomingTrackData = function(trackData) {
 
-		$scope.trackName = mapData.name;
-		console.log($scope.trackName);
-
-		// waypoints
-		//
-		for(var j in mapData.waypoints) {
-			
-			var pointString = mapData.waypoints[j];
-			var datum = pointString.split("|")		
-
-			// 2014-10-26 11:06:15|-25.938111|27.592123|1329.160000
-			// time, lat, lon, ele
-
-			//var timeStr = datum[0];
-
-			var lat = parseFloat(datum[0]);
-			var lon = parseFloat(datum[1]);
-			var ele = parseFloat(datum[2]);
-			var name = datum[3];
-
-			$scope.waypoints.push([lat,lon,ele,name]);
-		}
-
-		// segment
-		//
-		$scope.trackSegmentCount = mapData.segments.length;
-		console.log('segments:  ' + $scope.trackSegmentCount);
-
-		console.log('parsing points');
-		// points
-		//
-		$scope.points.length = 0;
-		for(var i in mapData.segments) {
-
-			seg = mapData.segments[i];
-
-			for(var j in seg.points) {
-
-				var pointString = seg.points[j];
-				var datum = pointString.split("|")		
-
-				// 2014-10-26 11:06:15|-25.938111|27.592123|1329.160000
-				// time, lat, lon, ele
-
-				//var timeStr = datum[0];
-
-				var lat = parseFloat(datum[0]);
-				var lon = parseFloat(datum[1]);
-				var ele = parseFloat(datum[2]);
-
-				$scope.points.push([lat,lon,ele]);
-			}
-		}	
-
-		var pointCount = $scope.points.length;
-		console.log('point count:  ' + pointCount);
-
-		var getMinMax = function(seriesArray, seriesIndex) {
-
-			var max = undefined;
-			var min = undefined;
-
-			for (var i = seriesArray.length - 1; i >= 0; i--) {
-				
-				var val = seriesArray[i][seriesIndex];
-
-				if ((max == undefined) || (val > max)) { 
-					max = val; 
-				}
-				if ((min == undefined) || (val < min)) { 
-					min = val; 
-				}
-			};
-
-			return { 'max' : max, 'min' : min };
-		}		
-
-		var minMaxLat = getMinMax($scope.points, 0);
-		var minMaxLon = getMinMax($scope.points, 1);
-		var minMaxEle = getMinMax($scope.points, 2);
-
-		var eleDiff = minMaxEle.max - minMaxEle.min;
-
-		var latDiff = minMaxLat.max - minMaxLat.min;
-		var lonDiff = minMaxLon.max - minMaxLon.min;
-		var latlonAR = lonDiff / latDiff;
-
-		// --------------------------------------
-
-		var logMinMax = function(token, minMax) {
-			console.log(token + ' E [' + minMax.min + ', ' + minMax.max + ']');
-		};
-
-		logMinMax('Lat', minMaxLat);
-		logMinMax('Lon', minMaxLon);
-		logMinMax('Ele', minMaxEle);		
+		var track = new Track(trackData);
 
 		// --------------------------------------
 

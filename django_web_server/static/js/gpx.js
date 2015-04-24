@@ -54,7 +54,7 @@ var parseWaypoint = function(waypointString) {
 	// 2014-10-26 11:06:15|-25.938111|27.592123|1329.160000
 	// time, lat, lon, ele
 
-	var datum = pointString.split("|")
+	var datum = waypointString.split("|")
 
 	//var timeStr = datum[0];
 
@@ -73,6 +73,8 @@ var parseWaypoint = function(waypointString) {
 
 function Track(data) {
 
+	var that = this;
+
 	// name
 	//
 	this.name = data.name;
@@ -81,55 +83,34 @@ function Track(data) {
 	//
 	this.segments = [];
 	for(var i in data.segments) {
-		var dataSegment = mapData.segments[i];
+		var dataSegment = data.segments[i];
 
 		var points = [];
 		for(var j in dataSegment.points) {
-			points.push(parsePoint(seg.points[j]));
+			points.push(parsePoint(dataSegment.points[j]));
 		}
 
 		this.segments.push(new Segment('', points));
 	}
 
-	for(var i in data.segments) {
-		var dataSegment = mapData.segments[i];
-}
-
-$scope.processIncomingMapData = function(mapData) {
-
-	// waypoints
-	//
-	for(var j in mapData.waypoints) {
-		
-		var pointString = mapData.waypoints[j];
-		var datum = pointString.split("|")		
-
-		// 2014-10-26 11:06:15|-25.938111|27.592123|1329.160000
-		// time, lat, lon, ele
-
-		//var timeStr = datum[0];
-
-		var lat = parseFloat(datum[0]);
-		var lon = parseFloat(datum[1]);
-		var ele = parseFloat(datum[2]);
-		var name = datum[3];
-
-		$scope.waypoints.push([lat,lon,ele,name]);
+	console.log('name:  ' + this.name);
+	console.log('segment count:' + this.segments.length.toString());
+	for (var i in this.segments) {
+		console.log('segment ' + (i + 1).toString() + ', point count:' + this.segments[i].points.length.toString());
 	}
 
-	
+	var calcTrackStats = function() {
 
-	var pointCount = $scope.points.length;
-	console.log('point count:  ' + pointCount);
+		var minMaxUndef = { 'max' : -10000, 'min' : 10000 };
 
-	var getMinMax = function(seriesArray, seriesIndex) {
+		that.minMaxLat = minMaxUndef;
+		that.minMaxLon = minMaxUndef;
+		that.minMaxEle = minMaxUndef;
 
-		var max = undefined;
-		var min = undefined;
+		var adjustMinMax = function(minMax, val) {
 
-		for (var i = seriesArray.length - 1; i >= 0; i--) {
-			
-			var val = seriesArray[i][seriesIndex];
+			var max = minMax.max;
+			var min = minMax.min;
 
 			if ((max == undefined) || (val > max)) { 
 				max = val; 
@@ -137,58 +118,43 @@ $scope.processIncomingMapData = function(mapData) {
 			if ((min == undefined) || (val < min)) { 
 				min = val; 
 			}
+
+			return { 'max' : max, 'min' : min };
 		};
 
-		return { 'max' : max, 'min' : min };
-	}		
+		for (var s in that.segments) {
+			for (var p in that.segments[s].points) {
+				var point = that.segments[s].points[p];	
 
-	var minMaxLat = getMinMax($scope.points, 0);
-	var minMaxLon = getMinMax($scope.points, 1);
-	var minMaxEle = getMinMax($scope.points, 2);
+				that.minMaxLat = adjustMinMax(that.minMaxLat, point.lat);
+				that.minMaxLon = adjustMinMax(that.minMaxLon, point.lon);
+				that.minMaxEle = adjustMinMax(that.minMaxEle, point.ele);
+			}
+		}
 
-	var eleDiff = minMaxEle.max - minMaxEle.min;
+		var logMinMax = function(token, minMax) {
+			console.log(token + ' E [' + minMax.min + ', ' + minMax.max + ']');
+		};
 
-	var latDiff = minMaxLat.max - minMaxLat.min;
-	var lonDiff = minMaxLon.max - minMaxLon.min;
-	var latlonAR = lonDiff / latDiff;
+		logMinMax('Lat', that.minMaxLat);
+		logMinMax('Lon', that.minMaxLon);
+		logMinMax('Ele', that.minMaxEle);	
 
-	// --------------------------------------
+		// calcs from range
 
-	var logMinMax = function(token, minMax) {
-		console.log(token + ' E [' + minMax.min + ', ' + minMax.max + ']');
+		that.eleDiff = that.minMaxEle.max - that.minMaxEle.min;
+
+		that.latDiff = that.minMaxLat.max - that.minMaxLat.min;
+		that.lonDiff = that.minMaxLon.max - that.minMaxLon.min;
+		that.latlonAR = that.lonDifflonDiff / that.lonDifflatDiff; // x / y
 	};
 
-	logMinMax('Lat', minMaxLat);
-	logMinMax('Lon', minMaxLon);
-	logMinMax('Ele', minMaxEle);		
+	calcTrackStats();
 
-	// --------------------------------------
-
-	// viewport
-
-	var viewPortHeight = $scope.windowHeight * 1.0;
-	var viewPortWidth = $scope.windowWidth * 1.0;
-
-	var vpHalfHeight = viewPortHeight / 2.0;
-	var vpHalfWidth  = viewPortWidth / 2.0;
-
-	var vpAR = viewPortWidth / viewPortHeight;
-
-	var scale = undefined;
-	if (latlonAR <= vpAR) {
-		// too tall, use y to scale
-		scale = viewPortHeight / latDiff;
+	// waypoints
+	//
+	this.waypoints = [];
+	for(var i in data.waypoints) {
+		this.waypoints.push(parseWaypoint(data.waypoints[i]));
 	}
-	else
-	{
-		// too wide, use x to scale
-		scale = viewPortWidth / lonDiff;
-	}
-
-	var midLat = 0.5 * (minMaxLat.max + minMaxLat.min);
-	var midLon = 0.5 * (minMaxLon.max + minMaxLon.min);
-	var midEle = 0.5 * (minMaxEle.max + minMaxEle.min);
-
-	var toRgbString = function(r, g, b) {
-		return 'rgb(' + r + ',' + g + ',' + b + ')';
-	};
+}
