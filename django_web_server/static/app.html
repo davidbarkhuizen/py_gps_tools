@@ -63,14 +63,15 @@
 	    </div>
 
 		<div ng-show='showMap' class="panel">
-			
-			<a style='color:blue;'>	{{ trackName.toLowerCase() }}</a>
-			<br/>
-			<a ng-click="gotoControls();" href="#" >options</a>
-			
+
+			<div>			
+				<a style='color:blue;'>	{{ track.name.toLowerCase() }}</a>
+				<br/>
+				<a ng-click="gotoControls();" href="#" >options</a>			
+			</div>
+
 			<canvas id="canvas" class="map-canvas">
 			</canvas>
-
 		</div>
 
 	</body>

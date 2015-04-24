@@ -93,11 +93,13 @@ function Track(data) {
 		this.segments.push(new Segment('', points));
 	}
 
+	/*
 	console.log('name:  ' + this.name);
 	console.log('segment count:' + this.segments.length.toString());
 	for (var i in this.segments) {
 		console.log('segment ' + (i + 1).toString() + ', point count:' + this.segments[i].points.length.toString());
 	}
+	*/
 
 	var calcTrackStats = function() {
 
@@ -132,6 +134,7 @@ function Track(data) {
 			}
 		}
 
+		/*
 		var logMinMax = function(token, minMax) {
 			console.log(token + ' E [' + minMax.min + ', ' + minMax.max + ']');
 		};
@@ -139,6 +142,7 @@ function Track(data) {
 		logMinMax('Lat', that.minMaxLat);
 		logMinMax('Lon', that.minMaxLon);
 		logMinMax('Ele', that.minMaxEle);	
+		*/
 
 		// calcs from range
 
@@ -148,7 +152,7 @@ function Track(data) {
 
 		// AR = x / y
 		//
-		that.latlonAR = that.lonDifflonDiff / that.lonDifflatDiff;
+		that.latlonAR = that.lonDiff / that.latDiff;
 
 		that.midLat = 0.5 * (that.minMaxLat.max + that.minMaxLat.min);
 		that.midLon = 0.5 * (that.minMaxLon.max + that.minMaxLon.min);
