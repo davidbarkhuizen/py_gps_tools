@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.utils import simplejson
+import json
 
 from server.models import GpxFile
 
@@ -24,6 +24,6 @@ def get(request):
 
     python = { 'maps' : maps }
 
-    json = simplejson.dumps(python)
+    json_string = json.dumps(python)
 
-    return HttpResponse(json, mimetype='application/json')
+    return HttpResponse(json_string, mimetype='application/json')

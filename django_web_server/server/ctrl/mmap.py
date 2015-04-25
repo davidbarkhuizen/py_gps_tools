@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.utils import simplejson
+import json
 
 #from .. import models
 
@@ -40,5 +40,5 @@ def get(request, id):
 
     track_dict = gpx.track_to_dict(track)
 
-    track_json = simplejson.dumps(track_dict)
-    return HttpResponse(track_json, mimetype='application/json')
+    track_json_string = json.dumps(track_dict)
+    return HttpResponse(track_json_string, mimetype='application/json')

@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 
-from django.utils import simplejson
+import json
 
 from logic import gpx
 
@@ -18,7 +18,7 @@ def routing(request):
 
 def post(request):
 	
-	json_data = simplejson.loads(request.body)	
+	json_data = json.loads(request.body)	
 
 	file_name = None
 	xml_string = None
@@ -68,7 +68,7 @@ def post(request):
 	#	
 	except Exception:
 		error_return = { 'code' : 'fail', 'msg' : msg }
-		json_string = simplejson.dumps(error_return)
+		json_string = json.dumps(error_return)
 		return HttpResponse(json_string)
 
 	# -----------
@@ -95,19 +95,6 @@ def post(request):
 			if (len(matches) > 0):	
 				already_exists = True
 
-			'''
-			for ep in WayPoint.objects.all():
-				if (ep.name == wp.name):
-					print('existing:  ' + str(ep))
-					print('candidate:  ' + str(wp))
-					print('ele:  ' + str(ep.ele == wp.ele))
-
-				if (wp.lat == ep.lat) and (wp.lon == ep.lon) and (wp.ele == ep.ele):
-					print('point %s, matches already existing point %s' % wp.name, ep.name)
-					already_exists = True
-					break
-			'''
-
 			if (already_exists):
 				print('%s already exists, skipping' % wp.name)
 				continue
@@ -115,5 +102,7 @@ def post(request):
 			wp.save()
 			print('created point %s' % wp.name)
 	
-	json_string = simplejson.dumps(ok_return)
+	# status response
+	#
+	json_string = json.dumps(ok_return)
 	return HttpResponse(json_string)

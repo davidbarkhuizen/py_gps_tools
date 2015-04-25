@@ -31,7 +31,7 @@ html, body {
 #wrapper > div > #topleft,
 #wrapper > div > #middleleft,
 #wrapper > div > #bottomleft {
-    width: 200px;
+    width: 300px;
 }
 #wrapper > div > #middleleft {
 }
