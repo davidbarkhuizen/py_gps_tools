@@ -4,10 +4,12 @@ from ctrl import mapfile
 from ctrl import maplist
 from ctrl import mmap
 
-urlpatterns = [
+from ctrl import echo
 
-    url(r'^mapfile', mapfile.routing),
+urlpatterns = [
+	url(r'^echo?(?P<qs>.+)$', echo.routing),
+
+    url(r'^mapfile?(?P<qs>.+)$', mapfile.routing),
     url(r'^maplist?(?P<qs>.+)$', maplist.routing),
     url(r'^map?(?P<qs>.+)$', mmap.routing),
-
     ]

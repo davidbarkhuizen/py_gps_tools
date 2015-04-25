@@ -2,6 +2,10 @@ var geoNodeTekApp = angular.module('geoNodeTekApp', []);
 
 geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeout) {
 
+	$scope.globalDebug = function(raw_html) {
+		window.open('/debug/?' + raw_html, '_blank', '');
+	};
+
 	// django anti-CSRF token -------------
 
 	$scope.getCookie = function (name) {
@@ -53,9 +57,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 			$scope.loadMapList(response.maps); 
 		};
 		var errorFn = function(error){
-			console.log('error');
-			$scope.error = error;
-			throw error;
+			$scope.globalDebug(error);
 		};
 
 		$http(request).success(successFn).error(errorFn);
