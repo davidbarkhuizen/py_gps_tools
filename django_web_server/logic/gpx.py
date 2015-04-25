@@ -139,6 +139,8 @@ def parse_string_to_track(xml_string, log = def_log_fn):
     # track
     
     gpx_track = Track('', [])
+
+    gpx_track.time = meta_data_time
     
     ## track name
     

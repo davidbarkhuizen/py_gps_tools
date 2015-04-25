@@ -4,7 +4,7 @@ import json
 
 from logic import gpx
 
-from server.models import GpxFile
+from server.models import GpxTrack
 from server.models import WayPoint
 
 def routing(request, qs):
@@ -40,8 +40,8 @@ def post(request):
 		# check if already exists
 		#
 		already_exists = False
-		for f in GpxFile.objects.all():
-		    if str(f.xml_string) == str(xml_string):
+		for f in GpxTrack.objects.all():
+		    if str(f.xml) == str(xml_string):
 		        already_exists = True
 		        break
 		if already_exists:
@@ -80,7 +80,7 @@ def post(request):
 	# create track
 	#
 	if track != None:
-		gpx_file = GpxFile(name = file_name, xml_string = xml_string)
+		gpx_file = GpxTrack(xml = xml_string, name = track.name, timestamp = track.time)
 		gpx_file.save()
 		ok_return['id'] = gpx_file.id
 

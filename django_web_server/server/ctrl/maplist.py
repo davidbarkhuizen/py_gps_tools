@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 import json
 
-from server.models import GpxFile
+from server.models import GpxTrack
 
 def routing(request, qs):
 
@@ -15,11 +15,11 @@ def routing(request, qs):
 
 def get(request):
 
-    gpx_files = GpxFile.objects.all()
+    gpx_files = GpxTrack.objects.all().order_by('timestamp')
 
     maps = []
     for x in gpx_files:
-        m = { 'name' : x.name, 'id' : x.id }
+        m = { 'name' : x.name, 'id' : x.id, 'timestamp' : str(x.timestamp) }
         maps.append(m)
 
     python = { 'maps' : maps }

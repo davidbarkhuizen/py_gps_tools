@@ -3,7 +3,7 @@ import json
 
 #from .. import models
 
-from server.models import GpxFile
+from server.models import GpxTrack
 from server.models import WayPoint
 
 from logic import gpx
@@ -24,12 +24,12 @@ def get(request, id):
 
     # retrieve matching gpx file
     #
-    existing_gpx_files = GpxFile.objects.all()
-    match = GpxFile.objects.get(id=id)
+    existing_gpx_files = GpxTrack.objects.all()
+    match = GpxTrack.objects.get(id=id)
 
     # parse
     #
-    track = gpx.parse_string_to_track(match.xml_string)
+    track = gpx.parse_string_to_track(match.xml)
     
     # waypoints
     #

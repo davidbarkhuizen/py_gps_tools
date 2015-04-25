@@ -1,12 +1,13 @@
 from django.db import models
 
-class GpxFile(models.Model):
+class GpxTrack(models.Model):
 
 	class Meta:
-	    db_table = "GpxFile"
+	    db_table = "GpxTrack"
 
 	name = models.CharField(max_length=1024)
-	xml_string = models.TextField()
+	timestamp= models.DateField()
+	xml = models.TextField()
 
 class WayPoint(models.Model):
 	'''

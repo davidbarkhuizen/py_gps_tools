@@ -63,7 +63,7 @@
 									ng-class='selectedMap[0].id == map.id ? "selected-text" : "";'
 									ng-click='mapListItemClicked(map.id);'
 									>
-									{{map.name.toLowerCase()}}
+									{{ map.timestamp + ' ' + map.name.toLowerCase() }}
 								</span>
 							</div>
 						</div>
