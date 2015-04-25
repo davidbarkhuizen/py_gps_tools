@@ -7,7 +7,7 @@ from logic import gpx
 from server.models import GpxFile
 from server.models import WayPoint
 
-def routing(request):
+def routing(request, qs):
     
 	# if request.is_ajax():
 
@@ -54,22 +54,24 @@ def post(request):
 			track = gpx.parse_string_to_track(xml_string)
 		except Exception, e:
 			pass
-
 		try:
 			way_points = gpx.parse_string_to_waypoints(xml_string)
 		except Exception, e:
 			pass
-
 		if (track == None) and (way_points == None):
 			msg = 'file not recognised as either a track or waypoints'
 			raise Exception(msg)
 
 	# handle exception, return JSON with error code
 	#	
-	except Exception:
-		error_return = { 'code' : 'fail', 'msg' : msg }
-		json_string = json.dumps(error_return)
-		return HttpResponse(json_string)
+	except Exception as e:
+		
+		if (msg):
+			error_return = { 'code' : 'fail', 'msg' : msg }
+			json_string = json.dumps(error_return)
+			return HttpResponse(json_string)
+		else:
+			raise e
 
 	# -----------
 
@@ -93,9 +95,6 @@ def post(request):
 			already_exists = False
 			matches = WayPoint.objects.filter(lat=wp.lat, lon=wp.lon, ele=wp.ele)
 			if (len(matches) > 0):	
-				already_exists = True
-
-			if (already_exists):
 				print('%s already exists, skipping' % wp.name)
 				continue
 

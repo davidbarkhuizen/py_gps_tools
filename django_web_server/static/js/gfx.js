@@ -90,15 +90,6 @@ function Gfx(canvasId) {
 				}
 			}
 
-			console.log(track.minMaxEle)
-			console.log(that.minMaxEle)
-
-			console.log(track.minMaxLat)
-			console.log(that.minMaxLat)
-
-			console.log(track.minMaxLon)
-			console.log(that.minMaxLon)
-
 			that.latDiff = that.minMaxLat.max - that.minMaxLat.min;
 			that.lonDiff = that.minMaxLon.max - that.minMaxLon.min;
 			that.eleDiff = that.minMaxEle.max - that.minMaxEle.min;
@@ -273,7 +264,7 @@ function Gfx(canvasId) {
 					that.context.fillText(pt.name, pt.x - 5, pt.y - 10);	
 				}	
 		    };	   	
-     
+    
 		};
 
 		getWindowDims();

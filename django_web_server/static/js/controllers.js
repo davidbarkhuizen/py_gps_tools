@@ -52,6 +52,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 	$scope.selectAndLoadMap = function(mapId) {
 		$scope.selectMapById(mapId);
+		$scope.headerText = $scope.selectedMap[0].name;
 		$scope.loadMap(mapId, false);
 	};
 
@@ -66,7 +67,6 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 			$scope.showMapList = false;
 		}
 	};
-
 	$scope.gotoOpenMap = function() {		
 		$scope.headerText = 'open a map';
 		$scope.showMap = false;
@@ -252,7 +252,8 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 					}).success(successFn).error(function(data, status, headers, config) {
 						$scope.showImportSection = false;
 						$scope.showMapList = true;
-					    console.log('ERROR:  ' + data);
+					    console.log(data);
+					    $scope.globalDebug(data);
 					});
 
 				};
@@ -290,6 +291,15 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
     	$scope.showMap = true;
     	$scope.showMapList = false;
     	$scope.showImportSection = false;
+
+    	var trackText = undefined;
+    	for(var t in $scope.tracks) {
+    		trackText = (trackText == undefined )
+    			? $scope.tracks[t].name
+    			: trackText + ' / ' + $scope.tracks[t].name;
+    	}
+
+    	$scope.headerText = trackText;
 	};
 
 	$scope.gfx = new Gfx('canvas');
