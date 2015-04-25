@@ -19,7 +19,7 @@
 		        <div id="topleft">
 		        </div>
 		        <div id="topright">
-		        	{{ track.name.toLowerCase() }}
+		        	{{ headerText }}
 	        	</div>
 		    </div>
 
@@ -31,11 +31,13 @@
 				        <a ng-class="(mapIsLoadedAndActive == true) && (showMap == false) ? 'active' : 'inactive'" href='#' ng-click='returnToActiveMap();'>active map</a>
 		           		<br/>
 
-						<a ng-class="selectedMap.length == 0 ? 'inactive' : 'active'" href='#' ng-click='switchToLoadMap();'>new map</a>
+						<a ng-class="selectedMap.length == 0 ? 'inactive' : 'active'" href='#' ng-click='gotoOpenMap();'>open map</a>
 		           		<br/>
 
 		           		<a ng-class='active' href='#' ng-click='launchFileImport();'>import data file</a>
 		           		<br/>
+
+						<a ng-show='mapIsLoadedAndActive == true' href='#' ng-click='gotoOverlayMap();'>overlay map</a>
 
 		           	</div>
 
@@ -43,6 +45,7 @@
 		        <div id="middleright">
 
 	          		<div ng-show='showMapList'>
+
 						<input
 							id='MapListFilterToken'
 							placeholder='type here to filter map list and auto-select a map' 

@@ -168,16 +168,17 @@ function Gfx(canvasId) {
 
 		var renderWayPointsToCanvasSpace = function() {
 
-			/*
 			that.canvasWaypoints = [];
 
-			for (var wp in track.waypoints) {
+			for (var t in tracks) {
+				for (var wp in tracks[t].waypoints) {
 
-				var point = track.waypoints[wp];
-				var canvasWaypoint = transformPoint(point.lat, point.lon, point.ele, point.name);
-				that.canvasWaypoints.push(canvasWaypoint);
+					var point = tracks[t].waypoints[wp];
+					var canvasWaypoint = transformPoint(point.lat, point.lon, point.ele, point.name);
+
+					that.canvasWaypoints.push(canvasWaypoint);
+				}
 			}
-			*/
 		};
 
 		var blankCanvas = function() {
@@ -218,7 +219,7 @@ function Gfx(canvasId) {
 		};
 
 		var drawWaypoints = function(colorString, fontString) {
-			/*
+
 			that.context.fillStyle = colorString;
 			that.context.font = fontString;
 
@@ -272,7 +273,7 @@ function Gfx(canvasId) {
 					that.context.fillText(pt.name, pt.x - 5, pt.y - 10);	
 				}	
 		    };	   	
-		    */        
+     
 		};
 
 		getWindowDims();

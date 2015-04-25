@@ -33,6 +33,8 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 	// map list, filter token, filtered list, selected item ------------
 
+	$scope.headerText = 'GeoNodeTek';
+
 	$scope.mapList = [];
 	$scope.mapSearchToken = '';
 	$scope.filteredMapList = [];
@@ -42,9 +44,20 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 	// show/hide ui sections and navigation ---------------------------
 
-	$scope.showMapList = true;
+	$scope.showMapList = false;
 	$scope.showMap = false;
 	$scope.showImportSection = false;
+
+	$scope.mapListItemClicked = undefined;
+
+	$scope.selectAndLoadMap = function(mapId) {
+		$scope.selectMapById(mapId);
+		$scope.loadMap(mapId, false);
+	};
+
+	$scope.overlayMap = function(mapId) {
+		$scope.loadMap(mapId, true);
+	};
 
 	$scope.returnToActiveMap = function() {
 		if ($scope.mapIsLoadedAndActive == true) {
@@ -54,9 +67,20 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 		}
 	};
 
-	$scope.switchToLoadMap = function() {
+	$scope.gotoOpenMap = function() {		
+		$scope.headerText = 'open a map';
 		$scope.showMap = false;
 		$scope.showMapList = true;
+
+		$scope.mapListItemClicked = $scope.selectAndLoadMap;
+	}
+
+	$scope.gotoOverlayMap = function() {		
+		$scope.headerText = 'overlay a map';
+		$scope.showMap = false;
+		$scope.showMapList = true;
+
+		$scope.mapListItemClicked = $scope.overlayMap;
 	}
 
 	// MAP LIST -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -121,7 +145,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-	$scope.getMap = function(id) {
+	$scope.getMap = function(id, overlay) {
 
 		var req =
 			{
@@ -132,7 +156,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 			};
 
 		var successFn = function(data) { 
-			$scope.processIncomingTrackData(data); 
+			$scope.processIncomingTrackData(data, overlay); 
 		};
 
 		var errorFn = function(error){
@@ -145,12 +169,8 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 		.error(errorFn);
 	};
 
-	$scope.loadSelectedMap = function(){
-
-		if (($scope.selectedMap == undefined) || ($scope.selectedMap.length == 0))
-			return;
-
-		$scope.getMap($scope.selectedMap[0].id);
+	$scope.loadMap = function(mapId, overlay){
+		$scope.getMap(mapId, overlay);
 	};
 	
 	$scope.selectMapById = function(id) {
@@ -165,11 +185,6 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 				break;
 			}
 		}
-	};
-
-	$scope.mapListItemClicked = function(mapId) {
-		$scope.selectMapById(mapId);
-		$scope.loadSelectedMap();
 	};
 
 	// -------------------------------------------------------
