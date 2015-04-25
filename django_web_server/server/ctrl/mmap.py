@@ -1,16 +1,10 @@
-from django.template import RequestContext
-from django.shortcuts import render_to_response
-from django.http import HttpResponseRedirect
 from django.http import HttpResponse
+from django.utils import simplejson
+
+#from .. import models
 
 from server.models import GpxFile
 from server.models import WayPoint
-
-from django.utils import simplejson
-
-from django.core.urlresolvers import reverse
-
-from .. import models
 
 from logic import gpx
 
@@ -28,9 +22,13 @@ def routing(request, qs):
 
 def get(request, id):
 
+    # retrieve matching gpx file
+    #
     existing_gpx_files = GpxFile.objects.all()
-    match = [x for x in existing_gpx_files if str(x.id) == id][0]
+    match = GpxFile.objects.get(id=id)
 
+    # parse
+    #
     track = gpx.parse_string_to_track(match.xml_string)
     
     # waypoints
@@ -44,28 +42,3 @@ def get(request, id):
 
     track_json = simplejson.dumps(track_dict)
     return HttpResponse(track_json, mimetype='application/json')
-
-def post(request):
-    
-    if request.method != 'POST':
-        raise Error(request.method)
-
-    name = None
-    try:
-        name = request.FILES['gpx_file'] 
-    except Exception, e:
-        return HttpResponseRedirect(reverse('server.mmap.upload_index'))
-
-    file_string = request.FILES['gpx_file'].read() 
-    
-    already_exists = False
-    for f in GpxFile.objects.all():
-        if (str(f.xml_string) == file_string):
-            already_exists = True
-            break  
-
-    if not already_exists:
-        gpx_file = GpxFile(name = name, xml_string = file_string)
-        gpx_file.save()
-
-    return HttpResponseRedirect(reverse('server.mmap.upload_index'))

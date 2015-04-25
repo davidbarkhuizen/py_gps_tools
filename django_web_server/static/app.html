@@ -28,13 +28,13 @@
 
 			        <div class='margin-right-10px'>
 
-				        <a ng-class="(mapIsLoadedAndActive == true) && (showMap == false) ? 'active' : 'inactive'" href='#' ng-click='returnToActiveMap();'>return to active map</a>
+				        <a ng-class="(mapIsLoadedAndActive == true) && (showMap == false) ? 'active' : 'inactive'" href='#' ng-click='returnToActiveMap();'>active map</a>
 		           		<br/>
 
-						<a ng-class="selectedMap.length == 0 ? 'inactive' : 'active'" href='#' ng-click='switchToLoadMap();'>load map</a>
+						<a ng-class="selectedMap.length == 0 ? 'inactive' : 'active'" href='#' ng-click='switchToLoadMap();'>new map</a>
 		           		<br/>
 
-		           		<a ng-class='active' href='#' ng-click='launchFileImport();'>import map data file</a>
+		           		<a ng-class='active' href='#' ng-click='launchFileImport();'>import data file</a>
 		           		<br/>
 
 		           	</div>
