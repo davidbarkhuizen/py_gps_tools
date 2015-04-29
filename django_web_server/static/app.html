@@ -84,11 +84,12 @@
 						<canvas id="canvas" class="map-canvas">
 						</canvas>
 
-						<div id='mapInfoOverlay' class='map-info-overlay' ng-show='showMapInfoOverlay'>		
-							Map Info Overlay</br>
-							</br>
-							one two three four</br>
-							five six seven eight</br>
+						<div id='mapInfoOverlay' class='map-info-overlay' ng-show='showMapInfoOverlay'>
+							<div ng-repeat="line in mapInfoOverlayText">
+								<span>
+									{{ line}}
+								</span>
+							</div>							
 						</div>
 
 					</div>

@@ -22,6 +22,16 @@ function Segment(name, points) {
 	this.points = points;
 }
 
+Number.prototype.pad = function(size) {
+      var s = String(this);
+      while (s.length < (size || 2)) {s = "0" + s;}
+      return s;
+}
+
+function toShortTimeString(dt) {
+	return dt.getHours().pad() + ':' + dt.getMinutes().pad();
+};
+
 var parsePoint = function(pointString) {
 
 	// 2014-10-26 11:06:15|-25.938111|27.592123|1329.160000
@@ -34,9 +44,9 @@ var parsePoint = function(pointString) {
 	var lat = parseFloat(datum[0]);
 	var lon = parseFloat(datum[1]);
 	var ele = parseFloat(datum[2]);
-	var time = Date.parse(datum[3]);
+	var t = new Date(Date.parse(datum[3]));
 
-	return new Point(lat, lon, ele, time);
+	return new Point(lat, lon, ele, t);
 };
 
 var parseWaypoint = function(waypointString) {
@@ -92,6 +102,7 @@ function Track(data) {
 		that.minMaxLat = minMaxUndef;
 		that.minMaxLon = minMaxUndef;
 		that.minMaxEle = minMaxUndef;
+		that.minMaxTime = { 'max' : undefined, 'min' : undefined };
 
 		var adjustMinMax = function(minMax, val) {
 
@@ -115,10 +126,11 @@ function Track(data) {
 				that.minMaxLat = adjustMinMax(that.minMaxLat, point.lat);
 				that.minMaxLon = adjustMinMax(that.minMaxLon, point.lon);
 				that.minMaxEle = adjustMinMax(that.minMaxEle, point.ele);
+				that.minMaxTime = adjustMinMax(that.minMaxTime, point.time);
 			}
 		}
 
-		/*
+    	/*
 		var logMinMax = function(token, minMax) {
 			console.log(token + ' E [' + minMax.min + ', ' + minMax.max + ']');
 		};
@@ -141,6 +153,25 @@ function Track(data) {
 		that.midLat = 0.5 * (that.minMaxLat.max + that.minMaxLat.min);
 		that.midLon = 0.5 * (that.minMaxLon.max + that.minMaxLon.min);
 		that.midEle = 0.5 * (that.minMaxEle.max + that.minMaxEle.min);
+
+		that.periodString = '';
+		if (that.minMaxTime.max.toDateString() == that.minMaxTime.min.toDateString()) {
+			// same day
+			that.periodString = that.minMaxTime.max.toDateString();
+			that.periodString = that.periodString + ':  ' + toShortTimeString(that.minMaxTime.min) + ' - ' + toShortTimeString(that.minMaxTime.max);
+
+		} else {
+			// different days
+			var from = that.minMaxTime.min.toDateString()  + ' ' + toShortTimeString(that.minMaxTime.min);
+			var to = that.minMaxTime.max.toDateString()  + ' ' + toShortTimeString(that.minMaxTime.max);
+			that.periodString = from + ' - ' + to;
+		}
+
+		var offSet = that.minMaxTime.min.getTimezoneOffset();
+		that.periodString = that.periodString + ' (UTC ' + (offSet <= 0 ? "+" : "-") + (Math.abs(offSet)).toString() + ' mins)';
+
+		var dayCount = ((that.minMaxTime.max - that.minMaxTime.min) / 1000 / 60 / 60 / 24).toFixed(2);
+		that.dayCountString = dayCount + ' days';
 	};
 
 	calcTrackStats();

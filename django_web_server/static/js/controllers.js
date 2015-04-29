@@ -39,6 +39,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 	$scope.mapSearchToken = '';
 	$scope.filteredMapList = [];
 	$scope.selectedMap = [];
+	$scope.mapInfoOverlayText = [];
 
 	$scope.mapIsLoadedAndActive = false;
 
@@ -77,7 +78,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 	}
 
 	$scope.gotoOverlayMap = function() {		
-		$scope.headerText = 'add a map';
+		$scope.headerText = 'add	 a map';
 		$scope.showMap = false;
 		$scope.showMapList = true;
 
@@ -172,8 +173,24 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 	$scope.loadMap = function(mapId, overlay){
 		$scope.getMap(mapId, overlay);
+		$scope.updateMapInfoOverlayText();
 	};
 	
+	$scope.updateMapInfoOverlayText = function() {
+
+		var texts = [];
+
+		for(var t in $scope.tracks) {
+			var track = $scope.tracks[t];
+
+			texts.push(track.name);
+			texts.push(track.periodString);
+			texts.push(track.dayCountString)
+		}
+
+		$scope.mapInfoOverlayText = texts;
+	};
+
 	$scope.selectMapById = function(id) {
 
 		if ($scope.selectedMap.id == id)
@@ -287,6 +304,8 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 		$scope.tracks.push(new Track(trackData));
 		$scope.gfx.draw($scope.tracks);
+
+		$scope.updateMapInfoOverlayText();
 
     	$scope.mapIsLoadedAndActive = true;
     	$scope.showMap = true;

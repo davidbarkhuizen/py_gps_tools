@@ -92,9 +92,8 @@ html, body {
 }
 
 .map-info-overlay {
-    color:darkgrey;
+    color:orange;
     font-family: courier;
-    opacity:0.4;
 }
 
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
