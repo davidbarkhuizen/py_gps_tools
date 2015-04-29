@@ -6,7 +6,7 @@ class Point(object):
         self.time = time
 
     def __str__(self):
-        return '%f|%f|%f' % (self.lat, self.lon, self.ele)        
+        return '%f|%f|%f|%s' % (self.lat, self.lon, self.ele, self.time.isoformat())
 
 class Segment(object):
     def __init__(self, points):
@@ -61,7 +61,7 @@ class WayPoint(Point):
         super(WayPoint,self).__init__(lat, lon, ele, time)
 
     def __str__(self):
-        return '%f|%f|%f|%s' % (self.lat, self.lon, self.ele, self.name)  
+        return '%f|%f|%f|%s|%s' % (self.lat, self.lon, self.ele, self.name, self.time.isoformat())  
 
 import datetime
 DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
@@ -74,7 +74,7 @@ import xml.etree.ElementTree as ET
 def track_to_dict(track, take = 1):
 
     trk = {}
-    trk = { 'name' : track.name, 'segments' : [], 'waypoints' : [] }
+    trk = { 'name' : track.name, 'time' : track.time.isoformat(), 'segments' : [], 'waypoints' : [] }
 
     for segment in track.segments:
         
@@ -91,7 +91,7 @@ def track_to_dict(track, take = 1):
         trk['segments'].append(seg)
 
     for mwp in track.waypoints:
-        wp = WayPoint(name=mwp.name, lat=mwp.lat, lon=mwp.lon, ele=mwp.ele, time=None)
+        wp = WayPoint(name=mwp.name, lat=mwp.lat, lon=mwp.lon, ele=mwp.ele, time=mwp.time)
         trk['waypoints'].append(str(wp))  
 
     return trk

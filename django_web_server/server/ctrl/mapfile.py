@@ -90,7 +90,7 @@ def post(request):
 
 		for incoming_way_point in way_points:
 
-			wp = WayPoint(name = incoming_way_point.name.lower().strip(), lat = incoming_way_point.lat, lon = incoming_way_point.lon, ele = incoming_way_point.ele)
+			wp = WayPoint(name = incoming_way_point.name.lower().strip(), lat = incoming_way_point.lat, lon = incoming_way_point.lon, ele = incoming_way_point.ele, time=incoming_way_point.time)
 
 			already_exists = False
 			matches = WayPoint.objects.filter(lat=wp.lat, lon=wp.lon, ele=wp.ele)

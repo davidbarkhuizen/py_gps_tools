@@ -203,6 +203,7 @@ function Gfx(canvasId) {
 
 		    for (var i in that.canvasPoints) {	
 		    	var pt = that.canvasPoints[i];
+
 					that.context.fillRect(pt.x - offSet, pt.y - offSet, thickness, thickness);
 		    };	    
 
@@ -236,7 +237,7 @@ function Gfx(canvasId) {
 				return false;
 			};
 
-			var hideOverlappingPoints = true;
+			var hideOverlappingPoints = false;
 
 			// --------------------------------
 
@@ -256,11 +257,19 @@ function Gfx(canvasId) {
 
 		    	if (drawPoint == true) {					
 
-			    	that.context.moveTo(pt.x - 5, pt.y - 5);
+		    		var z = 4;
+			    	that.context.moveTo(pt.x - z, pt.y - z);
 			    	that.context.beginPath();
-					that.context.fillRect(pt.x - 5, pt.y - 5, 10, 10);
+					that.context.fillRect(pt.x - z, pt.y - z, 2*z, 2*z);
 					that.context.stroke();
+			
 					
+					/*
+					that.context.fillRect(pt.x, pt.y, 1, 1);
+					that.context.beginPath();
+					that.context.arc(pt.x, pt.y,5,0,Math.PI*2,true);
+					that.context.stroke();
+					*/
 					that.context.fillText(pt.name, pt.x - 5, pt.y - 10);	
 				}	
 		    };	   	
@@ -277,7 +286,7 @@ function Gfx(canvasId) {
 		
 		blankCanvas();
 		
-		drawElevationHalo(5);
+		//drawElevationHalo(5);
 		drawTrail('#000000', 2);
 		drawWaypoints('#000000', '15px helvetica');
 	};

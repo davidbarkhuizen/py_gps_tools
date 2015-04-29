@@ -1,31 +1,20 @@
-/*
-	function Foo(bar) {
-	this._bar = bar;
-	}
-
-	Foo.prototype.getBar = function() {
-	return this._bar;
-	};
-
-	var foo = new Foo('bar');
-	alert(foo.getBar()); // 'bar'
-	alert(foo._bar); /
-*/
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 // TRACK - track, segment, point, waypoint
 
-function Point(lat, lon, ele) {
+function Point(lat, lon, ele, time) {
 	this.lat = lat;
 	this.lon = lon;
 	this.ele = ele;
+	this.time = time;
 }
 
-function WayPoint(name, lat, lon, ele) {
+function WayPoint(name, lat, lon, ele, time) {
 	this.name = name;
 	// no inheritance :(
 	this.lat = lat;
 	this.lon = lon;
 	this.ele = ele;
+	this.time = time;
 }
 
 function Segment(name, points) {
@@ -45,8 +34,9 @@ var parsePoint = function(pointString) {
 	var lat = parseFloat(datum[0]);
 	var lon = parseFloat(datum[1]);
 	var ele = parseFloat(datum[2]);
+	var time = Date.parse(datum[3]);
 
-	return new Point(lat, lon, ele);
+	return new Point(lat, lon, ele, time);
 };
 
 var parseWaypoint = function(waypointString) {
@@ -56,19 +46,13 @@ var parseWaypoint = function(waypointString) {
 
 	var datum = waypointString.split("|")
 
-	//var timeStr = datum[0];
-
-	// 2014-10-26 11:06:15|-25.938111|27.592123|1329.160000
-	// time, lat, lon, ele
-
-	//var timeStr = datum[0];
-
 	var lat = parseFloat(datum[0]);
 	var lon = parseFloat(datum[1]);
 	var ele = parseFloat(datum[2]);
 	var name = datum[3];
+	var time = Date.parse(datum[4]);
 
-	return new WayPoint(name, lat, lon, ele);
+	return new WayPoint(name, lat, lon, ele, time);
 };
 
 function Track(data) {

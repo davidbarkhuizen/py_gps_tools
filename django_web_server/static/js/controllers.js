@@ -47,6 +47,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 	$scope.showMapList = false;
 	$scope.showMap = false;
 	$scope.showImportSection = false;
+	$scope.showMapInfoOverlay = false;
 
 	$scope.mapListItemClicked = undefined;
 
@@ -76,7 +77,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 	}
 
 	$scope.gotoOverlayMap = function() {		
-		$scope.headerText = 'overlay a map';
+		$scope.headerText = 'add a map';
 		$scope.showMap = false;
 		$scope.showMapList = true;
 
