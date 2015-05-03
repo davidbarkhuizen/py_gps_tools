@@ -29,18 +29,21 @@
 			        <div class='margin-right-10px'>
 
 				        <a ng-class="(mapIsLoadedAndActive == true) && (showMap == false) ? 'active' : 'inactive'" href='#' ng-click='returnToActiveMap();'>active map</a>
+
 		           		<br/>
 
 						<a ng-class="selectedMap.length == 0 ? 'inactive' : 'active'" href='#' ng-click='gotoOpenMap();'>open map</a>
 		           		<br/>
 
 		           		<a ng-class='active' href='#' ng-click='launchFileImport();'>import data file</a>
+
 		           		<br/>
 
 						<a ng-show='mapIsLoadedAndActive == true' href='#' ng-click='gotoOverlayMap();'>add map</a>
 						
 						<br/>
-						<a ng-show='mapIsLoadedAndActive == true' href='#' ng-click='showMapInfoOverlay = !showMapInfoOverlay;'>overlay map info</a>
+
+						<a ng-show='mapIsLoadedAndActive == true' href='#' ng-click='showMapInfoOverlay = !showMapInfoOverlay;'>overlay map info</a>			
 		           	</div>
 
 		        </div>
@@ -84,6 +87,10 @@
 						<canvas id="canvas" class="map-canvas">
 						</canvas>
 
+						<div id='CanvasSelectionArea' 
+							style='position: absolute; z-index: 20;'>
+						</div>
+
 						<div id='mapInfoOverlay' class='map-info-overlay' ng-show='showMapInfoOverlay'>
 							<div ng-repeat="line in mapInfoOverlayText">
 								<span>
@@ -102,6 +109,7 @@
      	
 		        </div>
 		        <div id="bottomright">
+		        	{{ infoText }}
 		        </div>
 		    </div>
 		</div>

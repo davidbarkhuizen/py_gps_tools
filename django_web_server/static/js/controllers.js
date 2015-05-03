@@ -34,6 +34,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 	// map list, filter token, filtered list, selected item ------------
 
 	$scope.headerText = 'GeoNodeTek';
+	$scope.infoText = '';
 
 	$scope.mapList = [];
 	$scope.mapSearchToken = '';
@@ -322,7 +323,14 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
     	$scope.headerText = trackText;
 	};
 
-	$scope.gfx = new Gfx('canvas');
+	// START-UP
+
+	$scope.updateInfoText = function(msg) {
+		$scope.infoText = msg;
+		$scope.$apply();
+	};
+
+	$scope.gfx = new Gfx('canvas', $scope.updateInfoText);
 
 	$scope.getMapList();
 	$timeout(function() { document.getElementById("MapListFilterToken").focus(); }, 0 );

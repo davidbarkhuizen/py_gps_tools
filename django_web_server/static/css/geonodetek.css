@@ -57,6 +57,8 @@ html, body {
 #topright {
     vertical-align:bottom;
     text-align:left;
+
+    font-family: courier;
 }
 
 #middleright {
@@ -67,6 +69,10 @@ html, body {
 #bottomleft {
     vertical-align:top;
     text-align:right;
+}
+
+#bottomright {
+    font-family: courier;
 }
 
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */

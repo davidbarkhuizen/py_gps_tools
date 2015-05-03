@@ -1,4 +1,4 @@
-function Gfx(canvasId) {
+function Gfx(canvasId, updateInfoString) {
 
 	var that = this;
 
@@ -21,13 +21,13 @@ function Gfx(canvasId) {
 
 	this.draw = function(tracks) {
 
-		var getWindowDims = function() {
+		this.getWindowDims = function() {
 
 			that.windowWidth = document.getElementById(canvasId).parentNode.parentNode.clientWidth;
 			that.windowHeight = document.getElementById(canvasId).parentNode.parentNode.clientHeight;
 		};
 
-		var sizeCanvas = function() {
+		this.sizeCanvas = function() {
 
 			// calc canvas dims
 			//
@@ -40,7 +40,7 @@ function Gfx(canvasId) {
 			that.context.canvas.height = that.height;	
 		};
 
-		var initViewPort = function() {
+		this.initViewPort = function() {
 
 			that.viewPortHeight = that.height * 1.0;
 			that.viewPortWidth = that.width * 1.0;
@@ -51,14 +51,13 @@ function Gfx(canvasId) {
 			that.vpAR = that.viewPortWidth / that.viewPortHeight;
 		};
 
-		// pick scale based on aspect ratios
-		//
-		var determineScaleFromAspectRatios = function() {
-
+		this.calcDimensions = function() {
 			that.minMaxLat = { 'max' : -180.0, 'min' : 180.0 };
 			that.minMaxLon = { 'max' : -180.0, 'min' : 180.0 };
 			that.minMaxEle = { 'max' : -10000.0, 'min' : 10000.0 };
 
+			// calc max, min - lat, lon, ele - across all tracks
+			//
 			for(var t in tracks) {
 				var track = tracks[t];
 
@@ -97,6 +96,11 @@ function Gfx(canvasId) {
 			that.midLat = (that.minMaxLat.max + that.minMaxLat.min) / 2.0;
 			that.midLon = (that.minMaxLon.max + that.minMaxLon.min) / 2.0;
 			that.midEle = (that.minMaxEle.max + that.minMaxEle.min) / 2.0;
+		};
+
+		// pick scale based on aspect ratios
+		//
+		this.determineScaleFromAspectRatios = function() {
 
 			var ar = that.lonDiff / that.latDiff;
 
@@ -110,27 +114,33 @@ function Gfx(canvasId) {
 			}
 		};
 
-		var toRgbString = function(r, g, b) {
+		this.toRgbString = function(r, g, b) {
 			return 'rgb(' + r + ',' + g + ',' + b + ')';
 		};
 
-		var transformPoint = function(lat, lon, ele, name) {
+		this.transformPoint = function(lat, lon, ele, name) {
 
 			// translate to center around origin
+			//
 			var centeredLat = lat - that.midLat;
 			var centeredLon = lon - that.midLon;
 
 			// scale
+			//
 			var scaledX = centeredLon * that.scale;
 			var scaledY = centeredLat * that.scale;
 
 			// translate to viewpoint center
+			//
 			var x = that.vpHalfWidth + scaledX;
 			var y = that.vpHalfHeight - scaledY;
 
-			// COLOR
+			// ------------------------------------
+
+			// colour
+			//
 			var k = Math.floor(255.0 * (ele - that.minMaxEle.min) / that.eleDiff);
-			var rgbString = toRgbString(k, 255 - k, 0);
+			var rgbString = this.toRgbString(k, 255 - k, 0);
 
 			d =  { 'x' : x, 'y' : y, 'rgb' : rgbString };
 
@@ -141,7 +151,7 @@ function Gfx(canvasId) {
 			return d;
 		};
 
-		var renderTrackPointsToCanvasSpace = function() {
+		this.renderTrackPointsToCanvasSpace = function() {
 
 			that.canvasPoints = [];
 
@@ -150,14 +160,14 @@ function Gfx(canvasId) {
 					for (var p in tracks[t].segments[s].points) {
 
 						var point = tracks[t].segments[s].points[p];
-						var canvasPoint = transformPoint(point.lat, point.lon, point.ele);
+						var canvasPoint = this.transformPoint(point.lat, point.lon, point.ele);
 						that.canvasPoints.push(canvasPoint);
 					}
 				}
 			}
 		};
 
-		var renderWayPointsToCanvasSpace = function() {
+		this.renderWayPointsToCanvasSpace = function() {
 
 			that.canvasWaypoints = [];
 
@@ -165,20 +175,20 @@ function Gfx(canvasId) {
 				for (var wp in tracks[t].waypoints) {
 
 					var point = tracks[t].waypoints[wp];
-					var canvasWaypoint = transformPoint(point.lat, point.lon, point.ele, point.name);
+					var canvasWaypoint = this.transformPoint(point.lat, point.lon, point.ele, point.name);
 
 					that.canvasWaypoints.push(canvasWaypoint);
 				}
 			}
 		};
 
-		var blankCanvas = function() {
+		this.blankCanvas = function() {
 
 			that.context.fillStyle = '#FFFFFF'; // white
 			that.context.fillRect(0, 0, that.viewPortWidth, that.viewPortHeight);
 		};
 
-		var drawElevationHalo = function(thickness) {
+		this.drawElevationHalo = function(thickness) {
 
 			that.context.beginPath();
 		    
@@ -193,8 +203,12 @@ function Gfx(canvasId) {
 		    that.context.stroke();
 		};
 
+		this.drawTrailPoint = function(x, y, offset) {
+			that.context.fillRect(x - offset, y - offset, offset*2, offset*2);
+		};
+
 		// var colorString = '#000000'; 
-		var drawTrail = function(colorString, thickness) {		
+		this.drawTrail = function(colorString, thickness) {
 
 			that.context.beginPath();
 			that.context.fillStyle = colorString;
@@ -203,14 +217,13 @@ function Gfx(canvasId) {
 
 		    for (var i in that.canvasPoints) {	
 		    	var pt = that.canvasPoints[i];
-
-					that.context.fillRect(pt.x - offSet, pt.y - offSet, thickness, thickness);
+		    	this.drawTrailPoint(pt.x, pt.y, thickness);
 		    };	    
 
 		    that.context.stroke();
 		};
 
-		var drawWaypoints = function(colorString, fontString) {
+		this.drawWaypoints = function(colorString, fontString) {
 
 			that.context.fillStyle = colorString;
 			that.context.font = fontString;
@@ -273,21 +286,88 @@ function Gfx(canvasId) {
 					that.context.fillText(pt.name, pt.x - 5, pt.y - 10);	
 				}	
 		    };	   	
-    
 		};
 
-		getWindowDims();
-		sizeCanvas(0.90);
-		initViewPort();
-		determineScaleFromAspectRatios();
+		this.getWindowDims();
+		this.sizeCanvas(0.90);
+		this.initViewPort();
+		this.calcDimensions();
+		this.determineScaleFromAspectRatios();
 
-		renderTrackPointsToCanvasSpace();
-		renderWayPointsToCanvasSpace();
+		this.renderTrackPointsToCanvasSpace();
+		this.renderWayPointsToCanvasSpace();
 		
-		blankCanvas();
+		this.blankCanvas();
 		
-		//drawElevationHalo(5);
-		drawTrail('#000000', 2);
-		drawWaypoints('#000000', '15px helvetica');
+		this.drawElevationHalo(5);
+		this.drawTrail('#000000', 1.0);
+		this.drawWaypoints('#000000', '15px helvetica');
 	};
+
+	this.recoverXY = function(x, y) {
+
+		var xlon = ((x - that.vpHalfWidth) / that.scale) + that.midLon;
+		var ylat = ((that.vpHalfHeight - y) / that.scale) + that.midLat;
+
+		var s = 'lat ' + ylat.toFixed(6).toString() + ', lon ' + xlon.toFixed(6).toString();
+		updateInfoString(s);
+	};
+
+	// EVENT HANDLERS
+
+	this.getMousePos = function(evt) {
+		var rect = that.canvas.getBoundingClientRect();
+		return {
+			x: evt.clientX - rect.left,
+			y: evt.clientY - rect.top
+		};
+	};
+
+	this.canvas.addEventListener('mousemove', function(evt) {
+
+		var mousePos = that.getMousePos(evt);
+
+		// get lat, lon
+		//
+		that.recoverXY(mousePos.x, mousePos.y);
+
+		if (that.selecting == true) {
+
+			that.mouseLastPos = that.getMousePos(evt);
+
+			var selectionAreaDiv = document.getElementById('CanvasSelectionArea');
+
+			var baseStyle = 'position: absolute; z-index: 20; border-color:orange;border-width:2px;border-style:dashed;';
+			var style  = baseStyle + 'left:' + Math.min(that.mouseDownPos.x, that.mouseLastPos.x) + 'px;';
+			style = style + 'top:' + Math.min(that.mouseDownPos.y, that.mouseLastPos.y) + 'px;';
+			style = style + 'width:' + Math.abs(that.mouseDownPos.x - that.mouseLastPos.x) + 'px;';
+			style = style + 'height:' + Math.abs(that.mouseDownPos.y - that.mouseLastPos.y) + 'px;';
+			selectionAreaDiv.setAttribute('style', style);
+		}
+
+	}, false);
+
+	this.canvas.addEventListener('mousedown', function(evt) {
+
+		that.selecting = true;
+		that.mouseDownPos = that.getMousePos(evt);
+
+		//console.log('down @ ' + mousePos);
+	}, false);
+
+	var selectionAreaDiv = document.getElementById('CanvasSelectionArea');
+
+	selectionAreaDiv.addEventListener('mouseup', function(evt) {
+
+		that.selecting = false;
+
+		console.log('mouseup');
+
+		var mousePos = that.getMousePos(evt);
+		console.log('up @ ' + mousePos);
+
+		var baseStyle = 'position: absolute; z-index: 20; border-color:black;border-width:1px;border-style:dotted;';
+		var selectionAreaDiv = document.getElementById('CanvasSelectionArea');
+		selectionAreaDiv.setAttribute('style', baseStyle);
+	}, false);
 }
