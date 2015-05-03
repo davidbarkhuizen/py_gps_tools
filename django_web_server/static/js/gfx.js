@@ -1,5 +1,12 @@
 function Gfx(canvasId, updateInfoString) {
 
+	this.mapViewPort = {
+		minMaxLat : { 'max' : -180.0, 'min' : 180.0 },
+		minMaxLon : { 'max' : -180.0, 'min' : 180.0 }
+	};
+
+	this.useMapViewPort = false;
+
 	var that = this;
 
 	var constructContext = function() {
@@ -20,6 +27,8 @@ function Gfx(canvasId, updateInfoString) {
 	// ----------------
 
 	this.draw = function(tracks) {
+
+		that.tracks = tracks;
 
 		this.getWindowDims = function() {
 
@@ -52,40 +61,51 @@ function Gfx(canvasId, updateInfoString) {
 		};
 
 		this.calcDimensions = function() {
-			that.minMaxLat = { 'max' : -180.0, 'min' : 180.0 };
-			that.minMaxLon = { 'max' : -180.0, 'min' : 180.0 };
-			that.minMaxEle = { 'max' : -10000.0, 'min' : 10000.0 };
 
-			// calc max, min - lat, lon, ele - across all tracks
-			//
+			that.minMaxEle = { 'max' : -10000.0, 'min' : 10000.0 };
 			for(var t in tracks) {
 				var track = tracks[t];
 
-				// lat
-				//
-				if (track.minMaxLat.max >= that.minMaxLat.max) {
-					that.minMaxLat.max = track.minMaxLat.max;
-				}
-				if (track.minMaxLat.min <= that.minMaxLat.min) {
-					 that.minMaxLat.min = track.minMaxLat.min;
-				}
-
-				// lon
-				//
-				if (track.minMaxLon.max >= that.minMaxLon.max) {
-					that.minMaxLon.max = track.minMaxLon.max;
-				}
-				if (track.minMaxLon.min <= that.minMaxLon.min) {
-					 that.minMaxLon.min = track.minMaxLon.min;
-				}
-
-				// ele
-				//
 				if (track.minMaxEle.max >= that.minMaxEle.max) {
 					that.minMaxEle.max = track.minMaxEle.max;
 				}
 				if (track.minMaxEle.min <= that.minMaxEle.min) {
 					 that.minMaxEle.min = track.minMaxEle.min;
+				}
+			}
+
+			if (that.useMapViewPort == true) {
+				that.minMaxLat = that.mapViewPort.minMaxLat;
+				that.minMaxLon = that.mapViewPort.minMaxLon;
+
+				console.log('using map view port');
+				console.log(that.mapViewPort.minMaxLat);
+				console.log(that.mapViewPort.minMaxLon);
+			}
+			else {
+				that.minMaxLat = { 'max' : -180.0, 'min' : 180.0 };
+				that.minMaxLon = { 'max' : -180.0, 'min' : 180.0 };
+
+				for(var t in tracks) {
+					var track = tracks[t];
+
+					// lat
+					//
+					if (track.minMaxLat.max >= that.minMaxLat.max) {
+						that.minMaxLat.max = track.minMaxLat.max;
+					}
+					if (track.minMaxLat.min <= that.minMaxLat.min) {
+						 that.minMaxLat.min = track.minMaxLat.min;
+					}
+
+					// lon
+					//
+					if (track.minMaxLon.max >= that.minMaxLon.max) {
+						that.minMaxLon.max = track.minMaxLon.max;
+					}
+					if (track.minMaxLon.min <= that.minMaxLon.min) {
+						 that.minMaxLon.min = track.minMaxLon.min;
+					}
 				}
 			}
 
@@ -96,6 +116,12 @@ function Gfx(canvasId, updateInfoString) {
 			that.midLat = (that.minMaxLat.max + that.minMaxLat.min) / 2.0;
 			that.midLon = (that.minMaxLon.max + that.minMaxLon.min) / 2.0;
 			that.midEle = (that.minMaxEle.max + that.minMaxEle.min) / 2.0;
+
+			console.log('that.minMaxLat');
+			console.log(that.minMaxLat);
+
+			console.log('that.minMaxLon');
+			console.log(that.minMaxLon);
 		};
 
 		// pick scale based on aspect ratios
@@ -120,7 +146,7 @@ function Gfx(canvasId, updateInfoString) {
 
 		this.transformPoint = function(lat, lon, ele, name) {
 
-			// translate to center around origin
+			// translate
 			//
 			var centeredLat = lat - that.midLat;
 			var centeredLon = lon - that.midLon;
@@ -274,8 +300,7 @@ function Gfx(canvasId, updateInfoString) {
 			    	that.context.moveTo(pt.x - z, pt.y - z);
 			    	that.context.beginPath();
 					that.context.fillRect(pt.x - z, pt.y - z, 2*z, 2*z);
-					that.context.stroke();
-			
+					that.context.stroke();		
 					
 					/*
 					that.context.fillRect(pt.x, pt.y, 1, 1);
@@ -283,6 +308,7 @@ function Gfx(canvasId, updateInfoString) {
 					that.context.arc(pt.x, pt.y,5,0,Math.PI*2,true);
 					that.context.stroke();
 					*/
+
 					that.context.fillText(pt.name, pt.x - 5, pt.y - 10);	
 				}	
 		    };	   	
@@ -311,6 +337,11 @@ function Gfx(canvasId, updateInfoString) {
 
 		var s = 'lat ' + ylat.toFixed(6).toString() + ', lon ' + xlon.toFixed(6).toString();
 		updateInfoString(s);
+
+		return {
+			x : xlon,
+			y : ylat
+		};
 	};
 
 	// EVENT HANDLERS
@@ -361,13 +392,21 @@ function Gfx(canvasId, updateInfoString) {
 
 		that.selecting = false;
 
-		console.log('mouseup');
-
-		var mousePos = that.getMousePos(evt);
-		console.log('up @ ' + mousePos);
-
+		// clear selection outline
+		//
 		var baseStyle = 'position: absolute; z-index: 20; border-color:black;border-width:1px;border-style:dotted;';
 		var selectionAreaDiv = document.getElementById('CanvasSelectionArea');
 		selectionAreaDiv.setAttribute('style', baseStyle);
+
+		that.mouseUpPos = that.mouseLastPos;
+
+		var xyDown = that.recoverXY(that.mouseDownPos.x, that.mouseDownPos.y);
+		var xyUp = that.recoverXY(that.mouseUpPos.x, that.mouseUpPos.y);
+
+		that.mapViewPort.minMaxLat = { 'max' : Math.max(xyDown.y, xyUp.y), 'min' : Math.min(xyDown.y, xyUp.y) };
+		that.mapViewPort.minMaxLon = { 'max' : Math.max(xyDown.x, xyUp.x), 'min' : Math.min(xyDown.x, xyUp.x) };
+		
+		that.useMapViewPort = true;
+		that.draw(that.tracks);
 	}, false);
 }
