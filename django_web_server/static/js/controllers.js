@@ -34,7 +34,12 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 	// map list, filter token, filtered list, selected item ------------
 
 	$scope.headerText = 'GeoNodeTek';
+
 	$scope.infoText = '';
+	$scope.updateInfoText = function(msg) {
+		$scope.infoText = msg;
+		$scope.$apply();
+	};
 
 	$scope.mapList = [];
 	$scope.mapSearchToken = '';
@@ -45,6 +50,10 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 	$scope.mapIsLoadedAndActive = false;
 
 	// show/hide ui sections and navigation ---------------------------
+
+	$scope.focusOnId = function(id) {
+		document.getElementById(id).focus();
+	}; // MapListFilterToken
 
 	$scope.showMapList = false;
 	$scope.showMap = false;
@@ -65,6 +74,9 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 	$scope.returnToActiveMap = function() {
 		if ($scope.mapIsLoadedAndActive == true) {
+
+			// regen headerText
+
 			$scope.showMap = true;
 			$scope.showImportSection = false;
 			$scope.showMapList = false;
@@ -74,6 +86,8 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 		$scope.headerText = 'open a map';
 		$scope.showMap = false;
 		$scope.showMapList = true;
+
+		$timeout(function() { $scope.focusOnId('MapListFilterToken'); }, 10);
 
 		$scope.mapListItemClicked = $scope.selectAndLoadMap;
 	}
@@ -325,13 +339,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 	// START-UP
 
-	$scope.updateInfoText = function(msg) {
-		$scope.infoText = msg;
-		$scope.$apply();
-	};
-
 	$scope.gfx = new Gfx('canvas', $scope.updateInfoText);
 
 	$scope.getMapList();
-	$timeout(function() { document.getElementById("MapListFilterToken").focus(); }, 0 );
 });
