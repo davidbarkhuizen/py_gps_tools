@@ -107,6 +107,15 @@ function Gfx(canvasId, updateInfoString) {
 						 that.minMaxLon.min = track.minMaxLon.min;
 					}
 				}
+
+				var latMargin = (that.minMaxLat.max - that.minMaxLat.min) * 0.05;
+				var lonMargin = (that.minMaxLat.max - that.minMaxLat.min) * 0.05;
+
+				that.minMaxLat.max = that.minMaxLat.max + latMargin;
+				that.minMaxLat.min = that.minMaxLat.min - latMargin;
+
+				that.minMaxLon.max = that.minMaxLon.max + lonMargin;
+				that.minMaxLon.min = that.minMaxLon.min - lonMargin;
 			}
 
 			that.latDiff = that.minMaxLat.max - that.minMaxLat.min;
@@ -116,12 +125,6 @@ function Gfx(canvasId, updateInfoString) {
 			that.midLat = (that.minMaxLat.max + that.minMaxLat.min) / 2.0;
 			that.midLon = (that.minMaxLon.max + that.minMaxLon.min) / 2.0;
 			that.midEle = (that.minMaxEle.max + that.minMaxEle.min) / 2.0;
-
-			console.log('that.minMaxLat');
-			console.log(that.minMaxLat);
-
-			console.log('that.minMaxLon');
-			console.log(that.minMaxLon);
 		};
 
 		// pick scale based on aspect ratios
@@ -327,7 +330,7 @@ function Gfx(canvasId, updateInfoString) {
 		
 		this.drawElevationHalo(5);
 		this.drawTrail('#000000', 1.0);
-		this.drawWaypoints('#000000', '15px helvetica');
+		this.drawWaypoints('#000000', '15px courier');
 	};
 
 	this.recoverXY = function(x, y) {

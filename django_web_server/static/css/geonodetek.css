@@ -73,6 +73,7 @@ html, body {
 
 #bottomright {
     font-family: courier;
+    color:lightgrey;
 }
 
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
@@ -106,7 +107,7 @@ html, body {
 
 html, body
 {
-    font-family: helvetica;
+    font-family: courier;
     font-size: 125%;
     font-weight:bold;
 }
