@@ -6,29 +6,10 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 		window.open('/echo/?' + raw_html, '_blank', '');
 	};
 
-	// django anti-CSRF token -------------
-
-	$scope.getCookie = function (name) {
-	    
-	    var cookieValue = null;
-
-	    if (document.cookie && document.cookie != '') {
-	        var cookies = document.cookie.split(';');
-	        for (var i = 0; i < cookies.length; i++) {
-	            var cookie = cookies[i].trim();
-	            if (cookie.substring(0, name.length + 1) == (name + '=')) {
-	                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-	                break;
-	            }
-	        }
-	    }
-
-	    return cookieValue;
-	};
-
-	$scope.genCsrfTokenDict = function() {
-		var headerDict = { 'X-CSRFToken': $scope.getCookie('csrftoken') };
-		return headerDict;
+	// django anti-CSRF token
+	//
+	$scope.getAntiCsrfTokenHeader = function() { 
+		return { 'X-CSRFToken': getCookie('csrftoken') }; 
 	};
 
 	// map list, filter token, filtered list, selected item ------------
@@ -49,18 +30,16 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 	$scope.mapIsLoadedAndActive = false;
 
-	// show/hide ui sections and navigation ---------------------------
-
-	$scope.focusOnId = function(id) {
-		document.getElementById(id).focus();
-	}; // MapListFilterToken
-
-	$scope.showMapList = false;
-	$scope.showMap = false;
-	$scope.showImportSection = false;
-	$scope.showMapInfoOverlay = false;
+	// SHOW OPTIONS -------------------------
 
 	$scope.mapListItemClicked = undefined;
+
+	$scope.showMapList = false,
+	$scope.showMap = false,
+	$scope.showImportSection = false,
+	$scope.showMapInfoOverlay = false
+
+	// --------------------------------------
 
 	$scope.selectAndLoadMap = function(mapId) {
 		$scope.selectMapById(mapId);
@@ -75,7 +54,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 	$scope.returnToActiveMap = function() {
 		if ($scope.mapIsLoadedAndActive == true) {
 
-			// regen headerText
+	    	$scope.updateHeaderTextFromTrackNames();
 
 			$scope.showMap = true;
 			$scope.showImportSection = false;
@@ -87,17 +66,20 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 		$scope.showMap = false;
 		$scope.showMapList = true;
 
-		$timeout(function() { $scope.focusOnId('MapListFilterToken'); }, 10);
+		$timeout(function() { focusOnId('MapListFilterToken'); }, 10);
 
 		$scope.mapListItemClicked = $scope.selectAndLoadMap;
 	}
 
 	$scope.gotoOverlayMap = function() {		
+
 		$scope.headerText = 'add	 a map';
 		$scope.showMap = false;
 		$scope.showMapList = true;
 
 		$scope.mapListItemClicked = $scope.overlayMap;
+
+		$timeout(function() { focusOnId('MapListFilterToken'); }, 10);
 	}
 
 	// MAP LIST -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -239,21 +221,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 			var remainder = [];
 			for (var i = 1; i < files.length; i++) {
 				remainder.push(files[i])
-			};
-
-			var clearInput = function(id) {
-
-				var input = document.getElementById(id);
-				try{
-				    input.value = '';
-				    if(input.value){
-				        input.type = "text";
-				        input.type = "file";
-				    }
-				} catch(e){
-
-				}
-			};
+			};	
 
 			var onLoad = function(evt) {
 
@@ -281,11 +249,10 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 					    url: '/mapfile/',
 					    method: 'POST',
 					    data: packet,
-	 					headers: $scope.genCsrfTokenDict()
+	 					headers: $scope.getAntiCsrfTokenHeader()
 					}).success(successFn).error(function(data, status, headers, config) {
 						$scope.showImportSection = false;
 						$scope.showMapList = true;
-					    console.log(data);
 					    $scope.globalDebug(data);
 					});
 
@@ -312,6 +279,19 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 	$scope.tracks = [];
 
+	$scope.updateHeaderTextFromTrackNames = function() {
+		
+		var trackText = undefined;
+    	
+    	for(var t in $scope.tracks) {
+    		trackText = (trackText == undefined )
+    			? $scope.tracks[t].name
+    			: trackText + ' / ' + $scope.tracks[t].name;
+    	}
+
+    	$scope.headerText = trackText;
+	};
+
 	$scope.processIncomingTrackData = function(trackData, overlay) {
 
 		if (overlay) {}
@@ -327,14 +307,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
     	$scope.showMapList = false;
     	$scope.showImportSection = false;
 
-    	var trackText = undefined;
-    	for(var t in $scope.tracks) {
-    		trackText = (trackText == undefined )
-    			? $scope.tracks[t].name
-    			: trackText + ' / ' + $scope.tracks[t].name;
-    	}
-
-    	$scope.headerText = trackText;
+    	$scope.updateHeaderTextFromTrackNames();
 	};
 
 	// START-UP

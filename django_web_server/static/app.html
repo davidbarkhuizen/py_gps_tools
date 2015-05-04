@@ -7,9 +7,12 @@
 		<link rel="stylesheet" type="text/css" href="/static/css/geonodetek.css" />
 	    <script src="/static/lib/js/angular/angular.1.3.15.js"></script>
 
+		<script src="/static/js/lib.js"></script>
+
 	    <script src="/static/js/gps.js"></script>
 	    <script src="/static/js/gfx.js"></script>	    
 		<script src="/static/js/controllers.js"></script> 
+
 	</head>
 	<body ng-app='geoNodeTekApp' ng-controller="GeoNodeTekController" style='height:100%;'>
 
@@ -28,22 +31,20 @@
 
 			        <div class='margin-right-10px'>
 
-				        <a ng-class="(mapIsLoadedAndActive == true) && (showMap == false) ? 'active' : 'inactive'" href='#' ng-click='returnToActiveMap();'>active map</a>
-
+		           		<a ng-class='active' href='#' ng-click='launchFileImport();'>import data file</a>
+		           		<br/>
 		           		<br/>
 
 						<a ng-class="selectedMap.length == 0 ? 'inactive' : 'active'" href='#' ng-click='gotoOpenMap();'>open map</a>
 		           		<br/>
-
-		           		<a ng-class='active' href='#' ng-click='launchFileImport();'>import data file</a>
-
 		           		<br/>
 
-						<a ng-show='mapIsLoadedAndActive == true' href='#' ng-click='gotoOverlayMap();'>add map</a>
-						
+				        <a ng-class="(mapIsLoadedAndActive == true) && (showMap == false) ? 'active' : 'inactive'" href='#' ng-click='returnToActiveMap();'>active map</a>
+		           		<br/>
+						<a ng-show='showMap == true' href='#' ng-click='showMapInfoOverlay = !showMapInfoOverlay;'>toggle map info</a>
 						<br/>
-
-						<a ng-show='mapIsLoadedAndActive == true' href='#' ng-click='showMapInfoOverlay = !showMapInfoOverlay;'>overlay map info</a>			
+						<a ng-show='showMap == true' href='#' ng-click='gotoOverlayMap();'>add map</a>
+						<br/>
 		           	</div>
 
 		        </div>

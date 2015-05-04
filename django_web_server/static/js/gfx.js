@@ -77,10 +77,6 @@ function Gfx(canvasId, updateInfoString) {
 			if (that.useMapViewPort == true) {
 				that.minMaxLat = that.mapViewPort.minMaxLat;
 				that.minMaxLon = that.mapViewPort.minMaxLon;
-
-				console.log('using map view port');
-				console.log(that.mapViewPort.minMaxLat);
-				console.log(that.mapViewPort.minMaxLon);
 			}
 			else {
 				that.minMaxLat = { 'max' : -180.0, 'min' : 180.0 };
