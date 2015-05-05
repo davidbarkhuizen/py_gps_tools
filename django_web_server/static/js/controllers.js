@@ -83,6 +83,10 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 		$timeout(function() { focusOnId('MapListFilterToken'); }, 10);
 	}
 
+	$scope.zoomOut = function() {		
+		$scope.gfx.zoomOut();
+	}
+
 	// MAP LIST -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 	$scope.getMapList = function() {
@@ -236,8 +240,10 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 				    	}						
 
 				    	if (remainder.length == 0) {
-			    			$scope.showImportSection = false;
-			    			$scope.showMapList = true;
+
+				    		if ($scope.view == $scope.Views.IMPORT) {
+				    			$scope.view = $scope.Views.MAP_LIST;
+				    		}
 			    		}
 				    	else {
 				    		postMapDataFilesRecursive(remainder);

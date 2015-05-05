@@ -1,13 +1,43 @@
 function Gfx(canvasId, updateInfoString) {
 
-	this.mapViewPort = {
-		minMaxLat : { 'max' : -180.0, 'min' : 180.0 },
-		minMaxLon : { 'max' : -180.0, 'min' : 180.0 }
+	var that = this;
+
+	// MAP VIEW PORT
+
+	this.genMinMaxViewPort = function() {
+		return {
+			'lat' : { 'max' : -180.0, 'min' : 180.0 },
+			'lon' : { 'max' : -180.0, 'min' : 180.0 }
+		};
+	};
+
+	this.mapViewPorts = [];//[this.genMinMaxViewPort()];
+
+	this.mapViewPort = function() {
+		return that.mapViewPorts[that.mapViewPorts.length - 1];
 	};
 
 	this.useMapViewPort = false;
 
-	var that = this;
+	this.zoomIn = function(mapViewPort) {
+		that.mapViewPorts.push(mapViewPort);
+		that.useMapViewPort = true;
+		that.draw(that.tracks);		
+	};
+
+	this.zoomOut = function() {
+
+		if (that.mapViewPorts.length == 0)
+			return;
+		
+		if (that.mapViewPorts.length > 0)
+			that.mapViewPorts.pop();				
+
+		if (that.mapViewPorts.length > 0)
+			that.draw(that.tracks);
+		else
+			that.draw(that.tracks, true);
+	};
 
 	var constructContext = function() {
 		
@@ -79,8 +109,9 @@ function Gfx(canvasId, updateInfoString) {
 			}
 
 			if (that.useMapViewPort == true) {
-				that.minMaxLat = that.mapViewPort.minMaxLat;
-				that.minMaxLon = that.mapViewPort.minMaxLon;
+				var mapViewPort = that.mapViewPort();
+				that.minMaxLat = mapViewPort.lat;
+				that.minMaxLon = mapViewPort.lon;
 			}
 			else {
 				that.minMaxLat = { 'max' : -180.0, 'min' : 180.0 };
@@ -354,8 +385,7 @@ function Gfx(canvasId, updateInfoString) {
 		selectionAreaDiv.setAttribute('style', baseStyle);
 	};
 
-
-	// EVENT HANDLERS
+	// EVENT HANDLERS ========================================================
 
 	this.getMousePos = function(evt) {
 		var rect = that.canvas.getBoundingClientRect();
@@ -365,63 +395,13 @@ function Gfx(canvasId, updateInfoString) {
 		};
 	};
 
-	this.canvas.addEventListener('mousemove', function(evt) {
-
-		var mousePos = that.getMousePos(evt);
-
-		// get lat, lon
-		//
-		that.recoverXY(mousePos.x, mousePos.y);
-
-		if (that.selecting == true) {
-
-			that.moving = true;
-
-			that.mouseLastPos = that.getMousePos(evt);
-
-			var selectionAreaDiv = document.getElementById('CanvasSelectionArea');
-
-			var baseStyle = 'position: absolute; z-index: 20; border-color:orange;border-width:2px;border-style:dashed;';
-			var style  = baseStyle + 'left:' + Math.min(that.mouseDownPos.x, that.mouseLastPos.x) + 'px;';
-			style = style + 'top:' + Math.min(that.mouseDownPos.y, that.mouseLastPos.y) + 'px;';
-			style = style + 'width:' + Math.abs(that.mouseDownPos.x - that.mouseLastPos.x) + 'px;';
-			style = style + 'height:' + Math.abs(that.mouseDownPos.y - that.mouseLastPos.y) + 'px;';
-			selectionAreaDiv.setAttribute('style', style);
-		}
-
-	}, false);
-
-	/*
-	this.canvas.addEventListener('mouseenter', function(evt) {
-
-		console.log('mouseenter');
-		//console.log('down @ ' + mousePos);
-	}, false);
-
-	this.canvas.addEventListener('mouseout', function(evt) {
-
-		console.log('mouseout');
-		//console.log('down @ ' + mousePos);
-	}, false);
-
-	this.canvas.addEventListener('mouseleave', function(evt) {
-
-		console.log('mouseleave');
-		//console.log('down @ ' + mousePos);
-	}, false);
-
-	this.canvas.addEventListener('mousedown', function(evt) {
+	this.onMapLeftClickDown = function(mouseCanvasPos) {
 
 		that.selecting = true;
-		that.mouseDownPos = that.getMousePos(evt);
+		that.mouseDownPos = mouseCanvasPos;
+	};
 
-		//console.log('down @ ' + mousePos);
-	}, false);
-	*/
-	
-	var selectionAreaDiv = document.getElementById('CanvasSelectionArea');
-
-	selectionAreaDiv.addEventListener('mouseup', function(evt) {
+	this.onMapLeftClickUp = function() {
 
 		that.selecting = false;
 
@@ -432,10 +412,61 @@ function Gfx(canvasId, updateInfoString) {
 		var xyDown = that.recoverXY(that.mouseDownPos.x, that.mouseDownPos.y);
 		var xyUp = that.recoverXY(that.mouseUpPos.x, that.mouseUpPos.y);
 
-		that.mapViewPort.minMaxLat = { 'max' : Math.max(xyDown.y, xyUp.y), 'min' : Math.min(xyDown.y, xyUp.y) };
-		that.mapViewPort.minMaxLon = { 'max' : Math.max(xyDown.x, xyUp.x), 'min' : Math.min(xyDown.x, xyUp.x) };
+		var minMaxLat = { 'max' : Math.max(xyDown.y, xyUp.y), 'min' : Math.min(xyDown.y, xyUp.y) };
+		var minMaxLon = { 'max' : Math.max(xyDown.x, xyUp.x), 'min' : Math.min(xyDown.x, xyUp.x) };
 		
-		that.useMapViewPort = true;
-		that.draw(that.tracks);
+		that.zoomIn({ lat : minMaxLat, lon : minMaxLon });
+	};
+
+	this.onMapRightClickDown = function(mouseCanvasPos) {
+		that.zoomOut();
+	};
+
+	this.onMapMouseMove = function(mousePos) {
+
+		if (that.selecting == true) {
+
+			that.moving = true;
+
+			that.mouseLastPos = mousePos;
+
+			var selectionAreaDiv = document.getElementById('CanvasSelectionArea');
+
+			var baseStyle = 'position: absolute; z-index: 20; border-color:orange;border-width:2px;border-style:dashed;';
+			var style  = baseStyle + 'left:' + Math.min(that.mouseDownPos.x, that.mouseLastPos.x) + 'px;';
+			style = style + 'top:' + Math.min(that.mouseDownPos.y, that.mouseLastPos.y) + 'px;';
+			style = style + 'width:' + Math.abs(that.mouseDownPos.x - that.mouseLastPos.x) + 'px;';
+			style = style + 'height:' + Math.abs(that.mouseDownPos.y - that.mouseLastPos.y) + 'px;';
+			selectionAreaDiv.setAttribute('style', style);
+		}
+	};
+
+	this.canvas.addEventListener('mousemove', function(evt) {
+		var mousePos = that.getMousePos(evt);
+		that.onMapMouseMove(mousePos);
+	}, false);
+
+	this.canvas.addEventListener('mousedown', function(evt) {
+
+		if (evt.buttons == 1) {
+			that.onMapLeftClickDown(that.getMousePos(evt));
+		}
+		else if (evt.buttons == 2) {
+			that.onMapRightClickDown();
+		}
+
+	}, false);
+
+	var selectionAreaDiv = document.getElementById('CanvasSelectionArea');
+
+	selectionAreaDiv.addEventListener('mouseup', function(evt) {
+
+		if (evt.buttons == 1) {
+			that.onMapLeftClickUp(that.getMousePos(evt));
+		}
+		else if (evt.buttons == 2) {
+			// undo last zoom
+		}
+
 	}, false);
 }
