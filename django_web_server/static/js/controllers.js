@@ -30,20 +30,25 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 	$scope.mapIsLoadedAndActive = false;
 
-	// SHOW OPTIONS -------------------------
+	// SHOW ---------------------------------
+
+	$scope.Views = Object.freeze({
+		HOME : 0,
+		IMPORT : 1, 
+		TRACK_LIST : 2, 
+		MAP : 3
+	});
+	
+	$scope.view = $scope.Views.HOME;
+
+	$scope.showMapInfoOverlay = false
+
+	// NAVIGATION ---------------------------
 
 	$scope.mapListItemClicked = undefined;
 
-	$scope.showMapList = false,
-	$scope.showMap = false,
-	$scope.showImportSection = false,
-	$scope.showMapInfoOverlay = false
-
-	// --------------------------------------
-
 	$scope.selectAndLoadMap = function(mapId) {
 		$scope.selectMapById(mapId);
-		$scope.headerText = $scope.selectedMap[0].name;
 		$scope.loadMap(mapId, false);
 	};
 
@@ -55,16 +60,13 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 		if ($scope.mapIsLoadedAndActive == true) {
 
 	    	$scope.updateHeaderTextFromTrackNames();
-
-			$scope.showMap = true;
-			$scope.showImportSection = false;
-			$scope.showMapList = false;
+	    	$scope.view = $scope.Views.MAP;
 		}
 	};
-	$scope.gotoOpenMap = function() {		
-		$scope.headerText = 'open a map';
-		$scope.showMap = false;
-		$scope.showMapList = true;
+	$scope.gotoOpenTrack = function() {		
+
+		$scope.headerText = 'select track to view';
+		$scope.view = $scope.Views.MAP_LIST;
 
 		$timeout(function() { focusOnId('MapListFilterToken'); }, 10);
 
@@ -73,9 +75,8 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 	$scope.gotoOverlayMap = function() {		
 
-		$scope.headerText = 'add	 a map';
-		$scope.showMap = false;
-		$scope.showMapList = true;
+		$scope.headerText = 'select track to add to map';
+		$scope.view = $scope.Views.MAP_LIST;
 
 		$scope.mapListItemClicked = $scope.overlayMap;
 
@@ -205,11 +206,9 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 	// -------------------------------------------------------
 	// FILE IMPORT
 
-	$scope.launchFileImport = function() {
+	$scope.launchGpxImport = function() {
 
-		$scope.showImportSection = true;
-		$scope.showMapList = false;
-		$scope.showMap = false;
+		$scope.view = $scope.Views.IMPORT;
 	};
 
 	$scope.postMapDataFiles = function() {
@@ -303,11 +302,8 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 		$scope.updateMapInfoOverlayText();
 
     	$scope.mapIsLoadedAndActive = true;
-    	$scope.showMap = true;
-    	$scope.showMapList = false;
-    	$scope.showImportSection = false;
-
     	$scope.updateHeaderTextFromTrackNames();
+    	$scope.view = $scope.Views.MAP;    	
 	};
 
 	// START-UP

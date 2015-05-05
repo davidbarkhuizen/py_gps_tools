@@ -31,26 +31,36 @@
 
 			        <div class='margin-right-10px'>
 
-		           		<a ng-class='active' href='#' ng-click='launchFileImport();'>import data file</a>
+		           		<a ng-class='active' href='#' ng-click='launchGpxImport();'>import gpx file</a>
 		           		<br/>
 		           		<br/>
 
-						<a ng-class="selectedMap.length == 0 ? 'inactive' : 'active'" href='#' ng-click='gotoOpenMap();'>open map</a>
+						<a ng-class="selectedMap.length == 0 ? 'inactive' : 'active'" href='#' ng-click='gotoOpenTrack();'>open track</a>
 		           		<br/>
 		           		<br/>
 
-				        <a ng-class="(mapIsLoadedAndActive == true) && (showMap == false) ? 'active' : 'inactive'" href='#' ng-click='returnToActiveMap();'>active map</a>
+				        <a ng-class="(mapIsLoadedAndActive == true) && (view !== Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='returnToActiveMap();'>active map</a>
 		           		<br/>
-						<a ng-show='showMap == true' href='#' ng-click='showMapInfoOverlay = !showMapInfoOverlay;'>toggle map info</a>
+						<a ng-show='view == Views.MAP' href='#' ng-click='showMapInfoOverlay = !showMapInfoOverlay;'>summary info text</a>
 						<br/>
-						<a ng-show='showMap == true' href='#' ng-click='gotoOverlayMap();'>add map</a>
+						<a ng-show='view == Views.MAP' href='#' ng-click='gotoOverlayMap();'>add trail</a>
 						<br/>
 		           	</div>
 
 		        </div>
 		        <div id="middleright">
 
-	          		<div ng-show='showMapList'>
+					<!-- IMPORT -->
+	            	<div>
+		           		<div ng-show='view == Views.IMPORT'>
+		           			<input style='align:right;' type="file" multiple id="ImportMapFileInput" name="file"/>
+		           			<br/>
+							<button ng-click="postMapDataFiles()">import selected file</button>
+		           		</div>
+	           		</div>
+
+		        	<!-- MAP LIST -->
+	          		<div ng-show='view == Views.MAP_LIST'>
 
 						<input
 							id='MapListFilterToken'
@@ -75,15 +85,8 @@
 						</div>
 					</div>
 
-	            	<div>
-		           		<div ng-show='showImportSection'>
-		           			<input style='align:right;' type="file" multiple id="ImportMapFileInput" name="file"/>
-		           			<br/>
-							<button ng-click="postMapDataFiles()">import selected file</button>
-		           		</div>
-	           		</div>
-
-					<div id='mapContainer' ng-show='showMap' class="panel" style='height:100%;width100%'>
+	           		<!-- MAP -->
+					<div id='mapContainer' ng-show='view == Views.MAP' class="panel" style='height:100%;width100%'>
 
 						<canvas id="canvas" class="map-canvas">
 						</canvas>
