@@ -83,8 +83,14 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 		$timeout(function() { focusOnId('MapListFilterToken'); }, 10);
 	}
 
+	// GFX LINK FUNCTIONS -------------
+
 	$scope.zoomOut = function() {		
 		$scope.gfx.zoomOut();
+	}
+
+	$scope.zoomIn = function() {		
+		$scope.gfx.zoomIn();
 	}
 
 	// MAP LIST -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-

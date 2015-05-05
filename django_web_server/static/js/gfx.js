@@ -20,13 +20,27 @@ function Gfx(canvasId, updateInfoString) {
 
 	this.useMapViewPort = false;
 
-	this.zoomIn = function(mapViewPort) {
+	this.zoomIn = function() {
+
+		that.clearMapSelectionOutline();
+
+		var latLonDown = that.mapLatLonFromCanvasXY(that.mouseDownPos.x, that.mouseDownPos.y);
+		var latLonUp = that.mapLatLonFromCanvasXY(that.mouseUpPos.x, that.mouseUpPos.y);
+
+		var minMaxLat = { 'max' : Math.max(latLonDown.lat, latLonUp.lat), 'min' : Math.min(latLonDown.lat, latLonUp.lat) };
+		var minMaxLon = { 'max' : Math.max(latLonDown.lon, latLonUp.lon), 'min' : Math.min(latLonDown.lon, latLonUp.lon) };
+		
+		var mapViewPort = { 'lat' : minMaxLat, 'lon' : minMaxLon };
+
 		that.mapViewPorts.push(mapViewPort);
 		that.useMapViewPort = true;
+
 		that.draw(that.tracks);		
 	};
 
 	this.zoomOut = function() {
+
+		that.clearMapSelectionOutline();
 
 		if (that.mapViewPorts.length == 0)
 			return;
@@ -400,17 +414,7 @@ function Gfx(canvasId, updateInfoString) {
 
 		that.selecting = false;
 
-		that.clearMapSelectionOutline();
-
 		that.mouseUpPos = that.mouseLastPos;
-
-		var latLonDown = that.mapLatLonFromCanvasXY(that.mouseDownPos.x, that.mouseDownPos.y);
-		var latLonUp = that.mapLatLonFromCanvasXY(that.mouseUpPos.x, that.mouseUpPos.y);
-
-		var minMaxLat = { 'max' : Math.max(latLonDown.lat, latLonUp.lat), 'min' : Math.min(latLonDown.lat, latLonUp.lat) };
-		var minMaxLon = { 'max' : Math.max(latLonDown.lon, latLonUp.lon), 'min' : Math.min(latLonDown.lon, latLonUp.lon) };
-		
-		that.zoomIn({ 'lat' : minMaxLat, 'lon' : minMaxLon });
 	};
 
 	this.onMapRightClickDown = function(mouseCanvasPos) {
