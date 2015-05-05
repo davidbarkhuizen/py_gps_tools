@@ -1,7 +1,30 @@
+function toRgbString(r, g, b) {
+	return 'rgb(' + r + ',' + g + ',' + b + ')';
+};
+
+var PlotType = Object.freeze({
+	ELEVATION : 0,
+	EDGES : 1,
+	VERTICES : 2
+});
+
+var Colour = Object.freeze({
+	PURPLE : toRgbString(128, 0, 128),
+	RED : toRgbString(255, 0, 0),
+	GREEN : toRgbString(0, 255, 0),
+	BLUE : toRgbString(0, 0, 255),
+	ORANGE : toRgbString(255, 102, 0),
+	YELLOW : toRgbString(255, 102, 0)
+});
+
+var Colours = Object.freeze([Colour.PURPLE, Colour.GREEN, Colour.BLUE, Colour.YELLOW, Colour.ORANGE, Colour.RED]);
+
 function Gfx(canvasId, updateInfoString) {
 
 	var that = this;
 	that.updateInfoString = updateInfoString;
+
+	that.plotType = PlotType.EDGES;
 
 	// MAP VIEW PORT
 
@@ -20,7 +43,12 @@ function Gfx(canvasId, updateInfoString) {
 
 	this.useMapViewPort = false;
 
+	// ZOOM IN/OUT ---------------------------------
+
 	this.zoomIn = function() {
+
+		if ((that.mouseDownPos == undefined) || (that.mouseUpPos == undefined))
+			return;
 
 		that.clearMapSelectionOutline();
 
@@ -189,10 +217,6 @@ function Gfx(canvasId, updateInfoString) {
 			}
 		};
 
-		this.toRgbString = function(r, g, b) {
-			return 'rgb(' + r + ',' + g + ',' + b + ')';
-		};
-
 		this.transformPoint = function(lat, lon, ele, name) {
 
 			// translate
@@ -215,7 +239,7 @@ function Gfx(canvasId, updateInfoString) {
 			// colour
 			//
 			var k = Math.floor(255.0 * (ele - that.minMaxEle.min) / that.eleDiff);
-			var rgbString = this.toRgbString(k, 255 - k, 0);
+			var rgbString = toRgbString(k, 255 - k, 0);
 
 			d =  { 'x' : x, 'y' : y, 'rgb' : rgbString };
 
@@ -231,14 +255,19 @@ function Gfx(canvasId, updateInfoString) {
 			that.canvasPoints = [];
 
 			for (var t in tracks) {
+
+				var track = [];
+
 				for (var s in tracks[t].segments) {
 					for (var p in tracks[t].segments[s].points) {
 
 						var point = tracks[t].segments[s].points[p];
 						var canvasPoint = this.transformPoint(point.lat, point.lon, point.ele);
-						that.canvasPoints.push(canvasPoint);
+						track.push(canvasPoint);
 					}
 				}
+
+				that.canvasPoints.push(track);
 			}
 		};
 
@@ -269,33 +298,62 @@ function Gfx(canvasId, updateInfoString) {
 		    
 			var offSet = Math.floor(thickness / 2.0);
 
-		    for (var i in that.canvasPoints) {	
-		    	var pt = that.canvasPoints[i];
-				that.context.fillStyle = pt.rgb;	
-				that.context.fillRect(pt.x - offSet, pt.y - offSet, thickness, thickness);	
-		    };	   
+		    for (var t in that.canvasPoints) {
+		    	var track = that.canvasPoints[t];
+		    	for (var i in track){ 	
+
+			    	var pt = track[i];
+					that.context.fillStyle = pt.rgb;	
+					that.context.fillRect(pt.x - offSet, pt.y - offSet, thickness, thickness);	
+		    	}
+		    }   
 
 		    that.context.stroke();
 		};
 
-		this.drawTrailPoint = function(x, y, offset) {
-			that.context.fillRect(x - offset, y - offset, offset*2, offset*2);
-		};
-
-		// var colorString = '#000000'; 
-		this.drawTrail = function(colorString, thickness) {
+		// draw individual points
+		// 
+		this.drawTrackVertices = function(colorString, r) {
 
 			that.context.beginPath();
 			that.context.fillStyle = colorString;
 
-			var offSet = Math.floor(thickness / 2.0);
+		    for (var t in that.canvasPoints) {
+		    	var track = that.canvasPoints[t];
+		    	for (var i in track){ 	
 
-		    for (var i in that.canvasPoints) {	
-		    	var pt = that.canvasPoints[i];
-		    	this.drawTrailPoint(pt.x, pt.y, thickness);
-		    };	    
+			    	var pt = track[i];
+					that.context.fillStyle = pt.rgb;	
+					that.context.fillRect(pt.x - r, pt.y - r, 2*r + 1, 2*r + 1);
+		    	}
+		    }    
 
 		    that.context.stroke();
+		};
+
+		// draw continuous trail
+		// 
+		this.drawTrackEdges = function(colorString, thickness) {    
+
+			that.context.lineWidth = 2
+
+			for (var t in that.canvasPoints) {
+				var track = that.canvasPoints[t];
+
+				that.context.strokeStyle = Colours[t];
+				console.log(that.context.strokeStyle);
+
+				that.context.beginPath();
+				var start = track[0];
+				that.context.moveTo(start.x, start.y);			
+
+			    for (var i = 1; i < track.length; i++) {	
+			    	var pt = track[i];
+			    	that.context.lineTo(pt.x, pt.y);
+			    };
+
+			    that.context.stroke();
+		    }    
 		};
 
 		this.drawWaypoints = function(colorString, fontString) {
@@ -374,8 +432,13 @@ function Gfx(canvasId, updateInfoString) {
 		
 		this.blankCanvas();
 		
-		this.drawElevationHalo(5);
-		this.drawTrail('#000000', 1.0);
+		switch (this.plotType) {
+			case PlotType.ELEVATION: this.drawElevationHalo(); break;
+			case PlotType.EDGES: this.drawTrackEdges('#000000', 1.0); break;
+			case PlotType.VERTICES: this.drawTrackVertices('#000000', 1.0); break;
+			default: result = 'unknown';
+		}
+
 		this.drawWaypoints('#000000', '15px courier');
 	};
 
