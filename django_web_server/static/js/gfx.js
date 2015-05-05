@@ -418,6 +418,9 @@ function Gfx(canvasId, updateInfoString) {
 	};
 
 	this.onMapRightClickDown = function(mouseCanvasPos) {
+
+		that.selecting = false;
+		that.clearMapSelectionOutline();
 	};
 
 	this.genLocationString = function(lat, lon) {
