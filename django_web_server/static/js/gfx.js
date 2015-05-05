@@ -1,6 +1,7 @@
 function Gfx(canvasId, updateInfoString) {
 
 	var that = this;
+	that.updateInfoString = updateInfoString;
 
 	// MAP VIEW PORT
 
@@ -364,18 +365,12 @@ function Gfx(canvasId, updateInfoString) {
 		this.drawWaypoints('#000000', '15px courier');
 	};
 
-	this.recoverXY = function(x, y) {
+	this.mapLatLonFromCanvasXY = function(x, y) {
 
-		var xlon = ((x - that.vpHalfWidth) / that.scale) + that.midLon;
-		var ylat = ((that.vpHalfHeight - y) / that.scale) + that.midLat;
+		var lon = ((x - that.vpHalfWidth) / that.scale) + that.midLon;
+		var lat = ((that.vpHalfHeight - y) / that.scale) + that.midLat;
 
-		var s = 'lat ' + ylat.toFixed(6).toString() + ', lon ' + xlon.toFixed(6).toString();
-		updateInfoString(s);
-
-		return {
-			x : xlon,
-			y : ylat
-		};
+		return { 'lon' : lon, 'lat' : lat };
 	};
 
 	this.clearMapSelectionOutline = function() {
@@ -409,20 +404,25 @@ function Gfx(canvasId, updateInfoString) {
 
 		that.mouseUpPos = that.mouseLastPos;
 
-		var xyDown = that.recoverXY(that.mouseDownPos.x, that.mouseDownPos.y);
-		var xyUp = that.recoverXY(that.mouseUpPos.x, that.mouseUpPos.y);
+		var latLonDown = that.mapLatLonFromCanvasXY(that.mouseDownPos.x, that.mouseDownPos.y);
+		var latLonUp = that.mapLatLonFromCanvasXY(that.mouseUpPos.x, that.mouseUpPos.y);
 
-		var minMaxLat = { 'max' : Math.max(xyDown.y, xyUp.y), 'min' : Math.min(xyDown.y, xyUp.y) };
-		var minMaxLon = { 'max' : Math.max(xyDown.x, xyUp.x), 'min' : Math.min(xyDown.x, xyUp.x) };
+		var minMaxLat = { 'max' : Math.max(latLonDown.lat, latLonUp.lat), 'min' : Math.min(latLonDown.lat, latLonUp.lat) };
+		var minMaxLon = { 'max' : Math.max(latLonDown.lon, latLonUp.lon), 'min' : Math.min(latLonDown.lon, latLonUp.lon) };
 		
-		that.zoomIn({ lat : minMaxLat, lon : minMaxLon });
+		that.zoomIn({ 'lat' : minMaxLat, 'lon' : minMaxLon });
 	};
 
 	this.onMapRightClickDown = function(mouseCanvasPos) {
-		that.zoomOut();
+	};
+
+	this.genLocationString = function(lat, lon) {
+		return 'lat ' + lat.toFixed(6).toString() + ', lon ' + lon.toFixed(6).toString();
 	};
 
 	this.onMapMouseMove = function(mousePos) {
+
+		var latLon = that.mapLatLonFromCanvasXY(mousePos.x, mousePos.y);
 
 		if (that.selecting == true) {
 
@@ -439,6 +439,8 @@ function Gfx(canvasId, updateInfoString) {
 			style = style + 'height:' + Math.abs(that.mouseDownPos.y - that.mouseLastPos.y) + 'px;';
 			selectionAreaDiv.setAttribute('style', style);
 		}
+
+		that.updateInfoString(that.genLocationString(latLon.lat, latLon.lon));
 	};
 
 	this.canvas.addEventListener('mousemove', function(evt) {
