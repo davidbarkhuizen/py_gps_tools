@@ -26,9 +26,13 @@ function Gfx(canvasId, updateInfoString) {
 
 	// ----------------
 
-	this.draw = function(tracks) {
+	this.draw = function(tracks, resetMapViewPort) {
 
 		that.tracks = tracks;
+
+		if (resetMapViewPort == true) {
+			that.useMapViewPort = false;
+		}
 
 		this.getWindowDims = function() {
 
@@ -343,6 +347,14 @@ function Gfx(canvasId, updateInfoString) {
 		};
 	};
 
+	this.clearMapSelectionOutline = function() {
+
+		var baseStyle = 'position: absolute; z-index: 20; border-color:black;border-width:1px;border-style:dotted;';
+		var selectionAreaDiv = document.getElementById('CanvasSelectionArea');
+		selectionAreaDiv.setAttribute('style', baseStyle);
+	};
+
+
 	// EVENT HANDLERS
 
 	this.getMousePos = function(evt) {
@@ -363,6 +375,8 @@ function Gfx(canvasId, updateInfoString) {
 
 		if (that.selecting == true) {
 
+			that.moving = true;
+
 			that.mouseLastPos = that.getMousePos(evt);
 
 			var selectionAreaDiv = document.getElementById('CanvasSelectionArea');
@@ -377,6 +391,25 @@ function Gfx(canvasId, updateInfoString) {
 
 	}, false);
 
+	/*
+	this.canvas.addEventListener('mouseenter', function(evt) {
+
+		console.log('mouseenter');
+		//console.log('down @ ' + mousePos);
+	}, false);
+
+	this.canvas.addEventListener('mouseout', function(evt) {
+
+		console.log('mouseout');
+		//console.log('down @ ' + mousePos);
+	}, false);
+
+	this.canvas.addEventListener('mouseleave', function(evt) {
+
+		console.log('mouseleave');
+		//console.log('down @ ' + mousePos);
+	}, false);
+
 	this.canvas.addEventListener('mousedown', function(evt) {
 
 		that.selecting = true;
@@ -384,18 +417,15 @@ function Gfx(canvasId, updateInfoString) {
 
 		//console.log('down @ ' + mousePos);
 	}, false);
-
+	*/
+	
 	var selectionAreaDiv = document.getElementById('CanvasSelectionArea');
 
 	selectionAreaDiv.addEventListener('mouseup', function(evt) {
 
 		that.selecting = false;
 
-		// clear selection outline
-		//
-		var baseStyle = 'position: absolute; z-index: 20; border-color:black;border-width:1px;border-style:dotted;';
-		var selectionAreaDiv = document.getElementById('CanvasSelectionArea');
-		selectionAreaDiv.setAttribute('style', baseStyle);
+		that.clearMapSelectionOutline();
 
 		that.mouseUpPos = that.mouseLastPos;
 

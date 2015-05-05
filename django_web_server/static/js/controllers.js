@@ -293,11 +293,16 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 	$scope.processIncomingTrackData = function(trackData, overlay) {
 
-		if (overlay) {}
-		else { $scope.tracks.length = 0; }
+		if (overlay) {
+
+		}
+		else { 
+			$scope.tracks.length = 0;
+		}
 
 		$scope.tracks.push(new Track(trackData));
-		$scope.gfx.draw($scope.tracks);
+		var resetMapViewPort = (!overlay);
+		$scope.gfx.draw($scope.tracks, resetMapViewPort);
 
 		$scope.updateMapInfoOverlayText();
 
