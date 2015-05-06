@@ -14,6 +14,27 @@ archeological
 
 */
 
+// http://stackoverflow.com/questions/365826/calculate-distance-between-2-gps-coordinates
+// http://www.movable-type.co.uk/scripts/latlong.html
+
+Number.prototype.toRad = function() { return this * (Math.PI / 180); };
+
+function haversineDistanceMetres(lat1, lon1, lat2, lon2) {
+
+	var R = 6371; // km
+	var dLat = (lat2-lat1).toRad();
+	var dLon = (lon2-lon1).toRad();
+	var lat1 = lat1.toRad();
+	var lat2 = lat2.toRad();
+
+	var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+	        Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+	var d = R * c;
+
+	return d * 1000.0;
+}
+
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 // TRACK - track, segment, point, waypoint
 
@@ -43,7 +64,6 @@ Number.prototype.pad = function(size) {
       while (s.length < (size || 2)) {s = "0" + s;}
       return s;
 }
-
 function toShortTimeString(dt) {
 	return dt.getHours().pad() + ':' + dt.getMinutes().pad();
 };
@@ -135,7 +155,12 @@ function Track(data) {
 			return { 'max' : max, 'min' : min };
 		};
 
+		var cumTrackDist = 0;
+
 		for (var s in that.segments) {
+			
+			var cumSegmentDist = 0;
+
 			for (var p in that.segments[s].points) {
 				var point = that.segments[s].points[p];	
 
@@ -143,20 +168,22 @@ function Track(data) {
 				that.minMaxLon = adjustMinMax(that.minMaxLon, point.lon);
 				that.minMaxEle = adjustMinMax(that.minMaxEle, point.ele);
 				that.minMaxTime = adjustMinMax(that.minMaxTime, point.time);
+			
+				if (p > 0) {
+
+					var lastPoint = that.segments[s].points[p - 1]; 
+
+					var dist = haversineDistanceMetres(lastPoint.lat, lastPoint.lon, point.lat, point.lon);
+					cumSegmentDist = cumSegmentDist + dist;
+				}
 			}
+
+			cumTrackDist = cumTrackDist + cumSegmentDist;
 		}
 
-    	/*
-		var logMinMax = function(token, minMax) {
-			console.log(token + ' E [' + minMax.min + ', ' + minMax.max + ']');
-		};
+		that.totalDistanceM = cumTrackDist;
 
-		logMinMax('Lat', that.minMaxLat);
-		logMinMax('Lon', that.minMaxLon);
-		logMinMax('Ele', that.minMaxEle);	
-		*/
-
-		// calcs from range
+     	// calcs from range
 
 		that.eleDiff = that.minMaxEle.max - that.minMaxEle.min;
 		that.latDiff = that.minMaxLat.max - that.minMaxLat.min;
@@ -186,8 +213,24 @@ function Track(data) {
 		var offSet = that.minMaxTime.min.getTimezoneOffset();
 		that.periodString = that.periodString + ' (UTC ' + (offSet <= 0 ? "+" : "-") + (Math.abs(offSet)).toString() + ' mins)';
 
-		var dayCount = ((that.minMaxTime.max - that.minMaxTime.min) / 1000 / 60 / 60 / 24).toFixed(2);
-		that.dayCountString = dayCount + ' days';
+		var durationMS = that.minMaxTime.max - that.minMaxTime.min;
+
+		var daysToMS = 1000.0 * 60.0 * 60.0 * 24.0;
+		var days = Math.floor(durationMS / daysToMS);
+
+		var hoursMS = durationMS - (days * daysToMS); 
+		var hoursToMS = 1000.0 * 60.0 * 60.0; 
+		var hours = Math.floor(hoursMS / hoursToMS);
+
+		var minsMS = hoursMS - (hours * hoursToMS);
+		var minsToMS = 1000.0 * 60.0; 
+		var mins = Math.floor(minsMS / minsToMS);
+
+		var secsMS = minsMS - (mins * minsToMS);
+		var secsToMS = 1000.0; 
+		var secs = Math.floor(secsMS / secsToMS);
+
+		that.durationString = days + ' days ' + hours + ' hours ' + mins + ' minutes ' + secs + ' seconds';
 	};
 
 	calcTrackStats();

@@ -61,7 +61,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 	$scope.returnToActiveMap = function() {
 		if ($scope.mapIsLoadedAndActive == true) {
 
-	    	$scope.updateHeaderTextFromTrackNames();
+	    	$scope.updateHeaderTextFromTrackInfo();
 	    	$scope.view = $scope.Views.MAP;
 		}
 	};
@@ -300,11 +300,12 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 		
 		var text = '';
 
-		if ($scope.tracks.length > 0)
+		if ($scope.tracks.length == 0)
+			text = 'on tracks'
+		else if ($scope.tracks.length == 1)
 			text = $scope.tracks[0].name;
-
-		if ($scope.tracks.length > 1)
-			text = text + ' + ' + ($scope.tracks.length - 1).toString();		
+		else
+			text = 'multiple tracks (see track info)';		
 
     	$scope.headerText = text;
 	};
