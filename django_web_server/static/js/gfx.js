@@ -1,26 +1,3 @@
-function toRgbString(r, g, b) {
-	return 'rgb(' + r + ',' + g + ',' + b + ')';
-};
-
-var PlotType = Object.freeze({
-	ELEVATION : 0,
-	EDGES : 1,
-	VERTICES : 2
-});
-
-var Colour = Object.freeze({
-	PURPLE : toRgbString(128, 0, 128),
-	RED : toRgbString(255, 0, 0),
-	GREEN : toRgbString(0, 255, 0),
-	LIGHTGREEN : toRgbString(144, 255, 144),
-	DARKGREEN : toRgbString(0, 100, 0),
-	BLUE : toRgbString(0, 0, 255),
-	ORANGE : toRgbString(255, 102, 0),
-	YELLOW : toRgbString(255, 102, 0)
-});
-
-var Colours = Object.freeze([Colour.BLUE, Colour.PURPLE, Colour.YELLOW, Colour.DARKGREEN, Colour.RED, Colour.ORANGE]);
-
 function Gfx(canvasId, updateInfoString) {
 
 	var that = this;
@@ -341,28 +318,35 @@ function Gfx(canvasId, updateInfoString) {
 		    that.context.stroke();
 		};
 
+		this.drawEdges = function(points, thickness, color) {
+			
+			// style
+			//
+			that.context.lineWidth = thickness;
+			that.context.strokeStyle = color;
+
+			that.context.beginPath();
+			var start = points[0];
+			that.context.moveTo(start.x, start.y);			
+
+		    for (var i = 1; i < points.length; i++) {	
+		    	var pt = points[i];
+		    	that.context.lineTo(pt.x, pt.y);
+		    };
+
+		    that.context.stroke();		        
+		};
+		
 		// draw continuous trail
 		// 
-		this.drawTrackEdges = function(colorString, thickness) {    
-
-			that.context.lineWidth = 2
+		this.drawAllTracksEdgesColoured = function(thickness) {    
 
 			for (var t in that.canvasPoints) {
-				var track = that.canvasPoints[t];
+				
+				var vertices = that.canvasPoints[t];
+				var color = that.tracks[t].color;
 
-				that.context.strokeStyle = Colours[t];
-				console.log(that.context.strokeStyle);
-
-				that.context.beginPath();
-				var start = track[0];
-				that.context.moveTo(start.x, start.y);			
-
-			    for (var i = 1; i < track.length; i++) {	
-			    	var pt = track[i];
-			    	that.context.lineTo(pt.x, pt.y);
-			    };
-
-			    that.context.stroke();
+				that.drawEdges(vertices, thickness, color);
 		    }    
 		};
 
@@ -444,7 +428,7 @@ function Gfx(canvasId, updateInfoString) {
 		
 		switch (this.plotType) {
 			case PlotType.ELEVATION: this.drawElevationHalo(); break;
-			case PlotType.EDGES: this.drawTrackEdges('#000000', 1.0); break;
+			case PlotType.EDGES: this.drawAllTracksEdgesColoured('#000000', 1.0); break;
 			case PlotType.VERTICES: this.drawTrackVertices('#000000', 1.0); break;
 			default: result = 'unknown';
 		}

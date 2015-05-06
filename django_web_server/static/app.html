@@ -41,7 +41,7 @@
 
 				        <a ng-class="(mapIsLoadedAndActive == true) && (view !== Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='returnToActiveMap();'>active map</a>
 		           		<br/>
-						<a ng-show='view == Views.MAP' href='#' ng-click='showMapInfoOverlay = !showMapInfoOverlay;'>summary info text</a>
+						<a ng-show='view == Views.MAP' href='#' ng-click='showMapInfoOverlay = !showMapInfoOverlay;'>track info</a>
 						<br/>
 						<a ng-show='view == Views.MAP' href='#' ng-click='gotoOverlayMap();'>add trail</a>
 						<br/>
@@ -106,9 +106,10 @@
 						</div>
 
 						<div id='mapInfoOverlay' class='map-info-overlay' ng-show='showMapInfoOverlay'>
-							<div ng-repeat="line in mapInfoOverlayText">
-								<span>
-									{{ line}}
+
+							<div ng-repeat="track in tracks">
+								<span style='color:{{track.color}}'>
+									{{ track.name }}
 								</span>
 							</div>							
 						</div>

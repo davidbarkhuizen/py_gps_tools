@@ -1,3 +1,19 @@
+/*
+WAY POINTS
+
+navigational/logistical
+- start/end
+- junction
+- toilets
+- camp
+- water point
+- landmark (cairn, very large stone, giant tree, distinct ruin, mineshaft, building) 
+
+archeological
+- indestinct ruins
+
+*/
+
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 // TRACK - track, segment, point, waypoint
 

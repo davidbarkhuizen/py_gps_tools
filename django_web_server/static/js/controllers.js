@@ -30,6 +30,8 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 	$scope.mapIsLoadedAndActive = false;
 
+	$scope.TrackColours = Object.freeze([Colour.VERYDARKGREY, Colour.BLUE, Colour.PURPLE, Colour.DARKGREEN, Colour.RED]);
+
 	// SHOW ---------------------------------
 
 	$scope.Views = Object.freeze({
@@ -294,17 +296,17 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 	$scope.tracks = [];
 
-	$scope.updateHeaderTextFromTrackNames = function() {
+	$scope.updateHeaderTextFromTrackInfo = function() {
 		
-		var trackText = undefined;
-    	
-    	for(var t in $scope.tracks) {
-    		trackText = (trackText == undefined )
-    			? $scope.tracks[t].name
-    			: trackText + ' / ' + $scope.tracks[t].name;
-    	}
+		var text = '';
 
-    	$scope.headerText = trackText;
+		if ($scope.tracks.length > 0)
+			text = $scope.tracks[0].name;
+
+		if ($scope.tracks.length > 1)
+			text = text + ' + ' + ($scope.tracks.length - 1).toString();		
+
+    	$scope.headerText = text;
 	};
 
 	$scope.processIncomingTrackData = function(trackData, overlay) {
@@ -316,14 +318,19 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 			$scope.tracks.length = 0;
 		}
 
-		$scope.tracks.push(new Track(trackData));
+		var newTrack = new Track(trackData);
+		$scope.tracks.push(newTrack);
+
+		// HACK
+		newTrack.color = $scope.TrackColours[$scope.tracks.length - 1];
+
 		var resetMapViewPort = (!overlay);
 		$scope.gfx.draw($scope.tracks, resetMapViewPort);
 
 		$scope.updateMapInfoOverlayText();
 
     	$scope.mapIsLoadedAndActive = true;
-    	$scope.updateHeaderTextFromTrackNames();
+    	$scope.updateHeaderTextFromTrackInfo();
     	$scope.view = $scope.Views.MAP;    	
 	};
 
