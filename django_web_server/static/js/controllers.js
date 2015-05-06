@@ -85,6 +85,10 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 	// GFX LINK FUNCTIONS -------------
 
+	$scope.cancelSelection = function() {		
+		$scope.gfx.cancelSelection();
+	}
+
 	$scope.zoomOut = function() {		
 		$scope.gfx.zoomOut();
 	}

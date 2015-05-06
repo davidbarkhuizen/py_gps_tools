@@ -12,12 +12,14 @@ var Colour = Object.freeze({
 	PURPLE : toRgbString(128, 0, 128),
 	RED : toRgbString(255, 0, 0),
 	GREEN : toRgbString(0, 255, 0),
+	LIGHTGREEN : toRgbString(144, 255, 144),
+	DARKGREEN : toRgbString(0, 100, 0),
 	BLUE : toRgbString(0, 0, 255),
 	ORANGE : toRgbString(255, 102, 0),
 	YELLOW : toRgbString(255, 102, 0)
 });
 
-var Colours = Object.freeze([Colour.PURPLE, Colour.GREEN, Colour.BLUE, Colour.YELLOW, Colour.ORANGE, Colour.RED]);
+var Colours = Object.freeze([Colour.BLUE, Colour.PURPLE, Colour.YELLOW, Colour.DARKGREEN, Colour.RED, Colour.ORANGE]);
 
 function Gfx(canvasId, updateInfoString) {
 
@@ -42,6 +44,13 @@ function Gfx(canvasId, updateInfoString) {
 	};
 
 	this.useMapViewPort = false;
+
+	this.cancelSelection = function() {
+		that.clearMapSelectionOutline();
+		that.selecting = false;
+		that.mouseDownPos = null;
+		that.mouseUpPos = null;		
+	};
 
 	// ZOOM IN/OUT ---------------------------------
 
@@ -105,6 +114,7 @@ function Gfx(canvasId, updateInfoString) {
 
 		if (resetMapViewPort == true) {
 			that.useMapViewPort = false;
+			that.cancelSelection();
 		}
 
 		this.getWindowDims = function() {
