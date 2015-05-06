@@ -43,7 +43,7 @@
 		           		<br/>
 						<a ng-show='view == Views.MAP' href='#' ng-click='showMapInfoOverlay = !showMapInfoOverlay;'>track info</a>
 						<br/>
-						<a ng-show='view == Views.MAP' href='#' ng-click='gotoOverlayMap();'>add trail</a>
+						<a ng-show='view == Views.MAP' href='#' ng-click='gotoAddTrack();'>add track</a>
 						<br/>
 
 						<br/>
@@ -55,6 +55,12 @@
 						<br/>
 						<a ng-show='view == Views.MAP' href='#' ng-click='zoomOut();'>zoom out</a>
 						<br/>
+
+						<br/>
+
+						<a ng-show='view == Views.MAP' href='#' ng-click='gotoElevationPlot();'>elevation plot</a>
+		           		<br/>
+
 		           	</div>
 
 		        </div>
@@ -118,9 +124,16 @@
 									<br/>
 									{{ track.durationString }}
 								</div>
-							</div>							
-						</div>
+							</div>
 
+						</div>						
+					</div>
+
+					<div id='ElevationContainer' ng-show='view == Views.ELEVATION' class="panel" style='height:100%;width100%'>
+
+						<canvas id="ElevationCanvas" class="elevation-canvas">
+						</canvas>
+					
 					</div>
 
 	        	</div>

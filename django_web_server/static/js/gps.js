@@ -43,6 +43,7 @@ function Point(lat, lon, ele, time) {
 	this.lon = lon;
 	this.ele = ele;
 	this.time = time;
+	this.cumulativeDistanceM = 0;
 }
 
 function WayPoint(name, lat, lon, ele, time) {
@@ -57,6 +58,7 @@ function WayPoint(name, lat, lon, ele, time) {
 function Segment(name, points) {
 	this.name = name;
 	this.points = points;
+	this.totalDistanceM = 0;
 }
 
 Number.prototype.pad = function(size) {
@@ -155,11 +157,11 @@ function Track(data) {
 			return { 'max' : max, 'min' : min };
 		};
 
-		var cumTrackDist = 0;
+		var cumTrackDistM = 0;
 
 		for (var s in that.segments) {
 			
-			var cumSegmentDist = 0;
+			var cumSegmentDistM = 0;
 
 			for (var p in that.segments[s].points) {
 				var point = that.segments[s].points[p];	
@@ -173,15 +175,17 @@ function Track(data) {
 
 					var lastPoint = that.segments[s].points[p - 1]; 
 
-					var dist = haversineDistanceMetres(lastPoint.lat, lastPoint.lon, point.lat, point.lon);
-					cumSegmentDist = cumSegmentDist + dist;
+					var distM = haversineDistanceMetres(lastPoint.lat, lastPoint.lon, point.lat, point.lon);
+					cumSegmentDistM = cumSegmentDistM + distM;
+
+					point.cumulativeDistanceM = cumSegmentDistM;
 				}
 			}
 
-			cumTrackDist = cumTrackDist + cumSegmentDist;
+			cumTrackDistM = cumTrackDistM + cumSegmentDistM;
 		}
 
-		that.totalDistanceM = cumTrackDist;
+		that.totalDistanceM = cumTrackDistM;
 
      	// calcs from range
 

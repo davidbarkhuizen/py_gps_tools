@@ -30,7 +30,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 	$scope.mapIsLoadedAndActive = false;
 
-	$scope.TrackColours = Object.freeze([Colour.VERYDARKGREY, Colour.BLUE, Colour.PURPLE, Colour.DARKGREEN, Colour.RED]);
+	$scope.TrackColours = Object.freeze([Colour.BLACK, Colour.VERYDARKGREY, Colour.BLUE, Colour.PURPLE, Colour.DARKGREEN, Colour.RED]);
 
 	// SHOW ---------------------------------
 
@@ -38,7 +38,8 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 		HOME : 0,
 		IMPORT : 1, 
 		TRACK_LIST : 2, 
-		MAP : 3
+		MAP : 3,
+		ELEVATION : 4
 	});
 	
 	$scope.view = $scope.Views.HOME;
@@ -75,7 +76,7 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 		$scope.mapListItemClicked = $scope.selectAndLoadMap;
 	}
 
-	$scope.gotoOverlayMap = function() {		
+	$scope.gotoAddTrack = function() {		
 
 		$scope.headerText = 'select track to add to map';
 		$scope.view = $scope.Views.MAP_LIST;
@@ -85,11 +86,62 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 		$timeout(function() { focusOnId('MapListFilterToken'); }, 10);
 	}
 
-	// GFX LINK FUNCTIONS -------------
+	$scope.gotoElevationPlot = function() {
 
-	$scope.cancelSelection = function() {		
-		$scope.gfx.cancelSelection();
-	}
+		var canvasId = 'ElevationCanvas';
+
+		$scope.view = $scope.Views.ELEVATION;
+
+		var canvas = document.getElementById(canvasId);
+		var context = canvas.getContext("2d");
+
+		var width = document.getElementById(canvasId).parentNode.parentNode.clientWidth;
+		var height = document.getElementById(canvasId).parentNode.parentNode.clientHeight;
+
+		context.canvas.width  = width;
+		context.canvas.height = height;
+
+		var track = $scope.tracks[0];
+
+		var minEle = track.minMaxEle.min;
+		var maxEle = track.minMaxEle.max;
+
+		var yCanvas = function(elevation) {
+			return (maxEle - elevation) / (maxEle - minEle) * (height);
+		};
+
+		var totalDistM = track.totalDistanceM;
+
+		var xCanvas = function(distance) {
+			return distance / totalDistM * width;
+		};
+
+		context.lineWidth = 2;
+		context.strokeStyle = 'black';
+
+		context.beginPath();
+
+		for (var s in track.segments) {
+			var segment = track.segments[s];
+
+			var start = segment.points[0];
+			var startY = yCanvas(start.ele);
+			var startX = xCanvas(start.cumulativeDistanceM);
+
+			context.moveTo(startX, startY);	
+
+			for (var p = 1; p < segment.points.length; p++) {
+				var point = segment.points[p];
+
+				var y = yCanvas(point.ele);
+				var x = xCanvas(point.cumulativeDistanceM);
+
+				context.lineTo(x, y);
+			}
+
+			context.stroke();
+		}
+	};
 
 	$scope.zoomOut = function() {		
 		$scope.gfx.zoomOut();

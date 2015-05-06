@@ -435,7 +435,7 @@ function Gfx(canvasId, updateInfoString) {
 		
 		switch (this.plotType) {
 			case PlotType.ELEVATION: this.drawElevationHalo(); break;
-			case PlotType.EDGES: this.drawAllTracksEdgesColoured('#000000', 1.0); break;
+			case PlotType.EDGES: this.drawAllTracksEdgesColoured(2); break;
 			case PlotType.VERTICES: this.drawTrackVertices('#000000', 1.0); break;
 			default: result = 'unknown';
 		}
