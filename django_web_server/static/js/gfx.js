@@ -1,5 +1,8 @@
 function Gfx(canvasId, updateInfoString) {
 
+	this.canvasId = canvasId;
+	this.canvasSelectionAreaDivId = 'CanvasSelectionArea';
+
 	var that = this;
 	that.updateInfoString = updateInfoString;
 
@@ -7,14 +10,8 @@ function Gfx(canvasId, updateInfoString) {
 
 	// MAP VIEW PORT
 
-	this.genMinMaxViewPort = function() {
-		return {
-			'lat' : { 'max' : -180.0, 'min' : 180.0 },
-			'lon' : { 'max' : -180.0, 'min' : 180.0 }
-		};
-	};
-
-	this.mapViewPorts = [];//[this.genMinMaxViewPort()];
+	this.mapCanvasSelections = [];
+	this.mapViewPorts = [];
 
 	this.mapViewPort = function() {
 		return that.mapViewPorts[that.mapViewPorts.length - 1];
@@ -36,8 +33,6 @@ function Gfx(canvasId, updateInfoString) {
 		if ((that.mouseDownPos == undefined) || (that.mouseUpPos == undefined))
 			return;
 
-		that.clearMapSelectionOutline();
-
 		var latLonDown = that.mapLatLonFromCanvasXY(that.mouseDownPos.x, that.mouseDownPos.y);
 		var latLonUp = that.mapLatLonFromCanvasXY(that.mouseUpPos.x, that.mouseUpPos.y);
 
@@ -47,25 +42,37 @@ function Gfx(canvasId, updateInfoString) {
 		var mapViewPort = { 'lat' : minMaxLat, 'lon' : minMaxLon };
 
 		that.mapViewPorts.push(mapViewPort);
+		that.mapCanvasSelections.push([that.mouseDownPos, that.mouseUpPos]);
+
 		that.useMapViewPort = true;
 
 		that.draw(that.tracks);		
+
+		that.clearMapSelectionOutline();
+		that.mouseDownPos = undefined;
+		that.mouseUpPos = undefined;
 	};
 
 	this.zoomOut = function() {
 
-		that.clearMapSelectionOutline();
-
 		if (that.mapViewPorts.length == 0)
 			return;
+
+		that.clearMapSelectionOutline();
 		
-		if (that.mapViewPorts.length > 0)
-			that.mapViewPorts.pop();				
+		that.mapViewPorts.pop();		
+		var canvasSelection = that.mapCanvasSelections.pop();
 
 		if (that.mapViewPorts.length > 0)
 			that.draw(that.tracks);
 		else
 			that.draw(that.tracks, true);
+
+		if (canvasSelection != null) {
+			that.drawCanvasSelectionAreaFrom2Points(that.canvasSelectionAreaDivId, canvasSelection[0], canvasSelection[1]);		
+			that.mouseDownPos = canvasSelection[0];
+			that.mouseUpPos = canvasSelection[1];
+		}
 	};
 
 	var constructContext = function() {
@@ -470,61 +477,72 @@ function Gfx(canvasId, updateInfoString) {
 	this.onMapLeftClickUp = function() {
 
 		that.selecting = false;
-
 		that.mouseUpPos = that.mouseLastPos;
-	};
-
-	this.onMapRightClickDown = function(mouseCanvasPos) {
-
-		that.selecting = false;
-		that.clearMapSelectionOutline();
 	};
 
 	this.genLocationString = function(lat, lon) {
 		return 'lat ' + lat.toFixed(6).toString() + ', lon ' + lon.toFixed(6).toString();
 	};
 
+	this.drawCanvasSelectionArea = function(docId, top, left, height, width) {
+		
+		var el = document.getElementById(docId);
+
+		var baseStyle = 'position: absolute; z-index: 20; border-color:orange;border-width:2px;border-style:dashed;';
+		
+		var style  = baseStyle + 'left:' + left + 'px;';
+		style = style + 'top:' + top + 'px;';
+		style = style + 'width:' + width + 'px;';
+		style = style + 'height:' + height + 'px;';
+
+		el.setAttribute('style', style);
+	};
+
+	this.drawCanvasSelectionAreaFrom2Points = function(id, pt1, pt2) {
+
+		var left = Math.min(pt1.x, pt2.x);
+		var top = Math.min(pt1.y, pt2.y);
+		var width = Math.abs(pt1.x - pt2.x);
+		var height = Math.abs(pt1.y - pt2.y);
+
+		that.drawCanvasSelectionArea(id, top, left, height, width);
+	};
+
 	this.onMapMouseMove = function(mousePos) {
 
 		var latLon = that.mapLatLonFromCanvasXY(mousePos.x, mousePos.y);
+		that.updateInfoString(that.genLocationString(latLon.lat, latLon.lon));
 
 		if (that.selecting == true) {
 
-			that.moving = true;
-
 			that.mouseLastPos = mousePos;
-
-			var selectionAreaDiv = document.getElementById('CanvasSelectionArea');
-
-			var baseStyle = 'position: absolute; z-index: 20; border-color:orange;border-width:2px;border-style:dashed;';
-			var style  = baseStyle + 'left:' + Math.min(that.mouseDownPos.x, that.mouseLastPos.x) + 'px;';
-			style = style + 'top:' + Math.min(that.mouseDownPos.y, that.mouseLastPos.y) + 'px;';
-			style = style + 'width:' + Math.abs(that.mouseDownPos.x - that.mouseLastPos.x) + 'px;';
-			style = style + 'height:' + Math.abs(that.mouseDownPos.y - that.mouseLastPos.y) + 'px;';
-			selectionAreaDiv.setAttribute('style', style);
+			that.drawCanvasSelectionAreaFrom2Points(that.canvasSelectionAreaDivId, that.mouseDownPos, that.mouseLastPos);
 		}
-
-		that.updateInfoString(that.genLocationString(latLon.lat, latLon.lon));
 	};
 
+	// MAP MOUSE MOVE
+	//
 	this.canvas.addEventListener('mousemove', function(evt) {
 		var mousePos = that.getMousePos(evt);
 		that.onMapMouseMove(mousePos);
 	}, false);
 
+	// MAP MOUSE DOWN
+	//
 	this.canvas.addEventListener('mousedown', function(evt) {
-
+		var mousePos = that.getMousePos(evt);
 		if (evt.buttons == 1) {
-			that.onMapLeftClickDown(that.getMousePos(evt));
+			that.onMapLeftClickDown(mousePos);
 		}
 		else if (evt.buttons == 2) {
-			that.onMapRightClickDown();
 		}
 
 	}, false);
 
 	var selectionAreaDiv = document.getElementById('CanvasSelectionArea');
 
+	// SELECTION MOUSE UP
+	//
 	selectionAreaDiv.addEventListener('mouseup', function(evt) {
 
 		if (evt.buttons == 1) {
