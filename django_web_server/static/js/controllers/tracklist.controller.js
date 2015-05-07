@@ -1,29 +1,30 @@
 function TrackListController($scope, $http, $timeout) {
 
-	$scope.mapList = [];
-	$scope.mapSearchToken = '';
-	$scope.filteredMapList = [];
-	$scope.selectedMap = [];
+	$scope.trackList = [];
+	
+	$scope.trackListSearchToken = '';
+	$scope.filteredTrackList = [];
+	$scope.selectedTrack = [];
 
-	$scope.loadMapList = function(mapList) {
+	$scope.loadTrackList = function(trackList) {
 
-		$scope.mapList.length = 0;
-		for(var i in mapList){
-			$scope.mapList.push(mapList[i]);
+		$scope.trackList.length = 0;
+		for(var i in trackList){
+			$scope.trackList.push(trackList[i]);
 		}
 
-		$scope.filterMapList();
+		$scope.filterTrackList();
 	};
 
-	$scope.filterMapList = function() {		
+	$scope.filterTrackList = function() {		
 
 		matches = [];
 
 		// filter to matches
 		//
-		for(var i in $scope.mapList) {
-			if ($scope.mapList[i].name.toUpperCase().indexOf($scope.mapSearchToken.toUpperCase()) !== -1) {
-				matches.push($scope.mapList[i]);
+		for(var i in $scope.trackList) {
+			if ($scope.trackList[i].name.toUpperCase().indexOf($scope.trackListSearchToken.toUpperCase()) !== -1) {
+				matches.push($scope.trackList[i]);
 			}
 		}
 
@@ -33,28 +34,28 @@ function TrackListController($scope, $http, $timeout) {
 
 		// update filtered map list
 		//
-		$scope.filteredMapList.length = 0;
+		$scope.filteredTrackList.length = 0;
 		if (matches.length > 0) {			
 			for(var i in matches) {
-				$scope.filteredMapList.push(matches[i]);
+				$scope.filteredTrackList.push(matches[i]);
 			}
 		}
 
 		// auto-select from matches
 		//
-		$scope.selectedMap.length = 0;
-		if (!(($scope.filteredMapList == undefined) || ($scope.filteredMapList.length == 0))) {
-			$scope.selectedMap.push($scope.filteredMapList[0]);
+		$scope.selectedTrack.length = 0;
+		if (!(($scope.filteredTrackList == undefined) || ($scope.filteredTrackList.length == 0))) {
+			$scope.selectedTrack.push($scope.filteredTrackList[0]);
 		}
 	};
 
-	$scope.getMapList = function() {
+	$scope.getTrackList = function() {
 
 		var headers = { "Content-Type": "charset=utf-8" };
 		var request = { method: 'GET', url: "/maplist/", headers: headers };
 
 		var successFn = function(response) { 
-			$scope.loadMapList(response.maps); 
+			$scope.loadTrackList(response.maps); 
 		};
 		var errorFn = function(error){
 			$scope.globalDebug(error);
@@ -65,5 +66,5 @@ function TrackListController($scope, $http, $timeout) {
 			.error(errorFn);
 	};
 
-	$scope.getMapList();
+	$scope.getTrackList();
 };

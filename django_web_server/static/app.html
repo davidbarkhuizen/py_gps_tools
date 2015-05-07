@@ -40,7 +40,7 @@
 		           		<br/>
 		           		<br/>
 
-						<a ng-class="selectedMap.length == 0 ? 'inactive' : 'active'" href='#' ng-click='gotoOpenTrack();'>open track</a>
+						<a ng-class="selectedTrack.length == 0 ? 'inactive' : 'active'" href='#' ng-click='gotoOpenTrack();'>open track</a>
 		           		<br/>
 		           		<br/>
 
@@ -88,21 +88,21 @@
 	          			>
 
 						<input
-							id='MapListFilterToken'
+							id='TrackListFilterToken'
 							placeholder='type here to filter map list and auto-select a map' 
-							ng-model='mapSearchToken' 
-							ng-keyup='filterMapList();' 
+							ng-model='trackListSearchToken' 
+							ng-keyup='filterTrackList();' 
 							type='text'
 							size='32'
 							class='dashed-line-text-input'
-							ng-class='(mapSearchToken == "") || (filteredMapList.length == 0) ? "action-required" : "no-action-required"'
+							ng-class='(trackListSearchToken == "") || (filteredTrackList.length == 0) ? "action-required" : "no-action-required"'
 							/>
 
 		            	<div class='map-list'>
-							<div ng-repeat="map in filteredMapList">
+							<div ng-repeat="map in filteredTrackList">
 								<span 
-									ng-class='selectedMap[0].id == map.id ? "selected-text" : "";'
-									ng-click='mapListItemClicked(map.id);'
+									ng-class='selectedTrack[0].id == map.id ? "selected-text" : "";'
+									ng-click='trackListItemClicked(map.id);'
 									>
 									{{ map.timestamp + ' ' + map.name.toLowerCase() }}
 								</span>

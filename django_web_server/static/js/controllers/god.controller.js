@@ -42,7 +42,7 @@ function GodController($scope, $http, $timeout) {
 
 	// NAVIGATION ---------------------------
 
-	$scope.mapListItemClicked = undefined;
+	$scope.trackListItemClicked = undefined;
 
 	$scope.selectAndLoadMap = function(mapId) {
 		$scope.selectMapById(mapId);
@@ -65,9 +65,9 @@ function GodController($scope, $http, $timeout) {
 		$scope.headerText = 'select track to view';
 		$scope.view = $scope.Views.MAP_LIST;
 
-		$timeout(function() { focusOnId('MapListFilterToken'); }, 10);
+		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
 
-		$scope.mapListItemClicked = $scope.selectAndLoadMap;
+		$scope.trackListItemClicked = $scope.selectAndLoadMap;
 	}
 
 	$scope.gotoAddTrack = function() {		
@@ -75,9 +75,9 @@ function GodController($scope, $http, $timeout) {
 		$scope.headerText = 'select track to add to map';
 		$scope.view = $scope.Views.MAP_LIST;
 
-		$scope.mapListItemClicked = $scope.overlayMap;
+		$scope.trackListItemClicked = $scope.overlayMap;
 
-		$timeout(function() { focusOnId('MapListFilterToken'); }, 10);
+		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
 	}
 
 	/*
@@ -246,13 +246,13 @@ function GodController($scope, $http, $timeout) {
 
 	$scope.selectMapById = function(id) {
 
-		if ($scope.selectedMap.id == id)
+		if ($scope.selectedTrack[0].id == id)
 			return;
 
-		for (var i in $scope.filteredMapList) {
-			if ($scope.filteredMapList[i].id == id) {
-				$scope.selectedMap.length = 0;
-				$scope.selectedMap.push($scope.filteredMapList[i]);
+		for (var i in $scope.filteredTrackList) {
+			if ($scope.filteredTrackList[i].id == id) {
+				$scope.selectedTrack.length = 0;
+				$scope.selectedTrack.push($scope.filteredTrackList[i]);
 				break;
 			}
 		}
@@ -287,7 +287,7 @@ function GodController($scope, $http, $timeout) {
 					var successFn = function(data, status, headers, config) {
 
 						if (data.code == 'ok') {
-					    	$scope.getMapList();
+					    	$scope.getTrackList();
 				    	}						
 
 				    	if (remainder.length == 0) {
@@ -308,7 +308,7 @@ function GodController($scope, $http, $timeout) {
 	 					headers: $scope.getAntiCsrfTokenHeader()
 					}).success(successFn).error(function(data, status, headers, config) {
 						$scope.showImportSection = false;
-						$scope.showMapList = true;
+						$scope.showTrackList = true;
 					    $scope.globalDebug(data);
 					});
 
