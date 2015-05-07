@@ -86,6 +86,18 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 		$timeout(function() { focusOnId('MapListFilterToken'); }, 10);
 	}
 
+	/*
+	context.save();
+	context.translate(newx, newy);
+	context.rotate(-Math.PI/2);
+	context.textAlign = "center";
+	context.fillText("Your Label Here", labelXposition, 0);
+	context.restore();
+	 */
+
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// ELEVATION PLOT
+
 	$scope.elePlotCtxt = undefined; 
 
 	$scope.resizeElePlotFromGrandParentNodeDims = function(canvasId) {
@@ -136,6 +148,9 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 		var track = $scope.tracks[0];
 
+		console.log('dog');
+		console.log(track.waypoints);
+
 		var minEle = track.minMaxEle.min;
 		var maxEle = track.minMaxEle.max;
 
@@ -174,6 +189,12 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 
 			context.stroke();
 		}
+	};
+
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	$scope.cancelSelection = function() {
+		$scope.gfx.cancelSelection();
 	};
 
 	$scope.zoomOut = function() {		
