@@ -10,12 +10,16 @@
 	    <!-- true lib code -->
 		<script src="/static/js/lib.js"></script>
 	    <script src="/static/js/gps.js"></script>
+
+	    <script src="/static/js/const.js"></script>
 	    
 	    <!-- MUST BE MADE A CONTROLLER -->
 	    <script src="/static/js/gfx.js"></script>	
 
+	    <script src="/static/js/controllers/events.js"></script>
 		<script src="/static/js/controllers/god.controller.js"></script>
 		<script src="/static/js/controllers/tracklist.controller.js"></script>
+		<script src="/static/js/controllers/elevationplot.controller.js"></script>
 		<script src="/static/js/app.js"></script> 
 
 	</head>
@@ -71,6 +75,17 @@
 		        </div>
 		        <div id="middleright">
 
+		        	<div id='HomeContainer' ng-show='view == Views.HOME'>
+
+		        		<div style='margin:20px;text-align:center;'>
+	        			this is a modern website that makes use of many of the new futures of html5
+	        			<br/>
+	        			<br/>
+	        			please ensure that you are running the latest version of either <a target="blank" href="https://www.mozilla.org/en-US/firefox/new/">Mozilla FireFox</a> or <a target="blank" href="http://www.google.com/chrome/index.html">Google Chrome</a> browsers
+		        		</div>
+
+		        	</div>
+
 					<!-- IMPORT -->
 	            	<div>
 		           		<div ng-show='view == Views.IMPORT'>
@@ -102,7 +117,7 @@
 							<div ng-repeat="track in filteredTrackList">
 								<span 
 									ng-class='((selectedTrack !== null) && (selectedTrack.id == track.id)) ? "selected-text" : "";'
-									ng-click='trackListItemClicked(track.id);'
+									ng-click='selectTrack(track.id);'
 									>
 									{{ track.timestamp + ' ' + track.name.toLowerCase() }}
 								</span>
@@ -138,9 +153,14 @@
 						</div>						
 					</div>
 
-					<div id='ElevationContainer' ng-show='view == Views.ELEVATION' class="panel" style='height:100%;width100%'>
+					<div id='ElevationContainer'
+						ng-show='view == Views.ELEVATION'
+						ng-controller='ElevationPlotController'
+						class="panel"
+						style='height:100%;width100%'>
 
-						<canvas id="ElevationCanvas" class="elevation-canvas">
+						<canvas id="ElevationPlotCanvas"
+							class="elevation-canvas">
 						</canvas>
 					
 					</div>

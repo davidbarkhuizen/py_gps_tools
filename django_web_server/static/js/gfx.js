@@ -1,9 +1,16 @@
+var PlotType = Object.freeze({
+	ELEVATION : 0,
+	EDGES : 1,
+	VERTICES : 2
+});
+
 function Gfx(canvasId, updateInfoString) {
 
 	this.canvasId = canvasId;
 	this.canvasSelectionAreaDivId = 'CanvasSelectionArea';
 
 	var that = this;
+
 	that.updateInfoString = updateInfoString;
 
 	that.plotType = PlotType.EDGES;

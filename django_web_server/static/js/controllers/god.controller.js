@@ -1,5 +1,7 @@
 function GodController($scope, $http, $timeout) {
 
+	$scope.elevationPlotCanvasId = 'ElevationPlotCanvas';
+
 	$scope.globalDebug = function(raw_html) {
 		window.open('/echo/?' + raw_html, '_blank', '');
 	};
@@ -34,15 +36,14 @@ function GodController($scope, $http, $timeout) {
 		TRACK_LIST : 2, 
 		MAP : 3,
 		ELEVATION : 4
-	});
-	
+	});	
 	$scope.view = $scope.Views.HOME;
 
 	$scope.showMapInfoOverlay = false
 
 	// NAVIGATION ---------------------------
 
-	$scope.useTrack = function(trackId) { console.log('useTrack ' + trackId); };
+	$scope.onTrackSelected = function(trackId) { console.log('useTrack ' + trackId); };
 
 	$scope.selectAndLoadMap = function(mapId) {
 		$scope.loadMap(mapId, false);
@@ -66,7 +67,7 @@ function GodController($scope, $http, $timeout) {
 
 		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
 
-		$scope.useTrack = $scope.selectAndLoadMap;
+		$scope.onTrackSelected = $scope.selectAndLoadMap;
 	}
 
 	$scope.gotoAddTrack = function() {		
@@ -74,10 +75,26 @@ function GodController($scope, $http, $timeout) {
 		$scope.headerText = 'select track to add to map';
 		$scope.view = $scope.Views.MAP_LIST;
 
-		$scope.useTrack = $scope.overlayMap;
+		$scope.onTrackSelected = $scope.overlayMap;
 
 		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
 	}
+
+	$scope.gotoAddTrack = function() {		
+
+		$scope.headerText = 'select track to add to map';
+		$scope.view = $scope.Views.MAP_LIST;
+
+		$scope.onTrackSelected = $scope.overlayMap;
+
+		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
+	}
+
+	$scope.gotoElevationPlot = function() {
+
+		$scope.view = $scope.Views.ELEVATION;
+		$scope.$broadcast(GodControllerEvents.PLOT_ELEVATION);
+	};
 
 	/*
 	context.save();
@@ -87,99 +104,6 @@ function GodController($scope, $http, $timeout) {
 	context.fillText("Your Label Here", labelXposition, 0);
 	context.restore();
 	 */
-
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	// ELEVATION PLOT
-
-	$scope.elePlotCtxt = undefined; 
-
-	$scope.resizeElePlotFromGrandParentNodeDims = function(canvasId) {
-
-		var canvasGrandParentNode = document.getElementById(canvasId).parentNode.parentNode; 
-		
-		var width = canvasGrandParentNode.clientWidth;
-		var height = canvasGrandParentNode.clientHeight;
-
-		$scope.elePlotCtxt.canvas.width  = width;
-		$scope.elePlotCtxt.canvas.height = height;
-	
-		return [width, height];
-	};
-
-	$scope.getElePlotDims = function() {
-		return [$scope.elePlotCtxt.canvas.width, $scope.elePlotCtxt.canvas.height];
-	};
-
-	$scope.clearElePlot = function(fillStyle) {
-
-		fillStyle = (fillStyle == undefined) ? '#FFFFFF' : fillStyle;
-		
-		[width, height] = $scope.getElePlotDims();
-		
-		$scope.elePlotCtxt.fillRect(0, 0, width, height);
-	};
-
-	$scope.refreshElevationPlotContext = function(canvasId) {
-		
-		$scope.elePlotCtxt = ($scope.elePlotCtxt == undefined)
-			?  document.getElementById(canvasId).getContext("2d")
-			: $scope.elePlotCtxt;
-
-		$scope.resizeElePlotFromGrandParentNodeDims(canvasId);			
-	
-		return $scope.elePlotCtxt;
-	};
-
-	$scope.gotoElevationPlot = function() {
-
-		$scope.view = $scope.Views.ELEVATION;
-
-		var canvasId = 'ElevationCanvas';
-		var context = $scope.refreshElevationPlotContext(canvasId);
-
-		[width, height] = $scope.getElePlotDims();
-
-		var track = $scope.tracks[0];
-
-		var minEle = track.minMaxEle.min;
-		var maxEle = track.minMaxEle.max;
-
-		var yCanvas = function(elevation) {
-			return (maxEle - elevation) / (maxEle - minEle) * (height);
-		};
-
-		var totalDistM = track.totalDistanceM;
-
-		var xCanvas = function(distance) {
-			return distance / totalDistM * width;
-		};
-
-		context.lineWidth = 2;
-		context.strokeStyle = 'black';
-
-		context.beginPath();
-
-		for (var s in track.segments) {
-			var segment = track.segments[s];
-
-			var start = segment.points[0];
-			var startY = yCanvas(start.ele);
-			var startX = xCanvas(start.cumulativeDistanceM);
-
-			context.moveTo(startX, startY);	
-
-			for (var p = 1; p < segment.points.length; p++) {
-				var point = segment.points[p];
-
-				var y = yCanvas(point.ele);
-				var x = xCanvas(point.cumulativeDistanceM);
-
-				context.lineTo(x, y);
-			}
-
-			context.stroke();
-		}
-	};
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -193,9 +117,7 @@ function GodController($scope, $http, $timeout) {
 
 	$scope.zoomIn = function() {		
 		$scope.gfx.zoomIn();
-	}
-
-	
+	}	
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-
 

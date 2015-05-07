@@ -66,21 +66,19 @@ function TrackListController($scope, $http, $timeout) {
 			.error(errorFn);
 	};
 
-	$scope.trackListItemClicked = function(trackId) {
-		$scope.$parent.useTrack(trackId);
-	};
+	$scope.selectTrack = function(trackId) {
 
-	$scope.getTrackList();
-
-	/*
-	$scope.selectMapById = function(id) {
-
-		for (var i in $scope.filteredTrackList) {
-			if ($scope.filteredTrackList[i].id == id) {
-				$scope.selectedTrack = $scope.filteredTrackList[i];
+		// reflect selection locally
+		//
+		for (var i in $scope.trackList) {
+			if ($scope.trackList[i].id == trackId) {
+				$scope.selectedTrack = $scope.trackList[i];
 				break;
 			}
 		}
+
+		$scope.$parent.onTrackSelected(trackId);
 	};
-	*/
+
+	$scope.getTrackList();
 };
