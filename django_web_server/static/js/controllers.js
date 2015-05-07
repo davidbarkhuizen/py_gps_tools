@@ -1,6 +1,6 @@
-var geoNodeTekApp = angular.module('geoNodeTekApp', []);
+var geoNodeTekControllers = angular.module('GeoNodeTekControllers', []);
 
-geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeout) {
+function motherController($scope, $http, $timeout) {
 
 	$scope.globalDebug = function(raw_html) {
 		window.open('/echo/?' + raw_html, '_blank', '');
@@ -446,4 +446,8 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 	$scope.gfx = new Gfx('canvas', $scope.updateInfoText);
 
 	$scope.getMapList();
-});
+}
+
+geoNodeTekControllers.controller(
+	'MotherController', ['$scope', '$http', '$timeout', motherController]
+);

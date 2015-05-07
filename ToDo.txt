@@ -1,1 +1,6 @@
-shared model, each app is a controller, e.g. mapfile, maps, map & assoc. routing
+
+fix selection model - set selection behind canvas but with canvas opacity set so that selection is visible beneath => solves ridiculuous focus jumping issue
+
+!! ANGULAR.JS ffs
+
+clean up .css => GeoNodeTek.css

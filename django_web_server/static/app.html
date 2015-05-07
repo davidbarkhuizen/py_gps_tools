@@ -1,5 +1,5 @@
-	<!doctype html>
-<html lang="en">
+<!doctype html>
+<html lang="en" ng-app='geoNodeTekApp' >
 	<head>
 		<meta charset="utf-8">
 		<title>GeoNodeTek</title>
@@ -10,11 +10,14 @@
 		<script src="/static/js/lib.js"></script>
 
 	    <script src="/static/js/gps.js"></script>
-	    <script src="/static/js/gfx.js"></script>	    
-		<script src="/static/js/controllers.js"></script> 
+	    
+	    <script src="/static/js/gfx.js"></script>	
+
+		<script src="/static/js/controllers.js"></script>
+		<script src="/static/js/app.js"></script> 
 
 	</head>
-	<body ng-app='geoNodeTekApp' ng-controller="GeoNodeTekController" style='height:100%;'>
+	<body ng-controller="MotherController" style='height:100%;'>
 
 		<div id="wrapper">
 
