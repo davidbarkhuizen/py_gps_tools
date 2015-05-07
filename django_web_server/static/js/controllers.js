@@ -86,20 +86,53 @@ geoNodeTekApp.controller('GeoNodeTekController', function ($scope, $http, $timeo
 		$timeout(function() { focusOnId('MapListFilterToken'); }, 10);
 	}
 
-	$scope.gotoElevationPlot = function() {
+	$scope.elePlotCtxt = undefined; 
 
-		var canvasId = 'ElevationCanvas';
+	$scope.resizeElePlotFromGrandParentNodeDims = function(canvasId) {
+
+		var canvasGrandParentNode = document.getElementById(canvasId).parentNode.parentNode; 
+		
+		var width = canvasGrandParentNode.clientWidth;
+		var height = canvasGrandParentNode.clientHeight;
+
+		$scope.elePlotCtxt.canvas.width  = width;
+		$scope.elePlotCtxt.canvas.height = height;
+	
+		return [width, height];
+	};
+
+	$scope.getElePlotDims = function() {
+		return [$scope.elePlotCtxt.canvas.width, $scope.elePlotCtxt.canvas.height];
+	};
+
+	$scope.clearElePlot = function(fillStyle) {
+
+		fillStyle = (fillStyle == undefined) ? '#FFFFFF' : fillStyle;
+		
+		[width, height] = $scope.getElePlotDims();
+		
+		$scope.elePlotCtxt.fillRect(0, 0, width, height);
+	};
+
+	$scope.refreshElevationPlotContext = function(canvasId) {
+		
+		$scope.elePlotCtxt = ($scope.elePlotCtxt == undefined)
+			?  document.getElementById(canvasId).getContext("2d")
+			: $scope.elePlotCtxt;
+
+		$scope.resizeElePlotFromGrandParentNodeDims(canvasId);			
+	
+		return $scope.elePlotCtxt;
+	};
+
+	$scope.gotoElevationPlot = function() {
 
 		$scope.view = $scope.Views.ELEVATION;
 
-		var canvas = document.getElementById(canvasId);
-		var context = canvas.getContext("2d");
+		var canvasId = 'ElevationCanvas';
+		var context = $scope.refreshElevationPlotContext(canvasId);
 
-		var width = document.getElementById(canvasId).parentNode.parentNode.clientWidth;
-		var height = document.getElementById(canvasId).parentNode.parentNode.clientHeight;
-
-		context.canvas.width  = width;
-		context.canvas.height = height;
+		[width, height] = $scope.getElePlotDims();
 
 		var track = $scope.tracks[0];
 
