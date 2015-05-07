@@ -452,7 +452,6 @@ function Gfx(canvasId, updateInfoString) {
 	};
 
 	this.clearMapSelectionOutline = function() {
-		console.log('xxx');
 		var baseStyle = 'position: absolute; z-index: 20; border-color:black;border-width:1px;border-style:dotted;';
 		var selectionAreaDiv = document.getElementById(that.canvasSelectionAreaDivId);
 		selectionAreaDiv.setAttribute('style', baseStyle);

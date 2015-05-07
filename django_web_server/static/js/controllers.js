@@ -1,6 +1,6 @@
 var geoNodeTekControllers = angular.module('GeoNodeTekControllers', []);
 
-function motherController($scope, $http, $timeout) {
+function godController($scope, $http, $timeout) {
 
 	$scope.globalDebug = function(raw_html) {
 		window.open('/echo/?' + raw_html, '_blank', '');
@@ -147,9 +147,6 @@ function motherController($scope, $http, $timeout) {
 		[width, height] = $scope.getElePlotDims();
 
 		var track = $scope.tracks[0];
-
-		console.log('dog');
-		console.log(track.waypoints);
 
 		var minEle = track.minMaxEle.min;
 		var maxEle = track.minMaxEle.max;
@@ -449,5 +446,5 @@ function motherController($scope, $http, $timeout) {
 }
 
 geoNodeTekControllers.controller(
-	'MotherController', ['$scope', '$http', '$timeout', motherController]
+	'GodController', ['$scope', '$http', '$timeout', godController]
 );
