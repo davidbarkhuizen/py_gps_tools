@@ -1,10 +1,10 @@
 function TrackListController($scope, $http, $timeout) {
 
 	$scope.trackList = [];
-	
+
 	$scope.trackListSearchToken = '';
 	$scope.filteredTrackList = [];
-	$scope.selectedTrack = [];
+	$scope.selectedTrack = null;
 
 	$scope.loadTrackList = function(trackList) {
 
@@ -43,9 +43,9 @@ function TrackListController($scope, $http, $timeout) {
 
 		// auto-select from matches
 		//
-		$scope.selectedTrack.length = 0;
+		$scope.selectedTrack = null;
 		if (!(($scope.filteredTrackList == undefined) || ($scope.filteredTrackList.length == 0))) {
-			$scope.selectedTrack.push($scope.filteredTrackList[0]);
+			$scope.selectedTrack = $scope.filteredTrackList[0];
 		}
 	};
 
@@ -66,5 +66,21 @@ function TrackListController($scope, $http, $timeout) {
 			.error(errorFn);
 	};
 
+	$scope.trackListItemClicked = function(trackId) {
+		$scope.$parent.useTrack(trackId);
+	};
+
 	$scope.getTrackList();
+
+	/*
+	$scope.selectMapById = function(id) {
+
+		for (var i in $scope.filteredTrackList) {
+			if ($scope.filteredTrackList[i].id == id) {
+				$scope.selectedTrack = $scope.filteredTrackList[i];
+				break;
+			}
+		}
+	};
+	*/
 };

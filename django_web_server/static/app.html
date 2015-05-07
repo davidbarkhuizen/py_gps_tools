@@ -40,7 +40,7 @@
 		           		<br/>
 		           		<br/>
 
-						<a ng-class="selectedTrack.length == 0 ? 'inactive' : 'active'" href='#' ng-click='gotoOpenTrack();'>open track</a>
+						<a ng-class="(selectedTrack == null) ? 'inactive' : 'active'" href='#' ng-click='gotoOpenTrack();'>open track</a>
 		           		<br/>
 		           		<br/>
 
@@ -99,12 +99,12 @@
 							/>
 
 		            	<div class='map-list'>
-							<div ng-repeat="map in filteredTrackList">
+							<div ng-repeat="track in filteredTrackList">
 								<span 
-									ng-class='selectedTrack[0].id == map.id ? "selected-text" : "";'
-									ng-click='trackListItemClicked(map.id);'
+									ng-class='((selectedTrack !== null) && (selectedTrack.id == track.id)) ? "selected-text" : "";'
+									ng-click='trackListItemClicked(track.id);'
 									>
-									{{ map.timestamp + ' ' + map.name.toLowerCase() }}
+									{{ track.timestamp + ' ' + track.name.toLowerCase() }}
 								</span>
 							</div>
 						</div>

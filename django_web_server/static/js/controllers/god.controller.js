@@ -42,10 +42,9 @@ function GodController($scope, $http, $timeout) {
 
 	// NAVIGATION ---------------------------
 
-	$scope.trackListItemClicked = undefined;
+	$scope.useTrack = function(trackId) { console.log('useTrack ' + trackId); };
 
 	$scope.selectAndLoadMap = function(mapId) {
-		$scope.selectMapById(mapId);
 		$scope.loadMap(mapId, false);
 	};
 
@@ -67,7 +66,7 @@ function GodController($scope, $http, $timeout) {
 
 		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
 
-		$scope.trackListItemClicked = $scope.selectAndLoadMap;
+		$scope.useTrack = $scope.selectAndLoadMap;
 	}
 
 	$scope.gotoAddTrack = function() {		
@@ -75,7 +74,7 @@ function GodController($scope, $http, $timeout) {
 		$scope.headerText = 'select track to add to map';
 		$scope.view = $scope.Views.MAP_LIST;
 
-		$scope.trackListItemClicked = $scope.overlayMap;
+		$scope.useTrack = $scope.overlayMap;
 
 		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
 	}
@@ -242,20 +241,6 @@ function GodController($scope, $http, $timeout) {
 		}
 
 		$scope.mapInfoOverlayText = texts;
-	};
-
-	$scope.selectMapById = function(id) {
-
-		if ($scope.selectedTrack[0].id == id)
-			return;
-
-		for (var i in $scope.filteredTrackList) {
-			if ($scope.filteredTrackList[i].id == id) {
-				$scope.selectedTrack.length = 0;
-				$scope.selectedTrack.push($scope.filteredTrackList[i]);
-				break;
-			}
-		}
 	};
 
 	// -------------------------------------------------------
