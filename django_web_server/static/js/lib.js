@@ -15,8 +15,8 @@ function getCookie(name) {
     throw "can't find matching cookie for " + name;
 }
 
-function clearInput(id) {
-	
+function clearFileInput(id) {
+
 	var input = document.getElementById(id);
 	
 	try{

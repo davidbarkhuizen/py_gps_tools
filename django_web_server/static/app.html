@@ -20,8 +20,9 @@
 		<script src="/static/js/controllers/god.controller.js"></script>
 		<script src="/static/js/controllers/tracklist.controller.js"></script>
 		<script src="/static/js/controllers/elevationplot.controller.js"></script>
-		<script src="/static/js/app.js"></script> 
-
+		<script src="/static/js/controllers/gpximport.controller.js"></script>
+		
+		<script src="/static/js/app.js"></script>
 	</head>
 	<body ng-controller="GodController" style='height:100%;'>
 
@@ -75,7 +76,9 @@
 		        </div>
 		        <div id="middleright">
 
-		        	<div id='HomeContainer' ng-show='view == Views.HOME'>
+		        	<!-- HOME -->
+		        	<div id='HomeContainer'
+		        		ng-show='view == Views.HOME'>
 
 		        		<div style='margin:20px;text-align:center;'>
 	        			this is a modern website that makes use of many of the new futures of html5
@@ -87,11 +90,21 @@
 		        	</div>
 
 					<!-- IMPORT -->
-	            	<div>
-		           		<div ng-show='view == Views.IMPORT'>
-		           			<input style='align:right;' type="file" multiple id="ImportMapFileInput" name="file"/>
+	            	<div id="ImportContainer"
+	            		ng-show='view == Views.IMPORT'
+	            		ng-controller='GpxImportController'>
+
+		           		<div>
+		           			<input
+		           				id="ImportGpxFileInput"
+		           				style='align:right;'
+		           				type="file"
+		           				multiple
+		           				name="file"/>
 		           			<br/>
-							<button ng-click="postMapDataFiles()">import selected file</button>
+							<button ng-click="importSelectedFiles()">
+								import selected file
+							</button>
 		           		</div>
 	           		</div>
 

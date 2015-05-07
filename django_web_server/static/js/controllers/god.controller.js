@@ -1,34 +1,18 @@
 function GodController($scope, $http, $timeout) {
 
 	$scope.elevationPlotCanvasId = 'ElevationPlotCanvas';
-
-	$scope.globalDebug = function(raw_html) {
-		window.open('/echo/?' + raw_html, '_blank', '');
-	};
-
-	// django anti-CSRF token
-	//
-	$scope.getAntiCsrfTokenHeader = function() { 
-		return { 'X-CSRFToken': getCookie('csrftoken') }; 
-	};
-
-	// map list, filter token, filtered list, selected item ------------
+	$scope.fileInputId = 'ImportGpxFileInput';
 
 	$scope.headerText = 'GeoNodeTek';
-
-	$scope.infoText = '';
-	$scope.updateInfoText = function(msg) {
-		$scope.infoText = msg;
-		$scope.$apply();
-	};
-
-	$scope.mapInfoOverlayText = [];
+	$scope.infoText = '';	
 
 	$scope.mapIsLoadedAndActive = false;
 
-	$scope.TrackColours = Object.freeze([Colour.BLACK, Colour.VERYDARKGREY, Colour.BLUE, Colour.PURPLE, Colour.DARKGREEN, Colour.RED]);
+	$scope.mapInfoOverlayText = [];
+	$scope.showMapInfoOverlay = false;
 
-	// SHOW ---------------------------------
+	$scope.tracks = [];
+	$scope.TrackColours = Object.freeze([Colour.BLACK, Colour.VERYDARKGREY, Colour.BLUE, Colour.PURPLE, Colour.DARKGREEN, Colour.RED]);
 
 	$scope.Views = Object.freeze({
 		HOME : 0,
@@ -39,7 +23,24 @@ function GodController($scope, $http, $timeout) {
 	});	
 	$scope.view = $scope.Views.HOME;
 
-	$scope.showMapInfoOverlay = false
+	// -----------------------------------------------------	
+
+	$scope.globalDebug = function(raw_html) {
+		console.log(raw_html);
+	};
+
+	// django anti-CSRF token
+	//
+	$scope.getAntiCsrfTokenHeader = function() { 
+		return { 'X-CSRFToken': getCookie('csrftoken') }; 
+	};
+
+	// map list, filter token, filtered list, selected item ------------
+
+	$scope.updateInfoText = function(msg) {
+		$scope.infoText = msg;
+		$scope.$apply();
+	};
 
 	// NAVIGATION ---------------------------
 
@@ -93,7 +94,7 @@ function GodController($scope, $http, $timeout) {
 	$scope.gotoElevationPlot = function() {
 
 		$scope.view = $scope.Views.ELEVATION;
-		$scope.$broadcast(GodControllerEvents.PLOT_ELEVATION);
+		$scope.$broadcast(Events.PLOT_ELEVATION);
 	};
 
 	/*
@@ -104,6 +105,11 @@ function GodController($scope, $http, $timeout) {
 	context.fillText("Your Label Here", labelXposition, 0);
 	context.restore();
 	 */
+
+	$scope.launchGpxImport = function() {
+
+		$scope.view = $scope.Views.IMPORT;
+	};
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -166,81 +172,6 @@ function GodController($scope, $http, $timeout) {
 	};
 
 	// -------------------------------------------------------
-	// FILE IMPORT
-
-	$scope.launchGpxImport = function() {
-
-		$scope.view = $scope.Views.IMPORT;
-	};
-
-	$scope.postMapDataFiles = function() {
-
-		var postMapDataFilesRecursive = function(files) {
-
-			var file = files[0];
-
-			var remainder = [];
-			for (var i = 1; i < files.length; i++) {
-				remainder.push(files[i])
-			};	
-
-			var onLoad = function(evt) {
-
-					var packet = {
-						'fileName' : file.name,
-						'fileString' : evt.target.result
-					};
-
-					var successFn = function(data, status, headers, config) {
-
-						if (data.code == 'ok') {
-					    	$scope.getTrackList();
-				    	}						
-
-				    	if (remainder.length == 0) {
-
-				    		if ($scope.view == $scope.Views.IMPORT) {
-				    			$scope.view = $scope.Views.MAP_LIST;
-				    		}
-			    		}
-				    	else {
-				    		postMapDataFilesRecursive(remainder);
-				    	}
-					};
-
-					$http({
-					    url: '/mapfile/',
-					    method: 'POST',
-					    data: packet,
-	 					headers: $scope.getAntiCsrfTokenHeader()
-					}).success(successFn).error(function(data, status, headers, config) {
-						$scope.showImportSection = false;
-						$scope.showTrackList = true;
-					    $scope.globalDebug(data);
-					});
-
-				};
-
-			var reader = new FileReader(); 
-
-			reader.onload = onLoad; 
-
-			reader.onerror = function(evt) {
-				console.log('error reading file @ ' + file);
-				console.log(evt);
-				console.log('terminating');
-			};
-
-			reader.readAsText(file, "UTF-8");
-		};
-
-		var files = document.getElementById('ImportMapFileInput').files;
-		postMapDataFilesRecursive(files);
-	};
-
-	// -------------------------------------------------------
-
-	$scope.tracks = [];
 
 	$scope.updateHeaderTextFromTrackInfo = function() {
 		
@@ -280,6 +211,16 @@ function GodController($scope, $http, $timeout) {
     	$scope.updateHeaderTextFromTrackInfo();
     	$scope.view = $scope.Views.MAP;    	
 	};
+
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// EVENT	
+
+	$scope.$on(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED, function(evt) {
+
+		if ($scope.view == $scope.Views.IMPORT) {
+			$scope.view = $scope.Views.MAP_LIST;
+		}
+	});	
 
 	// START-UP
 

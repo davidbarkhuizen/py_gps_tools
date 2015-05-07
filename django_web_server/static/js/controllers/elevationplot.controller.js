@@ -1,13 +1,8 @@
 function ElevationPlotController($scope, $http, $timeout) {
 
-	$scope.canvasId = undefined;
+	$scope.canvasId = $scope.$parent.elevationPlotCanvasId;
+	
 	$scope.context = undefined;
-
-	$scope.getCanvasIdFromParent = function() {
-		$scope.canvasId = $scope.$parent.elevationPlotCanvasId;
-	};
-
-	$scope.getCanvasIdFromParent();	
 
 	$scope.refreshContext = function() {
 		
@@ -94,7 +89,7 @@ function ElevationPlotController($scope, $http, $timeout) {
 		}
 	};
 
-	$scope.$on(GodControllerEvents.PLOT_ELEVATION, function(evt) {
+	$scope.$on(Events.PLOT_ELEVATION, function(evt) {
 
 		$scope.refreshContext();
 		$scope.resizeCanvasFromGrandParentNodeDims();

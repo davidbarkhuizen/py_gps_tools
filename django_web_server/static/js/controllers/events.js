@@ -1,3 +1,7 @@
-var GodControllerEvents = Object.freeze({
-	PLOT_ELEVATION : 0
+var Events = Object.freeze({
+	PLOT_ELEVATION : 0,
+
+	GPX_FILE_IMPORT_FAILED : 1,
+	GPX_FILE_IMPORT_SUCCEEDED : 2,
+	GPX_FILE_IMPORT_PROCESS_COMPLETED : 3
 });

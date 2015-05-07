@@ -22,3 +22,9 @@ geoNodeTekControllers.controller(
 geoNodeTekControllers.controller(
 	'ElevationPlotController', ['$scope', '$http', '$timeout', ElevationPlotController]
 );
+
+// GpxImportController
+//
+geoNodeTekControllers.controller(
+	'GpxImportController', ['$scope', '$http', '$timeout', GpxImportController]
+);
