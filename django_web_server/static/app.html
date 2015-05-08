@@ -20,6 +20,7 @@
 		<script src="/static/js/controllers/god.controller.js"></script>
 		<script src="/static/js/controllers/tracklist.controller.js"></script>
 		<script src="/static/js/controllers/elevationplot.controller.js"></script>
+		<script src="/static/js/controllers/map.controller.js"></script>
 		<script src="/static/js/controllers/gpximport.controller.js"></script>
 		
 		<script src="/static/js/app.js"></script>
@@ -141,10 +142,11 @@
 	           		<!-- MAP -->
 					<div id='mapContainer' ng-show='view == Views.MAP' class="panel" style='height:100%;width100%'>
 
-						<canvas id="canvas" class="map-canvas">
+						<canvas id="MapCanvas"
+							class="map-canvas">
 						</canvas>
 
-						<div id='CanvasSelectionArea' 
+						<div id='MapCanvasSelectionArea' 
 							style='position: absolute; z-index: 20;'>
 						</div>
 

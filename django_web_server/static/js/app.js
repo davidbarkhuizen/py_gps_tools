@@ -5,26 +5,16 @@ var geoNodeTekApp = angular.module(appName, appDependencies);
 
 var geoNodeTekControllers = angular.module('GeoNodeTekControllers', []);
 
-// GodController
-//
-geoNodeTekControllers.controller(
-	'GodController', ['$scope', '$http', '$timeout', GodController]
-);
+var controllers = [
+	['GodController', ['$scope', '$http', '$timeout', GodController]],
+	['TrackListController', ['$scope', '$http', '$timeout', TrackListController]],
+	['ElevationPlotController', ['$scope', '$http', '$timeout', ElevationPlotController]],
+	['GpxImportController', ['$scope', '$http', '$timeout', GpxImportController]],
+	['MapController', ['$scope', '$http', '$timeout', MapController]],
+];
 
-// TrackListController
-//
-geoNodeTekControllers.controller(
-	'TrackListController', ['$scope', '$http', '$timeout', TrackListController]
-);
+for(var c in controllers) {
+	var ctrl = controllers[c];
+	geoNodeTekControllers.controller(ctrl[0], ctrl[1]);
+}
 
-// ElevationPlotController
-//
-geoNodeTekControllers.controller(
-	'ElevationPlotController', ['$scope', '$http', '$timeout', ElevationPlotController]
-);
-
-// GpxImportController
-//
-geoNodeTekControllers.controller(
-	'GpxImportController', ['$scope', '$http', '$timeout', GpxImportController]
-);

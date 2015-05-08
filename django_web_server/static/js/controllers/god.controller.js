@@ -3,6 +3,9 @@ function GodController($scope, $http, $timeout) {
 	$scope.elevationPlotCanvasId = 'ElevationPlotCanvas';
 	$scope.fileInputId = 'ImportGpxFileInput';
 
+	$scope.mapCanvasId = 'MapCanvas';
+	$scope.mapCanvasSelectionAreaDivId = 'MapCanvasSelectionArea';
+
 	$scope.headerText = 'GeoNodeTek';
 	$scope.infoText = '';	
 
@@ -221,8 +224,4 @@ function GodController($scope, $http, $timeout) {
 			$scope.view = $scope.Views.MAP_LIST;
 		}
 	});	
-
-	// START-UP
-
-	$scope.gfx = new Gfx('canvas', $scope.updateInfoText);
 }
