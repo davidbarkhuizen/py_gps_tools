@@ -254,14 +254,34 @@ function MapController($scope, $http, $timeout) {
 
 		$scope.canvasWaypoints = [];
 
+		var uniqueWaypoints = [];
+
 		for (var t in $scope.tracks) {
-			for (var wp in $scope.tracks[t].waypoints) {
+			for (var p in $scope.tracks[t].waypoints) {
 
-				var point = $scope.tracks[t].waypoints[wp];
-				var canvasWaypoint = $scope.transformPoint(point.lat, point.lon, point.ele, point.name);
+				var point = $scope.tracks[t].waypoints[p];
 
-				$scope.canvasWaypoints.push(canvasWaypoint);
+				var alreadyExists = false;
+				for(var j = 0; j < uniqueWaypoints.length; j++) {
+
+					if ((point.lat == uniqueWaypoints[j].lat) && (point.lon == uniqueWaypoints[j].lon)) {
+						alreadyExists = true;
+						break;
+					}
+				}
+
+				if (alreadyExists == false) {
+					uniqueWaypoints.push(point);
+				}				
 			}
+		}
+
+		for (var i = 0; i < uniqueWaypoints.length; i++) {
+
+			var point = uniqueWaypoints[i];
+			var canvasWaypoint = $scope.transformPoint(point.lat, point.lon, point.ele, point.name);
+
+			$scope.canvasWaypoints.push(canvasWaypoint);			
 		}
 	};
 
