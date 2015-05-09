@@ -1,7 +1,9 @@
-var Events = Object.freeze({
-	PLOT_ELEVATION : 0,
+var Event = Object.freeze({
+	PLOT_ELEVATION : guid(),
 
-	GPX_FILE_IMPORT_FAILED : 1,
-	GPX_FILE_IMPORT_SUCCEEDED : 2,
-	GPX_FILE_IMPORT_PROCESS_COMPLETED : 3
+	GPX_FILE_IMPORT_FAILED : guid(),
+	GPX_FILE_IMPORT_SUCCEEDED : guid(),
+	GPX_FILE_IMPORT_PROCESS_COMPLETED : guid(),
+
+	MAP_REFRESH : guid()
 });

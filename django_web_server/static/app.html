@@ -13,15 +13,14 @@
 
 	    <script src="/static/js/const.js"></script>
 	    
-	    <!-- MUST BE MADE A CONTROLLER -->
-	    <script src="/static/js/gfx.js"></script>	
-
 	    <script src="/static/js/controllers/events.js"></script>
+
 		<script src="/static/js/controllers/god.controller.js"></script>
+		<script src="/static/js/controllers/gpximport.controller.js"></script>
 		<script src="/static/js/controllers/tracklist.controller.js"></script>
+	    <script src="/static/js/controllers/map.controller.js"></script>
 		<script src="/static/js/controllers/elevationplot.controller.js"></script>
 		<script src="/static/js/controllers/map.controller.js"></script>
-		<script src="/static/js/controllers/gpximport.controller.js"></script>
 		
 		<script src="/static/js/app.js"></script>
 	</head>
@@ -82,10 +81,18 @@
 		        		ng-show='view == Views.HOME'>
 
 		        		<div style='margin:20px;text-align:center;'>
-	        			this is a modern website that makes use of many of the new futures of html5
+	        			please ensure that
+	        			<br/>
+	        			you are running the latest version
+	        			<br/>
+	        			of one of the following supported browsers
 	        			<br/>
 	        			<br/>
-	        			please ensure that you are running the latest version of either <a target="blank" href="https://www.mozilla.org/en-US/firefox/new/">Mozilla FireFox</a> or <a target="blank" href="http://www.google.com/chrome/index.html">Google Chrome</a> browsers
+	        			Mozilla <a target="blank" href="https://www.mozilla.org/en-US/firefox/new/">FireFox</a>
+	        			<br/>
+	        			Google <a target="blank" href="http://www.google.com/chrome/index.html">Chrome</a>
+		        		<br/>
+		        		Apple <a target="blank" href="https://www.apple.com/safari/">Safari</a>
 		        		</div>
 
 		        	</div>
@@ -140,7 +147,11 @@
 					</div>
 
 	           		<!-- MAP -->
-					<div id='mapContainer' ng-show='view == Views.MAP' class="panel" style='height:100%;width100%'>
+					<div id='mapContainer'
+						ng-show='view == Views.MAP'
+						ng-controller='MapController'
+						class="panel"
+						style='height:100%;width100%'>
 
 						<canvas id="MapCanvas"
 							class="map-canvas">

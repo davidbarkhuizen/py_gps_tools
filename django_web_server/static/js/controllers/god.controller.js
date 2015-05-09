@@ -1,8 +1,9 @@
 function GodController($scope, $http, $timeout) {
 
+	// Controller Element Doc Ids
+	//
 	$scope.elevationPlotCanvasId = 'ElevationPlotCanvas';
 	$scope.fileInputId = 'ImportGpxFileInput';
-
 	$scope.mapCanvasId = 'MapCanvas';
 	$scope.mapCanvasSelectionAreaDivId = 'MapCanvasSelectionArea';
 
@@ -97,7 +98,7 @@ function GodController($scope, $http, $timeout) {
 	$scope.gotoElevationPlot = function() {
 
 		$scope.view = $scope.Views.ELEVATION;
-		$scope.$broadcast(Events.PLOT_ELEVATION);
+		$scope.$broadcast(Event.PLOT_ELEVATION);
 	};
 
 	/*
@@ -206,7 +207,11 @@ function GodController($scope, $http, $timeout) {
 		newTrack.color = $scope.TrackColours[$scope.tracks.length - 1];
 
 		var resetMapViewPort = (!overlay);
-		$scope.gfx.draw($scope.tracks, resetMapViewPort);
+
+		$scope.$broadcast(
+			Event.MAP_REFRESH,
+			{ 'ResetMapViewPort' : resetMapViewPort }
+		);		
 
 		$scope.updateMapInfoOverlayText();
 
@@ -216,7 +221,7 @@ function GodController($scope, $http, $timeout) {
 	};
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	// EVENT	
+	// handlers for events emitted by child controllers	
 
 	$scope.$on(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED, function(evt) {
 

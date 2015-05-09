@@ -4,7 +4,7 @@ function toRgbString(r, g, b) {
 
 var Colour = Object.freeze({
 	BLACK: toRgbString(0, 0, 0),
-	PURPLE : toRgbString(128, 0, 128),
+	PURPLE : toRgbString(180, 0, 180),
 	RED : toRgbString(255, 0, 0),
 	GREEN : toRgbString(0, 255, 0),
 	LIGHTGREEN : toRgbString(144, 255, 144),

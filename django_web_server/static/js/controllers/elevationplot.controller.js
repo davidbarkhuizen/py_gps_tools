@@ -89,7 +89,7 @@ function ElevationPlotController($scope, $http, $timeout) {
 		}
 	};
 
-	$scope.$on(Events.PLOT_ELEVATION, function(evt) {
+	$scope.$on(Event.PLOT_ELEVATION, function(evt) {
 
 		$scope.refreshContext();
 		$scope.resizeCanvasFromGrandParentNodeDims();
