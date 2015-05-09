@@ -6,6 +6,9 @@ var Event = Object.freeze({
 	GPX_FILE_IMPORT_PROCESS_COMPLETED : guid(),
 
 	MAP_REFRESH : guid(),
+	MAP_ZOOM_IN : guid(),
+	MAP_ZOOM_OUT : guid(),
 	MAP_SELECTION_BEGUN : guid(),
 	CANCEL_MAP_SELECTION : guid(),
+
 });

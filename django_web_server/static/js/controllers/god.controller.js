@@ -125,11 +125,11 @@ function GodController($scope, $http, $timeout) {
 	};
 
 	$scope.zoomOut = function() {		
-		$scope.gfx.zoomOut();
+		$scope.$broadcast(Event.MAP_ZOOM_OUT);
 	}
 
 	$scope.zoomIn = function() {		
-		$scope.gfx.zoomIn();
+		$scope.$broadcast(Event.MAP_ZOOM_IN);
 	}	
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -209,12 +209,7 @@ function GodController($scope, $http, $timeout) {
 		// HACK
 		newTrack.color = $scope.TrackColours[$scope.tracks.length - 1];
 
-		var resetMapViewPort = (!overlay);
-
-		$scope.$broadcast(
-			Event.MAP_REFRESH,
-			{ 'ResetMapViewPort' : resetMapViewPort }
-		);		
+		$scope.$broadcast(Event.MAP_REFRESH);		
 
 		$scope.updateMapInfoOverlayText();
 
