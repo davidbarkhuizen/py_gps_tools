@@ -346,7 +346,7 @@ function MapController($scope, $http, $timeout) {
 
 		if (color) {
 			$scope.context.fillStyle = color;
-			$scope.strokeStyle = color;
+			$scope.context.strokeStyle = color;
 		}
 
 		// empty square
@@ -449,7 +449,7 @@ function MapController($scope, $http, $timeout) {
 		// $scope.drawTrackVertices('#000000', 1.0);
 
 		$scope.drawAllTracksEdgesColoured(2);
-		$scope.drawWaypoints(10, '#000000', 'helvetica', 15);
+		$scope.drawWaypoints(10, Colour.BLACK, 'helvetica', 15);
 	};
 
 	$scope.mapLatLonFromCanvasXY = function(x, y) {
