@@ -387,6 +387,32 @@ function MapController($scope, $http, $timeout) {
 
 	$scope.drawWaypoints = function(size, color, font, fontSize) {
 
+		var clusterFn = function(wp1, wp2) {
+
+			var dist = Math.sqrt(
+				(wp1.x - wp2.x) * (wp1.x - wp2.x)
+				+
+				(wp1.y - wp2.y) * (wp1.y - wp2.y)
+				);
+
+			var result = (dist <= size);
+
+			return result;
+		};
+
+		var clusters = cluster($scope.canvasWaypoints, clusterFn);
+		console.log('clusters');
+		console.log(clusters);
+
+		for(var c in clusters) {
+			console.log('cluster ' + c);
+			for(var z in clusters[c]) {
+				console.log(clusters[c][z].name)
+			}
+			console.log();
+		}
+
+
 	    for (var i in $scope.canvasWaypoints) {
 	    	var pt = $scope.canvasWaypoints[i];
 			$scope.drawWayPoint(pt.x, pt.y, size, color, pt.name, font, fontSize);
