@@ -1,72 +1,55 @@
-var MapPlotType = Object.freeze({
-	ELEVATION : 0,
-	EDGES : 1,
-	VERTICES : 2
-});
-
 function MapController($scope, $http, $timeout) {
+
+	$scope.tracks = $scope.$parent.tracks;
 	
 	$scope.canvasElement = document
 		.getElementById($scope.$parent.mapCanvasId);
-
-	$scope.selectionAreaElement = document
-		.getElementById($scope.$parent.mapCanvasSelectionAreaDivId);
-	
-	$scope.plotType = MapPlotType.EDGES;
-
-	$scope.tracks = $scope.$parent.tracks;
-
 	$scope.context = $scope.canvasElement.getContext("2d");
 
-	// selection area
-	// 
-	$scope.mapCanvasSelections = [];
-	$scope.selecting = false;
-	$scope.mouseDownPos = null;
-	$scope.mouseUpPos = null;
+	$scope.selectionAreaElement = document
+		.getElementById($scope.$parent.mapSelectionAreaDivId);
 
 	// map view port
 	//
 	$scope.mapViewPorts = [];
 	$scope.mapViewPort = function() {
 		return $scope.mapViewPorts[$scope.mapViewPorts.length - 1];
-	};
-
+	}
 	$scope.useMapViewPort = false;
 
-	$scope.cancelSelection = function() {
-		$scope.clearMapSelectionOutline();
+	// selection area
+	// 
+	$scope.mapCanvasSelections = [];
+	$scope.selecting = false;
+	$scope.selectionPoints = [];
 
+	$scope.cancelSelection = function() {
+		
 		$scope.selecting = false;
-		$scope.mouseDownPos = null;
-		$scope.mouseUpPos = null;		
+		$scope.selectionPoints.length = 0;
 	};
 
 	// ZOOM IN/OUT ---------------------------------
 
 	$scope.zoomIn = function() {
 
-		if (($scope.mouseDownPos == null) || ($scope.mouseUpPos == null))
+		if ($scope.selectionPoints.length !== 2)
 			return;
 
-		var latLonDown = $scope.mapLatLonFromCanvasXY($scope.mouseDownPos.x, $scope.mouseDownPos.y);
-		var latLonUp = $scope.mapLatLonFromCanvasXY($scope.mouseUpPos.x, $scope.mouseUpPos.y);
+		var latLon1 = $scope.mapLatLonFromCanvasXY($scope.selectionPoints[0].x, $scope.selectionPoints[0].y);
+		var latLon2 = $scope.mapLatLonFromCanvasXY($scope.selectionPoints[1].x, $scope.selectionPoints[1].y);
 
-		var minMaxLat = { 'max' : Math.max(latLonDown.lat, latLonUp.lat), 'min' : Math.min(latLonDown.lat, latLonUp.lat) };
-		var minMaxLon = { 'max' : Math.max(latLonDown.lon, latLonUp.lon), 'min' : Math.min(latLonDown.lon, latLonUp.lon) };
+		var minMaxLat = { 'max' : Math.max(latLon1.lat, latLon1.lat), 'min' : Math.min(latLon1.lat, latLon2.lat) };
+		var minMaxLon = { 'max' : Math.max(latLon1.lon, latLon2.lon), 'min' : Math.min(latLon1.lon, latLon2.lon) };
 		
 		var mapViewPort = { 'lat' : minMaxLat, 'lon' : minMaxLon };
-
 		$scope.mapViewPorts.push(mapViewPort);
-		$scope.mapCanvasSelections.push([$scope.mouseDownPos, $scope.mouseUpPos]);
+
+		$scope.mapCanvasSelections.push($scope.selectionPoints);
+		$scope.cancelSelection();
 
 		$scope.useMapViewPort = true;
-
 		$scope.draw();		
-
-		$scope.clearMapSelectionOutline();
-		$scope.mouseDownPos = null;
-		$scope.mouseUpPos = null;
 	};
 
 	$scope.zoomOut = function() {
@@ -85,9 +68,11 @@ function MapController($scope, $http, $timeout) {
 			$scope.draw($scope.tracks, true);
 
 		if (canvasSelection != null) {
-			$scope.drawCanvasSelectionAreaFrom2Points(canvasSelection[0], canvasSelection[1]);		
-			$scope.mouseDownPos = canvasSelection[0];
-			$scope.mouseUpPos = canvasSelection[1];
+			$scope.selectionPoints.length = 0;
+			$scope.selectionPoints.push(canvasSelection.pop());
+			$scope.selectionPoints.push(canvasSelection.pop());
+
+			$scope.drawCanvasSelectionArea();		
 		}
 	};
 
@@ -370,7 +355,8 @@ function MapController($scope, $http, $timeout) {
 		$scope.context.stroke();		
 
 		/*
-		$scope.context.fillRect(pt.x, pt.y, 1, 1);
+		// empty circle
+		//
 		$scope.context.beginPath();
 		$scope.context.arc(pt.x, pt.y,5,0,Math.PI*2,true);
 		$scope.context.stroke();
@@ -395,26 +381,29 @@ function MapController($scope, $http, $timeout) {
 				(wp1.y - wp2.y) * (wp1.y - wp2.y)
 				);
 
-			var result = (dist <= size);
+			var result = (dist <= (2*size));
 
 			return result;
 		};
 
 		var clusters = clusterPoints($scope.canvasWaypoints, clusterFn);
 
-		for(var c = 0; c <= clusters.length; c++) {
+		for(var c = 0; c < clusters.length; c++) {
 
 			var cluster = clusters[c];
 
 			var name, x, y;
 
+			// normal isolated waypoint
+			//
 			if (cluster.length == 1) {
+
 				x = cluster[0].x;
 				y = cluster[0].y;
 
 				name = cluster[0].name; 
 			}
-			else {
+			else { // cluster of waypoints too dense to display
 
 				// use 1st point (should be centroid)
 				//
@@ -453,13 +442,10 @@ function MapController($scope, $http, $timeout) {
 		
 		$scope.blankCanvas();
 
-		switch ($scope.plotType) {
-			case MapPlotType.ELEVATION: $scope.drawElevationHalo(); break;
-			case MapPlotType.EDGES: $scope.drawAllTracksEdgesColoured(2); break;
-			case MapPlotType.VERTICES: $scope.drawTrackVertices('#000000', 1.0); break;
-			default: throw "unknown $scope.MapPlotType:" + $scope.MapPlotType;
-		}
+		// $scope.drawElevationHalo();
+		// $scope.drawTrackVertices('#000000', 1.0);
 
+		$scope.drawAllTracksEdgesColoured(2);
 		$scope.drawWaypoints(10, '#000000', 'helvetica', 15);
 	};
 
@@ -471,12 +457,27 @@ function MapController($scope, $http, $timeout) {
 		return { 'lon' : lon, 'lat' : lat };
 	};
 
-	$scope.clearMapSelectionOutline = function() {
-		var baseStyle = 'position: absolute; z-index: 20; border-color:black;border-width:1px;border-style:dotted;';
-		$scope.selectionAreaElement.setAttribute('style', baseStyle);
+	$scope.genLocationString = function(lat, lon) {
+		return 'lat ' + lat.toFixed(6).toString() + ', lon ' + lon.toFixed(6).toString();
 	};
 
-	// EVENT HANDLERS ========================================================
+	$scope.drawCanvasSelectionArea = function() {
+
+		var pt1 = $scope.selectionPoints[0];
+		var pt2 = $scope.selectionPoints[1];
+
+		var left = Math.min(pt1.x, pt2.x);
+		var top = Math.min(pt1.y, pt2.y);
+		var width = Math.abs(pt1.x - pt2.x);
+		var height = Math.abs(pt1.y - pt2.y);
+		
+		var style  = 'left:' + left + 'px;';
+		style = style + 'top:' + top + 'px;';
+		style = style + 'width:' + width + 'px;';
+		style = style + 'height:' + height + 'px;';
+
+		$scope.selectionAreaElement.setAttribute('style', style);
+	};
 
 	$scope.getMousePos = function(evt) {
 		var rect = $scope.canvasElement.getBoundingClientRect();
@@ -486,45 +487,28 @@ function MapController($scope, $http, $timeout) {
 		};
 	};
 
-	$scope.onMapLeftClickDown = function(mouseCanvasPos) {
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// document event handlers
+
+	$scope.onLeftClickDown = function(mouseCanvasPos) {		
+
+		$scope.selectionPoints.length = 0;
+		$scope.selectionPoints.push(mouseCanvasPos);
+		$scope.selectionPoints.push(mouseCanvasPos);
+
+		$scope.drawCanvasSelectionArea();
 
 		$scope.selecting = true;
-		$scope.mouseDownPos = mouseCanvasPos;
+		$scope.$emit(Event.MAP_SELECTION_BEGUN);
 	};
 
-	$scope.onMapLeftClickUp = function() {
+	$scope.onLeftClickUp = function() {
 
 		$scope.selecting = false;
 		$scope.mouseUpPos = $scope.mouseLastPos;
-	};
+	};	
 
-	$scope.genLocationString = function(lat, lon) {
-		return 'lat ' + lat.toFixed(6).toString() + ', lon ' + lon.toFixed(6).toString();
-	};
-
-	$scope.drawCanvasSelectionArea = function(top, left, height, width) {
-		
-		var baseStyle = 'position: absolute; z-index: 20; border-color:orange;border-width:2px;border-style:dashed;';
-		
-		var style  = baseStyle + 'left:' + left + 'px;';
-		style = style + 'top:' + top + 'px;';
-		style = style + 'width:' + width + 'px;';
-		style = style + 'height:' + height + 'px;';
-
-		$scope.selectionAreaElement.setAttribute('style', style);
-	};
-
-	$scope.drawCanvasSelectionAreaFrom2Points = function(pt1, pt2) {
-
-		var left = Math.min(pt1.x, pt2.x);
-		var top = Math.min(pt1.y, pt2.y);
-		var width = Math.abs(pt1.x - pt2.x);
-		var height = Math.abs(pt1.y - pt2.y);
-
-		$scope.drawCanvasSelectionArea(top, left, height, width);
-	};
-
-	$scope.onMapMouseMove = function(mousePos) {
+	$scope.onMouseMove = function(mousePos) {
 
 		var latLon = $scope.mapLatLonFromCanvasXY(mousePos.x, mousePos.y);
 		
@@ -535,8 +519,8 @@ function MapController($scope, $http, $timeout) {
 
 		if ($scope.selecting == true) {
 
-			$scope.mouseLastPos = mousePos;
-			$scope.drawCanvasSelectionAreaFrom2Points($scope.mouseDownPos, $scope.mouseLastPos);
+			$scope.selectionPoints[1] = mousePos;
+			$scope.drawCanvasSelectionArea();
 		}
 	};
 
@@ -544,15 +528,16 @@ function MapController($scope, $http, $timeout) {
 	//
 	$scope.canvasElement.addEventListener('mousemove', function(evt) {
 		var mousePos = $scope.getMousePos(evt);
-		$scope.onMapMouseMove(mousePos);
+		$scope.onMouseMove(mousePos);
 	}, false);
 
 	// MAP MOUSE DOWN
 	//
 	$scope.canvasElement.addEventListener('mousedown', function(evt) {
+
 		var mousePos = $scope.getMousePos(evt);
 		if (evt.buttons == 1) {
-			$scope.onMapLeftClickDown(mousePos);
+			$scope.onLeftClickDown(mousePos);
 		}
 		else if (evt.buttons == 2) {
 		}
@@ -564,7 +549,7 @@ function MapController($scope, $http, $timeout) {
 	$scope.selectionAreaElement.addEventListener('mouseup', function(evt) {
 
 		if (evt.buttons == 1) {
-			$scope.onMapLeftClickUp($scope.getMousePos(evt));
+			$scope.onLeftClickUp($scope.getMousePos(evt));
 		}
 		else if (evt.buttons == 2) {
 			// undo last zoom
@@ -573,10 +558,13 @@ function MapController($scope, $http, $timeout) {
 	}, false);
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// handlers for angular.js events
 
 	$scope.$on(Event.MAP_REFRESH, function(evt, data) {
 		$scope.draw(data.ResetMapViewPort);
+	});
+
+	$scope.$on(Event.CANCEL_MAP_SELECTION, function(evt, data) {
+		$scope.cancelSelection();
 	});
 }

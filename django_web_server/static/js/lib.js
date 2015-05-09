@@ -103,7 +103,7 @@ function clusterPoints(list, clusterPredicate) {
 						// if the cluster predicate returns true, merge clusters
 						if (clusterPredicate(cluster1Element, cluster2Element)) {
 
-							console.log(c1, c1z, c2, c2z);
+							// console.log(c1, c1z, c2, c2z);
 
 							while (cluster2.length > 0) {
 								cluster1.push(cluster2.pop());

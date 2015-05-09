@@ -153,11 +153,8 @@ a
     color:green;
 }
 
-.map-canvas {
-    display:inline-block;
-}
-
 /* -------------------------------------------------------*/
+/* TRACK LIST */
 
 .map-list {
 
@@ -169,4 +166,22 @@ a
     overflow:scroll;
     overflow-y:scroll;
     overflow-x:hidden;
+}
+
+/* -------------------------------------------------------*/
+/* MAP */
+
+.map-canvas {
+    z-index: 1;
+    display:inline-block;
+    opacity: 0.99;
+}
+
+.map-selection-area{
+    z-index: 0;
+    position: absolute;
+    
+    border-style:dashed;
+    border-width:2px;
+    border-color:orange;
 }

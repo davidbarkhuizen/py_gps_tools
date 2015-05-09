@@ -59,7 +59,7 @@
 						<br/>
 						
 						<!-- MAP CONTROLS -->
-						<a ng-show='view == Views.MAP' href='#' ng-click='cancelSelection();'>cancel selection</a>
+						<a ng-show='view == Views.MAP' href='#' ng-click='cancelMapSelection();'>cancel selection</a>
 						<br/>
 						<a ng-show='view == Views.MAP' href='#' ng-click='zoomIn();'>zoom in</a>
 						<br/>
@@ -157,8 +157,10 @@
 							class="map-canvas">
 						</canvas>
 
-						<div id='MapCanvasSelectionArea' 
-							style='position: absolute; z-index: 20;'>
+						<div id='MapSelectionArea' 
+							class='map-selection-area'
+							ng-show='showMapSelectionArea'
+							>
 						</div>
 
 						<div id='mapInfoOverlay' class='map-info-overlay' ng-show='showMapInfoOverlay'>

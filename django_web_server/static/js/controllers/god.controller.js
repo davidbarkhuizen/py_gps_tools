@@ -5,7 +5,9 @@ function GodController($scope, $http, $timeout) {
 	$scope.elevationPlotCanvasId = 'ElevationPlotCanvas';
 	$scope.fileInputId = 'ImportGpxFileInput';
 	$scope.mapCanvasId = 'MapCanvas';
-	$scope.mapCanvasSelectionAreaDivId = 'MapCanvasSelectionArea';
+	
+	$scope.mapSelectionAreaDivId = 'MapSelectionArea';
+	$scope.showMapSelectionArea = false;
 
 	$scope.headerText = 'GeoNodeTek';
 	$scope.infoText = '';	
@@ -117,8 +119,9 @@ function GodController($scope, $http, $timeout) {
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-	$scope.cancelSelection = function() {
-		$scope.gfx.cancelSelection();
+	$scope.cancelMapSelection = function() {
+		$scope.$broadcast(Event.CANCEL_MAP_SELECTION);
+		$scope.showMapSelectionArea = false;
 	};
 
 	$scope.zoomOut = function() {		
@@ -228,5 +231,10 @@ function GodController($scope, $http, $timeout) {
 		if ($scope.view == $scope.Views.IMPORT) {
 			$scope.view = $scope.Views.MAP_LIST;
 		}
+	});	
+
+	$scope.$on(Event.MAP_SELECTION_BEGUN, function(evt) {
+		$scope.showMapSelectionArea = true;
+		$scope.$apply();
 	});	
 }
