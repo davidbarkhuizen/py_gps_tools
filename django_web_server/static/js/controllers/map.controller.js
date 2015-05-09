@@ -4,11 +4,6 @@ var MapPlotType = Object.freeze({
 	VERTICES : 2
 });
 
-/*
-ctx.beginPath();
-ctx.arc(75,75,50,0,Math.PI*2,true);
-*/
-
 function MapController($scope, $http, $timeout) {
 	
 	$scope.canvasElement = document
@@ -324,9 +319,6 @@ function MapController($scope, $http, $timeout) {
 
 	$scope.drawEdges = function(points, thickness, color) {
 		
-		console.log('$scope.context');
-		console.log($scope.context);
-
 		// style
 		//
 		$scope.context.lineWidth = thickness;
@@ -357,68 +349,47 @@ function MapController($scope, $http, $timeout) {
 	    }    
 	};
 
-	$scope.drawWaypoints = function(colorString, fontString) {
+	$scope.drawWayPoint = function(cx, cy, size, color, name, font, fontSize) {
 
-		$scope.context.fillStyle = colorString;
-		$scope.context.font = fontString;
+		if (color) {
+			$scope.context.fillStyle = color;
+			$scope.strokeStyle = color;
+		}
 
-		// overlap determination ---------------
+		// empty square
+		//
+		z = Math.floor(size / 2);		
+    	$scope.context.beginPath();
+		$scope.context.strokeRect(cx - z, cy - z, 2*z, 2*z);
+		$scope.context.stroke();		
 
-		var displayedPoints = [];
+		// with center dot
+		//
+    	$scope.context.beginPath();
+		$scope.context.fillRect(cx, cy, 1, 1);
+		$scope.context.stroke();		
 
-		var contains = function(container, contained, radius) {
+		/*
+		$scope.context.fillRect(pt.x, pt.y, 1, 1);
+		$scope.context.beginPath();
+		$scope.context.arc(pt.x, pt.y,5,0,Math.PI*2,true);
+		$scope.context.stroke();
+		*/
 
-			var containsX = ((container.x + 2*radius >= contained.x) && (container.x - 2*radius <= contained.x));
-			var containsY = ((container.y + 2*radius >= contained.y) && (container.y - 2*radius <= contained.y));
-		
-			return containsX && containsY;
-		};
+		// text
+		//
+		if (name !== undefined) {
+			$scope.context.font = fontSize + 'px ' + font;
+			$scope.context.textBaseline = 'middle';
+			$scope.context.fillText(name, cx + size, cy);
+		}	
+	}
 
-		var displayedPointsContains = function(contained, radius) {
+	$scope.drawWaypoints = function(size, color, font, fontSize) {
 
-			for(var i in displayedPoints) {
-				if (contains(displayedPoints[i], contained, radius))
-					return true;
-			}
-
-			return false;
-		};
-
-		var hideOverlappingPoints = false;
-
-		// --------------------------------
-
-	    for (var i in $scope.canvasWaypoints) {	
-	    	
-	    	var pt = $scope.canvasWaypoints[i];		    	
-
-	    	var drawPoint = true;
-
-	    	if (hideOverlappingPoints) {
-		    	if (displayedPointsContains(pt, 10) == true) {
-		    		drawPoint = false;
-		    	} else {
-		    		displayedPoints.push(pt);
-		    	}
-		    }
-
-	    	if (drawPoint == true) {					
-
-	    		var z = 4;
-		    	$scope.context.moveTo(pt.x - z, pt.y - z);
-		    	$scope.context.beginPath();
-				$scope.context.fillRect(pt.x - z, pt.y - z, 2*z, 2*z);
-				$scope.context.stroke();		
-				
-				/*
-				$scope.context.fillRect(pt.x, pt.y, 1, 1);
-				$scope.context.beginPath();
-				$scope.context.arc(pt.x, pt.y,5,0,Math.PI*2,true);
-				$scope.context.stroke();
-				*/
-
-				$scope.context.fillText(pt.name, pt.x - 5, pt.y - 10);	
-			}	
+	    for (var i in $scope.canvasWaypoints) {
+	    	var pt = $scope.canvasWaypoints[i];
+			$scope.drawWayPoint(pt.x, pt.y, size, color, pt.name, font, fontSize);
 	    };	   	
 	};
 
@@ -447,7 +418,7 @@ function MapController($scope, $http, $timeout) {
 			default: throw "unknown $scope.MapPlotType:" + $scope.MapPlotType;
 		}
 
-		$scope.drawWaypoints('#000000', '15px courier');
+		$scope.drawWaypoints(10, '#000000', 'helvetica', 15);
 	};
 
 	$scope.mapLatLonFromCanvasXY = function(x, y) {
@@ -564,8 +535,6 @@ function MapController($scope, $http, $timeout) {
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 	$scope.$on(Event.MAP_REFRESH, function(evt, data) {
-		console.log('$scope.tracks');
-		console.log($scope.tracks);
 		$scope.draw(data.ResetMapViewPort);
 	});
 }
