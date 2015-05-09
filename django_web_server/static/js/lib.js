@@ -63,7 +63,7 @@ for each cluster:
 if every cluster is fully examined with no merge, then end
 */
 
-function cluster(list, clusterPredicate) {
+function clusterPoints(list, clusterPredicate) {
 
 	if ((!list) || (list.length <= 1)){
 		return list;

@@ -400,23 +400,39 @@ function MapController($scope, $http, $timeout) {
 			return result;
 		};
 
-		var clusters = cluster($scope.canvasWaypoints, clusterFn);
-		console.log('clusters');
-		console.log(clusters);
+		var clusters = clusterPoints($scope.canvasWaypoints, clusterFn);
 
-		for(var c in clusters) {
-			console.log('cluster ' + c);
-			for(var z in clusters[c]) {
-				console.log(clusters[c][z].name)
+		for(var c = 0; c <= clusters.length; c++) {
+
+			var cluster = clusters[c];
+
+			var name, x, y;
+
+			if (cluster.length == 1) {
+				x = cluster[0].x;
+				y = cluster[0].y;
+
+				name = cluster[0].name; 
 			}
-			console.log();
+			else {
+
+				// use 1st point (should be centroid)
+				//
+				x = cluster[0].x;
+				y = cluster[0].y;
+
+				// concat names
+				//
+				var s = '';
+				for (var i = 0; i < cluster.length; i++) {
+					s = s + cluster[i].name  + ' | ';
+				};
+				s = s.slice(0, s.length - 3);
+				name = s;
+			}
+
+		    $scope.drawWayPoint(x, y, size, color, name, font, fontSize);   	
 		}
-
-
-	    for (var i in $scope.canvasWaypoints) {
-	    	var pt = $scope.canvasWaypoints[i];
-			$scope.drawWayPoint(pt.x, pt.y, size, color, pt.name, font, fontSize);
-	    };	   	
 	};
 
 	$scope.draw = function(resetMapViewPort) {
