@@ -11,4 +11,5 @@ var Event = Object.freeze({
 	MAP_SELECTION_BEGUN : guid(),
 	CANCEL_MAP_SELECTION : guid(),
 
+	INFO_TEXT_UPDATE : guid(),
 });

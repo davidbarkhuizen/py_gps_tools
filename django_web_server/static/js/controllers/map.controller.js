@@ -250,9 +250,7 @@ function MapController($scope, $http, $timeout) {
 		}
 	};
 
-	$scope.renderWayPointsToCanvasSpace = function() {
-
-		$scope.canvasWaypoints = [];
+	$scope.renderWayPointsToCanvasSpace = function() {		
 
 		var uniqueWaypoints = [];
 
@@ -275,6 +273,8 @@ function MapController($scope, $http, $timeout) {
 				}				
 			}
 		}
+
+		$scope.canvasWaypoints = [];
 
 		for (var i = 0; i < uniqueWaypoints.length; i++) {
 
@@ -480,7 +480,7 @@ function MapController($scope, $http, $timeout) {
 		return { 'lon' : lon, 'lat' : lat };
 	};
 
-	$scope.genLocationString = function(lat, lon) {
+	$scope.genLocationText = function(lat, lon) {
 		return 'lat ' + lat.toFixed(6).toString() + ', lon ' + lon.toFixed(6).toString();
 	};
 
@@ -523,8 +523,6 @@ function MapController($scope, $http, $timeout) {
 
 		$scope.selecting = true;
 		$scope.$emit(Event.MAP_SELECTION_BEGUN);
-
-		console.log('down');
 	};
 
 	$scope.onLeftClickUp = function(mousePos) {
@@ -539,8 +537,8 @@ function MapController($scope, $http, $timeout) {
 
 		var latLon = $scope.mapLatLonFromCanvasXY(mousePos.x, mousePos.y);
 		
-		// TODO
-		// $scope.updateInfoString($scope.genLocationString(latLon.lat, latLon.lon));
+		var locationText = $scope.genLocationText(latLon.lat, latLon.lon);
+		$scope.$emit(Event.INFO_TEXT_UPDATE, locationText);
 
 		if ($scope.selecting == true) {
 

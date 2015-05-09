@@ -50,7 +50,9 @@ function GodController($scope, $http, $timeout) {
 
 	// NAVIGATION ---------------------------
 
-	$scope.onTrackSelected = function(trackId) { console.log('useTrack ' + trackId); };
+	$scope.onTrackSelected = function(trackId) {
+		console.log('useTrack ' + trackId);
+	};
 
 	$scope.selectAndLoadMap = function(mapId) {
 		$scope.loadMap(mapId, false);
@@ -67,6 +69,7 @@ function GodController($scope, $http, $timeout) {
 	    	$scope.view = $scope.Views.MAP;
 		}
 	};
+
 	$scope.gotoOpenTrack = function() {		
 
 		$scope.headerText = 'select track to view';
@@ -196,10 +199,7 @@ function GodController($scope, $http, $timeout) {
 
 	$scope.processIncomingTrackData = function(trackData, overlay) {
 
-		if (overlay) {
-
-		}
-		else { 
+		if (!overlay) {
 			$scope.tracks.length = 0;
 		}
 
@@ -232,4 +232,9 @@ function GodController($scope, $http, $timeout) {
 		$scope.showMapSelectionArea = true;
 		$scope.$apply();
 	});	
-}
+
+	$scope.$on(Event.INFO_TEXT_UPDATE, function(evt, infoText) {
+		$scope.infoText = infoText;
+		$scope.$apply();
+	});
+};
