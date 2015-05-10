@@ -39,6 +39,8 @@ def get(request, id):
     track.waypoints = waypoints
 
     track_dict = gpx.track_to_dict(track)
+    # augment w data model id
+    track_dict['trackId'] = id
 
     track_json_string = json.dumps(track_dict)
     return HttpResponse(track_json_string, mimetype='application/json')

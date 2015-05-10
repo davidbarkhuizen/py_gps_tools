@@ -14,11 +14,13 @@ archeological
 
 */
 
-// http://stackoverflow.com/questions/365826/calculate-distance-between-2-gps-coordinates
-// http://www.movable-type.co.uk/scripts/latlong.html
-
 Number.prototype.toRad = function() { return this * (Math.PI / 180); };
 
+// http://stackoverflow.com/questions/365826/calculate-distance-between-2-gps-coordinates
+// http://www.movable-type.co.uk/scripts/latlong.html
+//
+// 4 significant digits ?
+//
 function haversineDistanceMetres(lat1, lon1, lat2, lon2) {
 
 	var R = 6371; // km
@@ -110,6 +112,7 @@ function Track(data) {
 	// name
 	//
 	this.name = data.name;
+	this.id = data.trackId;
 
 	// segments with points
 	//

@@ -21,11 +21,12 @@ function GodController($scope, $http, $timeout) {
 	$scope.TrackColours = Object.freeze([Colour.BLACK, Colour.BLUE, Colour.PURPLE, Colour.DARKGREEN, Colour.RED]);
 
 	$scope.Views = Object.freeze({
-		HOME : 0,
-		IMPORT : 1, 
-		TRACK_LIST : 2, 
-		MAP : 3,
-		ELEVATION : 4
+		HOME : guid(),
+		IMPORT : guid(), 
+		TRACK_LIST : guid(), 
+		ACTIVE_TRACK_LIST : guid(),
+		MAP : guid(),
+		ELEVATION : guid(),
 	});	
 	$scope.view = $scope.Views.HOME;
 
@@ -82,23 +83,21 @@ function GodController($scope, $http, $timeout) {
 
 	$scope.gotoAddTrack = function() {		
 
-		$scope.headerText = 'select track to add to map';
+		$scope.headerText = 'select a track to add to the map';
 		$scope.view = $scope.Views.MAP_LIST;
-
 		$scope.onTrackSelected = $scope.overlayMap;
-
 		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
 	}
 
-	$scope.gotoAddTrack = function() {		
+	$scope.gotoRemoveTrack = function() {
 
-		$scope.headerText = 'select track to add to map';
-		$scope.view = $scope.Views.MAP_LIST;
+		if ($scope.tracks.length <= 1)
+			return;
 
-		$scope.onTrackSelected = $scope.overlayMap;
-
-		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
-	}
+		$scope.headerText = 'select a track to remove from the map';
+		$scope.view = $scope.Views.ACTIVE_TRACK_LIST;		
+		// $scope.onTrackSelected = $scope.removeTrack;	
+	};
 
 	$scope.gotoElevationPlot = function() {
 
@@ -206,8 +205,25 @@ function GodController($scope, $http, $timeout) {
 		var newTrack = new Track(trackData);
 		$scope.tracks.push(newTrack);
 
-		// HACK
-		newTrack.color = $scope.TrackColours[$scope.tracks.length - 1];
+		// COLOUR LOGIC
+		
+		// used
+		var coloursInUse = [];
+		for (i = 0; i < $scope.tracks.length; i++) {
+			coloursInUse.push($scope.tracks[i].colour);
+		}
+
+		// unused
+		var unusedColours = [];
+		for (var colourName in $scope.TrackColours) {
+			var colour = $scope.TrackColours[colourName];
+
+			if (coloursInUse.indexOf(colour) == -1) {
+				unusedColours.push(colour);
+			}
+		}
+
+		newTrack.colour = unusedColours[0];
 
 		$scope.$broadcast(Event.MAP_REFRESH);		
 
@@ -218,8 +234,31 @@ function GodController($scope, $http, $timeout) {
     	$scope.view = $scope.Views.MAP;    	
 	};
 
+	$scope.removeTrack = function (trackId) {
+
+		function retain(track) {
+			return (track.id !== trackId);
+		};
+
+		var toRetain = $scope.tracks.filter(retain);
+
+		function addToTracks(track) { $scope.tracks.push(track); };
+
+		$scope.tracks.length = 0;
+
+		toRetain.forEach(addToTracks);
+
+		$scope.$broadcast(Event.MAP_REFRESH);
+
+		$scope.view = $scope.Views.MAP;
+	};
+
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// handlers for events emitted by child controllers	
+
+	$scope.$on(Command.REMOVE_TRACK, function(evt, trackId) {
+		$scope.removeTrack(trackId);
+	});
 
 	$scope.$on(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED, function(evt) {
 

@@ -10,6 +10,7 @@ var controllers = [
 	['TrackListController', ['$scope', '$http', '$timeout', TrackListController]],
 	['ElevationPlotController', ['$scope', '$http', '$timeout', ElevationPlotController]],
 	['GpxImportController', ['$scope', '$http', '$timeout', GpxImportController]],
+	['ActiveTrackListController', ['$scope', '$http', '$timeout', ActiveTrackListController]],
 	['MapController', ['$scope', '$http', '$timeout', MapController]],
 ];
 

@@ -354,9 +354,9 @@ function MapController($scope, $http, $timeout) {
 		for (var t in $scope.canvasPoints) {
 			
 			var vertices = $scope.canvasPoints[t];
-			var color = $scope.tracks[t].color;
+			var colour = $scope.tracks[t].colour;
 
-			$scope.drawEdges(vertices, thickness, color);
+			$scope.drawEdges(vertices, thickness, colour);
 	    }    
 	};
 
