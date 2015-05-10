@@ -158,20 +158,12 @@ a
 
 .map-canvas {
     z-index: 3;
-    opacity: 0.9;
+    /*opacity: 0.5;*/
     display:inline-block;
 }
 
-.map-info {
-    z-index: 2;
-    position: absolute;
-
-    top: 0;
-    left: 0;
-}
-
 .map-selection-area {
-    z-index: 1;
+    z-index: -1;
     position: absolute;
 }
 
@@ -181,5 +173,17 @@ a
 .map-selection-area {    
     border-style:dashed;
     border-width:2px;
-    border-color:orange;
+    border-color:red;
+}
+
+.track-stats {
+    vertical-align:top;
+
+    position: relative;
+    width:100%;
+    height:100%;
+}
+
+.elevation-plot-container {
+    position: relative;
 }

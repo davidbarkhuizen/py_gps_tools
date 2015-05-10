@@ -7,15 +7,11 @@ function GodController($scope, $http, $timeout) {
 	$scope.mapCanvasId = 'MapCanvas';
 	
 	$scope.mapSelectionAreaDivId = 'MapSelectionArea';
-	$scope.showMapSelectionArea = false;
 
 	$scope.headerText = 'GeoNodeTek';
 	$scope.infoText = '';	
 
 	$scope.mapIsLoadedAndActive = false;
-
-	$scope.mapInfoOverlayText = [];
-	$scope.showMapInfo = false;
 
 	$scope.tracks = [];
 	$scope.TrackColours = Object.freeze([Colour.BLACK, Colour.BLUE, Colour.PURPLE, Colour.DARKGREEN, Colour.RED]);
@@ -27,10 +23,11 @@ function GodController($scope, $http, $timeout) {
 		ACTIVE_TRACK_LIST : guid(),
 		MAP : guid(),
 		ELEVATION : guid(),
+		STATS : guid(),
 	});	
 	$scope.view = $scope.Views.HOME;
 
-	// -----------------------------------------------------	
+	// -----------------------------------------------------
 
 	$scope.globalDebug = function(raw_html) {
 		console.log(raw_html);
@@ -69,6 +66,10 @@ function GodController($scope, $http, $timeout) {
 	    	$scope.updateHeaderTextFromTrackInfo();
 	    	$scope.view = $scope.Views.MAP;
 		}
+	};
+
+	$scope.gotoStats = function() {
+		$scope.view = $scope.Views.STATS;
 	};
 
 	$scope.gotoOpenTrack = function() {		
@@ -123,7 +124,6 @@ function GodController($scope, $http, $timeout) {
 
 	$scope.cancelMapSelection = function() {
 		$scope.$broadcast(Event.CANCEL_MAP_SELECTION);
-		$scope.showMapSelectionArea = false;
 	};
 
 	$scope.zoomOut = function() {		
@@ -162,24 +162,8 @@ function GodController($scope, $http, $timeout) {
 
 	$scope.loadMap = function(mapId, overlay){
 		$scope.getMap(mapId, overlay);
-		$scope.updateMapInfoOverlayText();
 	};
 	
-	$scope.updateMapInfoOverlayText = function() {
-
-		var texts = [];
-
-		for(var t in $scope.tracks) {
-			var track = $scope.tracks[t];
-
-			texts.push(track.name);
-			texts.push(track.periodString);
-			texts.push(track.dayCountString)
-		}
-
-		$scope.mapInfoOverlayText = texts;
-	};
-
 	// -------------------------------------------------------
 
 	$scope.updateHeaderTextFromTrackInfo = function() {
@@ -191,7 +175,7 @@ function GodController($scope, $http, $timeout) {
 		else if ($scope.tracks.length == 1)
 			text = $scope.tracks[0].name;
 		else
-			text = 'multiple tracks (see track info)';		
+			text = 'multiple tracks';		
 
     	$scope.headerText = text;
 	};
@@ -226,8 +210,6 @@ function GodController($scope, $http, $timeout) {
 		newTrack.colour = unusedColours[0];
 
 		$scope.$broadcast(Event.MAP_REFRESH);		
-
-		$scope.updateMapInfoOverlayText();
 
     	$scope.mapIsLoadedAndActive = true;
     	$scope.updateHeaderTextFromTrackInfo();
@@ -268,7 +250,6 @@ function GodController($scope, $http, $timeout) {
 	});	
 
 	$scope.$on(Event.MAP_SELECTION_BEGUN, function(evt) {
-		$scope.showMapSelectionArea = true;
 		$scope.$apply();
 	});	
 

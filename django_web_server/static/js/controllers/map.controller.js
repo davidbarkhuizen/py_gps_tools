@@ -20,11 +20,17 @@ function MapController($scope, $http, $timeout) {
 	$scope.selecting = false;
 	$scope.selectionPoints = [];
 
+	$scope.showMapSelectionArea = false;
+
 	$scope.cancelSelection = function() {
 		
 		$scope.selecting = false;
 		$scope.selectionPoints.length = 0;
-		$scope.$parent.showMapSelectionArea = false;
+		$scope.showMapSelectionArea = false;
+
+		//if ($scope.show)
+
+		$scope.makeMapOpaque();
 	};
 
 	// ZOOM IN/OUT ---------------------------------
@@ -74,11 +80,11 @@ function MapController($scope, $http, $timeout) {
 
 			$scope.resizeCanvasSelectionArea();		
 
-			$scope.$parent.showMapSelectionArea = true;
+			$scope.showMapSelectionArea = true;
 		}
 		else {
 			$scope.selectionPoints.length = 0;
-			$scope.$parent.showMapSelectionArea = false;
+			$scope.showMapSelectionArea = false;
 		}
 	};
 
@@ -509,6 +515,18 @@ function MapController($scope, $http, $timeout) {
 	};
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	$scope.makeMapOpaque = function() {
+		$scope.canvasElement.setAttribute('style', 'opacity:1.0;');
+	};	
+
+	$scope.makeMapSemiTransparent = function() {
+		$scope.canvasElement.setAttribute('style', 'opacity:0.5;');
+	};
+
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// document event handlers
 
 	$scope.onLeftClickDown = function(mouseCanvasPos) {		
@@ -519,7 +537,13 @@ function MapController($scope, $http, $timeout) {
 
 		$scope.resizeCanvasSelectionArea();
 
+		$scope.makeMapSemiTransparent();
+
 		$scope.selecting = true;
+
+		$scope.showMapSelectionArea = true;
+		$scope.$apply();
+
 		$scope.$emit(Event.MAP_SELECTION_BEGUN);
 	};
 
@@ -561,13 +585,14 @@ function MapController($scope, $http, $timeout) {
 			$scope.onLeftClickDown(mousePos);
 		}
 		else if (evt.buttons == 2) {
+			$scope.cancelSelection();
 		}
 
 	}, false);
 
 	// SELECTION MOUSE UP
 	//
-	$scope.selectionAreaElement.addEventListener('mouseup', function(evt) {
+	$scope.canvasElement.addEventListener('mouseup', function(evt) {
 
 		if (evt.buttons == 1) {
 			$scope.onLeftClickUp($scope.getMousePos(evt));

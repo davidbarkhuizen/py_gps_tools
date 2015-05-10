@@ -48,40 +48,42 @@
 		           		<br/>
 		           		<br/>
 
-						<a ng-class="(selectedTrack == null) ? 'inactive' : 'active'" href='#' ng-click='gotoOpenTrack();'>open track</a>
-		           		<br/>
-		           		<br/>
-
-				        <a ng-class="(mapIsLoadedAndActive == true) && (view !== Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='returnToActiveMap();'>map</a>
-		           		<br/>
-						<a ng-show='view == Views.MAP' href='#' ng-click='showMapInfo = !showMapInfo;'>track info</a>
-						<br/>
-						<a ng-show='view == Views.MAP' href='#' ng-click='gotoAddTrack();'>add track</a>
-						<br/>
 						<a
-							ng-show='view == Views.MAP' 
-							ng-class="(tracks.length > 1) ? 'active' : 'inactive'"
+							class="active"
+							href='#'
+							ng-click='gotoOpenTrack();'>
+							open track
+						</a>
+		           		<br/>
+						<a  ng-class="(tracks.length == 0) ? 'inactive' : 'active'"
+							href='#'
+							ng-click='gotoAddTrack();'>
+							add track
+						</a>
+						<br/>	
+						<a ng-class="(tracks.length > 1) ? 'active' : 'inactive'"
 							href='#' 
 							ng-click='gotoRemoveTrack();'>
 							remove track
 						</a>
-						<br/>
-
-						<br/>
-						
-						<!-- MAP CONTROLS -->
-						<a ng-show='view == Views.MAP' href='#' ng-click='cancelMapSelection();'>cancel selection</a>
-						<br/>
-						<a ng-show='view == Views.MAP' href='#' ng-click='zoomIn();'>zoom in</a>
-						<br/>
-						<a ng-show='view == Views.MAP' href='#' ng-click='zoomOut();'>zoom out</a>
-						<br/>
-
-						<br/>
-
-						<a ng-show='view == Views.MAP' href='#' ng-click='gotoElevationPlot();'>elevation plot</a>
+						<br/>	           		
 		           		<br/>
 
+				        <a ng-class="(tracks.length > 0) && (view !== Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='returnToActiveMap();'>map</a>
+		           		<br/>
+						<a ng-class="(tracks.length > 0) && (view !== Views.STATS) ? 'active' : 'inactive'" href='#' ng-click='gotoStats()'>stats</a>
+						<br/>
+						<a ng-class="(tracks.length > 0) && (view !== Views.ELEVATION) ? 'active' : 'inactive'" href='#' ng-click='gotoElevationPlot();'>elevation plot</a>
+		           		<br/>						
+
+						<br/>						
+						<!-- MAP CONTROLS -->
+						<a ng-class="(view == Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='cancelMapSelection();'>cancel selection</a>
+						<br/>
+						<a ng-class="(view == Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='zoomIn();'>zoom in</a>
+						<br/>
+						<a ng-class="(view == Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='zoomOut();'>zoom out</a>
+						<br/>
 		           	</div>
 
 		        </div>
@@ -191,9 +193,15 @@
 							>
 						</div>
 
-						<div
-							class='map-info'
-							ng-show='showMapInfo'>
+					</div>
+
+					<!-- TRACK STATS -->
+					<div id='Stats'
+						ng-show='view == Views.STATS'
+						class='track-stats'
+						>
+
+						<div>
 
 							<div ng-repeat="track in tracks">
 								<div style='color:{{track.colour}};'>
@@ -208,12 +216,14 @@
 								</div>
 							</div>
 
-						</div>						
+						</div>
+
 					</div>
 
 					<!-- ELEVATION PLOT -->
 					<div id='ElevationContainer'
 						ng-show='view == Views.ELEVATION'
+						class='elevation-plot-container'
 						ng-controller='ElevationPlotController'
 						>
 
