@@ -25,7 +25,7 @@
 		
 		<script src="/static/js/app.js"></script>
 	</head>
-	<body ng-controller="GodController" style='height:100%;'>
+	<body ng-controller="GodController">
 
 		<div id="wrapper">
 
@@ -40,7 +40,9 @@
 		    <div id="middle">
 		        <div id="middleleft">
 
-			        <div class='margin-right-10px'>
+			        <div
+			        	class='margin-right-10px'
+			        	style='text-align:center;'>
 
 		           		<a ng-class='active' href='#' ng-click='launchGpxImport();'>import gpx file</a>
 		           		<br/>
@@ -52,7 +54,7 @@
 
 				        <a ng-class="(mapIsLoadedAndActive == true) && (view !== Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='returnToActiveMap();'>map</a>
 		           		<br/>
-						<a ng-show='view == Views.MAP' href='#' ng-click='showMapInfoOverlay = !showMapInfoOverlay;'>track info</a>
+						<a ng-show='view == Views.MAP' href='#' ng-click='showMapInfo = !showMapInfo;'>track info</a>
 						<br/>
 						<a ng-show='view == Views.MAP' href='#' ng-click='gotoAddTrack();'>add track</a>
 						<br/>
@@ -97,13 +99,12 @@
 	        			of one of the following supported browsers
 	        			<br/>
 	        			<br/>
-	        			Mozilla <a target="blank" href="https://www.mozilla.org/en-US/firefox/new/">FireFox</a>
+	        			mozilla <a target="blank" href="https://www.mozilla.org/en-US/firefox/new/">firefox</a>
 	        			<br/>
-	        			Google <a target="blank" href="http://www.google.com/chrome/index.html">Chrome</a>
+	        			google <a target="blank" href="http://www.google.com/chrome/index.html">chrome</a>
 		        		<br/>
-		        		Apple <a target="blank" href="https://www.apple.com/safari/">Safari</a>
+		        		apple <a target="blank" href="https://www.apple.com/safari/">safari</a>
 		        		</div>
-
 		        	</div>
 
 					<!-- IMPORT -->
@@ -143,7 +144,7 @@
 							ng-class='(trackListSearchToken == "") || (filteredTrackList.length == 0) ? "action-required" : "no-action-required"'
 							/>
 
-		            	<div class='map-list'>
+		            	<div class='track-list'>
 							<div ng-repeat="track in filteredTrackList">
 								<span 
 									ng-class='((selectedTrack !== null) && (selectedTrack.id == track.id)) ? "selected-text" : "";'
@@ -171,7 +172,6 @@
 	            				</a>
 		            		</li>
 	            		<ul>
-
 	            	</div>
 
 	           		<!-- MAP -->
@@ -191,10 +191,13 @@
 							>
 						</div>
 
-						<div id='mapInfoOverlay' class='map-info-overlay' ng-show='showMapInfoOverlay'>
+						<div
+							id='MapInfo'
+							class='map-info'
+							ng-show='showMapInfo'>
 
 							<div ng-repeat="track in tracks">
-								<div style='color:{{track.color}}'>
+								<div style='color:{{track.colour}}'>
 									<br/>
 									{{ track.name }}
 									<br/>
@@ -209,6 +212,7 @@
 						</div>						
 					</div>
 
+					<!-- ELEVATION PLOT -->
 					<div id='ElevationContainer'
 						ng-show='view == Views.ELEVATION'
 						ng-controller='ElevationPlotController'

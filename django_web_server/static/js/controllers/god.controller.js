@@ -15,7 +15,7 @@ function GodController($scope, $http, $timeout) {
 	$scope.mapIsLoadedAndActive = false;
 
 	$scope.mapInfoOverlayText = [];
-	$scope.showMapInfoOverlay = false;
+	$scope.showMapInfo = false;
 
 	$scope.tracks = [];
 	$scope.TrackColours = Object.freeze([Colour.BLACK, Colour.BLUE, Colour.PURPLE, Colour.DARKGREEN, Colour.RED]);

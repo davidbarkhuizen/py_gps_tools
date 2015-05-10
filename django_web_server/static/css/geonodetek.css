@@ -1,4 +1,9 @@
-/* use all available space */
+/*
+    GRID
+
+    Jared Farrish
+    http://stackoverflow.com/questions/12443983/make-a-div-take-up-all-available-vertical-space
+*/
 
 html, body {
     height: 100%;
@@ -6,8 +11,6 @@ html, body {
     padding: 0;
     margin: 0;
 }
-
-/* grid layout */
 
 #wrapper {
     display: table;
@@ -22,7 +25,6 @@ html, body {
 #wrapper > div > div {
     display: table-cell;
 }
-
 
 #top,
 #bottom {
@@ -43,6 +45,8 @@ html, body {
 #wrapper > div > #topleft,
 #wrapper > div > #bottomleft {
 }
+
+/* ------------------------------------------------*/
 
 #middleleft {
     vertical-align:middle;
@@ -72,43 +76,16 @@ html, body {
 }
 
 #bottomright {
-    font-family: courier;
     color:lightgrey;
 }
 
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-
-#mapContainer {
-    position: relative;
-}
-
-#canvas, 
-#mapInfoOverlay {
-    top: 0;
-    left: 0;
-}
-
-#mapInfoOverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-#mapInfoOverlay {
-    z-index: 10;
-}
-
-.map-info-overlay {
-    /*color:orange;
-    font-family: courier;*/
-}
-
-/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* GLOBAL */
 
 html, body
 {
     font-family: courier;
-    font-size: 125%;
+    font-size: 20px;
     font-weight:bold;
 }
 
@@ -117,20 +94,17 @@ a
     color:purple;
 }
 
-.selected-text
-{
-    color:blue;
-}
-
-.active
-{
+.active {
     color:purple;
 }
 
-.inactive
-{
+.inactive {
     color:darkgrey;
 }
+
+
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* TRACK LIST */
 
 .dashed-line-text-input {
     text-align: left;
@@ -141,22 +115,59 @@ a
     border-bottom: dashed;
 }
 
+.action-required {
+    color:red;
+}
+
+.no-action-required {
+    color:green;
+}
+
+.selected-text {
+    color:blue;
+}
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* MAP LAYERS / Z-INDICES */
+
+.map-canvas {
+    z-index: 1;
+    opacity: 0.9;
+}
+
+.map-info {
+    z-index: 0;
+}
+
+.map-selection-area {
+    z-index: 0;
+}
+
+
+
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+#mapContainer {
+    position: relative;
+}
+
+#canvas, 
+#MapInfo {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
 .margin-right-10px {
     padding-right: 10px;
 }
 
-.action-required{
-    color:red;
-}
-
-.no-action-required{
-    color:green;
-}
 
 /* -------------------------------------------------------*/
 /* TRACK LIST */
 
-.map-list {
+.track-list {
 
     width:90%;
 
@@ -172,13 +183,10 @@ a
 /* MAP */
 
 .map-canvas {
-    z-index: 1;
     display:inline-block;
-    opacity: 0.99;
 }
 
-.map-selection-area{
-    z-index: 0;
+.map-selection-area {
     position: absolute;
     
     border-style:dashed;
