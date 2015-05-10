@@ -50,7 +50,7 @@ html, body {
 
 #middleleft {
     vertical-align:middle;
-    text-align:right;
+    text-align:center;
 }
 
 #topleft {
@@ -61,8 +61,6 @@ html, body {
 #topright {
     vertical-align:bottom;
     text-align:left;
-
-    font-family: courier;
 }
 
 #middleright {
@@ -102,6 +100,28 @@ a
     color:darkgrey;
 }
 
+.action-required {
+    color:red;
+}
+
+.no-action-required {
+    color:green;
+}
+
+.selected-text {
+    color:blue;
+}
+
+.margin-right-10px {
+    padding-right: 10px;
+}
+
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* HOME */
+
+.home {
+    text-align:center;
+}
 
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
 /* TRACK LIST */
@@ -115,58 +135,6 @@ a
     border-bottom: dashed;
 }
 
-.action-required {
-    color:red;
-}
-
-.no-action-required {
-    color:green;
-}
-
-.selected-text {
-    color:blue;
-}
-/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-/* MAP LAYERS / Z-INDICES */
-
-.map-canvas {
-    z-index: 1;
-    opacity: 0.9;
-}
-
-.map-info {
-    z-index: 0;
-}
-
-.map-selection-area {
-    z-index: 0;
-}
-
-
-
-/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-
-#mapContainer {
-    position: relative;
-}
-
-#canvas, 
-#MapInfo {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-
-.margin-right-10px {
-    padding-right: 10px;
-}
-
-
-/* -------------------------------------------------------*/
-/* TRACK LIST */
-
 .track-list {
 
     width:90%;
@@ -179,16 +147,38 @@ a
     overflow-x:hidden;
 }
 
-/* -------------------------------------------------------*/
-/* MAP */
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* MAP LAYERS / Z-INDICES */
+
+#mapContainer {
+    position: relative;
+}
+
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
 
 .map-canvas {
+    z-index: 3;
+    opacity: 0.9;
     display:inline-block;
 }
 
-.map-selection-area {
+.map-info {
+    z-index: 2;
     position: absolute;
-    
+
+    top: 0;
+    left: 0;
+}
+
+.map-selection-area {
+    z-index: 1;
+    position: absolute;
+}
+
+/* -------------------------------------------------------*/
+/* MAP SELECTION AREA */
+
+.map-selection-area {    
     border-style:dashed;
     border-width:2px;
     border-color:orange;

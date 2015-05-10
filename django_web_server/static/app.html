@@ -42,7 +42,7 @@
 
 			        <div
 			        	class='margin-right-10px'
-			        	style='text-align:center;'>
+			        	>
 
 		           		<a ng-class='active' href='#' ng-click='launchGpxImport();'>import gpx file</a>
 		           		<br/>
@@ -88,10 +88,12 @@
 		        <div id="middleright">
 
 		        	<!-- HOME -->
-		        	<div id='HomeContainer'
+		        	<div
+		        		id='HomeContainer'
+		        		class='home'
 		        		ng-show='view == Views.HOME'>
 
-		        		<div style='margin:20px;text-align:center;'>
+		        		<div>
 	        			please ensure that
 	        			<br/>
 	        			you are running the latest version
@@ -115,7 +117,6 @@
 		           		<div>
 		           			<input
 		           				id="ImportGpxFileInput"
-		           				style='align:right;'
 		           				type="file"
 		           				multiple
 		           				name="file"/>
@@ -178,8 +179,7 @@
 					<div id='mapContainer'
 						ng-show='view == Views.MAP'
 						ng-controller='MapController'
-						class="panel"
-						style='height:100%;width100%'>
+						>
 
 						<canvas id="MapCanvas"
 							class="map-canvas">
@@ -192,12 +192,11 @@
 						</div>
 
 						<div
-							id='MapInfo'
 							class='map-info'
 							ng-show='showMapInfo'>
 
 							<div ng-repeat="track in tracks">
-								<div style='color:{{track.colour}}'>
+								<div style='color:{{track.colour}};'>
 									<br/>
 									{{ track.name }}
 									<br/>
@@ -216,15 +215,12 @@
 					<div id='ElevationContainer'
 						ng-show='view == Views.ELEVATION'
 						ng-controller='ElevationPlotController'
-						class="panel"
-						style='height:100%;width100%'>
+						>
 
 						<canvas id="ElevationPlotCanvas"
 							class="elevation-canvas">
-						</canvas>
-					
+						</canvas>					
 					</div>
-
 	        	</div>
 		    </div>
 
