@@ -32,15 +32,13 @@ function MapController($scope, $http, $timeout) {
 	$scope.zoomIn = function() {
 
 		if ($scope.selectionPoints.length !== 2) {
-
-			console.log('$scope.selectionPoints.length !== 2');
-			return;
+			throw '$scope.selectionPoints.length !== 2';
 		}
 
 		var latLon1 = $scope.mapLatLonFromCanvasXY($scope.selectionPoints[0].x, $scope.selectionPoints[0].y);
 		var latLon2 = $scope.mapLatLonFromCanvasXY($scope.selectionPoints[1].x, $scope.selectionPoints[1].y);
 
-		var minMaxLat = { 'max' : Math.max(latLon1.lat, latLon1.lat), 'min' : Math.min(latLon1.lat, latLon2.lat) };
+		var minMaxLat = { 'max' : Math.max(latLon1.lat, latLon2.lat), 'min' : Math.min(latLon1.lat, latLon2.lat) };
 		var minMaxLon = { 'max' : Math.max(latLon1.lon, latLon2.lon), 'min' : Math.min(latLon1.lon, latLon2.lon) };
 		
 		var latLonViewPort = { 'lat' : minMaxLat, 'lon' : minMaxLon };
