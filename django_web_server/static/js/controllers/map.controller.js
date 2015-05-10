@@ -1,5 +1,11 @@
 function MapController($scope, $http, $timeout) {
 
+	$scope.defaultFont = 'helvetica';
+	$scope.defaultFontSizePx = 20;
+	$scope.defaultFontColour = Colour.BLACK;
+
+	$scope.defaultTitleCorner = Corner.TOP_LEFT;
+
 	$scope.tracks = $scope.$parent.tracks;
 	
 	$scope.canvasElement = document
@@ -403,6 +409,40 @@ function MapController($scope, $http, $timeout) {
 		}	
 	}
 
+	$scope.drawTitleText = function(text, corner, colour, font, fontSize) {
+
+		corner = (corner == undefined) ? $scope.defaultTitleCorner : corner;
+		colour = (colour == undefined) ? $scope.defaultFontColour : colour;
+		font = (font == undefined) ? $scope.defaultFont : font;
+		fontSize = (fontSize == undefined) ? $scope.defaultFontSizePx: fontSize;
+
+		$scope.context.fillStyle = colour;
+		$scope.context.font = 'bold ' + fontSize + 'px ' + font;
+
+		// top left
+		if (corner == Corner.TOP_LEFT) {
+			$scope.context.textAlign = 'left';
+			$scope.context.fillText(text, fontSize, fontSize);
+		}
+		
+		if (corner == Corner.TOP_RIGHT) {
+			$scope.context.textAlign = 'right';
+			$scope.context.fillText(text, $scope.width - fontSize, fontSize);
+		}
+
+		if (corner == Corner.BOTTOM_LEFT) {
+			$scope.context.textAlign = 'left';
+			$scope.context.textBaseline = 'bottom';
+			$scope.context.fillText(text, fontSize, $scope.height - fontSize);
+		}
+
+		if (corner == Corner.BOTTOM_RIGHT) {	
+			$scope.context.textAlign = 'right';
+			$scope.context.textBaseline = 'bottom';
+			$scope.context.fillText(text, $scope.width - fontSize, $scope.height - fontSize);
+		}
+	};
+
 	$scope.drawWaypoints = function(size, color, font, fontSize) {
 
 		var clusterFn = function(wp1, wp2) {
@@ -474,6 +514,14 @@ function MapController($scope, $http, $timeout) {
 
 		$scope.drawAllTracksEdgesColoured(2);
 		$scope.drawWaypoints(10, Colour.BLACK, 'helvetica', 15);
+
+		// TITLE TEXT
+
+		var titleText = $scope.tracks[0].name;
+		if ($scope.tracks.length > 1)
+			titleText = titleText + ' + ' + ($scope.tracks.length - 1);
+
+		$scope.drawTitleText(titleText);
 	};
 
 	$scope.mapLatLonFromCanvasXY = function(x, y) {

@@ -16,3 +16,10 @@ var Colour = Object.freeze({
 	DARKGREY : toRgbString(169, 169, 169),
 	VERYDARKGREY : toRgbString(50, 50, 50),
 });
+
+var Corner = Object.freeze({
+	TOP_LEFT : 0,
+	TOP_RIGHT : 1,
+	BOTTOM_RIGHT : 2,
+	BOTTOM_LEFT : 3
+});

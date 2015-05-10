@@ -52,12 +52,12 @@ function GodController($scope, $http, $timeout) {
 		console.log('useTrack ' + trackId);
 	};
 
-	$scope.selectAndLoadMap = function(mapId) {
-		$scope.loadMap(mapId, false);
+	$scope.selectAndLoadTrack = function(trackId) {
+		$scope.loadTrack(trackId, false);
 	};
 
-	$scope.overlayMap = function(mapId) {
-		$scope.loadMap(mapId, true);
+	$scope.addTrack = function(trackId) {
+		$scope.loadTrack(trackId, true);
 	};
 
 	$scope.returnToActiveMap = function() {
@@ -69,6 +69,7 @@ function GodController($scope, $http, $timeout) {
 	};
 
 	$scope.gotoStats = function() {
+		$scope.headerText = 'statistics';
 		$scope.view = $scope.Views.STATS;
 	};
 
@@ -79,14 +80,14 @@ function GodController($scope, $http, $timeout) {
 
 		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
 
-		$scope.onTrackSelected = $scope.selectAndLoadMap;
+		$scope.onTrackSelected = $scope.selectAndLoadTrack;
 	}
 
 	$scope.gotoAddTrack = function() {		
 
 		$scope.headerText = 'select a track to add to the map';
 		$scope.view = $scope.Views.MAP_LIST;
-		$scope.onTrackSelected = $scope.overlayMap;
+		$scope.onTrackSelected = $scope.addTrack;
 		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
 	}
 
@@ -102,6 +103,7 @@ function GodController($scope, $http, $timeout) {
 
 	$scope.gotoElevationPlot = function() {
 
+		$scope.headerText = 'elevation @ ' + $scope.tracks[0].name;
 		$scope.view = $scope.Views.ELEVATION;
 		$scope.$broadcast(Event.PLOT_ELEVATION);
 	};
@@ -136,7 +138,7 @@ function GodController($scope, $http, $timeout) {
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-	$scope.getMap = function(id, overlay) {
+	$scope.getTrack = function(id, overlay) {
 
 		var req =
 			{
@@ -160,25 +162,19 @@ function GodController($scope, $http, $timeout) {
 		.error(errorFn);
 	};
 
-	$scope.loadMap = function(mapId, overlay){
-		$scope.getMap(mapId, overlay);
+	$scope.loadTrack = function(trackId, overlay){
+
+		var matches = $scope.tracks.filter(function(track){return (track.id == trackId);});
+		if (matches.length > 0)
+		{
+			$scope.view = $scope.Views.MAP;
+			return;
+		}
+
+		$scope.getTrack(trackId, overlay);
 	};
 	
 	// -------------------------------------------------------
-
-	$scope.updateHeaderTextFromTrackInfo = function() {
-		
-		var text = '';
-
-		if ($scope.tracks.length == 0)
-			text = 'on tracks'
-		else if ($scope.tracks.length == 1)
-			text = $scope.tracks[0].name;
-		else
-			text = 'multiple tracks';		
-
-    	$scope.headerText = text;
-	};
 
 	$scope.processIncomingTrackData = function(trackData, overlay) {
 
@@ -212,7 +208,7 @@ function GodController($scope, $http, $timeout) {
 		$scope.$broadcast(Event.MAP_REFRESH);		
 
     	$scope.mapIsLoadedAndActive = true;
-    	$scope.updateHeaderTextFromTrackInfo();
+    	$scope.headerText = 'map';
     	$scope.view = $scope.Views.MAP;    	
 	};
 
