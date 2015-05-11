@@ -443,26 +443,30 @@ function MapController($scope, $http, $timeout) {
 		}
 	};
 
-	$scope.drawCompass = function(cx, cy) {
+	$scope.drawCompass = function(magneticDeclinationDegrees) {
 
-		r = Math.min($scope.height / 2, $scope.width - 2);
+		var cx = $scope.width / 2;
+		var cy = $scope.height / 2;
 
-		$scope.context.lineWidth = 1;
-		$scope.context.strokeStyle = Colour.BLACK;
+		$scope.context.lineWidth = 1;		
+		$scope.context.strokeStyle = Colour.LIGHTGREY;
+
+		// true north line
 
 		$scope.context.beginPath();
 
-		$scope.context.moveTo(cx, cy - r);			
-	   	$scope.context.lineTo(cx, cy + r);
+		$scope.context.moveTo(cx, 0);			
+	   	$scope.context.lineTo(cx, $scope.width);
 
 	    $scope.context.stroke();
 
-	    // --------------------------
+	    // magnetic north line
 
-	    var thetaDegs = -20;
-	    var theta = thetaDegs.toRad();
+	    var theta = magneticDeclinationDegrees.toRad();
 
-	    var dy = r * Math.sin(Math.PI / 2 - theta);
+	    var dy = $scope.height / 2; // r * Math.sin(Math.PI / 2 - theta);
+	    var r = dy * Math.sin(Math.PI / 2 - theta);
+
 	    var dx = r * Math.cos(Math.PI / 2 - theta);
 
 		$scope.context.beginPath();

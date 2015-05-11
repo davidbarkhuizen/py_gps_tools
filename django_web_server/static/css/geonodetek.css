@@ -160,6 +160,9 @@ a
     z-index: 3;
     /*opacity: 0.5;*/
     display:inline-block;
+    /*border:solid;
+    border-color:darkgreen;
+    border-width: 1px;*/
 }
 
 .map-selection-area {
