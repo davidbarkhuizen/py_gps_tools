@@ -63,7 +63,7 @@ function GodController($scope, $http, $timeout) {
 	$scope.returnToActiveMap = function() {
 		if ($scope.mapIsLoadedAndActive == true) {
 
-	    	$scope.updateHeaderTextFromTrackInfo();
+	    	$scope.headerText = 'map';
 	    	$scope.view = $scope.Views.MAP;
 		}
 	};

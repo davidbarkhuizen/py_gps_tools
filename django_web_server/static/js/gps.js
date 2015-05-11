@@ -14,8 +14,6 @@ archeological
 
 */
 
-Number.prototype.toRad = function() { return this * (Math.PI / 180); };
-
 // http://stackoverflow.com/questions/365826/calculate-distance-between-2-gps-coordinates
 // http://www.movable-type.co.uk/scripts/latlong.html
 //

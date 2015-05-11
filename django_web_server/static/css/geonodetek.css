@@ -172,8 +172,8 @@ a
 
 .map-selection-area {    
     border-style:dashed;
-    border-width:2px;
-    border-color:red;
+    border-width:5px;
+    border-color:black;
 }
 
 .track-stats {

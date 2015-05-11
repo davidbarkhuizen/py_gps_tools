@@ -443,6 +443,36 @@ function MapController($scope, $http, $timeout) {
 		}
 	};
 
+	$scope.drawCompass = function(cx, cy) {
+
+		r = Math.min($scope.height / 2, $scope.width - 2);
+
+		$scope.context.lineWidth = 1;
+		$scope.context.strokeStyle = Colour.BLACK;
+
+		$scope.context.beginPath();
+
+		$scope.context.moveTo(cx, cy - r);			
+	   	$scope.context.lineTo(cx, cy + r);
+
+	    $scope.context.stroke();
+
+	    // --------------------------
+
+	    var thetaDegs = -20;
+	    var theta = thetaDegs.toRad();
+
+	    var dy = r * Math.sin(Math.PI / 2 - theta);
+	    var dx = r * Math.cos(Math.PI / 2 - theta);
+
+		$scope.context.beginPath();
+
+		$scope.context.moveTo(cx + dx, cy - dy);			
+	   	$scope.context.lineTo(cx - dx, cy + dy);
+
+	    $scope.context.stroke();
+	};
+
 	$scope.drawWaypoints = function(size, color, font, fontSize) {
 
 		var clusterFn = function(wp1, wp2) {
@@ -506,7 +536,7 @@ function MapController($scope, $http, $timeout) {
 
 		$scope.renderTrackPointsToCanvasSpace();
 		$scope.renderWayPointsToCanvasSpace();
-		
+
 		$scope.blankCanvas();
 
 		// $scope.drawElevationHalo();
@@ -522,6 +552,8 @@ function MapController($scope, $http, $timeout) {
 			titleText = titleText + ' + ' + ($scope.tracks.length - 1);
 
 		$scope.drawTitleText(titleText);
+
+		$scope.drawCompass($scope.width / 2, $scope.height / 2);
 	};
 
 	$scope.mapLatLonFromCanvasXY = function(x, y) {
@@ -570,8 +602,9 @@ function MapController($scope, $http, $timeout) {
 		$scope.canvasElement.setAttribute('style', 'opacity:1.0;');
 	};	
 
-	$scope.makeMapSemiTransparent = function() {
-		$scope.canvasElement.setAttribute('style', 'opacity:0.5;');
+	$scope.makeMapSemiTransparent = function(opacity) {
+		opacity = (opacity == undefined) ? 0.8 : opacity;
+		$scope.canvasElement.setAttribute('style', 'opacity:' + opacity.toFixed(1) +' ;');
 	};
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
