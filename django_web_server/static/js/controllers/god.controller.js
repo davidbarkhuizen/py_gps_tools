@@ -24,6 +24,7 @@ function GodController($scope, $http, $timeout) {
 		MAP : guid(),
 		ELEVATION : guid(),
 		STATS : guid(),
+		WAYPOINTS : guid(),
 	});	
 	$scope.view = $scope.Views.HOME;
 
@@ -106,6 +107,13 @@ function GodController($scope, $http, $timeout) {
 		$scope.headerText = 'elevation @ ' + $scope.tracks[0].name;
 		$scope.view = $scope.Views.ELEVATION;
 		$scope.$broadcast(Event.PLOT_ELEVATION);
+	};
+
+	$scope.gotoWaypoints = function() {
+
+		$scope.$broadcast(Command.REFRESH_WAYPOINTS);
+		$scope.headerText = 'waypoints';
+		$scope.view = $scope.Views.WAYPOINTS;
 	};
 
 	/*
@@ -205,7 +213,7 @@ function GodController($scope, $http, $timeout) {
 
 		newTrack.colour = unusedColours[0];
 
-		$scope.$broadcast(Event.MAP_REFRESH);		
+		$scope.$broadcast(Event.TRACK_LOADED);		
 
     	$scope.mapIsLoadedAndActive = true;
     	$scope.headerText = 'map';

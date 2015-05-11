@@ -100,16 +100,21 @@ function MapController($scope, $http, $timeout) {
 			.parentNode
 			.parentNode; 
 
+		var fudge = 10;
+		/*
+		getComputedStyle($scope.selectionAreaElement, null)
+			.getPropertyValue('border-top-width');
+		*/
 		$scope.windowWidth = canvasGrandParent.clientWidth;
-		$scope.windowHeight = canvasGrandParent.clientHeight;
+		$scope.windowHeight = canvasGrandParent.clientHeight - fudge;
 	};
 
-	$scope.sizeCanvas = function(factor) {
+	$scope.sizeCanvas = function() {
 
 		// calc canvas dims
 		//
-		$scope.width = $scope.windowWidth * factor;
-		$scope.height = $scope.windowHeight * factor;
+		$scope.width = $scope.windowWidth;
+		$scope.height = $scope.windowHeight;
 
 		// set canvas dims
 		//
@@ -642,6 +647,13 @@ function MapController($scope, $http, $timeout) {
 
 	$scope.onMouseMove = function(mousePos) {
 
+		if (
+			((mousePos.x < 0) || (mousePos.x > $scope.width))
+			||
+			((mousePos.y < 0) || (mousePos.y > $scope.height))
+			)
+			return;
+
 		var latLon = $scope.mapLatLonFromCanvasXY(mousePos.x, mousePos.y);
 		
 		var locationText = $scope.genLocationText(latLon.lat, latLon.lon);
@@ -690,6 +702,10 @@ function MapController($scope, $http, $timeout) {
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// handlers for angular.js events
+
+	$scope.$on(Event.TRACK_LOADED, function(evt) {
+		$scope.draw();
+	});
 
 	$scope.$on(Event.MAP_REFRESH, function(evt) {
 		$scope.draw();

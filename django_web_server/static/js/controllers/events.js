@@ -1,4 +1,9 @@
 var Event = Object.freeze({
+
+	TRACK_LOADED : guid(),
+
+	// ------------------------------
+
 	PLOT_ELEVATION : guid(),
 
 	GPX_FILE_IMPORT_FAILED : guid(),
@@ -17,4 +22,5 @@ var Event = Object.freeze({
 
 var Command = Object.freeze({
 	REMOVE_TRACK : guid(),
+	REFRESH_WAYPOINTS : guid()
 });

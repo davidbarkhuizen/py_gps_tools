@@ -12,6 +12,7 @@ var controllers = [
 	['GpxImportController', ['$scope', '$http', '$timeout', GpxImportController]],
 	['ActiveTrackListController', ['$scope', '$http', '$timeout', ActiveTrackListController]],
 	['MapController', ['$scope', '$http', '$timeout', MapController]],
+	['WaypointsController', ['$scope', '$http', '$timeout', WaypointsController]],
 ];
 
 for(var c in controllers) {

@@ -46,7 +46,8 @@ function Point(lat, lon, ele, time) {
 	this.cumulativeDistanceM = 0;
 }
 
-function WayPoint(name, lat, lon, ele, time) {
+function WayPoint(id, name, lat, lon, ele, time) {
+	this.id = id;
 	this.name = name;
 	// no inheritance :(
 	this.lat = lat;
@@ -99,8 +100,9 @@ var parseWaypoint = function(waypointString) {
 	var ele = parseFloat(datum[2]);
 	var name = datum[3];
 	var time = Date.parse(datum[4]);
+	var id = datum[5];
 
-	return new WayPoint(name, lat, lon, ele, time);
+	return new WayPoint(id, name, lat, lon, ele, time);
 };
 
 function Track(data) {

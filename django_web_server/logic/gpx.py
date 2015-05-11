@@ -56,12 +56,13 @@ class Track(object):
 
 class WayPoint(Point):
 
-    def __init__(self, name, lat, lon, ele, time):
+    def __init__(self, id, name, lat, lon, ele, time):
+        self.id = id
         self.name = name
         super(WayPoint,self).__init__(lat, lon, ele, time)
 
     def __str__(self):
-        return '%f|%f|%f|%s|%s' % (self.lat, self.lon, self.ele, self.name, self.time.isoformat())  
+        return '%f|%f|%f|%s|%s|%i' % (self.lat, self.lon, self.ele, self.name, self.time.isoformat(), self.id)  
 
 import datetime
 DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
@@ -91,7 +92,7 @@ def track_to_dict(track, take = 1):
         trk['segments'].append(seg)
 
     for mwp in track.waypoints:
-        wp = WayPoint(name=mwp.name, lat=mwp.lat, lon=mwp.lon, ele=mwp.ele, time=mwp.time)
+        wp = WayPoint(id=mwp.id, name=mwp.name, lat=mwp.lat, lon=mwp.lon, ele=mwp.ele, time=mwp.time)
         trk['waypoints'].append(str(wp))  
 
     return trk

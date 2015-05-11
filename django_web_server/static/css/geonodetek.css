@@ -64,7 +64,7 @@ html, body {
 }
 
 #middleright {
-    vertical-align:middle;
+    vertical-align:top;
     text-align:left;
 }
 
@@ -119,9 +119,6 @@ a
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
 /* HOME */
 
-.home {
-    text-align:center;
-}
 
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
 /* TRACK LIST */
@@ -135,16 +132,24 @@ a
     border-bottom: dashed;
 }
 
-.track-list {
-
+.list {
     width:90%;
-
-    min-height: 400px;
-    max-height: 400px;
 
     overflow:scroll;
     overflow-y:scroll;
     overflow-x:hidden;
+    min-height: 500px;
+    max-height: 500px;
+}
+
+.short-list {
+    width:90%;
+
+    overflow:scroll;
+    overflow-y:scroll;
+    overflow-x:hidden;
+    min-height: 300px;
+    max-height: 300px;
 }
 
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
@@ -158,11 +163,7 @@ a
 
 .map-canvas {
     z-index: 3;
-    /*opacity: 0.5;*/
     display:inline-block;
-    /*border:solid;
-    border-color:darkgreen;
-    border-width: 1px;*/
 }
 
 .map-selection-area {
