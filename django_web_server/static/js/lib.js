@@ -1,19 +1,4 @@
-function getCookie(name) {
-
-    if (!(document.cookie && document.cookie != '')) {
-    	throw "document has no or blank cookie";
-    };
-    
-    var cookies = document.cookie.split(';');
-    for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) == (name + '=')) {
-            return decodeURIComponent(cookie.substring(name.length + 1));
-        }
-    }
-
-    throw "can't find matching cookie for " + name;
-}
+// ---------------------------------------------------------------------
 
 function clearFileInput(id) {
 
@@ -134,4 +119,56 @@ function clusterPoints(list, clusterPredicate) {
 	}
 
 	return clusters;
+}
+
+// --------------------------------------------------------------
+
+// django anti-CSRF token
+
+function getCookie(name) {
+
+    if (!(document.cookie && document.cookie != '')) {
+    	throw "document has no or blank cookie";
+    };
+    
+    var cookies = document.cookie.split(';');
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+            return decodeURIComponent(cookie.substring(name.length + 1));
+        }
+    }
+
+    throw "can't find matching cookie for " + name;
+}
+
+function getAndAddAntiCsrfTokenHeaderToDict(dict) {
+	dict['X-CSRFToken'] = getCookie('csrftoken');
+	return dict;
+};
+
+function getDeleteHeaders() {
+	return getAndAddAntiCsrfTokenHeaderToDict({ 'X-METHODOVERRIDE': 'DELETE' });
+}
+
+function httpDelete($http, controller, id, onOk, onFail, onError) {	
+
+	var request = 
+	{
+		method: 'POST',
+		headers: getDeleteHeaders(),		
+		url: '/' + controller + '/',
+		data: 'id=' + id
+	};
+
+	var successFn = function(response) { 
+		if (response.status == 'ok')
+			onOk(response.data);
+		else
+			onFail(response.status);
+	};
+
+	$http(request)
+	.success(successFn)
+	.error(onError);
 }

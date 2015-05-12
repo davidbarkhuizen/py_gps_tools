@@ -64,7 +64,7 @@
 						<br/>	
 						<a ng-class="(tracks.length > 1) ? 'active' : 'inactive'"
 							href='#' 
-							ng-click='gotoRemoveTrack();'>
+							ng-click='gotoUnloadTrack();'>
 							remove track
 						</a>
 						<br/>	           		
@@ -262,7 +262,7 @@
 							<div ng-show='promptForDeleteConfirmation'>
 								<br/>
 								<div style='color:red;'>
-									are you sure that you want to delete {{ selectedPoint.name }} ?
+									are you sure that you want to delete waypoint '{{ selectedPoint.name }}' ?
 								</div>
 								<div>
 									<a href="#" ng-click='delete(selectedPoint.id)'>yes</a>

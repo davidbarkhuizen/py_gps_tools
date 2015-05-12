@@ -248,4 +248,10 @@ function Track(data) {
 	for(var i in data.waypoints) {
 		this.waypoints.push(parseWaypoint(data.waypoints[i]));
 	}
+
+	this.removeWaypoint = function(id) {
+		var toRetain = that.waypoints.filter(function(p){ return (p.id !== id); });
+		that.waypoints.length = 0;
+		toRetain.forEach(function(x) { that.waypoints.push(x); });
+	};
 }

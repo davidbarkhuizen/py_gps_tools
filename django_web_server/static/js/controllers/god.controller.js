@@ -34,12 +34,6 @@ function GodController($scope, $http, $timeout) {
 		console.log(raw_html);
 	};
 
-	// django anti-CSRF token
-	//
-	$scope.getAntiCsrfTokenHeader = function() { 
-		return { 'X-CSRFToken': getCookie('csrftoken') }; 
-	};
-
 	// map list, filter token, filtered list, selected item ------------
 
 	$scope.updateInfoText = function(msg) {
@@ -92,14 +86,13 @@ function GodController($scope, $http, $timeout) {
 		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
 	}
 
-	$scope.gotoRemoveTrack = function() {
+	$scope.gotoUnloadTrack = function() {
 
 		if ($scope.tracks.length <= 1)
 			return;
 
 		$scope.headerText = 'select a track to remove from the map';
 		$scope.view = $scope.Views.ACTIVE_TRACK_LIST;		
-		// $scope.onTrackSelected = $scope.removeTrack;	
 	};
 
 	$scope.gotoElevationPlot = function() {
@@ -220,21 +213,17 @@ function GodController($scope, $http, $timeout) {
     	$scope.view = $scope.Views.MAP;    	
 	};
 
-	$scope.removeTrack = function (trackId) {
+	$scope.unloadTrack = function (trackId) {
 
-		function retain(track) {
-			return (track.id !== trackId);
-		};
-
-		var toRetain = $scope.tracks.filter(retain);
-
-		function addToTracks(track) { $scope.tracks.push(track); };
+		var toRetain = $scope.tracks
+			.filter(function(track) { return (track.id !== trackId); });
 
 		$scope.tracks.length = 0;
+		
+		toRetain
+			.forEach(function (track) { $scope.tracks.push(track); });
 
-		toRetain.forEach(addToTracks);
-
-		$scope.$broadcast(Event.MAP_REFRESH);
+		$scope.$broadcast(Event.TRACK_UNLOADED);
 
 		$scope.view = $scope.Views.MAP;
 	};
@@ -242,8 +231,8 @@ function GodController($scope, $http, $timeout) {
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// handlers for events emitted by child controllers	
 
-	$scope.$on(Command.REMOVE_TRACK, function(evt, trackId) {
-		$scope.removeTrack(trackId);
+	$scope.$on(Command.UNLOAD_TRACK, function(evt, id) {
+		$scope.unloadTrack(id);
 	});
 
 	$scope.$on(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED, function(evt) {
@@ -260,5 +249,11 @@ function GodController($scope, $http, $timeout) {
 	$scope.$on(Event.INFO_TEXT_UPDATE, function(evt, infoText) {
 		$scope.infoText = infoText;
 		$scope.$apply();
+	});
+
+	$scope.$on(Event.WAYPOINT_DELETED, function(evt, id) {
+
+		$scope.tracks.forEach(function(track) { track.removeWaypoint(id); });
+		$scope.$broadcast(Event.DATA_MODEL_CHANGED);		
 	});
 };

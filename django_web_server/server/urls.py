@@ -3,6 +3,7 @@ from django.conf.urls import url
 from ctrl import mapfile
 from ctrl import maplist
 from ctrl import mmap
+from ctrl import waypoint
 
 from ctrl import echo
 
@@ -12,4 +13,5 @@ urlpatterns = [
     url(r'^mapfile?(?P<qs>.+)$', mapfile.routing),
     url(r'^maplist?(?P<qs>.+)$', maplist.routing),
     url(r'^map?(?P<qs>.+)$', mmap.routing),
+    url(r'^waypoint?(?P<qs>.+)$', waypoint.routing),
     ]

@@ -73,21 +73,14 @@ def construct_datastruct_from_xml_string(xml_tree):
     metadata_time_stamp_string = find('metadata/time').text
     meta_data_time = datetime.datetime.strptime(metadata_time_stamp_string, DATE_TIME_FORMAT)    
   
-    print('metadata - time @ %s' % meta_data_time)
-  
-    # track
-    
+    # track    
     gpx_track = gpx.Track()
     
-    ## track name
-    
+    ## track name    
     gpx_track.name = find('trk/name').text
-    print('track name - %s' % gpx_track.name)
     
-    ## track segments
-    
+    ## track segments    
     track_segments = findall('trk/trkseg')
-    print('track segment count = %i ' % len(track_segments))
     
     for track_segment in track_segments:
         
@@ -104,11 +97,7 @@ def construct_datastruct_from_xml_string(xml_tree):
             
             gpx_tracksegment.trackpoints.append(gpx_trackpoint) 
 
-        print('trackpoint count = %i' % len(gpx_tracksegment.trackpoints))
-
         gpx_tracksegment.trackpoints = sorted(gpx_tracksegment.trackpoints, key=lambda x : x.time)
-        print('started @ %s' % gpx_tracksegment.trackpoints[0].time)
-        print('ended @ %s' % gpx_tracksegment.trackpoints[len(gpx_tracksegment.trackpoints) - 1].time)  
 
         gpx_track.tracksegments.append(gpx_tracksegment)
 

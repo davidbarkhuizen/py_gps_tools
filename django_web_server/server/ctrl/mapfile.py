@@ -18,7 +18,7 @@ def routing(request, qs):
 
 def post(request):
 	
-	json_data = json.loads(request.body)	
+	json_data = json.loads(request.body)
 
 	file_name = None
 	xml_string = None

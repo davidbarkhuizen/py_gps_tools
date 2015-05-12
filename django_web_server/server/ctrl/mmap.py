@@ -10,12 +10,11 @@ from logic import gpx
 
 def routing(request, qs):
 
-    id = request.GET.get('id', '')
-
     # if request.is_ajax():
     if request.method == 'POST':
         return post(request)
     elif request.method == 'GET':
+        id = request.GET.get('id', '')
         return get(request, id)
 
     raise Error(request.method)

@@ -703,11 +703,19 @@ function MapController($scope, $http, $timeout) {
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// handlers for angular.js events
 
+	$scope.$on(Event.DATA_MODEL_CHANGED, function(evt) {
+		$scope.draw();
+	});
+
 	$scope.$on(Event.TRACK_LOADED, function(evt) {
 		$scope.draw();
 	});
 
-	$scope.$on(Event.MAP_REFRESH, function(evt) {
+	$scope.$on(Event.TRACK_UNLOADED, function(evt) {
+		$scope.draw();
+	});
+
+	$scope.$on(Event.WAYPOINT_DELETED, function(evt) {
 		$scope.draw();
 	});
 
