@@ -701,8 +701,6 @@ function MapController($scope, $http, $timeout) {
 	// handlers for angular.js events
 
 	$scope.$on(Event.DATA_MODEL_CHANGED, function(evt) {
-		console.log('MAP CTRL - $scope.$on(Event.DATA_MODEL_CHANGED - track');
-		console.log($scope.tracks);
 		$scope.draw();
 	});
 

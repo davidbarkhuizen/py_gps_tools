@@ -18,10 +18,10 @@
 		<script src="/static/js/controllers/god.controller.js"></script>
 		<script src="/static/js/controllers/gpximport.controller.js"></script>
 		<script src="/static/js/controllers/trackinfos.controller.js"></script>
-	    <script src="/static/js/controllers/tracks.controller.js"></script>
 	    <script src="/static/js/controllers/waypoints.controller.js"></script>
 	    <script src="/static/js/controllers/map.controller.js"></script>
 		<script src="/static/js/controllers/elevationplot.controller.js"></script>
+		<script src="/static/js/controllers/tracks.controller.js"></script>
 		
 		<script src="/static/js/app.js"></script>
 	</head>
@@ -64,14 +64,14 @@
 						<a ng-class="(tracks.length > 1) ? 'active' : 'inactive'"
 							href='#' 
 							ng-click='gotoUnloadTrack();'>
-							remove track
+							unload track
 						</a>
 						<br/>	           		
 		           		
 		           		<br/>
 
 		           		<!-- MAP -->
-				        <a ng-class="(tracks.length > 0) && (view !== Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='returnToActiveMap();'>map</a>
+				        <a ng-class="(tracks.length > 0) && (view !== Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='gotoMap();'>map</a>
 		           		<br/>
 						<a ng-class="(view == Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='cancelMapSelection();'>cancel selection</a>
 						<br/>
@@ -150,23 +150,16 @@
 							</div>
 						</div>
 					</div>
-
-					<!-- (LOADED) TRACKS -->
-	            	<div id="ActiveTrackListContainer"
-	            		ng-show='(view == Views.ACTIVE_TRACK_LIST)'
+					
+					<!-- LOADED TRACKS -->
+	            	<div
+	            		ng-show='view == Views.LOADED_TRACKS'
 	            		ng-controller='TracksController'>
 
-	            		<ul>
-		            		<li ng-repeat="track in tracks">
-		            			<a 
-		            				href='#'
-		            				ng-click='unload(track.id)'
-		            				style='color:{{track.colour}}'
-		            				>
-		            				{{ track.name }}
-	            				</a>
-		            		</li>
-	            		<ul>
+        				<br/>	            		
+	            		<div ng-repeat="track in $parent.tracks">
+	            			<a href='#' style='color:{{track.colour}}'>{{ track.name }}</a>&nbsp;<a href='#' ng-click='unload(track.id)'style='color:red'>unload</a>
+        				</div>
 	            	</div>
 
 	           		<!-- MAP -->

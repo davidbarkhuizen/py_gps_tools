@@ -8,24 +8,22 @@ var TrackColours = Object.freeze([
 
 function TracksController($scope, $http, $timeout) {
 
-	$scope.tracks = $scope.$parent.tracks;
-
 	$scope.getUnusedTrackColour = function() {
 
-		var inUse = $scope.tracks
+		var inUse = $scope.$parent.tracks
 			.map(function(x) { return x.colour; });
 
 		var unUsed = TrackColours
-			.filter(function(x) { inUse.indexOf(x) == -1; });
+			.filter(function(x) { return inUse.indexOf(x) == -1; });
 
-		return (unUsed.length !== 0) ? unUsed[0] : [Colour.BLACK];
+		return (unUsed.length > 0) ? unUsed[0] : [Colour.BLACK];
 	};
 
 	$scope.load = function(id, overlay) {
 
 		overlay = (overlay !== undefined) ? overlay : false;
 
-		var matches = $scope.tracks
+		var matches = $scope.$parent.tracks
 			.filter(function(track){return (track.id == id);});
 		
 		if (matches.length > 0)
@@ -33,20 +31,15 @@ function TracksController($scope, $http, $timeout) {
 
 		var successFn = function(data) { 
 
-			if (!overlay) $scope.tracks.length = 0;
+			if (!overlay) $scope.$parent.tracks.length = 0;
+
+			console.log(data);
 
 			var newTrack = new Track(data.track);
 			newTrack.colour = $scope.getUnusedTrackColour();
-			$scope.tracks.push(newTrack);
-
-			console.log('tracks.load.successFn - tracks')
-			console.log($scope.tracks);
+			$scope.$parent.tracks.push(newTrack);
 
 			$scope.$emit(Event.TRACK_LOADED);
-
-	    	$scope.mapIsLoadedAndActive = true;
-	    	$scope.headerText = 'map';
-	    	$scope.view = $scope.Views.MAP;  
 		};
 
 		var failFn = function(status){
@@ -58,18 +51,20 @@ function TracksController($scope, $http, $timeout) {
 	
 	$scope.unload = function (id) {
 
-		var toRetain = $scope.tracks
+		console.log(id);
+
+		var toRetain = $scope.$parent.tracks
 			.filter(function(track) { return (track.id !== id); });
 
-		$scope.tracks.length = 0;
+		$scope.$parent.tracks.length = 0;
 		
 		toRetain
-			.forEach(function (track) { $scope.tracks.push(track); });
+			.forEach(function (track) { $scope.$parent.tracks.push(track); });
 
-		$scope.$broadcast(Event.TRACK_UNLOADED);
+		$scope.$emit(Event.TRACK_UNLOADED);
 	};
 
-	$scope.$on(Command.LOAD_TRACK, function(evt, id) {
-		$scope.load(id);
-	}); 
-}
+	$scope.$on(Command.LOAD_TRACK, function(evt, data) {
+		$scope.load(data.id, data.overlay);
+	});
+};

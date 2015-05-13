@@ -9,9 +9,8 @@ function GodController($scope, $http, $timeout) {
 	$scope.Views = Object.freeze({
 		HOME : guid(),
 		IMPORT : guid(), 
-		TRACK_LIST : guid(), 
-		ACTIVE_TRACK_LIST : guid(),
 		MAP : guid(),
+		LOADED_TRACKS : guid(), 
 		ELEVATION : guid(),
 		STATS : guid(),
 		WAYPOINTS : guid(),
@@ -29,8 +28,6 @@ function GodController($scope, $http, $timeout) {
 	$scope.headerText = 'GeoNodeTek';
 	$scope.infoText = '';	
 
-	$scope.mapIsLoadedAndActive = false;
-
 	// map list, filter token, filtered list, selected item ------------
 
 	$scope.updateInfoText = function(msg) {
@@ -40,9 +37,9 @@ function GodController($scope, $http, $timeout) {
 
 	// NAVIGATION ---------------------------
 
-	$scope.returnToActiveMap = function() {
-		if ($scope.mapIsLoadedAndActive == true) {
+	$scope.gotoMap = function() {
 
+		if ($scope.tracks.length > 0) {
 	    	$scope.headerText = 'map';
 	    	$scope.view = $scope.Views.MAP;
 		}
@@ -51,31 +48,6 @@ function GodController($scope, $http, $timeout) {
 	$scope.gotoStats = function() {
 		$scope.headerText = 'statistics';
 		$scope.view = $scope.Views.STATS;
-	};
-
-	$scope.gotoOpenTrack = function() {		
-
-		$scope.onTrackSelected = function(id) { $scope.loadTrack(id); };
-		$scope.view = $scope.Views.MAP_LIST;
-		$scope.headerText = 'select track to view';
-		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
-	}
-
-	$scope.gotoAddTrack = function() {		
-
-		$scope.onTrackSelected = function(id) { $scope.loadTrack(id, true); };
-		$scope.headerText = 'select a track to add to the map';
-		$scope.view = $scope.Views.MAP_LIST;		
-		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
-	}
-
-	$scope.gotoUnloadTrack = function() {
-
-		if ($scope.tracks.length <= 1)
-			return;
-
-		$scope.headerText = 'select a track to remove from the map';
-		$scope.view = $scope.Views.ACTIVE_TRACK_LIST;		
 	};
 
 	$scope.gotoElevationPlot = function() {
@@ -120,9 +92,6 @@ function GodController($scope, $http, $timeout) {
 		$scope.$broadcast(Event.MAP_ZOOM_IN);
 	}	
 
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// handlers for events emitted by child controllers	
 
@@ -155,23 +124,49 @@ function GodController($scope, $http, $timeout) {
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// TRACK
 
-	$scope.loadTrack = function(id) {
-		$scope.$broadcast(Command.LOAD_TRACK, id);
-	}
+	$scope.onTrackSelected = undefined;
+	$scope.$on(Event.TRACK_SELECTED, function(evt, id) {
+		$scope.onTrackSelected(id);
+	});
+
+	$scope.gotoOpenTrack = function() {		
+
+		$scope.onTrackSelected = function(id) { $scope.broadcastLOAD_TRACK(id); };
+		$scope.view = $scope.Views.MAP_LIST;
+		$scope.headerText = 'select track to view';
+		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
+	};
+
+	$scope.gotoAddTrack = function() {		
+
+		$scope.onTrackSelected = function(id) { $scope.broadcastLOAD_TRACK(id, true); };
+		$scope.headerText = 'select a track to add to the map';
+		$scope.view = $scope.Views.MAP_LIST;		
+		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
+	};
+
+	$scope.broadcastLOAD_TRACK = function(id, overlay) {
+		$scope.$broadcast(Command.LOAD_TRACK, { 'id' : id, 'overlay' : overlay });
+	};
 
 	$scope.$on(Event.TRACK_LOADED, function (evt, id) {
-		console.log('god - $scope.on(Event.TRACK_LOADED');
-		console.log($scope.tracks);
 		$scope.$broadcast(Event.DATA_MODEL_CHANGED);
 		$scope.view = $scope.Views.MAP;
 	});
 
-	// ------------------------------------------------------
-	// Track Info Controller
+	$scope.gotoUnloadTrack = function() {
 
-	$scope.onTrackSelected = undefined;
-	$scope.$on(Event.TRACK_SELECTED, function(evt, id) {
-		$scope.onTrackSelected(id);
+		if ($scope.tracks.length <= 1)
+			return;
+
+		$scope.headerText = 'select a track to unload';
+		$scope.view = $scope.Views.LOADED_TRACKS;
+	};
+
+	$scope.$on(Event.TRACK_UNLOADED, function (evt, id) {
+		console.log('xxx');
+		console.log($scope.tracks)
+		$scope.$broadcast(Event.DATA_MODEL_CHANGED);
 	});
 
 	// DEBUG ----------------------------------------

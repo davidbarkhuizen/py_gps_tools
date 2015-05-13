@@ -112,7 +112,7 @@ function Track(data) {
 	// name
 	//
 	this.name = data.name;
-	this.id = data.trackId;
+	this.id = data.id;
 
 	// segments with points
 	//
