@@ -1,5 +1,21 @@
 function GodController($scope, $http, $timeout) {
 
+	$scope.model = {
+		trackInfos : [],
+	};
+
+	$scope.Views = Object.freeze({
+		HOME : guid(),
+		IMPORT : guid(), 
+		TRACK_LIST : guid(), 
+		ACTIVE_TRACK_LIST : guid(),
+		MAP : guid(),
+		ELEVATION : guid(),
+		STATS : guid(),
+		WAYPOINTS : guid(),
+	});	
+	$scope.view = $scope.Views.HOME;
+
 	// Controller Element Doc Ids
 	//
 	$scope.elevationPlotCanvasId = 'ElevationPlotCanvas';
@@ -16,28 +32,6 @@ function GodController($scope, $http, $timeout) {
 	$scope.tracks = [];
 	$scope.TrackColours = Object.freeze([Colour.BLACK, Colour.BLUE, Colour.PURPLE, Colour.DARKGREEN, Colour.RED]);
 
-	$scope.Views = Object.freeze({
-		HOME : guid(),
-		IMPORT : guid(), 
-		TRACK_LIST : guid(), 
-		ACTIVE_TRACK_LIST : guid(),
-		MAP : guid(),
-		ELEVATION : guid(),
-		STATS : guid(),
-		WAYPOINTS : guid(),
-	});	
-	$scope.view = $scope.Views.HOME;
-
-	// -----------------------------------------------------
-
-	$scope.globalDebug = function(raw_html) {
-		
-		var start = raw_html.indexOf('<div id="summary">');
-		var end = raw_html.indexOf('<div id="traceback">');
-		var section = raw_html.substring(start, end);
-		console.log(section);
-	};
-
 	// map list, filter token, filtered list, selected item ------------
 
 	$scope.updateInfoText = function(msg) {
@@ -46,18 +40,6 @@ function GodController($scope, $http, $timeout) {
 	};
 
 	// NAVIGATION ---------------------------
-
-	$scope.onTrackSelected = function(trackId) {
-		console.log('useTrack ' + trackId);
-	};
-
-	$scope.selectAndLoadTrack = function(trackId) {
-		$scope.loadTrack(trackId, false);
-	};
-
-	$scope.addTrack = function(trackId) {
-		$scope.loadTrack(trackId, true);
-	};
 
 	$scope.returnToActiveMap = function() {
 		if ($scope.mapIsLoadedAndActive == true) {
@@ -74,19 +56,17 @@ function GodController($scope, $http, $timeout) {
 
 	$scope.gotoOpenTrack = function() {		
 
-		$scope.headerText = 'select track to view';
+		$scope.onTrackSelected = function(id) { $scope.loadTrack(id); };
 		$scope.view = $scope.Views.MAP_LIST;
-
+		$scope.headerText = 'select track to view';
 		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
-
-		$scope.onTrackSelected = $scope.selectAndLoadTrack;
 	}
 
 	$scope.gotoAddTrack = function() {		
 
+		$scope.onTrackSelected = function(id) { $scope.loadTrack(id, true); };
 		$scope.headerText = 'select a track to add to the map';
-		$scope.view = $scope.Views.MAP_LIST;
-		$scope.onTrackSelected = $scope.addTrack;
+		$scope.view = $scope.Views.MAP_LIST;		
 		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
 	}
 
@@ -143,7 +123,15 @@ function GodController($scope, $http, $timeout) {
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-	$scope.getTrack = function(id, overlay) {
+	$scope.loadTrack = function(id, overlay) {
+
+		overlay = (overlay !== undefined) ? overlay : false;
+
+		var matches = $scope.tracks
+			.filter(function(track){return (track.id == id);});
+		
+		if (matches.length > 0)
+			return;
 
 		var successFn = function(data) { 
 			$scope.processIncomingTrackData(data.track, overlay); 
@@ -151,26 +139,9 @@ function GodController($scope, $http, $timeout) {
 
 		var failFn = function(status){
 			console.log('fail');
-			console.log(status);
 		};
 
-		var errorFn = function(error){
-			$scope.$broadcast(Event.AJAX_ERROR, error);
-		};
-
-		httpGet($http, 'track', id, successFn, failFn, errorFn);
-	};
-
-	$scope.loadTrack = function(trackId, overlay){
-
-		var matches = $scope.tracks.filter(function(track){return (track.id == trackId);});
-		if (matches.length > 0)
-		{
-			$scope.view = $scope.Views.MAP;
-			return;
-		}
-
-		$scope.getTrack(trackId, overlay);
+		httpGet($http, 'track', id, successFn, failFn, $scope.globalDebug);
 	};
 	
 	// -------------------------------------------------------
@@ -254,6 +225,24 @@ function GodController($scope, $http, $timeout) {
 		$scope.tracks.forEach(function(track) { track.removeWaypoint(id); });
 		$scope.$broadcast(Event.DATA_MODEL_CHANGED);		
 	});
+
+	// ------------------------------------------------------
+	// Track Info Controller
+
+	$scope.onTrackSelected = undefined;
+	$scope.$on(Event.TRACK_SELECTED, function(evt, id) {
+		$scope.onTrackSelected(id);
+	});
+
+	// DEBUG ----------------------------------------
+
+	$scope.globalDebug = function(raw_html) {
+		
+		var start = raw_html.indexOf('<div id="summary">');
+		var end = raw_html.indexOf('<div id="traceback">');
+		var section = raw_html.substring(start, end);
+		console.log(section);
+	};
 
 	$scope.$on(Event.AJAX_ERROR, function(evt, error) {
 		$scope.globalDebug(error);

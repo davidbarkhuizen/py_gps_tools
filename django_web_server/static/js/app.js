@@ -7,7 +7,7 @@ var geoNodeTekControllers = angular.module('GeoNodeTekControllers', []);
 
 var controllers = [
 	['GodController', ['$scope', '$http', '$timeout', GodController]],
-	['TrackListController', ['$scope', '$http', '$timeout', TrackListController]],
+	['TrackInfosController', ['$scope', '$http', '$timeout', TrackInfosController]],
 	['ElevationPlotController', ['$scope', '$http', '$timeout', ElevationPlotController]],
 	['GpxImportController', ['$scope', '$http', '$timeout', GpxImportController]],
 	['ActiveTrackListController', ['$scope', '$http', '$timeout', ActiveTrackListController]],

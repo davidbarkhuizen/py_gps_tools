@@ -4,9 +4,6 @@ from server.models import GpxTrack
 
 def routing(request, qs):
 
-    #xyz = request.GET.get('xyz', 'default value if not found')
-
-    # if request.is_ajax():
     if request.method == 'GET':
         return get(request)
 
@@ -21,4 +18,4 @@ def get(request):
         track_info  = { 'name' : gpx.name, 'id' : gpx.id, 'timestamp' : str(gpx.timestamp) }
         track_list.append(track_info)
 
-    return success({ 'trackList' : track_list })
+    return success({ 'trackInfos' : track_list })

@@ -17,7 +17,7 @@
 
 		<script src="/static/js/controllers/god.controller.js"></script>
 		<script src="/static/js/controllers/gpximport.controller.js"></script>
-		<script src="/static/js/controllers/tracklist.controller.js"></script>
+		<script src="/static/js/controllers/trackinfos.controller.js"></script>
 	    <script src="/static/js/controllers/activetracklist.controller.js"></script>
 	    <script src="/static/js/controllers/waypoints.controller.js"></script>
 	    <script src="/static/js/controllers/map.controller.js"></script>
@@ -101,21 +101,7 @@
 		        		ng-show='view == Views.HOME'>
 
 		        		<br/>
-
-		        		<div>
-	        			please ensure that
-	        			<br/>
-	        			you are running the latest version
-	        			<br/>
-	        			of one of the following supported browsers
-	        			<br/>
-	        			<br/>
-	        			mozilla <a target="blank" href="https://www.mozilla.org/en-US/firefox/new/">firefox</a>
-	        			<br/>
-	        			google <a target="blank" href="http://www.google.com/chrome/index.html">chrome</a>
-		        		<br/>
-		        		apple <a target="blank" href="https://www.apple.com/safari/">safari</a>
-		        		</div>
+		        		david barkhuizen 2015
 		        	</div>
 
 					<!-- IMPORT -->
@@ -139,28 +125,28 @@
 		        	<!-- TRACK LIST -->
 	          		<div
 	          			ng-show='view == Views.MAP_LIST'
-	          			ng-controller='TrackListController'
+	          			ng-controller='TrackInfosController'
 	          			id='TrackListContainer'
 	          			>
 
 						<input
 							id='TrackListFilterToken'
 							placeholder='type here to filter map list and auto-select a map' 
-							ng-model='trackListSearchToken' 
-							ng-keyup='filterTrackList();' 
+							ng-model='searchToken' 
+							ng-keyup='filter();' 
 							type='text'
 							size='32'
 							class='dashed-line-text-input'
-							ng-class='(trackListSearchToken == "") || (filteredTrackList.length == 0) ? "action-required" : "no-action-required"'
+							ng-class='(searchToken == "") || (filteredTrackInfos.length == 0) ? "action-required" : "no-action-required"'
 							/>
 
 		            	<div class='list'>
-							<div ng-repeat="track in filteredTrackList">
+							<div ng-repeat="trackInfo in filteredTrackInfos">
 								<span 
-									ng-class='((selectedTrack !== null) && (selectedTrack.id == track.id)) ? "selected-text" : "";'
-									ng-click='selectTrack(track.id);'
+									ng-class='((selectedTrackInfo !== null) && (selectedTrackInfo.id == trackInfo.id)) ? "selected-text" : "";'
+									ng-click='select(trackInfo.id);'
 									>
-									{{ track.timestamp + ' ' + track.name.toLowerCase() }}
+									{{ trackInfo.timestamp + ' ' + trackInfo.name.toLowerCase() }}
 								</span>
 							</div>
 						</div>
