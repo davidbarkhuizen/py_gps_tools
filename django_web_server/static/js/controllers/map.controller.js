@@ -1,19 +1,26 @@
 function MapController($scope, $http, $timeout) {
 
+	$scope.tracks = $scope.$parent.tracks;
+
+	// ---------------------------------------------
+	// DEFAULTS
+
 	$scope.defaultFont = 'helvetica';
 	$scope.defaultFontSizePx = 20;
 	$scope.defaultFontColour = Colour.BLACK;
 
 	$scope.defaultTitleCorner = Corner.TOP_LEFT;
-
-	$scope.tracks = $scope.$parent.tracks;
 	
+	// ---------------------------------------------
+	// ELEMENTS
+
 	$scope.canvasElement = document
 		.getElementById($scope.$parent.mapCanvasId);
-	$scope.context = $scope.canvasElement.getContext("2d");
 
 	$scope.selectionAreaElement = document
 		.getElementById($scope.$parent.mapSelectionAreaDivId);
+
+	$scope.context = $scope.canvasElement.getContext("2d");
 
 	// lat-lon view ports
 	//
@@ -197,8 +204,6 @@ function MapController($scope, $http, $timeout) {
 		$scope.midEle = ($scope.minMaxEle.max + $scope.minMaxEle.min) / 2.0;
 	};
 
-	// pick scale based on aspect ratios
-	//
 	$scope.determineScaleFromAspectRatios = function() {
 
 		var ar = $scope.lonDiff / $scope.latDiff;
@@ -678,7 +683,6 @@ function MapController($scope, $http, $timeout) {
 		else if (evt.buttons == 2) {
 			$scope.cancelSelection();
 		}
-
 	}, false);
 
 	// SELECTION MOUSE UP
@@ -691,25 +695,14 @@ function MapController($scope, $http, $timeout) {
 		else if (evt.buttons == 2) {
 			// undo last zoom
 		}
-
 	}, false);
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// handlers for angular.js events
 
 	$scope.$on(Event.DATA_MODEL_CHANGED, function(evt) {
-		$scope.draw();
-	});
-
-	$scope.$on(Event.TRACK_LOADED, function(evt) {
-		$scope.draw();
-	});
-
-	$scope.$on(Event.TRACK_UNLOADED, function(evt) {
-		$scope.draw();
-	});
-
-	$scope.$on(Event.WAYPOINT_DELETED, function(evt) {
+		console.log('MAP CTRL - $scope.$on(Event.DATA_MODEL_CHANGED - track');
+		console.log($scope.tracks);
 		$scope.draw();
 	});
 

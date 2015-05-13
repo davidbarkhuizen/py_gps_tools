@@ -1,5 +1,7 @@
 function GodController($scope, $http, $timeout) {
 
+	$scope.tracks = [];
+
 	$scope.model = {
 		trackInfos : [],
 	};
@@ -28,9 +30,6 @@ function GodController($scope, $http, $timeout) {
 	$scope.infoText = '';	
 
 	$scope.mapIsLoadedAndActive = false;
-
-	$scope.tracks = [];
-	$scope.TrackColours = Object.freeze([Colour.BLACK, Colour.BLUE, Colour.PURPLE, Colour.DARKGREEN, Colour.RED]);
 
 	// map list, filter token, filtered list, selected item ------------
 
@@ -107,7 +106,7 @@ function GodController($scope, $http, $timeout) {
 		$scope.view = $scope.Views.IMPORT;
 	};
 
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 	$scope.cancelMapSelection = function() {
 		$scope.$broadcast(Event.CANCEL_MAP_SELECTION);
@@ -123,79 +122,6 @@ function GodController($scope, $http, $timeout) {
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-	$scope.loadTrack = function(id, overlay) {
-
-		overlay = (overlay !== undefined) ? overlay : false;
-
-		var matches = $scope.tracks
-			.filter(function(track){return (track.id == id);});
-		
-		if (matches.length > 0)
-			return;
-
-		var successFn = function(data) { 
-			$scope.processIncomingTrackData(data.track, overlay); 
-		};
-
-		var failFn = function(status){
-			console.log('fail');
-		};
-
-		httpGet($http, 'track', id, successFn, failFn, $scope.globalDebug);
-	};
-	
-	// -------------------------------------------------------
-
-	$scope.processIncomingTrackData = function(trackData, overlay) {
-
-		if (!overlay) {
-			$scope.tracks.length = 0;
-		}
-
-		var newTrack = new Track(trackData);
-		$scope.tracks.push(newTrack);
-
-		// COLOUR LOGIC
-		
-		// used
-		var coloursInUse = [];
-		for (i = 0; i < $scope.tracks.length; i++) {
-			coloursInUse.push($scope.tracks[i].colour);
-		}
-
-		// unused
-		var unusedColours = [];
-		for (var colourName in $scope.TrackColours) {
-			var colour = $scope.TrackColours[colourName];
-
-			if (coloursInUse.indexOf(colour) == -1) {
-				unusedColours.push(colour);
-			}
-		}
-
-		newTrack.colour = unusedColours[0];
-
-		$scope.$broadcast(Event.TRACK_LOADED);		
-
-    	$scope.mapIsLoadedAndActive = true;
-    	$scope.headerText = 'map';
-    	$scope.view = $scope.Views.MAP;    	
-	};
-
-	$scope.unloadTrack = function (trackId) {
-
-		var toRetain = $scope.tracks
-			.filter(function(track) { return (track.id !== trackId); });
-
-		$scope.tracks.length = 0;
-		
-		toRetain
-			.forEach(function (track) { $scope.tracks.push(track); });
-
-		$scope.$broadcast(Event.TRACK_UNLOADED);
-
-		$scope.view = $scope.Views.MAP;
-	};
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// handlers for events emitted by child controllers	
@@ -224,6 +150,20 @@ function GodController($scope, $http, $timeout) {
 
 		$scope.tracks.forEach(function(track) { track.removeWaypoint(id); });
 		$scope.$broadcast(Event.DATA_MODEL_CHANGED);		
+	});
+
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// TRACK
+
+	$scope.loadTrack = function(id) {
+		$scope.$broadcast(Command.LOAD_TRACK, id);
+	}
+
+	$scope.$on(Event.TRACK_LOADED, function (evt, id) {
+		console.log('god - $scope.on(Event.TRACK_LOADED');
+		console.log($scope.tracks);
+		$scope.$broadcast(Event.DATA_MODEL_CHANGED);
+		$scope.view = $scope.Views.MAP;
 	});
 
 	// ------------------------------------------------------

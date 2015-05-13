@@ -6,12 +6,13 @@ var Event = Object.freeze({
 
 	TRACK_LOADED : guid(),
 	TRACK_UNLOADED : guid(),
+
+	// --------------------------------------------------
+
 	WAYPOINT_DELETED : guid(),
 	
 	// from GodController
-	DATA_MODEL_CHANGED : guid(),
-
-	// --------------------------------------------------
+	DATA_MODEL_CHANGED : guid(),	
 
 	PLOT_ELEVATION : guid(),
 
@@ -28,6 +29,7 @@ var Event = Object.freeze({
 });
 
 var Command = Object.freeze({
+	LOAD_TRACK : guid(),
 	UNLOAD_TRACK : guid(),
 	REFRESH_WAYPOINTS : guid()
 });

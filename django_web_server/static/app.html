@@ -18,11 +18,10 @@
 		<script src="/static/js/controllers/god.controller.js"></script>
 		<script src="/static/js/controllers/gpximport.controller.js"></script>
 		<script src="/static/js/controllers/trackinfos.controller.js"></script>
-	    <script src="/static/js/controllers/activetracklist.controller.js"></script>
+	    <script src="/static/js/controllers/tracks.controller.js"></script>
 	    <script src="/static/js/controllers/waypoints.controller.js"></script>
 	    <script src="/static/js/controllers/map.controller.js"></script>
 		<script src="/static/js/controllers/elevationplot.controller.js"></script>
-		<script src="/static/js/controllers/map.controller.js"></script>
 		
 		<script src="/static/js/app.js"></script>
 	</head>
@@ -152,16 +151,16 @@
 						</div>
 					</div>
 
-					<!-- ACTIVE TRACK LIST -->
+					<!-- (LOADED) TRACKS -->
 	            	<div id="ActiveTrackListContainer"
 	            		ng-show='(view == Views.ACTIVE_TRACK_LIST)'
-	            		ng-controller='ActiveTrackListController'>
+	            		ng-controller='TracksController'>
 
 	            		<ul>
 		            		<li ng-repeat="track in tracks">
 		            			<a 
 		            				href='#'
-		            				ng-click='removeTrack(track.id)'
+		            				ng-click='unload(track.id)'
 		            				style='color:{{track.colour}}'
 		            				>
 		            				{{ track.name }}
