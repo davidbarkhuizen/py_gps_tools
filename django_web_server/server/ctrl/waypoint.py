@@ -24,3 +24,13 @@ def delete(request, id):
 
     json_responce_string = json.dumps(response)
     return HttpResponse(json_responce_string, mimetype='application/json')
+
+    '''
+    # waypoints
+    #
+    track.calc_min_maxes()
+    waypoints = WayPoint.objects.filter(lat__lte=track.max_lat, lat__gte=track.min_lat,lon__lte=track.max_lon, lon__gte=track.min_lon)
+
+    track_json_string = json.dumps(track_dict)
+    return HttpResponse(track_json_string, mimetype='application/json')
+    '''

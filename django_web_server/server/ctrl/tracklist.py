@@ -1,5 +1,4 @@
-from django.http import HttpResponse
-import json
+from hfx import success
 
 from server.models import GpxTrack
 
@@ -17,13 +16,9 @@ def get(request):
 
     gpx_files = GpxTrack.objects.all().order_by('timestamp')
 
-    maps = []
-    for x in gpx_files:
-        m = { 'name' : x.name, 'id' : x.id, 'timestamp' : str(x.timestamp) }
-        maps.append(m)
+    track_list = []
+    for gpx in gpx_files:
+        track_info  = { 'name' : gpx.name, 'id' : gpx.id, 'timestamp' : str(gpx.timestamp) }
+        track_list.append(track_info)
 
-    python = { 'maps' : maps }
-
-    json_string = json.dumps(python)
-
-    return HttpResponse(json_string, mimetype='application/json')
+    return success({ 'trackList' : track_list })

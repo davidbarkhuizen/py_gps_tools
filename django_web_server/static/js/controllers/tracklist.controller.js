@@ -51,19 +51,14 @@ function TrackListController($scope, $http, $timeout) {
 
 	$scope.getTrackList = function() {
 
-		var headers = { "Content-Type": "charset=utf-8" };
-		var request = { method: 'GET', url: "/maplist/", headers: headers };
-
-		var successFn = function(response) { 
-			$scope.loadTrackList(response.maps); 
+		var successFn = function(data) { 
+			$scope.loadTrackList(data.trackList); 
 		};
 		var errorFn = function(error){
 			$scope.globalDebug(error);
 		};
 
-		$http(request)
-			.success(successFn)
-			.error(errorFn);
+		httpGet($http, 'tracklist', null, successFn, null, errorFn)
 	};
 
 	$scope.selectTrack = function(trackId) {

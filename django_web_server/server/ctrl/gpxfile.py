@@ -2,7 +2,7 @@ from django.http import HttpResponse
 
 import json
 
-from logic import gpx
+from gpx.gpx import parse_gpx_xml_to_track, parse_gpx_xml_to_waypoints
 
 from server.models import GpxTrack
 from server.models import WayPoint
@@ -51,11 +51,11 @@ def post(request):
 		# check that xml file can be parsed to either track or waypoint
 		#
 		try:
-			track = gpx.parse_string_to_track(xml_string)
+			track = parse_gpx_xml_to_track(xml_string)
 		except Exception, e:
 			pass
 		try:
-			way_points = gpx.parse_string_to_waypoints(xml_string)
+			way_points = parse_gpx_xml_to_waypoints(xml_string)
 		except Exception, e:
 			pass
 		if (track == None) and (way_points == None):

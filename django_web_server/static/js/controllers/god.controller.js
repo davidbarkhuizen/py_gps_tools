@@ -31,7 +31,11 @@ function GodController($scope, $http, $timeout) {
 	// -----------------------------------------------------
 
 	$scope.globalDebug = function(raw_html) {
-		console.log(raw_html);
+		
+		var start = raw_html.indexOf('<div id="summary">');
+		var end = raw_html.indexOf('<div id="traceback">');
+		var section = raw_html.substring(start, end);
+		console.log(section);
 	};
 
 	// map list, filter token, filtered list, selected item ------------
@@ -141,26 +145,20 @@ function GodController($scope, $http, $timeout) {
 
 	$scope.getTrack = function(id, overlay) {
 
-		var req =
-			{
-				headers: { "Content-Type": "charset=utf-8" },
-				method: 'GET',
-				url: '/map/',
-				params: { 'id' : id }
-			};
-
 		var successFn = function(data) { 
-			$scope.processIncomingTrackData(data, overlay); 
+			$scope.processIncomingTrackData(data.track, overlay); 
+		};
+
+		var failFn = function(status){
+			console.log('fail');
+			console.log(status);
 		};
 
 		var errorFn = function(error){
-			console.log('error');
-			$scope.error = error;
+			$scope.$broadcast(Event.AJAX_ERROR, error);
 		};
 
-		$http(req)
-		.success(successFn)
-		.error(errorFn);
+		httpGet($http, 'track', id, successFn, failFn, errorFn);
 	};
 
 	$scope.loadTrack = function(trackId, overlay){
@@ -255,5 +253,9 @@ function GodController($scope, $http, $timeout) {
 
 		$scope.tracks.forEach(function(track) { track.removeWaypoint(id); });
 		$scope.$broadcast(Event.DATA_MODEL_CHANGED);		
+	});
+
+	$scope.$on(Event.AJAX_ERROR, function(evt, error) {
+		$scope.globalDebug(error);
 	});
 };

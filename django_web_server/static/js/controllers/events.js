@@ -1,5 +1,7 @@
 var Event = Object.freeze({
 
+	AJAX_ERROR : guid(),
+
 	TRACK_LOADED : guid(),
 	TRACK_UNLOADED : guid(),
 	WAYPOINT_DELETED : guid(),

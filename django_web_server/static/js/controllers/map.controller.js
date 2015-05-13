@@ -325,8 +325,6 @@ function MapController($scope, $http, $timeout) {
 	    $scope.context.stroke();
 	};
 
-	// draw individual points
-	// 
 	$scope.drawTrackVertices = function(colorString, r) {
 
 		$scope.context.beginPath();
@@ -364,8 +362,6 @@ function MapController($scope, $http, $timeout) {
 	    $scope.context.stroke();		        
 	};
 	
-	// draw continuous trail
-	// 
 	$scope.drawAllTracksEdgesColoured = function(thickness) {    
 
 		for (var t in $scope.canvasPoints) {
@@ -602,8 +598,6 @@ function MapController($scope, $http, $timeout) {
 			y: evt.clientY - rect.top
 		};
 	};
-
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 

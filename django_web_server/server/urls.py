@@ -1,8 +1,8 @@
 from django.conf.urls import url
 
-from ctrl import mapfile
-from ctrl import maplist
-from ctrl import mmap
+from ctrl import gpxfile
+from ctrl import tracklist
+from ctrl import track
 from ctrl import waypoint
 
 from ctrl import echo
@@ -10,8 +10,8 @@ from ctrl import echo
 urlpatterns = [
 	url(r'^echo?(?P<qs>.+)$', echo.routing),
 
-    url(r'^mapfile?(?P<qs>.+)$', mapfile.routing),
-    url(r'^maplist?(?P<qs>.+)$', maplist.routing),
-    url(r'^map?(?P<qs>.+)$', mmap.routing),
+    url(r'^gpxfile?(?P<qs>.+)$', gpxfile.routing),
+    url(r'^tracklist?(?P<qs>.+)$', tracklist.routing),
+    url(r'^track?(?P<qs>.+)$', track.routing),
     url(r'^waypoint?(?P<qs>.+)$', waypoint.routing),
     ]

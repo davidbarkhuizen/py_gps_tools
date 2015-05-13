@@ -147,28 +147,60 @@ function getAndAddAntiCsrfTokenHeaderToDict(dict) {
 	return dict;
 };
 
-function getDeleteHeaders() {
-	return getAndAddAntiCsrfTokenHeaderToDict({ 'X-METHODOVERRIDE': 'DELETE' });
-}
+function buildUrlRoot(controller) {
+	return '/' + controller + '/';
+};
 
-function httpDelete($http, controller, id, onOk, onFail, onError) {	
+function http($http, request, onSuccess, onFailure, onError) {
+
+	function handleGoodResponse(response) { 
+
+		if (response.status == 'ok') {
+			if (onSuccess) onSuccess(response.data);
+		}
+		else {
+			if (onFailure) onFailure(response.message);
+		}
+	};
+
+	function handleBadResponse(response) { 
+
+		if (onError) onError(response);
+	};
+
+	$http(request)
+		.success(handleGoodResponse)
+		.error(handleBadResponse);
+};
+
+function httpDelete($http, controller, id, onSuccess, onFailure, onError) {	
+
+	function getHeaders() {
+
+		var headers = { 'X-METHODOVERRIDE': 'DELETE' };
+		getAndAddAntiCsrfTokenHeaderToDict(headers);
+		return headers;
+	}
 
 	var request = 
 	{
 		method: 'POST',
-		headers: getDeleteHeaders(),		
-		url: '/' + controller + '/',
+		headers: getHeaders(),		
+		url: buildUrlRoot(controller),
 		data: 'id=' + id
 	};
 
-	var successFn = function(response) { 
-		if (response.status == 'ok')
-			onOk(response.data);
-		else
-			onFail(response.status);
+	http($http, request, onSuccess, onFailure, onError);
+}
+
+function httpGet($http, controller, id, onSuccess, onFailure, onError) {
+
+	var request =
+	{
+		method: 'GET',
+		url: buildUrlRoot(controller),
+		params: { 'id' : id }
 	};
 
-	$http(request)
-	.success(successFn)
-	.error(onError);
-}
+	http($http, request, onSuccess, onFailure, onError);
+};
