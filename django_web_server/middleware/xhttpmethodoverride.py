@@ -24,14 +24,14 @@ class XHttpMethodOverride(object):
 				request.method = http_method
 				request.META['REQUEST_METHOD'] = http_method
 				
-				fromBodyQueryString = QueryDict(request.body)
-				fromBodyJSON = json.loads(request.body)
-
 				if http_method == 'PUT':
-					request.PUT = fromBodyJSON
+					request.PUT = json.loads(request.body)
 				elif http_method == 'PATCH':
-					request.PATCH = fromBodyJSON
+					request.PATCH = json.loads(request.body)
 				elif http_method == 'DELETE':
-					request.DELETE = fromBodyQueryString
+					request.DELETE = QueryDict(request.body)
+
+		elif request.method == 'POST':
+			request.POST = json.loads(request.body)
 		
 		return None

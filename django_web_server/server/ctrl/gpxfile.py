@@ -5,34 +5,28 @@ from gpx.gpx import parse_gpx_xml_to_track, parse_gpx_xml_to_waypoints
 from server.models import GpxTrack
 from server.models import WayPoint
 
-import json
-
 def routing(request, qs):
 	
 	if request.method == 'POST':
-		return post(request)
+		return post(request, request.POST)
 
 	raise Error(request.method)
 
-def post(request):
+def post(request, params):
 	
-	json_data = json.loads(request.body)
-
 	file_name = None
 	xml_string = None
 
 	track = None
 	way_points = None
 
-	# parse_gpx_xml_to_waypoints(json_data['xml'])
-
 	msg = None
 	try:
 		# get fileName, fileString JSON fields
 		#
 		try:
-			file_name = json_data['fileName']
-			xml_string = json_data['xml']
+			file_name = params['fileName']
+			xml_string = params['xml']
 		except Exception, e:
 			msg = 'missing json data'
 			raise
