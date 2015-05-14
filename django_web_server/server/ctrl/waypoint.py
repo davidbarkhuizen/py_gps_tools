@@ -20,3 +20,16 @@ def delete(request, params):
 		return success(None)
 	except Exception as e:      
 		return failure(e.message)
+
+def patch(request, params):
+
+	id = params['id']
+	name = params['name']
+
+	try:
+		point = WayPoint.objects.get(id=id)
+		point.name = name
+		point.save()
+		return success(id)
+	except Exception as e:      
+		return failure(e.message)

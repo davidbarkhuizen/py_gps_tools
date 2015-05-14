@@ -41,6 +41,9 @@ function http($http, request, onSuccess, onFailure, onError) {
 		if (onError) onError(response);
 	};
 
+	console.log('requestdata');
+	console.log(request['data']);
+
 	$http(request)
 		.success(handleGoodResponse)
 		.error(handleBadResponse);
@@ -52,6 +55,9 @@ function getPOSTHeaders(overrideMethod) {
 
 	if (overrideMethod)
 		headers['X-METHODOVERRIDE'] = overrideMethod; 
+
+		if (overrideMethod == 'PATCH')
+			headers['content-type'] = 'application/json';			
 
 	getAndAddAntiCsrfTokenHeaderToDict(headers);
 	
@@ -89,6 +95,19 @@ function httpPOST($http, controller, data, onSuccess, onFailure, onError) {
 	{
 		method: 'POST',
 		headers: getPOSTHeaders(),		
+		url: buildUrlRoot(controller),
+		data: data
+	};
+
+	http($http, request, onSuccess, onFailure, onError);
+}
+
+function httpPATCH($http, controller, data, onSuccess, onFailure, onError) {	
+
+	var request = 
+	{
+		method: 'PATCH',
+		headers: getPOSTHeaders('PATCH'),		
 		url: buildUrlRoot(controller),
 		data: data
 	};

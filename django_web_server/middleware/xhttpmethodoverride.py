@@ -1,4 +1,5 @@
 from django.http import QueryDict
+import json
 
 # X-HTTP-Method-Override / HTTP POST Tunneling
 
@@ -23,12 +24,14 @@ class XHttpMethodOverride(object):
 				request.method = http_method
 				request.META['REQUEST_METHOD'] = http_method
 				
-				q = QueryDict(request.body)
+				fromBodyQueryString = QueryDict(request.body)
+				fromBodyJSON = json.loads(request.body)
+
 				if http_method == 'PUT':
-					request.PUT = q
+					request.PUT = fromBodyJSON
 				elif http_method == 'PATCH':
-					request.PATCH = q
+					request.PATCH = fromBodyJSON
 				elif http_method == 'DELETE':
-					request.DELETE = q
+					request.DELETE = fromBodyQueryString
 		
 		return None
