@@ -19,11 +19,15 @@ function WaypointsController($scope, $http, $timeout) {
 
 	// delete --------------------------------------
 
-	$scope.promptForDeleteConfirmation = false;
+	$scope.userRequestedToDeleteId = null;
+	$scope.confirmDeletion = function(id) {
+		$scope.userRequestedToDeleteId = id;
+	};
+	$scope.showDeleteConfirmationPrompt = function() {
+		return ($scope.selectedPoint) && ($scope.userRequestedToDeleteId == $scope.selectedPoint.id);
+	};
 
 	$scope.deleteLocal = function(id) {
-
-		$scope.$emit(Event.WAYPOINT_DELETED, id);
 
 		waypoints
 			.xRemoveWhere(function(x){ return x.id == id; });
@@ -37,6 +41,7 @@ function WaypointsController($scope, $http, $timeout) {
 
 		var successFn = function() { 
 			$scope.deleteLocal(id);
+			$scope.$emit(Event.WAYPOINT_DELETED, id);
 		};
 
 		var failureFn = function(message) { 

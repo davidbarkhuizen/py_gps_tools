@@ -3,16 +3,18 @@ from hfx import success, failure
 
 def routing(request, qs):
 
-    if request.method == 'DELETE':
-        return delete(request, request.DELETE['id'])
+	if request.method == 'DELETE':
+		return delete(request, request.DELETE)
 
-    raise Error(request.method)
+	raise Exception(request.method)
 
-def delete(request, id):
+def delete(request, params):
 
-    try:
-        point = WayPoint.objects.get(id=id)
-        point.delete()
-        return success()
-    except Exception as e:      
-        return failure()
+	id = params['id']
+
+	try:
+		point = WayPoint.objects.get(id=id)
+		point.delete()
+		return success(None)
+	except Exception as e:      
+		return failure(e.message)

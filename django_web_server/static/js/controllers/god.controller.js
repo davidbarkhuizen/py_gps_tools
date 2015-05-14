@@ -123,8 +123,6 @@ function GodController($scope, $http, $timeout) {
 	});
 
 	$scope.$on(Event.WAYPOINT_ADDED, function(evt) {
-		console.log('god - WAYPOINT_ADDED');
-		console.log($scope.model.waypoints);
 		$scope.$broadcast(Event.DATA_MODEL_CHANGED);		
 	});	
 

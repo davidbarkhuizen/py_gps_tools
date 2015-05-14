@@ -494,7 +494,7 @@ function MapController($scope, $http, $timeout) {
 
 				name = cluster[0].name; 
 			}
-			else { // cluster of waypoints too dense to display
+			else if (cluster.length > 1) { // cluster of waypoints too dense to display
 
 				// use 1st point (should be centroid)
 				//

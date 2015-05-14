@@ -8,9 +8,11 @@ Object.defineProperty(Array.prototype, "xCopy", {
 Object.defineProperty(Array.prototype, "xRemoveWhere", {
 	enumerable: false,
 	value: function(predicate) {
+		var that = this;
+
 		var toRetain = this.filter(function(x) { return !predicate(x); });
 		this.length = 0;
-		toRetain.forEach(function(x) { this.push(x)});
+		toRetain.forEach(function(x) { that.push(x)});
 
 		return this;
     }

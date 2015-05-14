@@ -53,7 +53,7 @@ if every cluster is fully examined with no merge, then end
 function clusterPoints(list, clusterPredicate) {
 
 	if ((!list) || (list.length <= 1)){
-		return list;
+		return [list];
 	}
 
 	// list of clusters = each cluster containing 1 element only
