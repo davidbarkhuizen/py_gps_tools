@@ -42,8 +42,10 @@ function WaypointsController($scope, $http, $timeout) {
 	$scope.saveEdit = function() {
 
 		var successFn = function() {
+
 			$scope.selectedPoint.name = $scope.editCopy.name;
 			$scope.editing = false;
+			$scope.$emit(Event.WAYPOINT_EDITED);
 		};
 
 		var failureFn = function() {

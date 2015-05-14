@@ -1,23 +1,29 @@
 var Event = Object.freeze({
 
+	// --------------------------------------------------
+	// emitted
+
 	AJAX_ERROR : guid(),
+
+	GPX_FILE_IMPORT_SUCCEEDED : guid(),
+	GPX_FILE_IMPORT_PROCESS_COMPLETED : guid(),
 
 	TRACK_SELECTED : guid(),
 
 	TRACK_LOADED : guid(),
 	TRACK_UNLOADED : guid(),
 
-	// --------------------------------------------------
-
+	WAYPOINT_EDITED : guid(),
 	WAYPOINT_DELETED : guid(),
+
+	// --------------------------------------------------
+	// broadcast
 	
-	// from GodController
 	DATA_MODEL_CHANGED : guid(),	
 
-	PLOT_ELEVATION : guid(),
+	// --------------------------------------------------
 
-	GPX_FILE_IMPORT_SUCCEEDED : guid(),
-	GPX_FILE_IMPORT_PROCESS_COMPLETED : guid(),
+	PLOT_ELEVATION : guid(),
 
 	MAP_ZOOM_IN : guid(),
 	MAP_ZOOM_OUT : guid(),

@@ -75,11 +75,6 @@ function GodController($scope, $http, $timeout) {
 	context.restore();
 	 */
 
-	$scope.launchGpxImport = function() {
-
-		$scope.view = $scope.Views.IMPORT;
-	};
-
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 	$scope.cancelMapSelection = function() {
@@ -95,11 +90,11 @@ function GodController($scope, $http, $timeout) {
 	}	
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	// handlers for events emitted by child controllers	
+	// GPX IMPORT
 
-	$scope.$on(Command.UNLOAD_TRACK, function(evt, id) {
-		$scope.unloadTrack(id);
-	});
+	$scope.launchGpxImport = function() {
+		$scope.view = $scope.Views.IMPORT;
+	};
 
 	$scope.$on(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED, function(evt) {
 
@@ -117,12 +112,18 @@ function GodController($scope, $http, $timeout) {
 		$scope.$apply();
 	});
 
-	$scope.$on(Event.WAYPOINT_DELETED, function(evt, id) {
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// WAYPOINTS
 
+	$scope.$on(Event.WAYPOINT_DELETED, function(evt, id) {
 		$scope.$broadcast(Event.DATA_MODEL_CHANGED);		
 	});
 
 	$scope.$on(Event.WAYPOINT_ADDED, function(evt) {
+		$scope.$broadcast(Event.DATA_MODEL_CHANGED);		
+	});	
+
+	$scope.$on(Event.WAYPOINT_EDITED, function(evt) {
 		$scope.$broadcast(Event.DATA_MODEL_CHANGED);		
 	});	
 
@@ -171,6 +172,10 @@ function GodController($scope, $http, $timeout) {
 
 	$scope.$on(Event.TRACK_UNLOADED, function (evt, id) {
 		$scope.$broadcast(Event.DATA_MODEL_CHANGED);
+	});
+
+	$scope.$on(Command.UNLOAD_TRACK, function(evt, id) {
+		$scope.unloadTrack(id);
 	});
 
 	// DEBUG ----------------------------------------
