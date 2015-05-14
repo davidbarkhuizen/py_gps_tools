@@ -33,25 +33,21 @@ function TracksController($scope, $http, $timeout) {
 
 			if (!overlay) $scope.$parent.tracks.length = 0;
 
-			console.log(data);
-
 			var newTrack = new Track(data.track);
 			newTrack.colour = $scope.getUnusedTrackColour();
 			$scope.$parent.tracks.push(newTrack);
 
-			$scope.$emit(Event.TRACK_LOADED);
+			$scope.$emit(Event.TRACK_LOADED, newTrack.id);
 		};
 
 		var failFn = function(status){
 			console.log('fail');
 		};
 
-		httpGet($http, 'track', id, successFn, failFn, $scope.globalDebug);
+		httpGet($http, 'track', { 'id' : id }, successFn, failFn, $scope.globalDebug);
 	};
 	
 	$scope.unload = function (id) {
-
-		console.log(id);
 
 		var toRetain = $scope.$parent.tracks
 			.filter(function(track) { return (track.id !== id); });

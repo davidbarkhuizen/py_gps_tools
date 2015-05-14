@@ -193,13 +193,13 @@ function httpDelete($http, controller, id, onSuccess, onFailure, onError) {
 	http($http, request, onSuccess, onFailure, onError);
 }
 
-function httpGet($http, controller, id, onSuccess, onFailure, onError) {
+function httpGet($http, controller, query, onSuccess, onFailure, onError) {
 
 	var request =
 	{
 		method: 'GET',
 		url: buildUrlRoot(controller),
-		params: { 'id' : id }
+		params: query,
 	};
 
 	http($http, request, onSuccess, onFailure, onError);

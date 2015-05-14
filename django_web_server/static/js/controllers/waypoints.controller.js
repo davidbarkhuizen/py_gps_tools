@@ -76,4 +76,33 @@ function WaypointsController($scope, $http, $timeout) {
 	$scope.$on(Event.TRACK_LOADED, function(evt, data) {
 		$scope.fetchAndAggregateTrackWaypoints();
 	});
+
+	$scope.queryForArea = function(minLat, maxLat, minLon, maxLon) {
+
+		var successFn = function(data) { 
+			console.log(data);
+		};
+
+		var failureFn = function(message) { 
+			console.log(message) 
+		};
+
+		var errorFn = function(error){
+			$scope.$emit(Event.AJAX_ERROR, error);
+		};
+
+		query = {
+			'minLat' : minLat,
+			'maxLat' : maxLat,
+			'minLon' : minLon,
+			'maxLon' : maxLon
+		};
+
+		httpGet($http, 'waypoints', query, successFn, failureFn, errorFn);
+	};
+
+	$scope.$on(Command.LOAD_WAYPOINTS_FOR_TRACK, function(evt, id) {
+		var track = $scope.$parent.tracks.filter(function(x) {return x.id == id;})[0];
+		$scope.queryForArea(track.minMaxLat.min, track.minMaxLat.max, track.minMaxLon.min, track.minMaxLon.max); 
+	});	
 }

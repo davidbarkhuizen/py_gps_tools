@@ -158,7 +158,7 @@
 
         				<br/>	            		
 	            		<div ng-repeat="track in $parent.tracks">
-	            			<a href='#' style='color:{{track.colour}}'>{{ track.name }}</a>&nbsp;<a href='#' ng-click='unload(track.id)'style='color:red'>unload</a>
+	            			<a href='#' ng-click='unload(track.id)'style='color:red'>unload</a>&nbsp;<a href='#' style='color:{{track.colour}}'>{{ track.name }}</a>
         				</div>
 	            	</div>
 
@@ -217,9 +217,10 @@
 						</canvas>					
 					</div>
 
-					<div id='WaypointsContainer'
-						ng-controller='WaypointsController'
+					<div id='WaypointsContainer' 
 						ng-show='view == Views.WAYPOINTS'
+						ng-controller='WaypointsController'
+						
 						style='vertical-align:top;'
 						>
 
@@ -259,7 +260,18 @@
 								<a href='#' ng-click="selectPoint(waypoint)">{{ waypoint.name }} </a>
 							</div>
 						</div>
+					</div>
 
+					<div id='Debug'
+						ng-show='view == Views.DEBUG'>
+						<div class='short-list'>
+							<div id="DebugSummary">
+							</div>
+						</div>
+						<div class='short-list'>
+							<div id="DebugTrace">
+							</div>
+						</div>
 					</div>
 	        	</div>
 		    </div>

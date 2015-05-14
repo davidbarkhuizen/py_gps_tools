@@ -7,6 +7,7 @@ function GodController($scope, $http, $timeout) {
 	};
 
 	$scope.Views = Object.freeze({
+		DEBUG : guid(),
 		HOME : guid(),
 		IMPORT : guid(), 
 		MAP : guid(),
@@ -152,6 +153,7 @@ function GodController($scope, $http, $timeout) {
 	$scope.$on(Event.TRACK_LOADED, function (evt, id) {
 		$scope.$broadcast(Event.DATA_MODEL_CHANGED);
 		$scope.view = $scope.Views.MAP;
+		$scope.$broadcast(Command.LOAD_WAYPOINTS_FOR_TRACK, id);
 	});
 
 	$scope.gotoUnloadTrack = function() {
@@ -164,19 +166,33 @@ function GodController($scope, $http, $timeout) {
 	};
 
 	$scope.$on(Event.TRACK_UNLOADED, function (evt, id) {
-		console.log('xxx');
-		console.log($scope.tracks)
 		$scope.$broadcast(Event.DATA_MODEL_CHANGED);
 	});
 
 	// DEBUG ----------------------------------------
 
+	var debugSummaryElement = document.getElementById('DebugSummary');
+	var debugTraceElement = document.getElementById('DebugTrace');
+	var dummyRoot = document.createElement('div');
+
 	$scope.globalDebug = function(raw_html) {
+
+		debugSummaryElement.innerHTML = '';
+		debugTraceElement.innerHTML = '';
 		
-		var start = raw_html.indexOf('<div id="summary">');
-		var end = raw_html.indexOf('<div id="traceback">');
-		var section = raw_html.substring(start, end);
-		console.log(section);
+		dummyRoot.innerHTML = raw_html;
+
+		var summaryE = dummyRoot
+			.querySelector("#summary");
+
+		debugSummaryElement.innerHTML = summaryE.innerHTML;
+
+		var traceE = dummyRoot
+			.querySelector("#traceback");
+
+		debugTraceElement.innerHTML = traceE.innerHTML;
+
+		$scope.view = $scope.Views.DEBUG;
 	};
 
 	$scope.$on(Event.AJAX_ERROR, function(evt, error) {

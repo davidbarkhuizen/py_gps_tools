@@ -11,12 +11,13 @@ def routing(request, qs):
     if request.method == 'POST':
         return post(request)
     elif request.method == 'GET':
-        id = request.GET.get('id', '')
-        return get(request, id)
+        return get(request, request.GET)
 
     raise Exception(request.method)
 
-def get(request, id):
+def get(request, params):
+
+    id = params['id']
 
     model = GpxTrack.objects.get(id=id)
     
