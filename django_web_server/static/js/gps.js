@@ -88,19 +88,16 @@ var parsePoint = function(pointString) {
 	return new Point(lat, lon, ele, t);
 };
 
-var parseWaypoint = function(waypointString) {
+var parseWaypointDict = function(wp) {
 
-	// 2014-10-26 11:06:15|-25.938111|27.592123|1329.160000
-	// time, lat, lon, ele
+	var id = wp.id;
+	var name = wp.name;
 
-	var datum = waypointString.split("|")
-
-	var lat = parseFloat(datum[0]);
-	var lon = parseFloat(datum[1]);
-	var ele = parseFloat(datum[2]);
-	var name = datum[3];
-	var time = Date.parse(datum[4]);
-	var id = datum[5];
+	var lat = parseFloat(wp.lat);
+	var lon = parseFloat(wp.lon);
+	var ele = parseFloat(wp.ele);
+	
+	var time = Date.parse(wp.time);
 
 	return new WayPoint(id, name, lat, lon, ele, time);
 };
@@ -241,17 +238,4 @@ function Track(data) {
 	};
 
 	calcTrackStats();
-
-	// waypoints
-	//
-	this.waypoints = [];
-	for(var i in data.waypoints) {
-		this.waypoints.push(parseWaypoint(data.waypoints[i]));
-	}
-
-	this.removeWaypoint = function(id) {
-		var toRetain = that.waypoints.filter(function(p){ return (p.id !== id); });
-		that.waypoints.length = 0;
-		toRetain.forEach(function(x) { that.waypoints.push(x); });
-	};
 }

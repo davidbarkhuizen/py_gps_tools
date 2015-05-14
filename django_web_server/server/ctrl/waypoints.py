@@ -20,6 +20,10 @@ return HttpResponse(track_json_string, mimetype='application/json')
 
 def get(request, params):
 
+	waypoints = []
+
+	# AREA QUERY
+	#
 	area_keys = ['minLat', 'maxLat', 'minLon', 'maxLon']
 	if len([x for x in area_keys if x in params.keys()]) == len(area_keys):
 		
@@ -30,4 +34,5 @@ def get(request, params):
 
 		waypoints = WayPoint.objects.filter(lat__lte=max_lat, lat__gte=min_lat,lon__lte=max_lon, lon__gte=min_lon)
 
-		return success(waypoints)
+	wp_dicts = [wp.to_dict() for wp in waypoints]
+	return success({'waypoints' : wp_dicts})

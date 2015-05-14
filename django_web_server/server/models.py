@@ -3,7 +3,7 @@ from django.db import models
 class GpxTrack(models.Model):
 
 	class Meta:
-	    db_table = "GpxTrack"
+		db_table = "GpxTrack"
 
 	name = models.CharField(max_length=1024)
 	timestamp= models.DateField()
@@ -30,3 +30,14 @@ class WayPoint(models.Model):
 
 	def __str__(self):
 		return '%s (%f %f) @ %f m [%t]' % (self.name, self.lat, self.lon, self.ele, self.time)
+
+	def to_dict(self):
+		
+		return { 
+				'id' : self.id, 
+				'name' : self.name, 
+				'lat' : str(self.lat), 
+				'lon' : str(self.lon),
+				'ele' :  str(self.ele), 
+				'time' : self.time.isoformat() 
+			}

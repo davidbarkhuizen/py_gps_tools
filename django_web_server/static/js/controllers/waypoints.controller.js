@@ -79,8 +79,11 @@ function WaypointsController($scope, $http, $timeout) {
 
 	$scope.queryForArea = function(minLat, maxLat, minLon, maxLon) {
 
-		var successFn = function(data) { 
-			console.log(data);
+		var successFn = function(data) {			
+			data.waypoints.forEach(function(wpd){
+				var wp = parseWaypointDict(wpd);
+				console.log(wp);
+			});
 		};
 
 		var failureFn = function(message) { 
