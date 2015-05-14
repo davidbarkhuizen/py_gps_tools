@@ -2,6 +2,10 @@ function MapController($scope, $http, $timeout) {
 
 	$scope.tracks = $scope.$parent.tracks;
 
+	var waypoints = $scope.$parent.model.waypoints; 
+
+	$scope.canvasWaypoints = [];
+
 	// ---------------------------------------------
 	// DEFAULTS
 
@@ -272,37 +276,12 @@ function MapController($scope, $http, $timeout) {
 
 	$scope.renderWayPointsToCanvasSpace = function() {		
 
-		var uniqueWaypoints = [];
+		$scope.canvasWaypoints.length = 0;
 
-		for (var t in $scope.tracks) {
-			for (var p in $scope.tracks[t].waypoints) {
-
-				var point = $scope.tracks[t].waypoints[p];
-
-				var alreadyExists = false;
-				for(var j = 0; j < uniqueWaypoints.length; j++) {
-
-					if ((point.lat == uniqueWaypoints[j].lat) && (point.lon == uniqueWaypoints[j].lon)) {
-						alreadyExists = true;
-						break;
-					}
-				}
-
-				if (alreadyExists == false) {
-					uniqueWaypoints.push(point);
-				}				
-			}
-		}
-
-		$scope.canvasWaypoints = [];
-
-		for (var i = 0; i < uniqueWaypoints.length; i++) {
-
-			var point = uniqueWaypoints[i];
+		waypoints.forEach(function(point) {
 			var canvasWaypoint = $scope.transformPoint(point.lat, point.lon, point.ele, point.name);
-
-			$scope.canvasWaypoints.push(canvasWaypoint);			
-		}
+			$scope.canvasWaypoints.push(canvasWaypoint);
+		});
 	};
 
 	$scope.blankCanvas = function() {

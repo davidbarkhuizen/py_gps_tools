@@ -1,19 +1,32 @@
 function WaypointsController($scope, $http, $timeout) {
 
+	var waypoints = $scope.$parent.model.waypoints;
+
+	// selection
+	//
+	$scope.selectedPoint = undefined;
+
+	$scope.selectPoint = function(point) {
+		$scope.selectedPoint = point;
+	};
+
 	$scope.selectFirstWayPoint = function() {
 
-		$scope.selectedPoint = ($scope.waypoints.length > 0)
-			? $scope.waypoints[0]
+		$scope.selectedPoint = (waypoints.length > 0)
+			? waypoints[0]
 			: undefined;
 	};
+
+	// delete --------------------------------------
+
+	$scope.promptForDeleteConfirmation = false;
 
 	$scope.deleteLocal = function(id) {
 
 		$scope.$emit(Event.WAYPOINT_DELETED, id);
 
-		var toRetain = $scope.waypoints.filter(function(x) { return x.id !== id; });
-		$scope.waypoints.length = 0;
-		toRetain.forEach(function(x) { $scope.waypoints.push(x); });		
+		waypoints
+			.xRemoveWhere(function(x){ return x.id == id; });
 
 		if (($scope.selectedPoint !== undefined) && ($scope.selectedPoint.id == id)) {
 			$scope.selectFirstWayPoint();
@@ -37,53 +50,47 @@ function WaypointsController($scope, $http, $timeout) {
 		httpDelete($http, 'waypoint', id, successFn, failureFn, errorFn);
 	};
 
-	$scope.waypoints = [];
-	$scope.selectedPoint = undefined;
-
-	$scope.promptForDeleteConfirmation = false;
+	// --------------------------------------------
 
 	$scope.timeString = function(dateVal) {
+
 		var d = new Date(dateVal);
 		return d.toString();
 	};
 
-	$scope.selectPoint = function(point) {
-		$scope.selectedPoint = point;
-	};
+	$scope.mergeNewPoints = function(newPoints) {
 
-	$scope.fetchAndAggregateTrackWaypoints = function() {
-		
-		$scope.$parent.tracks.forEach(function (track) {
-			track.waypoints.forEach(
-				function(wp) {
+		var changed = false;
 
-					if ($scope.waypoints.filter(function(x) { return x.id == wp.id}).length == 0)
-						$scope.waypoints.push(wp);
-				}
-			);
+		newPoints.forEach(function(newPoint) {
+
+			var exists  = function(existing) { 
+				return existing.id == newPoint.id; 
+			};
+
+			if (!waypoints.xContainsWhere(exists)) {
+				waypoints.push(newPoint);
+				changed = true;
+			}
 		});
 
-		if ($scope.waypoints.length == 0) {
-			$scope.selectedPoint = undefined;
-			return;
+		if (changed)  {
+			$scope.$emit(Event.WAYPOINT_ADDED);
 		}
-
-		$scope.waypoints.sort(function(a,b) { return a.name == b.name ? 0 : a.name > b.name });
-	
-		$scope.selectedPoint = $scope.waypoints[0];
 	};
 
-	$scope.$on(Event.TRACK_LOADED, function(evt, data) {
-		$scope.fetchAndAggregateTrackWaypoints();
-	});
+	$scope.getAndMergeForArea = function(minLat, maxLat, minLon, maxLon) {
 
-	$scope.queryForArea = function(minLat, maxLat, minLon, maxLon) {
+		var successFn = function(data) {	
 
-		var successFn = function(data) {			
+			var resultPoints = [];	
+
 			data.waypoints.forEach(function(wpd){
 				var wp = parseWaypointDict(wpd);
-				console.log(wp);
+				resultPoints.push(wp);
 			});
+
+			$scope.mergeNewPoints(resultPoints);
 		};
 
 		var failureFn = function(message) { 
@@ -104,8 +111,13 @@ function WaypointsController($scope, $http, $timeout) {
 		httpGet($http, 'waypoints', query, successFn, failureFn, errorFn);
 	};
 
+	// EVENT HANDLERS ----------------------------------------
+
 	$scope.$on(Command.LOAD_WAYPOINTS_FOR_TRACK, function(evt, id) {
+
 		var track = $scope.$parent.tracks.filter(function(x) {return x.id == id;})[0];
-		$scope.queryForArea(track.minMaxLat.min, track.minMaxLat.max, track.minMaxLon.min, track.minMaxLon.max); 
+		if (track) {
+			$scope.getAndMergeForArea(track.minMaxLat.min, track.minMaxLat.max, track.minMaxLon.min, track.minMaxLon.max);
+		}
 	});	
 }

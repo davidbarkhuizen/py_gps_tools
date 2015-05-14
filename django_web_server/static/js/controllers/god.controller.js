@@ -4,6 +4,7 @@ function GodController($scope, $http, $timeout) {
 
 	$scope.model = {
 		trackInfos : [],
+		waypoints : []
 	};
 
 	$scope.Views = Object.freeze({
@@ -118,9 +119,14 @@ function GodController($scope, $http, $timeout) {
 
 	$scope.$on(Event.WAYPOINT_DELETED, function(evt, id) {
 
-		$scope.tracks.forEach(function(track) { track.removeWaypoint(id); });
 		$scope.$broadcast(Event.DATA_MODEL_CHANGED);		
 	});
+
+	$scope.$on(Event.WAYPOINT_ADDED, function(evt) {
+		console.log('god - WAYPOINT_ADDED');
+		console.log($scope.model.waypoints);
+		$scope.$broadcast(Event.DATA_MODEL_CHANGED);		
+	});	
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// TRACK

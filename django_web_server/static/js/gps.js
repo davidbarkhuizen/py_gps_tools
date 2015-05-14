@@ -119,7 +119,13 @@ function Track(data) {
 
 		var points = [];
 		for(var j in dataSegment.points) {
-			points.push(parsePoint(dataSegment.points[j]));
+			try {
+				points.push(parsePoint(dataSegment.points[j]));
+			}
+			catch (error) {
+				console.log(dataSegment.points[j]);
+				throw error
+			}
 		}
 
 		this.segments.push(new Segment('', points));
