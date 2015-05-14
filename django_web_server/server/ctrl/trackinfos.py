@@ -4,18 +4,18 @@ from server.models import GpxTrack
 
 def routing(request, qs):
 
-    if request.method == 'GET':
-        return get(request)
+	if request.method == 'GET':
+		return get(request)
 
-    raise Error(request.method)
+	raise Error(request.method)
 
 def get(request):
 
-    gpx_files = GpxTrack.objects.all().order_by('timestamp')
+	gpx_files = GpxTrack.objects.all().order_by('timestamp')
 
-    track_list = []
-    for gpx in gpx_files:
-        track_info  = { 'name' : gpx.name, 'id' : gpx.id, 'timestamp' : str(gpx.timestamp) }
-        track_list.append(track_info)
+	track_list = []
+	for gpx in gpx_files:
+		track_info  = { 'name' : gpx.name, 'id' : gpx.id, 'timestamp' : str(gpx.timestamp) }
+		track_list.append(track_info)
 
-    return success({ 'trackInfos' : track_list })
+	return success({ 'trackInfos' : track_list })

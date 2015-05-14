@@ -11,15 +11,24 @@ from django.http import QueryDict
 # http://www.endurasoft.com/Blog/post/X-HTTP-Method-Override.aspx
 
 class XHttpMethodOverride(object):
-    
-    def process_request(self, request):
+	
+	def process_request(self, request):
 
-        if request.META.has_key('HTTP_X_METHODOVERRIDE'):
-            http_method = request.META['HTTP_X_METHODOVERRIDE']
+		if request.META.has_key('HTTP_X_METHODOVERRIDE'):
 
-            if http_method.lower() == 'delete':
-                request.method = 'DELETE'
-                request.META['REQUEST_METHOD'] = 'DELETE'
-                request.DELETE = QueryDict(request.body)
-        
-        return None
+			http_method = request.META['HTTP_X_METHODOVERRIDE'].upper().strip() 
+
+			if http_method in ['PUT', 'PATCH', 'DELETE']:
+
+				request.method = http_method
+				request.META['REQUEST_METHOD'] = http_method
+				
+				q = QueryDict(request.body)
+				if http_method == 'PUT':
+					request.PUT = q
+				elif http_method == 'PATCH':
+					request.PATCH = q
+				elif http_method == 'DELETE':
+					request.DELETE = q
+		
+		return None

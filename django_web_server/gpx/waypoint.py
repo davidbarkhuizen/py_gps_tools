@@ -2,7 +2,7 @@ from point import Point
 
 class WayPoint(Point):
 
-    def __init__(self, id, name, lat, lon, ele, time):
+    def __init__(self, name, lat, lon, ele, time, id = None):
         self.id = id
         self.name = name
         super(WayPoint,self).__init__(lat, lon, ele, time)

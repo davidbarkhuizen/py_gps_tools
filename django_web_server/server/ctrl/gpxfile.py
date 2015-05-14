@@ -1,20 +1,18 @@
-from django.http import HttpResponse
-
-import json
+from hfx import success, failure
 
 from gpx.gpx import parse_gpx_xml_to_track, parse_gpx_xml_to_waypoints
 
 from server.models import GpxTrack
 from server.models import WayPoint
 
+import json
+
 def routing(request, qs):
-    
-	# if request.is_ajax():
+	
+	if request.method == 'POST':
+		return post(request)
 
-    if request.method == 'POST':
-        return post(request)
-
-    raise Error(request.method)
+	raise Error(request.method)
 
 def post(request):
 	
@@ -26,24 +24,26 @@ def post(request):
 	track = None
 	way_points = None
 
+	# parse_gpx_xml_to_waypoints(json_data['xml'])
+
 	msg = None
 	try:
 		# get fileName, fileString JSON fields
 		#
 		try:
-		    file_name = json_data['fileName']
-		    xml_string = json_data['fileString']
+			file_name = json_data['fileName']
+			xml_string = json_data['xml']
 		except Exception, e:
-		    msg = 'missing json data'
-		    raise
+			msg = 'missing json data'
+			raise
 
 		# check if already exists
 		#
 		already_exists = False
 		for f in GpxTrack.objects.all():
-		    if str(f.xml) == str(xml_string):
-		        already_exists = True
-		        break
+			if str(f.xml) == str(xml_string):
+				already_exists = True
+				break
 		if already_exists:
 			msg = 'already exists'
 			raise Exception(msg)
@@ -53,29 +53,26 @@ def post(request):
 		try:
 			track = parse_gpx_xml_to_track(xml_string)
 		except Exception, e:
-			pass
+			msg = 'not a valid track file'
 		try:
 			way_points = parse_gpx_xml_to_waypoints(xml_string)
 		except Exception, e:
+			msg = 'not a valid waypoint file'
 			pass
 		if (track == None) and (way_points == None):
 			msg = 'file not recognised as either a track or waypoints'
 			raise Exception(msg)
+		else:
+			msg = None
 
 	# handle exception, return JSON with error code
 	#	
 	except Exception as e:
-		
+
 		if (msg):
-			error_return = { 'code' : 'fail', 'msg' : msg }
-			json_string = json.dumps(error_return)
-			return HttpResponse(json_string)
+			return failure(msg)
 		else:
 			raise e
-
-	# -----------
-
-	ok_return = ok_return = { 'code' : 'ok' }
 
 	# create track
 	#
@@ -101,7 +98,4 @@ def post(request):
 			wp.save()
 			print('created point %s' % wp.name)
 	
-	# status response
-	#
-	json_string = json.dumps(ok_return)
-	return HttpResponse(json_string)
+	return success(None)

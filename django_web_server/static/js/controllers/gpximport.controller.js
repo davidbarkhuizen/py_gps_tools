@@ -13,19 +13,14 @@ function GpxImportController($scope, $http, $timeout) {
 
 		var onLoad = function(evt) {
 
-			var packet = {
+			var data = {
 				'fileName' : file.name,
-				'fileString' : evt.target.result
+				'xml' : evt.target.result
 			};
 
 			var successFn = function(data, status, headers, config) {
 
-				if (data.code == 'ok') {
-			    	$scope.$emit(Event.GPX_FILE_IMPORTED);
-		    	}						
-		    	else  {
-		    		$scope.$emit(Event.GPX_FILE_IMPORT_FAILED);
-		    	}
+				$scope.$emit(Event.GPX_FILE_IMPORTED);
 
 		    	if (remainder.length == 0) {
 		    		clearFileInput($scope.fileInputId);
@@ -36,18 +31,15 @@ function GpxImportController($scope, $http, $timeout) {
 		    	}
 			};
 
-			var errorFn = function(data, status, headers, config) {
-			    $scope.$parent.globalDebug(data);
+			var failureFn = function(message) {
+			    console.log(message);
 			};
 
-			$http({
-			    url: '/mapfile/',
-			    method: 'POST',
-			    data: packet,
-				headers: $scope.$parent.getAntiCsrfTokenHeader()
-			})
-			.success(successFn)
-			.error(errorFn);
+			var errorFn = function(error) {
+			    $scope.$emit(Event.AJAX_ERROR, error);
+			};
+
+			httpPOST($http, 'gpxfile', data, successFn, failureFn, errorFn);
 		};
 
 		var reader = new FileReader(); 

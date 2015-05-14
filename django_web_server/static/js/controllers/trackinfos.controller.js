@@ -51,7 +51,7 @@ function TrackInfosController($scope, $http, $timeout) {
 			$scope.globalDebug(error);
 		};
 
-		httpGet($http, 'trackinfos', null, successFn, null, errorFn)
+		httpGET($http, 'trackinfos', null, successFn, null, errorFn)
 	};
 
 	$scope.load();

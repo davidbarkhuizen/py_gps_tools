@@ -99,4 +99,4 @@ def parse_gpx_xml_to_waypoints(xml_string, log = def_log_fn):
         
         waypoints.append(waypoint) 
 
-    return waypoin
+    return waypoints

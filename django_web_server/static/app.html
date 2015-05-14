@@ -16,7 +16,9 @@
 		<script src="/static/js/const.js"></script>
 	    
 	    <!-- DOMAIN -->
-	    <script src="/static/js/gps.js"></script>	    
+	    <script src="/static/js/gps.js"></script>	
+
+	    <script src="/static/js/hfx.js"></script>    
 	    
 	    <!-- CONTROLLLERS -->
 	    <script src="/static/js/controllers/events.js"></script>
@@ -235,15 +237,31 @@
 
 						<div ng-show='model.waypoints.length > 0'>
 							<div>
-								{{ selectedPoint.name }}
-								<br/>	
-								lat {{ selectedPoint.lat }}, lon {{ selectedPoint.lon }}
-								<br/>
-								{{ timeString(selectedPoint.time) }}
+								<div ng-show='!editing'>
+									{{ selectedPoint.name }}
+								</div>
+								<div ng-show='editing'>
+									<input
+										id='EditWayPointName'
+										placeholder='{{ selectedPoint.name }}' 
+										ng-model='editCopy.name' 
+										size='32'
+										class='dashed-line-text-input'
+										/>
+								</div>
+								<div>
+									lat {{ selectedPoint.lat }}, lon {{ selectedPoint.lon }}
+								</div>
+								<div>
+									{{ timeString(selectedPoint.time) }}
+								</div>
 							</div>
 							<div>
-								<a href='#' style='color:green;'>edit</a>
-								<a href='#' style='color:red;' ng-click='confirmDeletion(selectedPoint.id)'>delete</a>
+								<a href='#' style='color:green;' ng-show='showEdit()' ng-click='edit()'>edit</a>
+								<a href='#' style='color:green;' ng-show='showSaveEdit()' ng-click='saveEdit()'>save edit</a>
+								<a href='#' style='color:green;' ng-show='showCancelEdit()' ng-click='cancelEdit()'>cancel edit</a>
+								
+								<a href='#' style='color:red;' ng-show='showDelete()' ng-click='confirmDeletion(selectedPoint.id)'>delete</a>
 							</div>
 							<div ng-show='showDeleteConfirmationPrompt()'>
 								<br/>
@@ -252,7 +270,7 @@
 								</div>
 								<div>
 									<a href="#" ng-click='delete(selectedPoint.id)'>yes</a>
-									<a href="#" ng-click='userRequestedToDeleteId = null'>no</a>
+							f		<a href="#" ng-click='userRequestedToDeleteId = null'>no</a>
 								</div>
 							</div>
 						</div>
@@ -271,10 +289,12 @@
 
 					<div id='Debug'
 						ng-show='view == Views.DEBUG'>
+						<br/>
 						<div class='short-list'>
 							<div id="DebugSummary">
 							</div>
 						</div>
+						<br/>
 						<div class='short-list'>
 							<div id="DebugTrace">
 							</div>

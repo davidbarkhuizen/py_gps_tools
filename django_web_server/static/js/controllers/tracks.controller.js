@@ -44,7 +44,7 @@ function TracksController($scope, $http, $timeout) {
 			console.log('fail');
 		};
 
-		httpGet($http, 'track', { 'id' : id }, successFn, failFn, $scope.globalDebug);
+		httpGET($http, 'track', { 'id' : id }, successFn, failFn, $scope.globalDebug);
 	};
 	
 	$scope.unload = function (id) {

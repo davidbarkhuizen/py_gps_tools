@@ -3,7 +3,9 @@ from hfx import success, failure
 
 def routing(request, qs):
 
-	if request.method == 'DELETE':
+	if request.method == 'PATCH':
+		return patch(request, request.PATCH)
+	elif request.method == 'DELETE':
 		return delete(request, request.DELETE)
 
 	raise Exception(request.method)

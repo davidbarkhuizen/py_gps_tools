@@ -2,9 +2,79 @@ function WaypointsController($scope, $http, $timeout) {
 
 	var waypoints = $scope.$parent.model.waypoints;
 
+	$scope.editing = false;
+	$scope.deleting = false;
+
+	// edit
+	//
+
+	$scope.editCopy = null;
+
+	$scope.showEdit = function() { 
+		return !($scope.editing || $scope.deleting) 
+	};
+	$scope.edit = function(id) { 
+		if (id) {
+			$scope.selectPointById(id);
+		} 
+
+		if (!$scope.selectedPoint) return;
+
+		$scope.editCopy = JSON.parse(JSON.stringify($scope.selectedPoint)); 
+
+		$timeout(function() { focusOnId('EditWayPointName'); }, 10);
+
+		$scope.deleting = false;
+		$scope.editing = true;
+	};
+
+	$scope.showSaveEdit = function() { 
+
+		var x =   
+			(
+			($scope.editing == true) 
+			&& 
+			(JSON.stringify($scope.editCopy) !== JSON.stringify($scope.selectedPoint))
+			);
+
+		return x;
+	};
+	$scope.saveEdit = function() {
+
+		var successFn = function() {
+			$scope.selectedPoint.name = $scope.editCopy.name;
+			$scope.editing = false;
+		};
+
+		var failureFn = function() {
+			console.log('failed');
+		};
+
+		var errorFn = function(error) {
+			$scope.$emit(Event.AJAX_ERROR, error);
+		};
+
+		httpPATCH($http, 'waypoint', $scope.editCopy, successFn, failureFn, errorFn);	
+	};
+
+	$scope.showCancelEdit = function() {
+		return $scope.editing;
+	};
+	$scope.cancelEdit = function() {
+		$scope.editing = false;
+	};
+
+	$scope.showDelete = function() { return !($scope.editing || $scope.deleting) };
+
+
 	// selection
 	//
 	$scope.selectedPoint = undefined;
+
+	$scope.selectPointById = function(id) {
+
+	    waypoints.forEach(function(x) { if (x.id == id) $scope.selectedPoint = x;  });
+	};
 
 	$scope.selectPoint = function(point) {
 		$scope.selectedPoint = point;
@@ -18,6 +88,10 @@ function WaypointsController($scope, $http, $timeout) {
 	};
 
 	// delete --------------------------------------
+
+	$scope.clearDeletionRequest = function() {
+		$scope.userRequestedToDeleteId = null;
+	};
 
 	$scope.userRequestedToDeleteId = null;
 	$scope.confirmDeletion = function(id) {
@@ -52,7 +126,7 @@ function WaypointsController($scope, $http, $timeout) {
 			console.log(error);
 		};
 
-		httpDelete($http, 'waypoint', id, successFn, failureFn, errorFn);
+		httpDELETE($http, 'waypoint', id, successFn, failureFn, errorFn);
 	};
 
 	// --------------------------------------------
@@ -96,6 +170,9 @@ function WaypointsController($scope, $http, $timeout) {
 			});
 
 			$scope.mergeNewPoints(resultPoints);
+
+			if (($scope.selectedPoint == undefined) || ($scope.selectedPoint == null))
+				$scope.selectFirstWayPoint();
 		};
 
 		var failureFn = function(message) { 
@@ -113,7 +190,7 @@ function WaypointsController($scope, $http, $timeout) {
 			'maxLon' : maxLon
 		};
 
-		httpGet($http, 'waypoints', query, successFn, failureFn, errorFn);
+		httpGET($http, 'waypoints', query, successFn, failureFn, errorFn);
 	};
 
 	// EVENT HANDLERS ----------------------------------------
