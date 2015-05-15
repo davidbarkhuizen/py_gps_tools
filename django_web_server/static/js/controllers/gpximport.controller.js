@@ -18,10 +18,7 @@ function GpxImportController($scope, $http, $timeout) {
 				'xml' : evt.target.result
 			};
 
-			var successFn = function(data, status, headers, config) {
-
-				$scope.$emit(Event.GPX_FILE_IMPORTED);
-
+			var next = function() {
 		    	if (remainder.length == 0) {
 		    		clearFileInput($scope.fileInputId);
 		    		$scope.$emit(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED);
@@ -31,8 +28,16 @@ function GpxImportController($scope, $http, $timeout) {
 		    	}
 			};
 
+			var successFn = function(data, status, headers, config) {
+
+				$scope.$emit(Event.GPX_FILE_IMPORTED);
+				next();
+			};
+
 			var failureFn = function(message) {
-			    console.log(message);
+				
+			    console.log('gpx file import failed:  ' + message);
+			    next();
 			};
 
 			var errorFn = function(error) {

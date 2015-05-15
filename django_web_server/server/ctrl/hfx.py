@@ -18,8 +18,7 @@ def success(data):
 def failure(message):
 
 	envelope = { 
-		'status' : 'fail', 
-		'messge' : message 
+		'status' : message 
 		}
 	
 	json_string = json.dumps(envelope)

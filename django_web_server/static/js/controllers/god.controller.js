@@ -99,7 +99,7 @@ function GodController($scope, $http, $timeout) {
 	$scope.$on(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED, function(evt) {
 
 		if ($scope.view == $scope.Views.IMPORT) {
-			$scope.view = $scope.Views.MAP_LIST;
+			$scope.gotoOpenTrack();
 		}
 	});	
 

@@ -32,7 +32,7 @@ function http($http, request, onSuccess, onFailure, onError) {
 			if (onSuccess) onSuccess(response.data);
 		}
 		else {
-			if (onFailure) onFailure(response.message);
+			if (onFailure) onFailure(response.status);
 		}
 	};
 
@@ -40,9 +40,6 @@ function http($http, request, onSuccess, onFailure, onError) {
 
 		if (onError) onError(response);
 	};
-
-	console.log('requestdata');
-	console.log(request['data']);
 
 	$http(request)
 		.success(handleGoodResponse)
