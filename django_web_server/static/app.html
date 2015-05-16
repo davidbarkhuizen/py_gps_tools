@@ -319,7 +319,7 @@
 						<h3>
 							Export
 						</h3>
-						<a href='#' ng-click='export()'>export this</a>
+						<a ng-show='!canExport'>nothing to export</a>
 						<a ng-show='canExport' id='GpxDownloadLink'>download</a>
 					</div>
 	        	</div>

@@ -36,5 +36,7 @@ var Event = Object.freeze({
 var Command = Object.freeze({
 	LOAD_TRACK : guid(),
 	UNLOAD_TRACK : guid(),
-	REFRESH_WAYPOINTS : guid()
+	MAKE_GPX_FILE_AVAILABLE_FOR_EXPORT : guid(),
+
+	REFRESH_WAYPOINTS : guid(),
 });

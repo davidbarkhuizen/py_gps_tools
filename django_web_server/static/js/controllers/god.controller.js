@@ -54,6 +54,8 @@ function GodController($scope, $http, $timeout) {
 	// GPX IMPORT - EXPORT
 
 	$scope.gotoGpxExport = function() {
+
+		$scope.$broadcast(Command.MAKE_GPX_FILE_AVAILABLE_FOR_EXPORT, { xml : 'dog', fileName : 'cat' });
     	$scope.view = $scope.Views.EXPORT;
 	};
 
