@@ -245,3 +245,75 @@ function Track(data) {
 
 	calcTrackStats();
 }
+
+// ----------------------------------------------------------------------------
+// XML
+
+var xmlDoc = document.implementation.createDocument(null, null, null);
+
+function toNode(tagName, attributes, children) {
+
+    var node = xmlDoc.createElement(tagName);
+
+    for(var attr in attributes) {
+    	node.setAttribute(attr, attributes[attr]);
+    };	    
+
+    var text, child;
+
+    for(var i = 0; i < children.length; i++) {
+        child = children[i];
+        if(typeof child == 'string') {
+            child = xmlDoc.createTextNode(child);
+        }
+        node.appendChild(child);
+    }
+
+    return node;
+}
+
+function toGpxXml(childNodes) {
+
+	var gpxAttrs =  {
+		'xmlns' : "http://www.topografix.com/GPX/1/1",
+		'xmlns:gpxx' : "http://www.garmin.com/xmlschemas/GpxExtensions/v3",
+		'xmlns:wptx1':"http://www.garmin.com/xmlschemas/WaypointExtension/v1",
+		'xmlns:gpxtpx':"http://www.garmin.com/xmlschemas/TrackPointExtension/v1",
+		'creator':"GeoNodeTek",
+		'version':"1.1",
+		'xmlns:xsi':"http://www.w3.org/2001/XMLSchema-instance",
+		'xsi:schemaLocation':"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www8.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://www8.garmin.com/xmlschemas/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd"
+	};
+
+	var metaDataAttrs = {
+		'href' : 'www.geonodetek.com'
+	};
+
+	var linkText = toNode('text', {}, ['GeoNodeTek']);
+	var link = toNode('link', {}, [linkText]);
+	var metadata = toNode('metadata', metaDataAttrs, [link]);
+
+	var gpxChildren = (childNodes == undefined) ? [] : childNodes;
+	gpxChildren.push(metadata);
+
+	var gpx = toNode('gpx', gpxAttrs, gpxChildren);
+
+	var xmlHeader = '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>';
+
+	var xml = xmlHeader + new XMLSerializer().serializeToString(gpx);
+
+	return xml;
+}
+
+
+
+// -------------------------------------------------------------------
+
+/*
+	<wpt lat="-26.482695" lon="28.212483">
+		<ele>1644.855591</ele>
+		<time>2012-09-16T10:02:30Z</time>
+		<name>car parl</name
+		><sym>Flag, Blue</sym>
+	</wpt>
+*/

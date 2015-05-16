@@ -1,5 +1,25 @@
 function GpxExportController($scope, $http) {
 
+	var xmlDoc = document.implementation.createDocument(null, null, null);
+
+	// function that creates the XML structure
+	function recXML(tagName, attributes, children) {
+
+	    var node = xmlDoc.createElement(tagName);
+
+	    var text, child;
+
+	    for(var i = 1; i < children.length; i++) {
+	        child = children[i];
+	        if(typeof child == 'string') {
+	            child = xmlDoc.createTextNode(child);
+	        }
+	        node.appendChild(child);
+	    }
+
+	    return node;
+	}
+
 	$scope.canExport = false;
 
 	var dlBlobURL = null;

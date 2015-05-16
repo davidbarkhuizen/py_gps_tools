@@ -1,0 +1,15 @@
+GPX V1.1
+Schema @ http://www.topografix.com/GPX/1/1/gpx.xsd
+Documation @ http://www.topografix.com/GPX/1/1/
+
+GPX EXTENSIONS VERSION V3
+Schema @ http://www8.garmin.com/xmlschemas/GpxExtensionsv3.xsd
+Documentation @ dead link = http://www.garmin.com/xmlschemas/GpxExtensions/v3
+
+WAY POINT EXTENSIONS V1
+Schema @ http://www8.garmin.com/xmlschemas/WaypointExtensionv1.xsd
+Documentation@ dead link = http://www.garmin.com/xmlschemas/WaypointExtension/v1
+
+TRACK POINT EXTENSIONS V1
+http://www.garmin.com/xmlschemas/TrackPointExtension/v1 
+http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd
