@@ -1,8 +1,47 @@
+EXPORT
+
+create export controller, view, html
+create laucnher on god controller
+test html5 download link functionality
+
+--- ---- --- --- --- --- ---
+
+filter to waypoints to in the vicinity of 
+- the active map
+OR
+- loaded tracks individually
+
+process to identify and aid in the deletion of duplicates
+- 1 = cluster waypoint, on same distance base (50m ?)
+- 2 = present 
+
+--- ---- --- --- --- --- ---
+
+xml serialisation
+- look into exporting gpx directly from client
+(xml creation; file d/l mechanics)
+- python to/from xml (got from, need to)
+
+waypoint export (as gpx) - both local (from client) and by/from server
+track export (as gpx)
+
+track model
+- add min, max properties to model to allow db geo searching
+- check gpx format - where waypoints are included in track info - st fort gpx ?
+
+waypoint model
+- add note field, based on gpx structure
+- fix lost time information
+- add category - archeological, junction, general
+
+--- ---- --- --- --- --- ---
 
 fix selection model - set selection behind canvas but with canvas opacity set so that selection is visible beneath => solves ridiculuous focus jumping issue
 
 clean-up
 - improve use of document Ids
 - css
-- fix zoom bug when 1st selection point is bottom instead of top
-- remove track func.
+
+
+
+

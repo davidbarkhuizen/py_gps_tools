@@ -10,7 +10,10 @@ function GodController($scope, $http, $timeout) {
 	$scope.Views = Object.freeze({
 		DEBUG : guid(),
 		HOME : guid(),
+
 		IMPORT : guid(), 
+		EXPORT : guid(),
+
 		MAP : guid(),
 		LOADED_TRACKS : guid(), 
 		ELEVATION : guid(),
@@ -46,6 +49,26 @@ function GodController($scope, $http, $timeout) {
 	    	$scope.view = $scope.Views.MAP;
 		}
 	};
+
+	// -------------------------------------------------------------------
+	// GPX IMPORT - EXPORT
+
+	$scope.gotoGpxExport = function() {
+    	$scope.view = $scope.Views.EXPORT;
+	};
+
+	$scope.gotoGpxImport = function() {
+		$scope.view = $scope.Views.IMPORT;
+	};
+
+	$scope.$on(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED, function(evt) {
+
+		if ($scope.view == $scope.Views.IMPORT) {
+			$scope.gotoOpenTrack();
+		}
+	});
+
+	// -------------------------------------------------------------------
 
 	$scope.gotoStats = function() {
 		$scope.headerText = 'statistics';
@@ -87,21 +110,7 @@ function GodController($scope, $http, $timeout) {
 
 	$scope.zoomIn = function() {		
 		$scope.$broadcast(Event.MAP_ZOOM_IN);
-	}	
-
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	// GPX IMPORT
-
-	$scope.launchGpxImport = function() {
-		$scope.view = $scope.Views.IMPORT;
 	};
-
-	$scope.$on(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED, function(evt) {
-
-		if ($scope.view == $scope.Views.IMPORT) {
-			$scope.gotoOpenTrack();
-		}
-	});	
 
 	$scope.$on(Event.MAP_SELECTION_BEGUN, function(evt) {
 		$scope.$apply();

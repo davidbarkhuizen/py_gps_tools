@@ -18,6 +18,7 @@
 	    <!-- DOMAIN -->
 	    <script src="/static/js/gps.js"></script>	
 
+	    <!-- HTTP FRAMEWORK -->
 	    <script src="/static/js/hfx.js"></script>    
 	    
 	    <!-- CONTROLLLERS -->
@@ -25,11 +26,15 @@
 		<script src="/static/js/controllers/god.controller.js"></script>
 
 		<script src="/static/js/controllers/gpximport.controller.js"></script>
+		<script src="/static/js/controllers/gpxexport.controller.js"></script>
+
 		<script src="/static/js/controllers/trackinfos.controller.js"></script>
+
+		<script src="/static/js/controllers/tracks.controller.js"></script>
 	    <script src="/static/js/controllers/waypoints.controller.js"></script>
+
 	    <script src="/static/js/controllers/map.controller.js"></script>
 		<script src="/static/js/controllers/elevationplot.controller.js"></script>
-		<script src="/static/js/controllers/tracks.controller.js"></script>
 		
 		<!-- APP -->
 		<script src="/static/js/app.js"></script>
@@ -53,7 +58,15 @@
 			        	class='margin-right-10px'
 			        	>
 
-		           		<a ng-class='active' href='#' ng-click='launchGpxImport();'>import gpx file</a>
+		           		<a
+		           			ng-class='active'
+		           			href='#'
+		           			ng-click='gotoGpxImport();'>import gpx file</a>
+		           		<br/>
+		           		<a
+		           			ng-class='true || (tracks.length > 0) || (waypoints.length > 0) ? "active" : "inactive" ' 
+		           			href='#' 
+		           			ng-click='gotoGpxExport();'>export gpx file</a>
 		           		<br/>
 		           		<br/>
 
@@ -299,6 +312,15 @@
 							<div id="DebugTrace">
 							</div>
 						</div>
+					</div>
+
+					<div id='ExportContainer' ng-controller="GpxExportController"
+						ng-show='view == Views.EXPORT'>
+						<h3>
+							Export
+						</h3>
+						<a href='#' ng-click='export()'>export this</a>
+						<a ng-show='canExport' id='GpxDownloadLink'>download</a>
 					</div>
 	        	</div>
 		    </div>
