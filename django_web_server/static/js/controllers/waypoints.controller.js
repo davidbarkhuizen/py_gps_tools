@@ -195,13 +195,44 @@ function WaypointsController($scope, $http, $timeout) {
 		httpGET($http, 'waypoints', query, successFn, failureFn, errorFn);
 	};
 
-	// EVENT HANDLERS ----------------------------------------
+	// LOAD
 
-	$scope.$on(Command.LOAD_WAYPOINTS_FOR_TRACK, function(evt, id) {
+	$scope.loadWaypointsForTrack = function(id) {
 
 		var track = $scope.$parent.tracks.filter(function(x) {return x.id == id;})[0];
 		if (track) {
 			$scope.getAndMergeForArea(track.minMaxLat.min, track.minMaxLat.max, track.minMaxLon.min, track.minMaxLon.max);
 		}
+	};
+
+	// EXPORT
+
+	$scope.exportAllWaypoints = function() {
+		$scope.$emit(Event.WAYPOINTS_EXPORT_REQUESTED, $scope.model.waypoints);
+	};
+
+	// UNLOAD
+
+	$scope.unloadAllWaypoints = function() {
+		$scope.model.waypoints.length = 0;
+		$scope.$emit(Event.WAYPOINT_UNLOADED);
+	};	
+
+	// RELOAD
+	
+	$scope.reloadWaypointsForTracks = function() {
+		$scope.model.waypoints.length = 0;
+
+		$scope.$parent.tracks.forEach(function(track) {
+			$scope.loadWaypointsForTrack(track.id);
+		});
+	};	
+
+	// EVENT HANDLERS ----------------------------------------
+
+
+
+	$scope.$on(Command.LOAD_WAYPOINTS_FOR_TRACK, function(evt, id) {
+		$scope.loadWaypointsForTrack(id);
 	});	
 }

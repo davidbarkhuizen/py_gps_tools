@@ -53,20 +53,12 @@ function GodController($scope, $http, $timeout) {
 	// -------------------------------------------------------------------
 	// GPX IMPORT - EXPORT
 
-	/*
-		<wpt lat="-26.482695" lon="28.212483">
-			<ele>1644.855591</ele>
-			<time>2012-09-16T10:02:30Z</time>
-			<name>car parl</name
-			><sym>Flag, Blue</sym>
-		</wpt>
-	*/
-
 	$scope.gotoGpxExport = function() {
 
-		var xml = toGpxXml();
+		var xml = waypointsToGpx($scope.model.waypoints);
+
 		$scope.$broadcast(Command.MAKE_GPX_FILE_AVAILABLE_FOR_EXPORT, { xml : xml, fileName : 'cat' });
-    	$scope.view = $scope.Views.EXPORT;
+    	//$scope.view = $scope.Views.EXPORT;
 	};
 
 	$scope.gotoGpxImport = function() {
@@ -78,6 +70,10 @@ function GodController($scope, $http, $timeout) {
 		if ($scope.view == $scope.Views.IMPORT) {
 			$scope.gotoOpenTrack();
 		}
+	});
+
+	$scope.$on(Event.WAYPOINTS_EXPORT_REQUESTED, function(evt, waypoints) {
+		$scope.$broadcast(Command.EXPORT_WAYPOINTS, waypoints);		
 	});
 
 	// -------------------------------------------------------------------
@@ -145,6 +141,10 @@ function GodController($scope, $http, $timeout) {
 	});	
 
 	$scope.$on(Event.WAYPOINT_EDITED, function(evt) {
+		$scope.$broadcast(Event.DATA_MODEL_CHANGED);		
+	});
+	
+	$scope.$on(Event.WAYPOINT_UNLOADED, function(evt) {
 		$scope.$broadcast(Event.DATA_MODEL_CHANGED);		
 	});	
 

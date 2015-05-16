@@ -305,15 +305,26 @@ function toGpxXml(childNodes) {
 	return xml;
 }
 
+function waypointsToGpx(waypoints) {
 
+	var nodes = [];
+	waypoints.forEach(function(wp){
+
+		var lat = wp.lat.toFixed(6);
+		var lon = wp.lon.toFixed(6);
+
+		var ele = toNode('ele', [], [wp.ele.toFixed(6)]);
+		
+		var time = toNode('time', [], [wp.time.toString()]);
+		var name = toNode('name', [], [wp.name]);
+		
+		// sym
+
+		nodes.push(toNode('wpt', { 'lat' : lat, 'lon' : lon }, [ele, time, name]));
+	});
+
+	return toGpxXml(nodes);
+};
 
 // -------------------------------------------------------------------
 
-/*
-	<wpt lat="-26.482695" lon="28.212483">
-		<ele>1644.855591</ele>
-		<time>2012-09-16T10:02:30Z</time>
-		<name>car parl</name
-		><sym>Flag, Blue</sym>
-	</wpt>
-*/

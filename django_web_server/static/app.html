@@ -291,6 +291,11 @@
 						<div>
 							{{ model.waypoints.length }} points, in the vicinity of {{ tracks.length }} track(s):
 						</div>
+						<div>
+							<a href='#' ng-click='exportAllWaypoints();'>export all</a>
+							<a href='#' ng-click='unloadAllWaypoints();'>unload all</a>
+							<a href='#' ng-click='reloadWaypointsForTracks();'>refresh</a>
+						</div>
 						<br/>
 						<div class='short-list'>
 							<div ng-repeat='waypoint in model.waypoints'>
@@ -316,11 +321,7 @@
 
 					<div id='ExportContainer' ng-controller="GpxExportController"
 						ng-show='view == Views.EXPORT'>
-						<h3>
-							Export
-						</h3>
-						<a ng-show='!canExport'>nothing to export</a>
-						<a ng-show='canExport' id='GpxDownloadLink'>download</a>
+						<a ng-show='false' id='GpxDownloadLink'>download</a>
 					</div>
 	        	</div>
 		    </div>

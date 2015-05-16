@@ -15,6 +15,8 @@ var Event = Object.freeze({
 
 	WAYPOINT_EDITED : guid(),
 	WAYPOINT_DELETED : guid(),
+	WAYPOINT_UNLOADED : guid(),
+	WAYPOINTS_EXPORT_REQUESTED : guid(),
 
 	// --------------------------------------------------
 	// broadcast
@@ -36,7 +38,7 @@ var Event = Object.freeze({
 var Command = Object.freeze({
 	LOAD_TRACK : guid(),
 	UNLOAD_TRACK : guid(),
-	MAKE_GPX_FILE_AVAILABLE_FOR_EXPORT : guid(),
+	EXPORT_WAYPOINTS : guid(),
 
 	REFRESH_WAYPOINTS : guid(),
 });
