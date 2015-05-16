@@ -73,7 +73,6 @@ def post(request, params):
 	if track != None:
 		gpx_file = GpxTrack(xml = xml_string, name = track.name, timestamp = track.time)
 		gpx_file.save()
-		ok_return['id'] = gpx_file.id
 
 	# create waypoints
 	#
