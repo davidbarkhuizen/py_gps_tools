@@ -3,6 +3,7 @@ function MapController($scope, $http, $timeout) {
 	$scope.tracks = $scope.$parent.tracks;
 
 	var waypoints = $scope.$parent.model.waypoints; 
+	var filteredWaypoints = $scope.$parent.model.filteredWaypoints; 
 
 	$scope.canvasWaypoints = [];
 
@@ -693,5 +694,48 @@ function MapController($scope, $http, $timeout) {
 
 	$scope.$on(Event.MAP_ZOOM_OUT, function(evt) {
 		$scope.zoomOut();
+	});
+
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// WAYPOINT SELECTION	
+
+	$scope.areaSelectWayPoints = function() {
+
+		if ($scope.selectionPoints.length !== 2) {
+			console.log($scope.selectionPoints);
+			throw '$scope.selectionPoints.length !== 2';
+		}
+
+		var latLon1 = $scope.mapLatLonFromCanvasXY($scope.selectionPoints[0].x, $scope.selectionPoints[0].y);
+		var latLon2 = $scope.mapLatLonFromCanvasXY($scope.selectionPoints[1].x, $scope.selectionPoints[1].y);
+
+		var minMaxLat = { 'max' : Math.max(latLon1.lat, latLon2.lat), 'min' : Math.min(latLon1.lat, latLon2.lat) };
+		var minMaxLon = { 'max' : Math.max(latLon1.lon, latLon2.lon), 'min' : Math.min(latLon1.lon, latLon2.lon) };
+	
+		var isInside = function(wpt) {
+
+			var yes = 
+				(
+				(wpt.lat >= minMaxLat.min) 
+				&& (wpt.lat <= minMaxLat.max)
+				&& (wpt.lon >= minMaxLon.min) 
+				&& (wpt.lon <= minMaxLon.max)
+				);
+
+			return yes;
+		};
+
+		var inside = [];
+		waypoints.forEach(function(x) { if (isInside(x)) inside.push(x); });
+
+		filteredWaypoints.length = 0;
+		inside.forEach(function(x){ filteredWaypoints.push(x); });
+	
+		if (filteredWaypoints.length)
+			$scope.$parent.model.selectedPoint = filteredWaypoints[0];
+	};
+
+	$scope.$on(Command.AREA_SELECT_WAYPOINTS, function(evt) {
+		$scope.areaSelectWayPoints();
 	});
 }

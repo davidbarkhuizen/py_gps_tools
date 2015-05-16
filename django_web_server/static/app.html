@@ -101,6 +101,8 @@
 						<br/>
 						<a ng-class="(view == Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='zoomOut();'>zoom out</a>
 						<br/>
+						<a ng-class="(view == Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='areaSelectWaypoints();'>select waypoints</a>
+						<br/>
 
 						<br/>
 
@@ -241,8 +243,7 @@
 
 					<div id='WaypointsContainer' 
 						ng-show='view == Views.WAYPOINTS'
-						ng-controller='WaypointsController'
-						
+						ng-controller='WaypointsController'						
 						style='vertical-align:top;'
 						>
 
@@ -251,22 +252,22 @@
 						<div ng-show='model.waypoints.length > 0'>
 							<div>
 								<div ng-show='!editing'>
-									{{ selectedPoint.name }}
+									{{ model.selectedPoint.name }}
 								</div>
 								<div ng-show='editing'>
 									<input
 										id='EditWayPointName'
-										placeholder='{{ selectedPoint.name }}' 
+										placeholder='{{ model.selectedPoint.name }}' 
 										ng-model='editCopy.name' 
 										size='32'
 										class='dashed-line-text-input'
 										/>
 								</div>
 								<div>
-									lat {{ selectedPoint.lat }}, lon {{ selectedPoint.lon }}
+									lat {{ model.selectedPoint.lat }}, lon {{ model.selectedPoint.lon }}
 								</div>
 								<div>
-									{{ timeString(selectedPoint.time) }}
+									{{ timeString(model.selectedPoint.time) }}
 								</div>
 							</div>
 							<div>
@@ -274,22 +275,22 @@
 								<a href='#' style='color:green;' ng-show='showSaveEdit()' ng-click='saveEdit()'>save edit</a>
 								<a href='#' style='color:green;' ng-show='showCancelEdit()' ng-click='cancelEdit()'>cancel edit</a>
 								
-								<a href='#' style='color:red;' ng-show='showDelete()' ng-click='confirmDeletion(selectedPoint.id)'>delete</a>
+								<a href='#' style='color:red;' ng-show='showDelete()' ng-click='confirmDeletion(model.selectedPoint.id)'>delete</a>
 							</div>
 							<div ng-show='showDeleteConfirmationPrompt()'>
 								<br/>
 								<div style='color:red;'>
-									are you sure that you want to delete waypoint '{{ selectedPoint.name }}' ?
+									are you sure that you want to delete waypoint '{{ model.selectedPoint.name }}' ?
 								</div>
 								<div>
-									<a href="#" ng-click='delete(selectedPoint.id)'>yes</a>
+									<a href="#" ng-click='delete(model.selectedPoint.id)'>yes</a>
 									<a href="#" ng-click='userRequestedToDeleteId = null'>no</a>
 								</div>
 							</div>
 						</div>
 						<br/>
 						<div>
-							{{ model.waypoints.length }} points, in the vicinity of {{ tracks.length }} track(s):
+							{{ filteredOrAll().length }} points of {{ model.waypoints.length }} in total:
 						</div>
 						<div>
 							<a href='#' ng-click='exportAllWaypoints();'>export all</a>
@@ -298,7 +299,7 @@
 						</div>
 						<br/>
 						<div class='short-list'>
-							<div ng-repeat='waypoint in model.waypoints'>
+							<div ng-repeat='waypoint in filteredOrAll()'>
 								<span>{{ waypoint.lat.toFixed(6) }}, {{ waypoint.lon.toFixed(6) }}</span>
 								<a href='#' ng-click="selectPoint(waypoint)">{{ waypoint.name }} </a>
 							</div>

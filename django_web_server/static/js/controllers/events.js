@@ -36,9 +36,14 @@ var Event = Object.freeze({
 });
 
 var Command = Object.freeze({
+	
 	LOAD_TRACK : guid(),
 	UNLOAD_TRACK : guid(),
-	EXPORT_WAYPOINTS : guid(),
 
+	EXPORT_WAYPOINTS : guid(),
 	REFRESH_WAYPOINTS : guid(),
+	
+	// should not be a command.  trigger should be local to map
+	//
+	AREA_SELECT_WAYPOINTS : guid(),
 });

@@ -1,0 +1,1 @@
+<a ng-show='canExport' id='GpxDownloadLink'>download</a>

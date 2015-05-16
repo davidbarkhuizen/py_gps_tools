@@ -4,7 +4,9 @@ function GodController($scope, $http, $timeout) {
 
 	$scope.model = {
 		trackInfos : [],
-		waypoints : []
+		waypoints : [],
+		filteredWaypoints : [],
+		selectedPoint : null
 	};
 
 	$scope.Views = Object.freeze({
@@ -94,6 +96,11 @@ function GodController($scope, $http, $timeout) {
 
 		$scope.$broadcast(Command.REFRESH_WAYPOINTS);
 		$scope.headerText = 'waypoints';
+		$scope.view = $scope.Views.WAYPOINTS;
+	};
+
+	$scope.areaSelectWaypoints = function() {
+		$scope.$broadcast(Command.AREA_SELECT_WAYPOINTS);
 		$scope.view = $scope.Views.WAYPOINTS;
 	};
 
