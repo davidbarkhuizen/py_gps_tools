@@ -290,9 +290,9 @@
 						</div>
 						<br/>
 						<div>
-							{{ filteredOrAll().length }} points of {{ model.waypoints.length }} in total:
+							showing {{ filteredOrAll().length }} points of {{ model.waypoints.length }} in total (<a href='#' ng-click='showAllPoint();'>show all</a>)
 						</div>
-						<div>
+						<div>							
 							<a href='#' ng-click='exportAllWaypoints();'>export all</a>
 							<a href='#' ng-click='unloadAllWaypoints();'>unload all</a>
 							<a href='#' ng-click='reloadWaypointsForTracks();'>refresh</a>

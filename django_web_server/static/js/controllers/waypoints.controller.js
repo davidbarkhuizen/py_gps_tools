@@ -3,7 +3,20 @@ function WaypointsController($scope, $http, $timeout) {
 	var model = $scope.$parent.model; 
 
 	$scope.editing = false;
+	$scope.editCopy = null;
+
 	$scope.deleting = false;
+
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+	$scope.timeString = function(dateVal) {
+
+		var d = new Date(dateVal);
+		return d.toString();
+	};
+
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// FILTERING
 
 	$scope.filteredOrAll = function() {
 
@@ -12,10 +25,8 @@ function WaypointsController($scope, $http, $timeout) {
 			: model.waypoints;
 	};
 
-	// edit
-	//
-
-	$scope.editCopy = null;
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// EDIT
 
 	$scope.showEdit = function() { 
 		return !($scope.editing || $scope.deleting) 
@@ -46,6 +57,7 @@ function WaypointsController($scope, $http, $timeout) {
 
 		return x;
 	};
+
 	$scope.saveEdit = function() {
 
 		var successFn = function() {
@@ -69,13 +81,13 @@ function WaypointsController($scope, $http, $timeout) {
 	$scope.showCancelEdit = function() {
 		return $scope.editing;
 	};
+
 	$scope.cancelEdit = function() {
 		$scope.editing = false;
 	};
 
-	$scope.showDelete = function() { return !($scope.editing || $scope.deleting) };
-
-
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// SELECT
 
 	$scope.selectPointById = function(id) {
 
@@ -88,12 +100,22 @@ function WaypointsController($scope, $http, $timeout) {
 
 	$scope.selectFirstWayPoint = function() {
 
+		model.selectedPoint = (model.filteredWaypoints.length > 0)
+			? model.filteredWaypoints[0]
+			: undefined;
+
+		if (model.selectedPoint !== undefined)
+			return;
+
 		model.selectedPoint = (model.waypoints.length > 0)
 			? model.waypoints[0]
 			: undefined;
 	};
 
-	// delete --------------------------------------
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// DELETE
+
+	$scope.showDelete = function() { return !($scope.editing || $scope.deleting) };
 
 	$scope.clearDeletionRequest = function() {
 		$scope.userRequestedToDeleteId = null;
@@ -108,6 +130,9 @@ function WaypointsController($scope, $http, $timeout) {
 	};
 
 	$scope.deleteLocal = function(id) {
+
+		model.filteredWaypoints
+			.xRemoveWhere(function(x){ return x.id == id; });
 
 		model.waypoints
 			.xRemoveWhere(function(x){ return x.id == id; });
@@ -135,13 +160,29 @@ function WaypointsController($scope, $http, $timeout) {
 		httpDELETE($http, 'waypoint', id, successFn, failureFn, errorFn);
 	};
 
-	// --------------------------------------------
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// LOAD
 
-	$scope.timeString = function(dateVal) {
+	$scope.$on(Command.LOAD_WAYPOINTS_FOR_TRACK, function(evt, id) {
+		$scope.loadWaypointsForTrack(id);
+	});	
 
-		var d = new Date(dateVal);
-		return d.toString();
-	};
+	// UNLOAD
+
+	$scope.unloadAllWaypoints = function() {
+		model.waypoints.length = 0;
+		$scope.$emit(Event.WAYPOINT_UNLOADED);
+	};	
+
+	// RELOAD FOR ALL TRACKS
+	
+	$scope.reloadWaypointsForTracks = function() {
+		model.waypoints.length = 0;
+
+		$scope.$parent.tracks.forEach(function(track) {
+			$scope.loadWaypointsForTrack(track.id);
+		});
+	};	
 
 	$scope.mergeNewPoints = function(newPoints) {
 
@@ -199,8 +240,6 @@ function WaypointsController($scope, $http, $timeout) {
 		httpGET($http, 'waypoints', query, successFn, failureFn, errorFn);
 	};
 
-	// LOAD
-
 	$scope.loadWaypointsForTrack = function(id) {
 
 		var track = $scope.$parent.tracks.filter(function(x) {return x.id == id;})[0];
@@ -209,32 +248,11 @@ function WaypointsController($scope, $http, $timeout) {
 		}
 	};
 
-	// EXPORT
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// LOAD
 
 	$scope.exportAllWaypoints = function() {
 		$scope.$emit(Event.WAYPOINTS_EXPORT_REQUESTED, model.waypoints);
 	};
 
-	// UNLOAD
-
-	$scope.unloadAllWaypoints = function() {
-		model.waypoints.length = 0;
-		$scope.$emit(Event.WAYPOINT_UNLOADED);
-	};	
-
-	// RELOAD
-	
-	$scope.reloadWaypointsForTracks = function() {
-		model.waypoints.length = 0;
-
-		$scope.$parent.tracks.forEach(function(track) {
-			$scope.loadWaypointsForTrack(track.id);
-		});
-	};	
-
-	// EVENT HANDLERS ----------------------------------------
-
-	$scope.$on(Command.LOAD_WAYPOINTS_FOR_TRACK, function(evt, id) {
-		$scope.loadWaypointsForTrack(id);
-	});	
 }
