@@ -37,6 +37,8 @@ var Event = Object.freeze({
 
 var Command = Object.freeze({
 	
+	REFRESH_TRACK_INFOS : guid(),
+
 	LOAD_TRACK : guid(),
 	UNLOAD_TRACK : guid(),
 

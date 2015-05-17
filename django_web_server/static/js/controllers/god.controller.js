@@ -67,6 +67,10 @@ function GodController($scope, $http, $timeout) {
 		$scope.view = $scope.Views.IMPORT;
 	};
 
+	$scope.$on(Event.GPX_FILE_IMPORTED, function(evt) {
+		$scope.$broadcast(Command.REFRESH_TRACK_INFOS);
+	});
+
 	$scope.$on(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED, function(evt) {
 
 		if ($scope.view == $scope.Views.IMPORT) {

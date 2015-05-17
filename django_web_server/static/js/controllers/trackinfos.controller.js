@@ -54,5 +54,10 @@ function TrackInfosController($scope, $http, $timeout) {
 		httpGET($http, 'trackinfos', null, successFn, null, errorFn)
 	};
 
+	// TODO - MOVE TO GOD CONTROLLER - SHOULD FIRE AS PART OF GLOBAL INIT SEQUENCE VIA CMD
 	$scope.load();
+
+	$scope.$on(Command.REFRESH_TRACK_INFOS, function(evt) {
+		$scope.load();		
+	});
 };
