@@ -537,7 +537,7 @@ function MapController($scope, $http, $timeout) {
 
 		// TITLE TEXT
 
-		var titleText = $scope.tracks[0].name;
+		var titleText = $scope.tracks.length > 0 ? $scope.tracks[0].name : 'no tracks';
 		if ($scope.tracks.length > 1)
 			titleText = titleText + ' + ' + ($scope.tracks.length - 1);
 

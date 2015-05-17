@@ -51,6 +51,7 @@ def post(request, params):
 		try:
 			way_points = parse_gpx_xml_to_waypoints(xml_string)
 		except Exception, e:
+			print(e)
 			msg = 'not a valid waypoint file'
 			pass
 		if (track == None) and (way_points == None):

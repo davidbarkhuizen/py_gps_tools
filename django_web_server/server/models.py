@@ -26,7 +26,7 @@ class WayPoint(models.Model):
 	lat = models.DecimalField(max_digits=9, decimal_places=6)
 	lon = models.DecimalField(max_digits=9, decimal_places=6)
 	ele = models.DecimalField(max_digits=12, decimal_places=6)
-	time = models.DateField(null=True)
+	time = models.DateTimeField(null=True)
 
 	def __str__(self):
 		return '%s (%f %f) @ %f m [%t]' % (self.name, self.lat, self.lon, self.ele, self.time)
