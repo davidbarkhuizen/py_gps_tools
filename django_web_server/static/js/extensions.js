@@ -1,11 +1,4 @@
-Object.defineProperty(Array.prototype, "xCopy", {
-	enumerable: false,
-	value: function(predicate) {
-		return this.filter(function() { return true; });
-	}
-});
-
-Object.defineProperty(Array.prototype, "xRemoveWhere", {
+Object.defineProperty(Array.prototype, "removeWhere", {
 	enumerable: false,
 	value: function(predicate) {
 		var that = this;
@@ -18,7 +11,7 @@ Object.defineProperty(Array.prototype, "xRemoveWhere", {
     }
 });
 
-Object.defineProperty(Array.prototype, "xCountWhere", {
+Object.defineProperty(Array.prototype, "countWhere", {
 	enumerable: false,
 	value: function(predicate) {
 
@@ -28,7 +21,7 @@ Object.defineProperty(Array.prototype, "xCountWhere", {
     }
 });
 
-Object.defineProperty(Array.prototype, "xContainsWhere", {
+Object.defineProperty(Array.prototype, "containsWhere", {
 	enumerable: false,
 	value: function(predicate) {
 		

@@ -49,14 +49,7 @@ function TracksController($scope, $http, $timeout) {
 	
 	$scope.unload = function (id) {
 
-		var toRetain = $scope.$parent.tracks
-			.filter(function(track) { return (track.id !== id); });
-
-		$scope.$parent.tracks.length = 0;
-		
-		toRetain
-			.forEach(function (track) { $scope.$parent.tracks.push(track); });
-
+		$scope.$parent.tracks.removeWhere(function(track) { return (track.id == id); });
 		$scope.$emit(Event.TRACK_UNLOADED);
 	};
 

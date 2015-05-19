@@ -151,16 +151,15 @@ function MapController($scope, $http, $timeout) {
 	$scope.calcDimensions = function() {
 
 		$scope.minMaxEle = { 'max' : -10000.0, 'min' : 10000.0 };
-		for(var t in $scope.tracks) {
-			var track = $scope.tracks[t];
 
-			if (track.minMaxEle.max >= $scope.minMaxEle.max) {
+		$scope.tracks.forEach(function(track) {
+			
+			if (track.minMaxEle.max >= $scope.minMaxEle.max)
 				$scope.minMaxEle.max = track.minMaxEle.max;
-			}
-			if (track.minMaxEle.min <= $scope.minMaxEle.min) {
+
+			if (track.minMaxEle.min <= $scope.minMaxEle.min)
 				 $scope.minMaxEle.min = track.minMaxEle.min;
-			}
-		}
+		});
 
 		if ($scope.latLonViewPorts.length > 0) {
 			var latLonViewPort = $scope.latLonViewPorts[$scope.latLonViewPorts.length - 1];

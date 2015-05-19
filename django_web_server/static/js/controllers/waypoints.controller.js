@@ -132,10 +132,10 @@ function WaypointsController($scope, $http, $timeout) {
 	$scope.deleteLocal = function(id) {
 
 		model.filteredWaypoints
-			.xRemoveWhere(function(x){ return x.id == id; });
+			.removeWhere(function(x){ return x.id == id; });
 
 		model.waypoints
-			.xRemoveWhere(function(x){ return x.id == id; });
+			.removeWhere(function(x){ return x.id == id; });
 
 		if ((model.selectedPoint !== undefined) && (model.selectedPoint.id == id)) {
 			$scope.selectFirstWayPoint();
@@ -194,7 +194,7 @@ function WaypointsController($scope, $http, $timeout) {
 				return existing.id == newPoint.id; 
 			};
 
-			if (!model.waypoints.xContainsWhere(exists)) {
+			if (!model.waypoints.containsWhere(exists)) {
 				model.waypoints.push(newPoint);
 				changed = true;
 			}
@@ -252,7 +252,6 @@ function WaypointsController($scope, $http, $timeout) {
 	// LOAD
 
 	$scope.exportAllWaypoints = function() {
-		console.log('dog');
 		$scope.$emit(Event.WAYPOINTS_EXPORT_REQUESTED, model.waypoints);
 	};
 

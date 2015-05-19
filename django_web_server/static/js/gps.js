@@ -110,34 +110,16 @@ function Track(data) {
 	//
 	this.name = data.name;
 	this.id = data.id;
+	// time ?
 
-	// segments with points
-	//
 	this.segments = [];
-	for(var i in data.segments) {
-		var dataSegment = data.segments[i];
-
+	data.segments.forEach(function(segment){ 
 		var points = [];
-		for(var j in dataSegment.points) {
-			try {
-				points.push(parsePoint(dataSegment.points[j]));
-			}
-			catch (error) {
-				console.log(dataSegment.points[j]);
-				throw error
-			}
-		}
-
-		this.segments.push(new Segment('', points));
-	}
-
-	/*
-	console.log('name:  ' + this.name);
-	console.log('segment count:' + this.segments.length.toString());
-	for (var i in this.segments) {
-		console.log('segment ' + (i + 1).toString() + ', point count:' + this.segments[i].points.length.toString());
-	}
-	*/
+		segment.points.forEach(function(point) {
+			points.push(parsePoint(point));
+		});
+		that.segments.push(new Segment('', points));
+	});
 
 	var calcTrackStats = function() {
 

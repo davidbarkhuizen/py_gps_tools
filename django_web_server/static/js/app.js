@@ -18,7 +18,4 @@ var controllers = [
 	['WaypointsController', ['$scope', '$http', '$timeout', WaypointsController]],
 ];
 
-for(var c in controllers) {
-	var ctrl = controllers[c];
-	geoNodeTekControllers.controller(ctrl[0], ctrl[1]);
-}
+controllers.forEach(function(ctrl) { geoNodeTekControllers.controller(ctrl[0], ctrl[1]); });
