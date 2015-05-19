@@ -1,61 +1,54 @@
 window.name = 'NG_DEFER_BOOTSTRAP! ' + window.name;
 
-function rawHTTP(method, url, onSuccess, onError)  {
-
-	xmlHttpReq = new XMLHttpRequest();
-
-  	xmlHttpReq.onreadystatechange = function() {
-
-        if (xmlHttpReq.readyState == XMLHttpRequest.DONE ) {
-
-           if ((xmlHttpReq.status == 200) || (xmlHttpReq.status == 304))
-               onSuccess(xmlHttpReq.responseText);
-           else {
-           		console.log('ERROR');
-           		console.log(xmlHttpReq.status);
-
-           		if (onError) {
-           			onError();
-           		}
-           }
-        }
-    };
-
-    xmlHttpReq.open(method, url, true);
-    xmlHttpReq.send();
-}
-
 window.onload = function () {
 
 	var attr = 'data-html-fragment';
 
 	var urlRoot = '/static/fragments/';
 
-	var next = function() {
+	var fetch = function(fragmentName) {
 
-		var fragmentEls = document.querySelectorAll('[' + attr + ']');
+		var q =  "[" + attr + "='" + fragmentName + "']";
+		var fragmentElement = document.querySelector(q);
 
-		if (fragmentEls.length) {
+		console.log('fetching ' + fragmentName);
 
-			var element = fragmentEls[0];
+		var xmlHttpReq = new XMLHttpRequest();
 
-			var fragmentName = element.getAttribute(attr);
+	  	xmlHttpReq.onreadystatechange = function() {
 
-			rawHTTP('GET', urlRoot + fragmentName + '.html',
-				function(html) {
+	        if (xmlHttpReq.readyState == XMLHttpRequest.DONE ) {
 
-					element.innerHTML = html;
-					element.removeAttribute(attr);
+	           if ((xmlHttpReq.status == 200) || (xmlHttpReq.status == 304)) {
 
-					next();
-				}
-			);
-		}
-		else {
-			angular.resumeBootstrap();
-			window.name = window.name.replace('NG_DEFER_BOOTSTRAP! ', '');
-		}
+					fragmentElement.innerHTML = xmlHttpReq.responseText;
+					fragmentElement.removeAttribute(attr);
+
+					var remaining = document.querySelectorAll('[' + attr + ']');
+					if ((remaining == undefined) || (remaining.length == 0)) {
+						angular.resumeBootstrap();
+						window.name = window.name.replace('NG_DEFER_BOOTSTRAP! ', '');
+					}
+	           }
+	           else {
+	           		console.log('ERROR');
+	           		console.log(xmlHttpReq.status);
+
+	           		if (onError) {
+	           			onError();
+	           		}
+	           }
+	        }
+	    };
+
+	    var url = urlRoot + fragmentName + '.html';
+	    xmlHttpReq.open('GET', url, true);
+	    xmlHttpReq.send();		
 	};
 
-	next();
+	var fragmentElements = document.querySelectorAll('[' + attr + ']');
+	for(var i = 0; i < fragmentElements.length; i++) {
+		var fragmentName = fragmentElements[i].getAttribute(attr);
+		fetch(fragmentName);
+	}
 };
