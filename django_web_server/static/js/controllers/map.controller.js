@@ -113,6 +113,7 @@ function MapController($scope, $http, $timeout) {
 
 		var canvasGrandParent = $scope.canvasElement
 			.parentNode
+			.parentNode
 			.parentNode; 
 
 		var fudge = 10;

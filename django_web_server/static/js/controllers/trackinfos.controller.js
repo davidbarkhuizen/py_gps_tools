@@ -1,7 +1,5 @@
 function TrackInfosController($scope, $http, $timeout) {
 
-	console.log('TrackInfosController');
-
 	$scope.trackInfos = $scope.$parent.model.trackInfos;
 	$scope.searchToken = '';
 	$scope.filteredTrackInfos = [];

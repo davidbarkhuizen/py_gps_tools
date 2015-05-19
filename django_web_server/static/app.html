@@ -49,231 +49,33 @@
 		<div id="wrapper">
 
 		    <div id="top">
+		     	<div id="topleft">
+	        	</div>
 		        <div id="topright">
 		        	{{ headerText }}
 	        	</div>
 		    </div>
 
 		    <div id="middle">
-		        <div id="middleleft">
-
-			        <div
-			        	class='margin-right-10px'
-			        	>
-
-		           		<a
-		           			ng-class='active'
-		           			href='#'
-		           			ng-click='gotoGpxImport();'>import gpx file</a>
-		           		<br/>
-		           		<a
-		           			ng-class='true || (tracks.length > 0) || (waypoints.length > 0) ? "active" : "inactive" ' 
-		           			href='#' 
-		           			ng-click='gotoGpxExport();'>export gpx file</a>
-		           		<br/>
-		           		<br/>
-
-						<a
-							class="active"
-							href='#'
-							ng-click='gotoOpenTrack();'>
-							open track
-						</a>
-		           		<br/>
-						<a  ng-class="(tracks.length == 0) ? 'inactive' : 'active'"
-							href='#'
-							ng-click='gotoAddTrack();'>
-							add track
-						</a>
-						<br/>	
-						<a ng-class="(tracks.length > 1) ? 'active' : 'inactive'"
-							href='#' 
-							ng-click='gotoUnloadTrack();'>
-							unload track
-						</a>
-						<br/>	           		
-		           		
-		           		<br/>
-
-		           		<!-- MAP -->
-				        <a ng-class="(tracks.length > 0) && (view !== Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='gotoMap();'>map</a>
-		           		<br/>
-						<a ng-class="(view == Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='cancelMapSelection();'>cancel selection</a>
-						<br/>
-						<a ng-class="(view == Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='zoomIn();'>zoom in</a>
-						<br/>
-						<a ng-class="(view == Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='zoomOut();'>zoom out</a>
-						<br/>
-						<a ng-class="(view == Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='areaSelectWaypoints();'>select waypoints</a>
-						<br/>
-
-						<br/>
-
-						<a ng-class="(tracks.length > 0) && (view !== Views.STATS) ? 'active' : 'inactive'" href='#' ng-click='gotoStats()'>stats</a>
-						<br/>
-						<a ng-class="(tracks.length > 0) && (view !== Views.ELEVATION) ? 'active' : 'inactive'" href='#' ng-click='gotoElevationPlot();'>elevation plot</a>
-						<br/>
-						<a ng-class="(view !== Views.WAYPOINTS) && (tracks.length > 0) ? 'active' : 'inactive'" href='#' ng-click='gotoWaypoints()'>waypoints</a>
-								   
-		           	</div>
-
+		        <div id="middleleft">     
+			        <div data-html-fragment='leftmenu'>
+			        </div>
 		        </div>
 		        <div id="middleright">
-
-		        	<div data-html-fragment='home'>
-		        	</div>
-
-					<div data-html-fragment='import'>
-	           		</div>
-
-	           		<div data-html-fragment='trackinfos'>
-	           		</div>
-
-	           		<!-- MAP -->
-					<div id='mapContainer'
-						ng-show='view == Views.MAP'
-						ng-controller='MapController'
-						>
-
-						<canvas id="MapCanvas"
-							class="map-canvas">
-						</canvas>
-
-						<div id='MapSelectionArea' 
-							class='map-selection-area'
-							ng-show='showMapSelectionArea'
-							>
-						</div>
-
-					</div>
-
-					<!-- TRACK STATS -->
-					<div id='Stats'
-						ng-show='view == Views.STATS'
-						class='track-stats'
-						ng-controller='TracksController'
-						>
-
-						<div>
-
-							<div ng-repeat="track in tracks">
-								<div style='color:{{track.colour}};'>
-									<br/>
-									{{ track.name }}
-									<br/>
-									{{ (track.totalDistanceM / 1000.0).toFixed(2) }} km
-									<br/>
-									total ascent = {{ track.eleDiff.toFixed(0) }} m ({{ track.minMaxEle.min.toFixed(0) }} - {{ track.minMaxEle.max.toFixed(0) }})
-									<br/>
-									{{ track.durationString }}
-								</div>
-							</div>
-
-						</div>
-
-					</div>
-
-					<!-- ELEVATION PLOT -->
-					<div id='ElevationContainer'
-						ng-show='view == Views.ELEVATION'
-						class='elevation-plot-container'
-						ng-controller='ElevationPlotController'
-						>
-
-						<canvas id="ElevationPlotCanvas"
-							class="elevation-canvas">
-						</canvas>					
-					</div>
-
-					<div id='WaypointsContainer' 
-						ng-show='view == Views.WAYPOINTS'
-						ng-controller='WaypointsController'						
-						style='vertical-align:top;'
-						>
-
-						<br/>
-
-						<div ng-show='model.waypoints.length > 0'>
-							<div>
-								<div ng-show='!editing'>
-									{{ model.selectedPoint.name }}
-								</div>
-								<div ng-show='editing'>
-									<input
-										id='EditWayPointName'
-										placeholder='{{ model.selectedPoint.name }}' 
-										ng-model='editCopy.name' 
-										size='32'
-										class='dashed-line-text-input'
-										/>
-								</div>
-								<div>
-									lat {{ model.selectedPoint.lat }}, lon {{ model.selectedPoint.lon }}
-								</div>
-								<div>
-									{{ timeString(model.selectedPoint.time) }}
-								</div>
-							</div>
-							<div>
-								<a href='#' style='color:green;' ng-show='showEdit()' ng-click='edit()'>edit</a>
-								<a href='#' style='color:green;' ng-show='showSaveEdit()' ng-click='saveEdit()'>save edit</a>
-								<a href='#' style='color:green;' ng-show='showCancelEdit()' ng-click='cancelEdit()'>cancel edit</a>
-								
-								<a href='#' style='color:red;' ng-show='showDelete()' ng-click='confirmDeletion(model.selectedPoint.id)'>delete</a>
-							</div>
-							<div ng-show='showDeleteConfirmationPrompt()'>
-								<br/>
-								<div style='color:red;'>
-									are you sure that you want to delete waypoint '{{ model.selectedPoint.name }}' ?
-								</div>
-								<div>
-									<a href="#" ng-click='delete(model.selectedPoint.id)'>yes</a>
-									<a href="#" ng-click='userRequestedToDeleteId = null'>no</a>
-								</div>
-							</div>
-						</div>
-						<br/>
-						<div>
-							showing {{ filteredOrAll().length }} points of {{ model.waypoints.length }} in total (<a href='#' ng-click='showAllPoint();'>show all</a>)
-						</div>
-						<div>							
-							<a href='#' ng-click='exportAllWaypoints();'>export all</a>
-							<a href='#' ng-click='unloadAllWaypoints();'>unload all</a>
-							<a href='#' ng-click='reloadWaypointsForTracks();'>refresh</a>
-						</div>
-						<br/>
-						<div class='short-list'>
-							<div ng-repeat='waypoint in filteredOrAll()'>
-								<span>{{ waypoint.lat.toFixed(6) }}, {{ waypoint.lon.toFixed(6) }}</span>
-								<a href='#' ng-click="selectPoint(waypoint)">{{ waypoint.name }} </a>
-							</div>
-						</div>
-					</div>
-
-					<div id='Debug'
-						ng-show='view == Views.DEBUG'>
-						<br/>
-						<div class='short-list'>
-							<div id="DebugSummary">
-							</div>
-						</div>
-						<br/>
-						<div class='short-list'>
-							<div id="DebugTrace">
-							</div>
-						</div>
-					</div>
-
-					<div id='ExportContainer' ng-controller="GpxExportController"
-						ng-show='view == Views.EXPORT'>
-						<a ng-show='false' id='GpxDownloadLink'>download</a>
-					</div>
+		        	<div data-html-fragment='home'></div>
+					<div data-html-fragment='import'></div>
+	           		<div data-html-fragment='trackinfos'></div>
+					<div data-html-fragment='map' style='width:100%;height:100%'></div>
+	           		<div data-html-fragment='tracks'></div>
+	           		<div data-html-fragment='elevation' style='width:100%; height:100%'></div>
+	           		<div data-html-fragment='waypoints'></div>
+	           		<div data-html-fragment='debug'> </div>
+	           		<div data-html-fragment='export'></div>
 	        	</div>
 		    </div>
 
 		    <div id="bottom">
-		        <div id="bottomleft">	
-     	
+		        <div id="bottomleft">	     	
 		        </div>
 		        <div id="bottomright">
 		        	{{ infoText }}

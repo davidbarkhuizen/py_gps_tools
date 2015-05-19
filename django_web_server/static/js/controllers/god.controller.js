@@ -175,8 +175,6 @@ function GodController($scope, $http, $timeout) {
 				Command.LOAD_TRACK,
 				{ id : id, overlay : false }
 			);
-
-			console.log('$scope.onTrackSelected');
 		};
 
 		$scope.view = $scope.Views.MAP_LIST;

@@ -17,10 +17,11 @@ function ElevationPlotController($scope, $http, $timeout) {
 
 		var canvasGrandParent = $scope.canvasElement
 			.parentNode
+			.parentNode
 			.parentNode; 
 
 		$scope.windowWidth = canvasGrandParent.clientWidth;
-		$scope.windowHeight = canvasGrandParent.clientHeight;
+		$scope.windowHeight = canvasGrandParent.clientHeight - 10;
 
 		// calc canvas dims
 		//

@@ -1,0 +1,57 @@
+ <div class='margin-right-10px'>
+
+	<a
+		ng-class='active'
+		href='#'
+		ng-click='gotoGpxImport();'>import gpx file</a>
+	<br/>
+	<a
+		ng-class='true || (tracks.length > 0) || (waypoints.length > 0) ? "active" : "inactive" ' 
+		href='#' 
+		ng-click='gotoGpxExport();'>export gpx file</a>
+	<br/>
+	<br/>
+
+	<a
+		class="active"
+		href='#'
+		ng-click='gotoOpenTrack();'>
+		open track
+	</a>
+		<br/>
+	<a  ng-class="(tracks.length == 0) ? 'inactive' : 'active'"
+		href='#'
+		ng-click='gotoAddTrack();'>
+		add track
+	</a>
+	<br/>	
+	<a ng-class="(tracks.length > 1) ? 'active' : 'inactive'"
+		href='#' 
+		ng-click='gotoUnloadTrack();'>
+		unload track
+	</a>
+	<br/>	           		
+   		
+		<br/>
+
+		<!-- MAP -->
+    <a ng-class="(tracks.length > 0) && (view !== Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='gotoMap();'>map</a>
+		<br/>
+	<a ng-class="(view == Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='cancelMapSelection();'>cancel selection</a>
+	<br/>
+	<a ng-class="(view == Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='zoomIn();'>zoom in</a>
+	<br/>
+	<a ng-class="(view == Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='zoomOut();'>zoom out</a>
+	<br/>
+	<a ng-class="(view == Views.MAP) ? 'active' : 'inactive'" href='#' ng-click='areaSelectWaypoints();'>select waypoints</a>
+	<br/>
+
+	<br/>
+
+	<a ng-class="(tracks.length > 0) && (view !== Views.STATS) ? 'active' : 'inactive'" href='#' ng-click='gotoStats()'>stats</a>
+	<br/>
+	<a ng-class="(tracks.length > 0) && (view !== Views.ELEVATION) ? 'active' : 'inactive'" href='#' ng-click='gotoElevationPlot();'>elevation plot</a>
+	<br/>
+	<a ng-class="(view !== Views.WAYPOINTS) && (tracks.length > 0) ? 'active' : 'inactive'" href='#' ng-click='gotoWaypoints()'>waypoints</a>
+			   
+</div>
