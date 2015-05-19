@@ -169,7 +169,16 @@ function GodController($scope, $http, $timeout) {
 
 	$scope.gotoOpenTrack = function() {		
 
-		$scope.onTrackSelected = function(id) { $scope.broadcastLOAD_TRACK(id); };
+		$scope.onTrackSelected = function(id) { 
+
+			$scope.$broadcast(
+				Command.LOAD_TRACK,
+				{ id : id, overlay : false }
+			);
+
+			console.log('$scope.onTrackSelected');
+		};
+
 		$scope.view = $scope.Views.MAP_LIST;
 		$scope.headerText = 'select track to view';
 		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
@@ -177,7 +186,7 @@ function GodController($scope, $http, $timeout) {
 
 	$scope.gotoAddTrack = function() {		
 
-		$scope.onTrackSelected = function(id) { $scope.broadcastLOAD_TRACK(id, true); };
+		$scope.onTrackSelected = function(id) { $scope.$broadcast(Command.LOAD_TRACK, { id : id, overlay : true }); };
 		$scope.headerText = 'select a track to add to the map';
 		$scope.view = $scope.Views.MAP_LIST;		
 		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);

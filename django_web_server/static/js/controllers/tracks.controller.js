@@ -53,7 +53,8 @@ function TracksController($scope, $http, $timeout) {
 		$scope.$emit(Event.TRACK_UNLOADED);
 	};
 
-	$scope.$on(Command.LOAD_TRACK, function(evt, data) {
-		$scope.load(data.id, data.overlay);
+ 	$scope.$on(Command.LOAD_TRACK, function(evt, data) {
+
+		$scope.load(data.id, data.overlay);	
 	});
 };

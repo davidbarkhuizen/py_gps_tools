@@ -1,0 +1,28 @@
+<div
+	ng-show='view == Views.MAP_LIST'
+	ng-controller='TrackInfosController'
+	id='TrackListContainer'
+	>
+
+	<input
+		id='TrackListFilterToken'
+		placeholder='type here to filter map list and auto-select a map' 
+		ng-model='searchToken' 
+		ng-keyup='filter();' 
+		type='text'
+		size='32'
+		class='dashed-line-text-input'
+		ng-class='(searchToken == "") || (filteredTrackInfos.length == 0) ? "action-required" : "no-action-required"'
+		/>
+
+	<div class='list'>
+		<div ng-repeat="trackInfo in filteredTrackInfos">
+			<span 
+				ng-class='((selectedTrackInfo !== null) && (selectedTrackInfo.id == trackInfo.id)) ? "selected-text" : "";'
+				ng-click='select(trackInfo.id);'
+				>
+				{{ trackInfo.timestamp + ' ' + trackInfo.name.toLowerCase() }}
+			</span>
+		</div>
+	</div>
+</div>

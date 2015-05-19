@@ -126,46 +126,8 @@
 					<div data-html-fragment='import'>
 	           		</div>
 
-		        	<!-- TRACK LIST -->
-	          		<div
-	          			ng-show='view == Views.MAP_LIST'
-	          			ng-controller='TrackInfosController'
-	          			id='TrackListContainer'
-	          			>
-
-						<input
-							id='TrackListFilterToken'
-							placeholder='type here to filter map list and auto-select a map' 
-							ng-model='searchToken' 
-							ng-keyup='filter();' 
-							type='text'
-							size='32'
-							class='dashed-line-text-input'
-							ng-class='(searchToken == "") || (filteredTrackInfos.length == 0) ? "action-required" : "no-action-required"'
-							/>
-
-		            	<div class='list'>
-							<div ng-repeat="trackInfo in filteredTrackInfos">
-								<span 
-									ng-class='((selectedTrackInfo !== null) && (selectedTrackInfo.id == trackInfo.id)) ? "selected-text" : "";'
-									ng-click='select(trackInfo.id);'
-									>
-									{{ trackInfo.timestamp + ' ' + trackInfo.name.toLowerCase() }}
-								</span>
-							</div>
-						</div>
-					</div>
-					
-					<!-- LOADED TRACKS -->
-	            	<div
-	            		ng-show='view == Views.LOADED_TRACKS'
-	            		ng-controller='TracksController'>
-
-        				<br/>	            		
-	            		<div ng-repeat="track in $parent.tracks">
-	            			<a href='#' ng-click='unload(track.id)'style='color:red'>unload</a>&nbsp;<a href='#' style='color:{{track.colour}}'>{{ track.name }}</a>
-        				</div>
-	            	</div>
+	           		<div data-html-fragment='trackinfos'>
+	           		</div>
 
 	           		<!-- MAP -->
 					<div id='mapContainer'
@@ -189,6 +151,7 @@
 					<div id='Stats'
 						ng-show='view == Views.STATS'
 						class='track-stats'
+						ng-controller='TracksController'
 						>
 
 						<div>

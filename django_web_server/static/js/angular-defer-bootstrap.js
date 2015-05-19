@@ -43,9 +43,9 @@ window.onload = function () {
 
 			rawHTTP('GET', urlRoot + fragmentName + '.html',
 				function(html) {
+
 					element.innerHTML = html;
 					element.removeAttribute(attr);
-					console.log(html);
 
 					next();
 				}
