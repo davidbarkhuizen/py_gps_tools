@@ -1,0 +1,16 @@
+<div id="ImportContainer"
+	ng-show='view == Views.IMPORT'
+	ng-controller='GpxImportController'>
+
+	<div>
+		<input
+			id="ImportGpxFileInput"
+			type="file"
+			multiple
+			name="file"/>
+		<br/>
+		<button ng-click="importSelectedFiles()">
+			import selected file
+		</button>
+	</div>
+</div>
