@@ -252,6 +252,7 @@ function WaypointsController($scope, $http, $timeout) {
 	// LOAD
 
 	$scope.exportAllWaypoints = function() {
+		console.log('dog');
 		$scope.$emit(Event.WAYPOINTS_EXPORT_REQUESTED, model.waypoints);
 	};
 

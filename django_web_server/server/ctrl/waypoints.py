@@ -8,16 +8,6 @@ def routing(request, qs):
 
     raise Error(request.method)
 
-'''
-# waypoints
-#
-track.calc_min_maxes()
-waypoints = WayPoint.objects.filter(lat__lte=track.max_lat, lat__gte=track.min_lat,lon__lte=track.max_lon, lon__gte=track.min_lon)
-
-track_json_string = json.dumps(track_dict)
-return HttpResponse(track_json_string, mimetype='application/json')
-'''
-
 def get(request, params):
 
 	waypoints = []

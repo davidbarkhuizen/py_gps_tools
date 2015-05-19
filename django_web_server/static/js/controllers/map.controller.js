@@ -90,6 +90,8 @@ function MapController($scope, $http, $timeout) {
 		//	
 		if ($scope.canvasSelections.length > 0) {
 
+			// console.log('redrawing selection area');
+
 			var newSelection = $scope.canvasSelections.pop();
 
 			$scope.selectionPoints.length = 0;
@@ -99,6 +101,7 @@ function MapController($scope, $http, $timeout) {
 			$scope.resizeCanvasSelectionArea();		
 
 			$scope.showMapSelectionArea = true;
+			$scope.makeMapSemiTransparent();
 		}
 		else {
 			$scope.selectionPoints.length = 0;

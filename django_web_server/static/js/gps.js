@@ -314,8 +314,31 @@ function waypointsToGpx(waypoints) {
 		var lon = wp.lon.toFixed(6);
 
 		var ele = toNode('ele', [], [wp.ele.toFixed(6)]);
-		
-		var time = toNode('time', [], [wp.time.toString()]);
+
+		function lpad0(s) {
+			return (s.length == 2) ? s : '0' + s;
+		}
+
+		function toZTimeStr(dt) {
+			// 2012-09-16T10:02:30Z
+
+			var dateS = dt.getUTCFullYear().toString() 
+				+ '-'
+				+ lpad0((dt.getUTCMonth() + 1).toString())
+				+ '-'
+				+ lpad0(dt.getUTCDate().toString());
+			
+			var timeS = lpad0(dt.getUTCHours().toString())
+				+ ':'
+				+ lpad0(dt.getMinutes().toString())
+				+ ':'
+				+ lpad0(dt.getSeconds().toString());
+
+			return dateS + 'T' + timeS + 'Z';
+		}
+
+		var time = toNode('time', [], [toZTimeStr(new Date(wp.time))]);
+
 		var name = toNode('name', [], [wp.name]);
 		
 		// sym
