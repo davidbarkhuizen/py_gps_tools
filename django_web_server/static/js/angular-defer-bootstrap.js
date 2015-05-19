@@ -1,4 +1,6 @@
-window.name = 'NG_DEFER_BOOTSTRAP! ' + window.name;
+var ngDeferToken = 'NG_DEFER_BOOTSTRAP! ';
+
+window.name =  ngDeferToken + window.name;
 
 window.onload = function () {
 
@@ -10,8 +12,6 @@ window.onload = function () {
 
 		var q =  "[" + attr + "='" + fragmentName + "']";
 		var fragmentElement = document.querySelector(q);
-
-		console.log('fetching ' + fragmentName);
 
 		var xmlHttpReq = new XMLHttpRequest();
 
@@ -26,8 +26,9 @@ window.onload = function () {
 
 					var remaining = document.querySelectorAll('[' + attr + ']');
 					if ((remaining == undefined) || (remaining.length == 0)) {
+
 						angular.resumeBootstrap();
-						window.name = window.name.replace('NG_DEFER_BOOTSTRAP! ', '');
+						window.name = window.name.replace(ngDeferToken, '');
 					}
 	           }
 	           else {
