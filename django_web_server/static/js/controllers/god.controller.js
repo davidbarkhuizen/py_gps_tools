@@ -1,5 +1,8 @@
 function GodController($scope, $http, $timeout) {
 
+	// NAVBAR
+	$scope.isCollapsed = true;
+
 	$scope.tracks = [];
 
 	$scope.model = {
@@ -16,6 +19,8 @@ function GodController($scope, $http, $timeout) {
 		IMPORT : guid(), 
 		EXPORT : guid(),
 
+		TRACK_DATABASE : guid(),
+
 		MAP : guid(),
 		LOADED_TRACKS : guid(), 
 		ELEVATION : guid(),
@@ -23,6 +28,7 @@ function GodController($scope, $http, $timeout) {
 		WAYPOINTS : guid(),
 	});	
 	$scope.view = $scope.Views.HOME;
+	$scope.userView = $scope.Views.HOME;
 
 	// Controller Element Doc Ids
 	//
@@ -177,7 +183,7 @@ function GodController($scope, $http, $timeout) {
 			);
 		};
 
-		$scope.view = $scope.Views.MAP_LIST;
+		$scope.view = $scope.Views.TRACK_DATABASE;
 		$scope.headerText = 'select track to view';
 		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
 	};
@@ -186,7 +192,7 @@ function GodController($scope, $http, $timeout) {
 
 		$scope.onTrackSelected = function(id) { $scope.$broadcast(Command.LOAD_TRACK, { id : id, overlay : true }); };
 		$scope.headerText = 'select a track to add to the map';
-		$scope.view = $scope.Views.MAP_LIST;		
+		$scope.view = $scope.Views.TRACK_DATABASE;		
 		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
 	};
 
