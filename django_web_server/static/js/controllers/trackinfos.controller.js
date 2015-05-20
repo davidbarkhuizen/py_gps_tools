@@ -1,6 +1,8 @@
-function TrackInfosController($scope, $http, $timeout) {
+function TrackInfosController($rootScope, $scope, $http, $timeout) {
 
 	$scope.trackInfos = $scope.$parent.model.trackInfos;
+	var tracks = $scope.$parent.tracks;
+
 	$scope.searchToken = '';
 	$scope.filteredTrackInfos = [];
 	$scope.selectedTrackInfo = null;
@@ -60,4 +62,13 @@ function TrackInfosController($scope, $http, $timeout) {
 	$scope.$on(Command.REFRESH_TRACK_INFOS, function(evt) {
 		$scope.load();		
 	});
+
+	$scope.loadTrack = function(id) {
+		tracks.length = 0;
+		$rootScope.$emit(Command.LOAD_TRACK, id);		
+	};
+
+	$scope.addTrack = function(id) {
+		$rootScope.$emit(Command.LOAD_TRACK, id);
+	};
 };

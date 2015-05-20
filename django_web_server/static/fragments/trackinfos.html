@@ -8,7 +8,7 @@
 	
 	<input
 		id='TrackListFilterToken'
-		placeholder='type here to filter map list and auto-select a map' 
+		placeholder='type here to filter track list' 
 		ng-model='searchToken' 
 		ng-keyup='filter();' 
 		type='text' 
@@ -17,8 +17,13 @@
 		ng-class='(searchToken == "") || (filteredTrackInfos.length == 0) ? "action-required" : "no-action-required"'
 		/>
 
+	<br/>
+	<br/>
+
 	<div class='list'>
 		<div ng-repeat="trackInfo in filteredTrackInfos">
+			<a href='#' ng-click='loadTrack(trackInfo.id);'>load</a>
+			<a href='#' ng-show='tracks.length > 0' ng-click='addTrack(trackInfo.id);'>add</a>
 			<span 
 				ng-class='((selectedTrackInfo !== null) && (selectedTrackInfo.id == trackInfo.id)) ? "selected-text" : "";'
 				ng-click='select(trackInfo.id);'

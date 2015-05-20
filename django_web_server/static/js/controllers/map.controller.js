@@ -1,4 +1,4 @@
-function MapController($scope, $http, $timeout) {
+function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.tracks = $scope.$parent.tracks;
 
@@ -683,18 +683,26 @@ function MapController($scope, $http, $timeout) {
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// handlers for angular.js events
 
-	$scope.$on(Event.DATA_MODEL_CHANGED, function(evt) {
+	// TRACK LOAD / UNLOAD
+	//
+	$rootScope.$on(Event.TRACK_LOADED, function(evt) {
+		$scope.draw();
+	});
+	$rootScope.$on(Event.TRACK_UNLOADED, function(evt) {
 		$scope.draw();
 	});
 
+	// SELECTION
+	//
 	$scope.$on(Event.CANCEL_MAP_SELECTION, function(evt) {
 		$scope.cancelSelection();
 	});
 
+	// ZOOM
+	//
 	$scope.$on(Event.MAP_ZOOM_IN, function(evt) {
 		$scope.zoomIn();
 	});
-
 	$scope.$on(Event.MAP_ZOOM_OUT, function(evt) {
 		$scope.zoomOut();
 	});

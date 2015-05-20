@@ -6,7 +6,7 @@ var TrackColours = Object.freeze([
 	Colour.RED
 ]);
 
-function TracksController($scope, $http, $timeout) {
+function TracksController($rootScope, $scope, $http, $timeout) {
 
 	$scope.getUnusedTrackColour = function() {
 
@@ -37,7 +37,7 @@ function TracksController($scope, $http, $timeout) {
 			newTrack.colour = $scope.getUnusedTrackColour();
 			$scope.$parent.tracks.push(newTrack);
 
-			$scope.$emit(Event.TRACK_LOADED, newTrack.id);
+			$rootScope.$emit(Event.TRACK_LOADED, newTrack.id);
 		};
 
 		var failFn = function(status){
@@ -53,8 +53,7 @@ function TracksController($scope, $http, $timeout) {
 		$scope.$emit(Event.TRACK_UNLOADED);
 	};
 
- 	$scope.$on(Command.LOAD_TRACK, function(evt, data) {
-
-		$scope.load(data.id, data.overlay);	
+ 	$rootScope.$on(Command.LOAD_TRACK, function(evt, id) {
+		$scope.load(id);	
 	});
 };

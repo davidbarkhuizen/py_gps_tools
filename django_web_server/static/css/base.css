@@ -45,7 +45,7 @@ html, body {
 	font-size:20px;
     font-weight: bold;
     text-align: left;
-    
+
     margin-bottom: 5px;
 
     border-color: lightgrey !important;
@@ -55,13 +55,18 @@ html, body {
 
 
 .list {
-	width:100%;
+	width:95%;
 
     overflow:scroll;
     overflow-y:scroll;
     overflow-x:hidden;
     min-height: 500px;
     max-height: 500px;
+
+    text-align: left;
+
+    padding-left:10px;
+    padding-right:10px;
 }
 
 .short-list {

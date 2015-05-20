@@ -1,4 +1,4 @@
-function GodController($scope, $http, $timeout) {
+function GodController($rootScope, $scope, $http, $timeout) {
 
 	// NAVBAR
 	$scope.isCollapsed = true;
@@ -173,37 +173,8 @@ function GodController($scope, $http, $timeout) {
 		$scope.onTrackSelected(id);
 	});
 
-	$scope.gotoOpenTrack = function() {		
-
-		$scope.onTrackSelected = function(id) { 
-
-			$scope.$broadcast(
-				Command.LOAD_TRACK,
-				{ id : id, overlay : false }
-			);
-		};
-
-		$scope.view = $scope.Views.TRACK_DATABASE;
-		$scope.headerText = 'select track to view';
-		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
-	};
-
-	$scope.gotoAddTrack = function() {		
-
-		$scope.onTrackSelected = function(id) { $scope.$broadcast(Command.LOAD_TRACK, { id : id, overlay : true }); };
-		$scope.headerText = 'select a track to add to the map';
-		$scope.view = $scope.Views.TRACK_DATABASE;		
-		$timeout(function() { focusOnId('TrackListFilterToken'); }, 10);
-	};
-
-	$scope.broadcastLOAD_TRACK = function(id, overlay) {
-		$scope.$broadcast(Command.LOAD_TRACK, { 'id' : id, 'overlay' : overlay });
-	};
-
-	$scope.$on(Event.TRACK_LOADED, function (evt, id) {
-		$scope.$broadcast(Event.DATA_MODEL_CHANGED);
+	$rootScope.$on(Event.TRACK_LOADED, function (evt) {
 		$scope.view = $scope.Views.MAP;
-		$scope.$broadcast(Command.LOAD_WAYPOINTS_FOR_TRACK, id);
 	});
 
 	$scope.gotoUnloadTrack = function() {
