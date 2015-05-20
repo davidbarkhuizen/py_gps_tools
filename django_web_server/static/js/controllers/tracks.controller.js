@@ -19,9 +19,7 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 		return (unUsed.length > 0) ? unUsed[0] : [Colour.BLACK];
 	};
 
-	$scope.load = function(id, overlay) {
-
-		overlay = (overlay !== undefined) ? overlay : false;
+	$scope.load = function(id) {
 
 		var matches = $scope.$parent.tracks
 			.filter(function(track){return (track.id == id);});
@@ -30,8 +28,6 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 			return;
 
 		var successFn = function(data) { 
-
-			if (!overlay) $scope.$parent.tracks.length = 0;
 
 			var newTrack = new Track(data.track);
 			newTrack.colour = $scope.getUnusedTrackColour();

@@ -683,13 +683,15 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// handlers for angular.js events
 
-	// TRACK LOAD / UNLOAD
-	//
-	$rootScope.$on(Event.TRACK_LOADED, function(evt) {
-		$scope.draw();
-	});
-	$rootScope.$on(Event.TRACK_UNLOADED, function(evt) {
-		$scope.draw();
+	// RE-DRAW TRIGGERS
+	$scope.redrawTriggers = [
+		Event.TRACK_LOADED,
+		Event.TRACK_UNLOADED,
+		Event.WAYPOINTS_LOADED
+		];
+	// register
+	$scope.redrawTriggers.forEach(function(trigger) {		
+		$rootScope.$on(trigger, function(evt) { $scope.draw();  });		
 	});
 
 	// SELECTION

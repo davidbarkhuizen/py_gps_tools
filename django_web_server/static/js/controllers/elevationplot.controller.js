@@ -1,4 +1,4 @@
-function ElevationPlotController($scope, $http, $timeout) {
+function ElevationPlotController($rootScope, $scope, $http, $timeout) {
 
 	$scope.canvasId = $scope.$parent.elevationPlotCanvasId;
 	$scope.canvasElement = document
@@ -98,11 +98,18 @@ function ElevationPlotController($scope, $http, $timeout) {
 		}
 	};
 
-	$scope.$on(Event.PLOT_ELEVATION, function(evt) {
-
+	$scope.redraw = function() {
 		$scope.refreshContext();
 		$scope.resizeCanvasFromGrandParentNodeDims(0.98);
 		$scope.clearElePlot();		
 		$scope.drawElevationPlot();
+	};
+
+	$rootScope.$on(Event.TRACK_LOADED, function(evt) {
+		$scope.redraw();
 	});
+	$rootScope.$on(Event.TRACK_UNLOADED, function(evt) {
+		$scope.redraw();
+	});
+
 };

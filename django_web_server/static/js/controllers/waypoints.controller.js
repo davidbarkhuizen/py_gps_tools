@@ -1,4 +1,4 @@
-function WaypointsController($scope, $http, $timeout) {
+function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 	var model = $scope.$parent.model; 
 
@@ -163,7 +163,7 @@ function WaypointsController($scope, $http, $timeout) {
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// LOAD
 
-	$scope.$on(Command.LOAD_WAYPOINTS_FOR_TRACK, function(evt, id) {
+	$rootScope.$on(Event.TRACK_LOADED, function(evt, id) {
 		$scope.loadWaypointsForTrack(id);
 	});	
 
@@ -201,7 +201,7 @@ function WaypointsController($scope, $http, $timeout) {
 		});
 
 		if (changed)  {
-			$scope.$emit(Event.WAYPOINT_ADDED);
+			$scope.$emit(Event.WAYPOINTS_LOADED);
 		}
 	};
 
@@ -254,5 +254,4 @@ function WaypointsController($scope, $http, $timeout) {
 	$scope.exportAllWaypoints = function() {
 		$scope.$emit(Event.WAYPOINTS_EXPORT_REQUESTED, model.waypoints);
 	};
-
 }

@@ -1,4 +1,4 @@
-function GpxImportController($scope, $http, $timeout) {
+function GpxImportController($rootScope, $scope, $http, $timeout) {
 
 	$scope.fileInputId = $scope.$parent.fileInputId;
 
