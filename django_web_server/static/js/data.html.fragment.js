@@ -21,12 +21,14 @@ window.onload = function () {
 
 	           if ((xmlHttpReq.status == 200) || (xmlHttpReq.status == 304)) {
 
-					fragmentElement.innerHTML = xmlHttpReq.responseText;
-					fragmentElement.removeAttribute(attr);
+	           		var holderE = document.createElement('div');
+	           		holderE.innerHTML = xmlHttpReq.responseText;
+	           		var toInsert = holderE.firstChild;
 
-					var remaining = document.querySelectorAll('[' + attr + ']');
+	           		fragmentElement.parentNode.replaceChild(toInsert, fragmentElement);
+
+					var remaining = document.querySelectorAll('[' + attr + ']');					
 					if ((remaining == undefined) || (remaining.length == 0)) {
-
 						angular.resumeBootstrap();
 						window.name = window.name.replace(ngDeferToken, '');
 					}
