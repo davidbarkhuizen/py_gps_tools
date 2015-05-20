@@ -4,12 +4,14 @@
 	id='TrackListContainer'
 	>
 
+	<br/>
+	
 	<input
 		id='TrackListFilterToken'
 		placeholder='type here to filter map list and auto-select a map' 
 		ng-model='searchToken' 
 		ng-keyup='filter();' 
-		type='text'
+		type='text' 
 		size='32'
 		class='dashed-line-text-input'
 		ng-class='(searchToken == "") || (filteredTrackInfos.length == 0) ? "action-required" : "no-action-required"'
@@ -25,4 +27,7 @@
 			</span>
 		</div>
 	</div>
+	<span ng-show='filteredTrackInfos.length > 0'>
+		...
+	</span>
 </div>
