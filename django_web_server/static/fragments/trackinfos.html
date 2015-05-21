@@ -4,11 +4,11 @@
 	id='TrackListContainer'
 	>
 
-	<br/>
-	
+	<h3>track database</h3>
+
 	<input
 		id='TrackListFilterToken'
-		placeholder='type here to filter track list' 
+		placeholder='search track database' 
 		ng-model='searchToken' 
 		ng-keyup='filter();' 
 		type='text' 
@@ -21,10 +21,14 @@
 	<br/>
 	<br/>
 
-	<div class='list'>
+	<div class='short-list'>
 		<div ng-repeat="trackInfo in filteredTrackInfos">
 			<a href='#' ng-click='loadTrack(trackInfo.id);'>load</a>
-			<a href='#' ng-show='tracks.length > 0' ng-click='addTrack(trackInfo.id);'>add</a>
+			<a href='#'
+				ng-show='tracks.length > 0'
+				ng-click='addTrack(trackInfo.id);'
+				ng-class="trackIsLoaded(trackInfo.id) ? 'inactive' : 'active'"
+				>add</a>
 			<span 
 				ng-class='((selectedTrackInfo !== null) && (selectedTrackInfo.id == trackInfo.id)) ? "selected-text" : "";'
 				ng-click='select(trackInfo.id);'

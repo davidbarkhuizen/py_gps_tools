@@ -7,6 +7,10 @@ function TrackInfosController($rootScope, $scope, $http, $timeout) {
 	$scope.filteredTrackInfos = [];
 	$scope.selectedTrackInfo = null;
 
+	$scope.trackIsLoaded = function(id) {
+		return (tracks.countWhere(function(track) { return (track.id == id); }) > 0);
+	};
+
 	// select -----------------------------------------
 
 	$scope.select = function(id) {
