@@ -46,9 +46,9 @@ function ElevationPlotController($rootScope, $scope, $http, $timeout) {
 		fillStyle = (fillStyle == undefined) ? '#FFFFFF' : fillStyle;
 		$scope.context.fillStyle = fillStyle;	
 
-		[width, height] = $scope.getCanvasDimensions();	
+		var widthHeight = $scope.getCanvasDimensions();
 		
-		$scope.context.fillRect(0, 0, width, height);
+		$scope.context.fillRect(0, 0, widthHeight[0], widthHeight[1]);
 	};
 
 	$scope.drawElevationPlot = function() {
@@ -111,5 +111,4 @@ function ElevationPlotController($rootScope, $scope, $http, $timeout) {
 	$rootScope.$on(Event.TRACK_UNLOADED, function(evt) {
 		$scope.redraw();
 	});
-
 };

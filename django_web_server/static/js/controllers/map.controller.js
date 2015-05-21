@@ -25,6 +25,9 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	$scope.selectionAreaElement = document
 		.getElementById($scope.$parent.mapSelectionAreaDivId);
 
+	$scope.mapContextMenuElement = document
+		.getElementById($scope.$parent.mapContextMenuDivId);
+
 	$scope.context = $scope.canvasElement.getContext("2d");
 
 	// lat-lon view ports
@@ -39,6 +42,11 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	$scope.selectionPoints = [];
 
 	$scope.showMapSelectionArea = false;
+
+	$scope.ShowMapContextMenu = function() {
+		var selected = (($scope.showMapSelectionArea == true) && ($scope.selecting == false));
+		return ((selected == true) || ($scope.canZoomOut() == true));
+	};
 
 	$scope.cancelSelection = function() {
 		
@@ -75,11 +83,14 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		$scope.draw();		
 	};
 
+	$scope.canZoomOut = function() {
+		return ($scope.latLonViewPorts.length > 0);
+	};
+
 	$scope.zoomOut = function() {
 
-		if ($scope.latLonViewPorts.length == 0) {
+		if ($scope.canZoomOut() == false)
 			return;
-		}
 
 		$scope.cancelSelection();
 
@@ -561,6 +572,28 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		return 'lat ' + lat.toFixed(6).toString() + ', lon ' + lon.toFixed(6).toString();
 	};
 
+	$scope.showMapContextMenu = false;
+
+	$scope.openContextMenu = function() {
+
+		var pt1 = $scope.selectionPoints[0];
+		var pt2 = $scope.selectionPoints[1];
+
+		var left = 20;
+		var width = 100;
+
+		var height = 20;//Math.abs(pt1.y - pt2.y);
+		var top = $scope.height - height; //Math.min(pt1.y, pt2.y);
+		
+		var style  = 'left:' + left + 'px;';
+		style = style + 'top:' + top + 'px;';
+		//style = style + 'width:' + width + 'px;';
+		//style = style + 'height:' + height + 'px;';
+
+		$scope.mapContextMenuElement.setAttribute('style', style);
+		$scope.mapContextMenuElement.className = $scope.mapContextMenuElement.className.replace('ng-hide', ''); 
+	};
+
 	$scope.resizeCanvasSelectionArea = function() {
 
 		var pt1 = $scope.selectionPoints[0];
@@ -625,6 +658,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		$scope.resizeCanvasSelectionArea();
 
 		$scope.selecting = false;
+
+		$scope.openContextMenu();
 	};	
 
 	$scope.onMouseMove = function(mousePos) {
@@ -694,21 +729,6 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		$rootScope.$on(trigger, function(evt) { $scope.draw();  });		
 	});
 
-	// SELECTION
-	//
-	$scope.$on(Event.CANCEL_MAP_SELECTION, function(evt) {
-		$scope.cancelSelection();
-	});
-
-	// ZOOM
-	//
-	$scope.$on(Event.MAP_ZOOM_IN, function(evt) {
-		$scope.zoomIn();
-	});
-	$scope.$on(Event.MAP_ZOOM_OUT, function(evt) {
-		$scope.zoomOut();
-	});
-
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// WAYPOINT SELECTION	
 
@@ -719,12 +739,16 @@ function MapController($rootScope, $scope, $http, $timeout) {
 			throw '$scope.selectionPoints.length !== 2';
 		}
 
+		// determine selection area
+
 		var latLon1 = $scope.mapLatLonFromCanvasXY($scope.selectionPoints[0].x, $scope.selectionPoints[0].y);
 		var latLon2 = $scope.mapLatLonFromCanvasXY($scope.selectionPoints[1].x, $scope.selectionPoints[1].y);
 
 		var minMaxLat = { 'max' : Math.max(latLon1.lat, latLon2.lat), 'min' : Math.min(latLon1.lat, latLon2.lat) };
 		var minMaxLon = { 'max' : Math.max(latLon1.lon, latLon2.lon), 'min' : Math.min(latLon1.lon, latLon2.lon) };
 	
+		// determine which points fall inside
+
 		var isInside = function(wpt) {
 
 			var yes = 
@@ -741,14 +765,14 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		var inside = [];
 		waypoints.forEach(function(x) { if (isInside(x)) inside.push(x); });
 
+		// update model: filteredWaypoints, selectedPoint
+
 		filteredWaypoints.length = 0;
 		inside.forEach(function(x){ filteredWaypoints.push(x); });
 	
 		if (filteredWaypoints.length)
 			$scope.$parent.model.selectedPoint = filteredWaypoints[0];
-	};
 
-	$scope.$on(Command.AREA_SELECT_WAYPOINTS, function(evt) {
-		$scope.areaSelectWayPoints();
-	});
+		$rootScope.$emit(Command.GOTO_VIEW, $scope.$parent.Views.WAYPOINTS);
+	};
 }

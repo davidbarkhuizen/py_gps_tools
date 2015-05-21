@@ -1,4 +1,4 @@
-function GpxExportController($scope, $http) {
+function GpxExportController($rootScope, $scope, $http) {
 
 	var dlBlobURL = null;
 	$scope.exportXML = function(xml, fileName) {
@@ -19,8 +19,8 @@ function GpxExportController($scope, $http) {
 		dlLink.click();
 	};
 
-	$scope.$on(Command.EXPORT_WAYPOINTS, function(evt, waypoints) {
+	$rootScope.$on(Command.EXPORT_WAYPOINTS, function(evt, waypoints) {
 		var xml = waypointsToGpx(waypoints);
-		$scope.exportXML(xml, 'waypoints.gpx');
+		$scope.exportXML(xml, 'geonodetek.waypoints.gpx');
 	});
 };

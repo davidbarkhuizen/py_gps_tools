@@ -137,6 +137,11 @@ a
     position: absolute;
 }
 
+.map-context-menu {
+    z-index: 4;
+    position: absolute;
+}
+
 /* -------------------------------------------------------*/
 /* MAP SELECTION AREA */
 

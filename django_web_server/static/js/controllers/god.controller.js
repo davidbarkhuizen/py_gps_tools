@@ -1,5 +1,7 @@
 function GodController($rootScope, $scope, $http, $timeout) {
 
+	$scope.dog = false;
+
 	$scope.tracks = [];
 
 	$scope.model = {
@@ -8,6 +10,9 @@ function GodController($rootScope, $scope, $http, $timeout) {
 		filteredWaypoints : [],
 		selectedPoint : null
 	};
+
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// VIEWS
 
 	$scope.Views = Object.freeze({
 		DEBUG : guid(),
@@ -29,6 +34,12 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	$scope.gotoView = function(newView) {
 		$scope.view = newView;		
 	};
+
+	$rootScope.$on(Command.GOTO_VIEW, function(evt, view) { $scope.view = view; });
+
+	$scope.$on(Event.AJAX_ERROR, function(evt, error) {
+		$scope.globalDebug(error);
+	});
 
 	$scope.giveActiveViewFocus = function() {
 		
@@ -65,6 +76,7 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	$scope.mapCanvasId = 'MapCanvas';
 	
 	$scope.mapSelectionAreaDivId = 'MapSelectionArea';
+	$scope.mapContextMenuDivId = 'MapContextMenu';
 
 	$scope.headerText = 'GeoNodeTek';
 	$scope.infoText = '';	
@@ -88,14 +100,6 @@ function GodController($rootScope, $scope, $http, $timeout) {
 
 	// -------------------------------------------------------------------
 	// GPX IMPORT - EXPORT
-
-	$scope.gotoGpxExport = function() {
-
-		var xml = waypointsToGpx($scope.model.waypoints);
-
-		$scope.$broadcast(Command.MAKE_GPX_FILE_AVAILABLE_FOR_EXPORT, { xml : xml, fileName : 'cat' });
-    	//$scope.view = $scope.Views.EXPORT;
-	};
 
 	$scope.$on(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED, function(evt) {
 

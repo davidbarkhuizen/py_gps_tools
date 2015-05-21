@@ -12,4 +12,14 @@
 		ng-show='showMapSelectionArea'
 		>
 	</div>
+
+	<div id='MapContextMenu' 
+		class='map-context-menu'
+		ng-show='ShowMapContextMenu()'
+		>
+		<a href='#' ng-click='cancelSelection()'>cancel selection</a>
+		<a href='#' ng-click='zoomIn()'>zoom in</a>
+		<a href='#' ng-click='zoomOut()'>zoom out</a>
+		<a href='#' ng-click='areaSelectWayPoints()'>waypoints</a>
+	</div>
 </div>

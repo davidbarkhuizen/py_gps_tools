@@ -249,9 +249,9 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 	};
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	// LOAD
+	// EXPORT
 
 	$scope.exportAllWaypoints = function() {
-		$scope.$emit(Event.WAYPOINTS_EXPORT_REQUESTED, model.waypoints);
+		$rootScope.$emit(Command.EXPORT_WAYPOINTS, model.waypoints);
 	};
 }
