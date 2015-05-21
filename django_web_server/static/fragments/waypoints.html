@@ -45,7 +45,18 @@
 			</div>
 		</div>
 	</div>
+
 	<br/>
+
+	<div class='short-list'>
+		<div ng-repeat='waypoint in filteredOrAll()'>
+			<span>{{ waypoint.lat.toFixed(6) }}, {{ waypoint.lon.toFixed(6) }}</span>
+			<a href='#' ng-click="selectPoint(waypoint)">{{ waypoint.name }} </a>
+		</div>
+	</div>
+
+	<br/>
+
 	<div>
 		showing {{ filteredOrAll().length }} points of {{ model.waypoints.length }} in total (<a href='#' ng-click='showAllPoint();'>show all</a>)
 	</div>
@@ -55,10 +66,4 @@
 		<a href='#' ng-click='reloadWaypointsForTracks();'>refresh</a>
 	</div>
 	<br/>
-	<div class='short-list'>
-		<div ng-repeat='waypoint in filteredOrAll()'>
-			<span>{{ waypoint.lat.toFixed(6) }}, {{ waypoint.lon.toFixed(6) }}</span>
-			<a href='#' ng-click="selectPoint(waypoint)">{{ waypoint.name }} </a>
-		</div>
-	</div>
 </div>

@@ -26,6 +26,10 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	
 	$scope.view = $scope.Views.HOME;
 
+	$scope.gotoView = function(newView) {
+		$scope.view = newView;		
+	};
+
 	$scope.giveActiveViewFocus = function() {
 		
 		// data-focus-element
