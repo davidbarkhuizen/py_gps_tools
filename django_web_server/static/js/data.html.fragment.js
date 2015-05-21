@@ -44,7 +44,7 @@ window.onload = function () {
 	        }
 	    };
 
-	    var url = urlRoot + fragmentName + '.html';
+	    var url = urlRoot + fragmentName + '.html' + '?' + guid();
 	    xmlHttpReq.open('GET', url, true);
 	    xmlHttpReq.send();		
 	};

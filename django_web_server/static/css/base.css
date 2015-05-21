@@ -33,6 +33,15 @@ html, body {
 	padding:5px;
 }
 
+.navbar-select {
+    color:black;
+    background:white;
+
+    font-family: courier !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+}
+
 .viewport {
 	width:100%;
 	height:100%;
