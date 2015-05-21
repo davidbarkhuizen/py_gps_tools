@@ -88,3 +88,28 @@ html, body {
     max-height: 250px;
     max-width: 1100px;
 }
+
+a 
+{
+    color:purple;
+}
+
+.active {
+    color:purple;
+}
+
+.inactive {
+    color:darkgrey;
+}
+
+.action-required {
+    color:red;
+}
+
+.no-action-required {
+    color:green;
+}
+
+.selected-text {
+    color:blue;
+}

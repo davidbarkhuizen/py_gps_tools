@@ -26,6 +26,34 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	
 	$scope.view = $scope.Views.HOME;
 
+	$scope.giveActiveViewFocus = function() {
+		
+		// data-focus-element
+
+		var views = document
+			.getElementById('viewport')
+			.childNodes;
+
+		for(var i = 0; i < views.length; i++) {
+
+			var className = views[i].className;
+
+			if (className !== undefined) {
+				if ((' ' + className + ' ').indexOf(' ' + 'ng-hide' + ' ') == -1) {
+
+					var q =  '[' + 'data-focus-element' + ']';
+					var focusElement = views[i].querySelector(q);
+					if (focusElement)
+						focusElement.focus();
+				}
+			}
+		}
+	};
+
+	$scope.onViewChange = function() {
+		$timeout($scope.giveActiveViewFocus, 100);
+	};
+
 	// Controller Element Doc Ids
 	//
 	$scope.elevationPlotCanvasId = 'ElevationPlotCanvas';
