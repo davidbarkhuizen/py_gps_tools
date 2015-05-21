@@ -11,7 +11,7 @@ var Event = Object.freeze({
 	TRACK_UNLOADED : guid(),
 
 	WAYPOINTS_LOADED : guid(),
-	WAYPOINT_UNLOADED : guid(),
+	WAYPOINTS_UNLOADED : guid(),
 	WAYPOINT_EDITED : guid(),
 	WAYPOINT_DELETED : guid(),
 });

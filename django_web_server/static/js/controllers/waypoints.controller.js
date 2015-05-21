@@ -150,7 +150,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 		var successFn = function() { 
 			$scope.deleteLocal(id);
-			$scope.$emit(Event.WAYPOINT_DELETED, id);
+			$rootScope.$emit(Event.WAYPOINT_DELETED, id);
 		};
 
 		var failureFn = function(message) { 
@@ -175,7 +175,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 	$scope.unloadAllWaypoints = function() {
 		model.waypoints.length = 0;
-		$scope.$emit(Event.WAYPOINT_UNLOADED);
+		$scope.$emit(Event.WAYPOINTS_UNLOADED);
 	};	
 
 	// RELOAD FOR ALL TRACKS

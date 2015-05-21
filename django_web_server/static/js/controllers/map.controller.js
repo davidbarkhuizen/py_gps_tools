@@ -722,7 +722,10 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	$scope.redrawTriggers = [
 		Event.TRACK_LOADED,
 		Event.TRACK_UNLOADED,
-		Event.WAYPOINTS_LOADED
+		Event.WAYPOINTS_LOADED,
+		Event.WAYPOINTS_UNLOADED,
+		Event.WAYPOINT_EDITED,
+		Event.WAYPOINT_DELETED
 		];
 	// register
 	$scope.redrawTriggers.forEach(function(trigger) {		
