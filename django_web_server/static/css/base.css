@@ -50,6 +50,8 @@ html, body {
 
 .dashed-line-text-input {
 
+    text-align: center !important;
+
     font-family: courier !important;
 	font-size:20px;
     font-weight: bold;

@@ -8,7 +8,9 @@ function TrackInfosController($rootScope, $scope, $http, $timeout) {
 	$scope.selectedTrackInfo = null;
 
 	$scope.trackIsLoaded = function(id) {
-		return (tracks.countWhere(function(track) { return (track.id == id); }) > 0);
+
+		var isLoaded = (tracks.countWhere(function(track) { return (track.id == id); }) > 0); 
+		return isLoaded;
 	};
 
 	// select -----------------------------------------
@@ -21,8 +23,9 @@ function TrackInfosController($rootScope, $scope, $http, $timeout) {
 					$scope.selectedTrackInfo = x;
 			}
 		);
-
-		$scope.$emit(Event.TRACK_SELECTED, id);
+		
+		$scope.$emit(Command.LOAD_TRACK, id);
+		tracks.length = 0;
 	};
 
 	// filter -----------------------------------------
