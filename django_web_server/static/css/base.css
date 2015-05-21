@@ -117,3 +117,31 @@ a
 .selected-text {
     color:blue;
 }
+
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* MAP LAYERS / Z-INDICES */
+
+#mapContainer {
+    position: relative;
+}
+
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+.map-canvas {
+    z-index: 3;
+    display:inline-block;
+}
+
+.map-selection-area {
+    z-index: -1;
+    position: absolute;
+}
+
+/* -------------------------------------------------------*/
+/* MAP SELECTION AREA */
+
+.map-selection-area {    
+    border-style:dashed;
+    border-width:5px;
+    border-color:black;
+}

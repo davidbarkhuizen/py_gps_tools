@@ -30,14 +30,6 @@
     border-color:black;
 }
 
-.track-stats {
-    vertical-align:top;
-
-    position: relative;
-    width:100%;
-    height:100%;
-}
-
 .elevation-plot-container {
     position: relative;
 }

@@ -6,10 +6,10 @@
 				<option value='{{Views.HOME}}'>home</option>
 				<option value="{{Views.IMPORT}}">import GPX file</option>
 				<option value="{{Views.TRACK_DATABASE}}">track database</option>
-				<option value="{{Views.LOADED_TRACKS}}">loaded tracks</option>
-				<option value="{{Views.MAP}}">map</option>
-				<option value="{{Views.ELEVATION}}">elevation plot</option>
-				<option value="{{Views.WAYPOINTS}}">waypoints</option>
+				<option value="{{Views.LOADED_TRACKS}}" ng-disabled='tracks.length == 0'>loaded tracks</option>
+				<option value="{{Views.MAP}}" ng-disabled='tracks.length == 0'>map</option>
+				<option value="{{Views.ELEVATION}}" ng-disabled='tracks.length == 0'>elevation plot</option>
+				<option value="{{Views.WAYPOINTS}}" ng-disabled='tracks.length == 0'>waypoints</option>
 			</select>
 		</div>
 		<div style='float:right;'>
