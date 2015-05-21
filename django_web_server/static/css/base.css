@@ -98,6 +98,16 @@ a
     color:purple;
 }
 
+.navbar-inner > div > a.nav-active 
+{
+    color:white;
+}
+
+.navbar-inner > div > a.nav-inactive
+{
+    color:lightgrey;
+}
+
 .active {
     color:purple;
 }

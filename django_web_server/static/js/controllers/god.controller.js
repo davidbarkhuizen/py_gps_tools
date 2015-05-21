@@ -1,7 +1,5 @@
 function GodController($rootScope, $scope, $http, $timeout) {
 
-	$scope.dog = false;
-
 	$scope.tracks = [];
 
 	$scope.model = {

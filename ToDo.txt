@@ -42,6 +42,8 @@ clean-up
 - improve use of document Ids
 - css
 
+--- ---- --- --- --- --- ---
 
+on track import - reload track infos, waypoints 
 
 

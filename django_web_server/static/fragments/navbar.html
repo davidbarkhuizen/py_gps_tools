@@ -1,20 +1,48 @@
 <div class='navbar' >
 	<div class='navbar-inner'>
 		<div style='float:left;'>
-			GeoNodeTek
-			<select ng-model="view" ng-change="onViewChange()" class='navbar-select'>
-				<option value='{{Views.HOME}}'>home</option>
-				<option value="{{Views.IMPORT}}">import GPX file</option>
-				<option value="{{Views.TRACK_DATABASE}}">track database</option>
-				<option value="{{Views.LOADED_TRACKS}}" ng-disabled='tracks.length == 0'>loaded tracks</option>
-				<option value="{{Views.MAP}}" ng-disabled='tracks.length == 0'>map</option>
-				<option value="{{Views.ELEVATION}}" ng-disabled='tracks.length == 0'>elevation plot</option>
-				<option value="{{Views.WAYPOINTS}}" ng-disabled='tracks.length == 0'>waypoints</option>
-			</select>
+			<span style='color:lightgrey;'>GeoNodeTek</span>
+			&nbsp;			
+			<a href='#' 
+				ng-click="gotoView(Views.HOME);"
+				ng-class="view == Views.HOME ? 'nav-active' : 'nav-inactive'"
+				>home</a>
+			
+			<a href='#' 
+				ng-click="gotoView(Views.IMPORT);"
+				ng-class="view == Views.IMPORT ? 'nav-active' : 'nav-inactive'"
+				>import</a>
+			
+			<a href='#' 
+				ng-click="gotoView(Views.TRACK_DATABASE);"
+				ng-class="view == Views.TRACK_DATABASE ? 'nav-active' : 'nav-inactive'"
+				>database</a>
+			
+			<a href='#' 
+				ng-click="gotoView(Views.LOADED_TRACKS);"
+				ng-class="view == Views.LOADED_TRACKS ? 'nav-active' : 'nav-inactive'"
+				>loaded</a>
+			
+			<a href='#' 
+				ng-click="gotoView(Views.MAP);"
+				ng-class="view == Views.MAP ? 'nav-active' : 'nav-inactive'"
+				>map</a>
+			
+			<a href='#' 
+				ng-click="gotoView(Views.ELEVATION);"
+				ng-class="view == Views.ELEVATION ? 'nav-active' : 'nav-inactive'"
+				>elevation</a>
+			
+			<a href='#' 
+				ng-click="gotoView(Views.WAYPOINTS);"
+				ng-class="view == Views.WAYPOINTS ? 'nav-active' : 'nav-inactive'"
+				>waypoints</a>
 		</div>
+
 		<div style='float:right;'>
 			david
 		</div>
+		
 		<div style='clear:both;'>
 		</div>
 	</div>

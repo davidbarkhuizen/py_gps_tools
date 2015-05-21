@@ -13,6 +13,10 @@
 		total ascent = {{ track.eleDiff.toFixed(0) }} m ({{ track.minMaxEle.min.toFixed(0) }} - {{ track.minMaxEle.max.toFixed(0) }})
 		<br/>
 		{{ track.durationString }}
+
+		<div ng-show='tracks.length > 1'>
+			<br/>
+		</div>
 	</div>
 	
 	<div ng-show='tracks.length == 0'>

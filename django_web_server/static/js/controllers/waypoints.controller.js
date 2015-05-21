@@ -20,6 +20,10 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 	$scope.filteredOrAll = function() {
 
+		if (model.waypoints.length == 0) {
+			model.filteredWaypoints.length = 0;
+		}
+
 		return (model.filteredWaypoints.length > 0)
 			? model.filteredWaypoints
 			: model.waypoints;
