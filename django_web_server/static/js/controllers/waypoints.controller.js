@@ -18,6 +18,10 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// FILTERING
 
+	$scope.showAll = function() {
+		model.filteredWaypoints.length = 0;
+	};
+
 	$scope.filteredOrAll = function() {
 
 		if (model.waypoints.length == 0) {

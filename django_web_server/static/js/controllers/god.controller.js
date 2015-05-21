@@ -30,7 +30,8 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	$scope.view = $scope.Views.HOME;
 
 	$scope.gotoView = function(newView) {
-		$scope.view = newView;		
+		$scope.view = newView;	
+		$timeout($scope.giveActiveViewFocus, 100);
 	};
 
 	$rootScope.$on(Command.GOTO_VIEW, function(evt, view) { $scope.view = view; });
@@ -61,10 +62,6 @@ function GodController($rootScope, $scope, $http, $timeout) {
 				}
 			}
 		}
-	};
-
-	$scope.onViewChange = function() {
-		$timeout($scope.giveActiveViewFocus, 100);
 	};
 
 	// Controller Element Doc Ids

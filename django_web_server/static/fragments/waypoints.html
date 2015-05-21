@@ -58,12 +58,16 @@
 	<br/>
 
 	<div>
-		showing {{ filteredOrAll().length }} points of {{ model.waypoints.length }} in total (<a href='#' ng-click='showAllPoint();'>show all</a>)
+		showing {{ filteredOrAll().length }} points of {{ model.waypoints.length }} in total (<a href='#' ng-click='showAll();'>show all</a>)
 	</div>
 	<div>							
 		<a href='#' ng-click='exportAllWaypoints();'>export all</a>
 		<a href='#' ng-click='unloadAllWaypoints();'>unload all</a>
 		<a href='#' ng-click='reloadWaypointsForTracks();'>refresh</a>
 	</div>
+	<div>
+		<a href='#' ng-click='gotoView(Views.MAP);'>goto map</a>
+	</div>
+
 	<br/>
 </div>
