@@ -25,16 +25,27 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 	$scope.filteredOrAll = function() {
 
 		if (model.waypoints.length == 0) {
-			model.filteredWaypoints.length = 0;
+			model.filteredWaypoints.length = 0; 
 		}
 
-		return (model.filteredWaypoints.length > 0)
+		var set = (model.filteredWaypoints.length > 0)
 			? model.filteredWaypoints
 			: model.waypoints;
+
+		set = set.sort(function(a, b) { return a.name.localeCompare(b.name); });
+
+		return set;
 	};
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// EDIT
+
+	$scope.editKeyPress = function(evt) {
+		console.log(evt.which);
+
+		if (evt.which == 13) $scope.saveEdit();
+		else if (evt.which == 0) $scope.cancelEdit()
+	};
 
 	$scope.showEdit = function() { 
 		return !($scope.editing || $scope.deleting) 
@@ -262,4 +273,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 	$scope.exportAllWaypoints = function() {
 		$rootScope.$emit(Command.EXPORT_WAYPOINTS, model.waypoints);
 	};
+
+
+
 }
