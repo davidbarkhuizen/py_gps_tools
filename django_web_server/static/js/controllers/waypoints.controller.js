@@ -40,14 +40,9 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// EDIT
 
+	var kcEnter = 13, kcEsc = 27;
 	$scope.editKeyPress = function(evt) {
-
-		var kcEnter = 13, kcEsc = 27;
-
-		console.log(evt.key, evt.charCode, evt.keyCode);
-
 		if (evt.charCode == 0) {
-
 			if (evt.keyCode == kcEnter) $scope.saveEdit();
 			else if (evt.keyCode == kcEsc) $scope.cancelEdit();
 		}

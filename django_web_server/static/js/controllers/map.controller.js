@@ -43,9 +43,12 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.showMapSelectionArea = false;
 
+	$scope.isSelected = function() {
+		return (($scope.showMapSelectionArea) && (!$scope.selecting));
+	};
+
 	$scope.ShowMapContextMenu = function() {
-		var selected = (($scope.showMapSelectionArea == true) && ($scope.selecting == false));
-		return ((selected == true) || ($scope.canZoomOut() == true));
+		return (($scope.isSelected()) || ($scope.canZoomOut()));
 	};
 
 	$scope.cancelSelection = function() {
@@ -54,18 +57,19 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		$scope.selectionPoints.length = 0;
 		$scope.showMapSelectionArea = false;
 
-		//if ($scope.show)
-
 		$scope.makeMapOpaque();
 	};
 
 	// ZOOM IN/OUT ---------------------------------
 
+	$scope.canZoomIn = function()  {
+		return ($scope.selectionPoints.length == 2);
+	};
+
 	$scope.zoomIn = function() {
 
-		if ($scope.selectionPoints.length !== 2) {
-			throw '$scope.selectionPoints.length !== 2';
-		}
+		if (!$scope.canZoomIn())
+			return;
 
 		var latLon1 = $scope.mapLatLonFromCanvasXY($scope.selectionPoints[0].x, $scope.selectionPoints[0].y);
 		var latLon2 = $scope.mapLatLonFromCanvasXY($scope.selectionPoints[1].x, $scope.selectionPoints[1].y);

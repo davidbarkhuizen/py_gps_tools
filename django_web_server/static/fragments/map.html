@@ -17,9 +17,21 @@
 		class='map-context-menu'
 		ng-show='ShowMapContextMenu()'
 		>
-		<a href='#' ng-click='cancelSelection()'>cancel selection</a>
-		<a href='#' ng-click='zoomIn()'>zoom in</a>
-		<a href='#' ng-click='zoomOut()'>zoom out</a>
-		<a href='#' ng-click='areaSelectWayPoints()'>waypoints</a>
+		<a href='#'
+			ng-click='cancelSelection()'
+			ng-class='(isSelected() == true) ? "active" : "inactive" '
+			>cancel selection</a>
+		<a href='#'
+			ng-click='zoomIn()'
+			ng-class='(canZoomIn() == true) ? "active" : "inactive" '
+			>zoom in</a>
+		<a href='#'
+			ng-click='zoomOut()'
+			ng-class='(canZoomOut() == true) ? "active" : "inactive" '
+			>zoom out</a>
+		<a href='#'
+			ng-click='areaSelectWayPoints()'
+			ng-class='(isSelected() == true) ? "active" : "inactive" '
+			>selected waypoints</a>
 	</div>
 </div>
