@@ -5,22 +5,32 @@
 	<h3>
 		Tracks
 	</h3>
-	<div ng-repeat="track in tracks" style='color:{{track.colour}};'>
-		{{ track.name }}
-		<br/>
-		{{ (track.totalDistanceM / 1000.0).toFixed(2) }} km
-		<br/>
-		total ascent = {{ track.eleDiff.toFixed(0) }} m ({{ track.minMaxEle.min.toFixed(0) }} - {{ track.minMaxEle.max.toFixed(0) }})
-		<br/>
-		{{ track.durationString }}
-		<br/>
-		<a href='#' ng-click='unload(track.id);'>unload</a>
+	<div>
+		{{ tracks.length }} track(s) loaded
+	</div>
+	<div ng-show='tracks.length > 0'>
+		<div class='short-list'>
+			<div ng-repeat="track in tracks" style='color:{{track.colour}};'>
+				{{ track.name }}
+				<br/>
+				{{ (track.totalDistanceM / 1000.0).toFixed(2) }} km
+				<br/>
+				total ascent = {{ track.eleDiff.toFixed(0) }} m ({{ track.minMaxEle.min.toFixed(0) }} - {{ track.minMaxEle.max.toFixed(0) }})
+				<br/>
+				{{ track.durationString }}
+				<br/>
+				<a href='#' ng-click='unload(track.id);'>unload</a>
 
-		<div ng-show='tracks.length > 1'>
-			<br/>
+				<div ng-show='tracks.length > 1'>
+					<br/>
+				</div>
+			</div>
+		</div>
+		<div>
+			...
 		</div>
 	</div>
-	
+
 	<div ng-show='tracks.length == 0'>
 		<div>no tracks loaded</div>
 		<br/>

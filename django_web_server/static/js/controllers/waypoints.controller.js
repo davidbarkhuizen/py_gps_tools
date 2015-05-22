@@ -41,10 +41,16 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 	// EDIT
 
 	$scope.editKeyPress = function(evt) {
-		console.log(evt.which);
 
-		if (evt.which == 13) $scope.saveEdit();
-		else if (evt.which == 0) $scope.cancelEdit()
+		var kcEnter = 13, kcEsc = 27;
+
+		console.log(evt.key, evt.charCode, evt.keyCode);
+
+		if (evt.charCode == 0) {
+
+			if (evt.keyCode == kcEnter) $scope.saveEdit();
+			else if (evt.keyCode == kcEsc) $scope.cancelEdit();
+		}
 	};
 
 	$scope.showEdit = function() { 
