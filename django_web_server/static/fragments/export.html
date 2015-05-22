@@ -8,5 +8,21 @@
 		export
 	</h3>
 
+	<div>
+		map
+	</div>
+	<div ng-show='tracks.length > 0'>
+		<a href='#' ng-click='exportMap();'>export</a>
+	</div>
+
+	<br/>
+
+	<div>
+		waypoints
+	</div>
+	<div ng-show='model.waypoints.length > 0'>
+		<a href='#' ng-click='exportAllWaypoints();'>export all</a>
+	</div>
+
 	<a ng-show='false' id='GpxDownloadLink'>download</a>
 </div>

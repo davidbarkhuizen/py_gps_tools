@@ -1,5 +1,7 @@
 function GpxExportController($rootScope, $scope, $http) {
 
+	var model = $scope.$parent.model;
+
 	var dlBlobURL = null;
 	$scope.exportXML = function(xml, fileName) {
 
@@ -19,8 +21,22 @@ function GpxExportController($rootScope, $scope, $http) {
 		dlLink.click();
 	};
 
-	$rootScope.$on(Command.EXPORT_WAYPOINTS, function(evt, waypoints) {
+
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// WAYPOINTS
+
+	$scope.exportWaypointSet = function(waypoints, fileName) {
+		fileName = (fileName == undefined) ? 'geonodetek.waypoints.gpx' : fileName;
+		
 		var xml = waypointsToGpx(waypoints);
-		$scope.exportXML(xml, 'geonodetek.waypoints.gpx');
+		$scope.exportXML(xml, fileName);
+	};
+
+	$rootScope.$on(Command.EXPORT_WAYPOINTS, function(evt, data) {
+		$scope.exportWaypointSet(data.waypoints, data.fileName);
 	});
+
+	$scope.exportAllWaypoints = function() {
+		$scope.exportWaypointSet(model.waypoints, 'geonodetek.waypoints.');
+	};
 };

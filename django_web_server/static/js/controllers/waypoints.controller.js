@@ -271,10 +271,8 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// EXPORT
 
-	$scope.exportAllWaypoints = function() {
-		$rootScope.$emit(Command.EXPORT_WAYPOINTS, model.waypoints);
+	$scope.exportAllWaypoints = function(fileName) {
+		var data = { waypoints : model.waypoints, fileName : fileName };
+		$rootScope.$emit(Command.EXPORT_WAYPOINTS, data);
 	};
-
-
-
 }
