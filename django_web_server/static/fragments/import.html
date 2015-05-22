@@ -5,16 +5,24 @@
 	<div>
 
 		<h3>
-			import track or waypoints .GPX file to the database
+			import
 		</h3>
-		<input
-			id="ImportGpxFileInput"
-			type="file"
-			multiple
-			name="file"/>
+		<div>
+			track or waypoint .GPX file
+		</div>
+
 		<br/>
-		<button ng-click="importSelectedFiles()">
-			import selected file
-		</button>
+
+		<div>
+			<input
+				id="ImportGpxFileInput"
+				type="file"
+				multiple
+				name="file"/>
+			<br/>
+			<button ng-click="importSelectedFiles()">
+				import selected file
+			</button>
+		</div>
 	</div>
 </div>
