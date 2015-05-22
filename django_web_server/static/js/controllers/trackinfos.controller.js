@@ -79,4 +79,6 @@ function TrackInfosController($rootScope, $scope, $http, $timeout) {
 	$scope.addTrack = function(id) {
 		$rootScope.$emit(Command.LOAD_TRACK, id);
 	};
+
+	// ----------------------------------------------
 };

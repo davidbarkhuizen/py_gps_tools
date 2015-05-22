@@ -100,7 +100,7 @@ function ElevationPlotController($rootScope, $scope, $http, $timeout) {
 
 	$scope.redraw = function() {
 		$scope.refreshContext();
-		$scope.resizeCanvasFromGrandParentNodeDims(0.98);
+		$scope.resizeCanvasFromGrandParentNodeDims();
 		$scope.clearElePlot();		
 		$scope.drawElevationPlot();
 	};
