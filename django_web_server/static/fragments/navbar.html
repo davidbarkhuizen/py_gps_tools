@@ -21,7 +21,7 @@
 			<a href='#' 
 				ng-click="gotoView(Views.LOADED_TRACKS);"
 				ng-class="view == Views.LOADED_TRACKS ? 'nav-active' : 'nav-inactive'"
-				>loaded</a>
+				>track</a>
 			
 			<a href='#' 
 				ng-click="gotoView(Views.MAP);"
@@ -37,6 +37,10 @@
 				ng-click="gotoView(Views.WAYPOINTS);"
 				ng-class="view == Views.WAYPOINTS ? 'nav-active' : 'nav-inactive'"
 				>waypoints</a>
+			<a href='#' 
+				ng-click="gotoView(Views.EXPORT);"
+				ng-class="view == Views.EXPORT ? 'nav-active' : 'nav-inactive'"
+				>export</a>
 		</div>
 
 		<div style='float:right;'>

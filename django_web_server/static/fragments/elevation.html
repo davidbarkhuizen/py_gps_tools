@@ -4,7 +4,18 @@
 	ng-controller='ElevationPlotController'
 	>
 
-	<canvas id="ElevationPlotCanvas"
-		class="elevation-canvas">
+	<div ng-show='(tracks.length == 0)'>
+		<br/>
+		<span>no tracks loaded</span>
+		<br/>
+		<br/>
+		<a href="#" ng-click='gotoView(Views.TRACK_DATABASE);'>goto database</a>
+	</div>
+
+	<canvas
+		id="ElevationPlotCanvas"
+		class="elevation-canvas"
+		ng-show='(tracks.length > 0)'
+		>
 	</canvas>					
 </div>

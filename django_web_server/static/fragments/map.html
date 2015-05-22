@@ -3,8 +3,18 @@
 	ng-controller='MapController'
 	>
 
+	<div ng-show='(tracks.length == 0)'>
+		<br/>
+		<span>no tracks loaded</span>
+		<br/>
+		<br/>
+		<a href="#" ng-click='gotoView(Views.TRACK_DATABASE);'>goto database</a>
+	</div>
+
 	<canvas id="MapCanvas"
-		class="map-canvas">
+		class="map-canvas"
+		ng-show='tracks.length > 0'
+		>
 	</canvas>
 
 	<div id='MapSelectionArea' 

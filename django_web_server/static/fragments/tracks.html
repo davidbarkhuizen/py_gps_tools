@@ -3,7 +3,7 @@
 	ng-controller='TracksController'
 	>
 	<h3>
-		Tracks
+		tracks
 	</h3>
 	<div>
 		{{ tracks.length }} track(s) loaded
@@ -31,9 +31,8 @@
 		</div>
 	</div>
 
-	<div ng-show='tracks.length == 0'>
-		<div>no tracks loaded</div>
+	<div>
 		<br/>
-		<a href="#" ng-click='gotoView(Views.TRACK_DATABASE);'>goto track database</a>
+		<a href="#" ng-click='gotoView(Views.TRACK_DATABASE);'>goto database</a>
 	</div>
 </div>

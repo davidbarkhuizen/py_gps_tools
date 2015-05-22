@@ -7,6 +7,11 @@ function TrackInfosController($rootScope, $scope, $http, $timeout) {
 	$scope.filteredTrackInfos = [];
 	$scope.selectedTrackInfo = null;
 
+	$scope.showAll = function() {
+		$scope.searchToken = '';
+		$scope.filter();	
+	};
+
 	$scope.trackIsLoaded = function(id) {
 
 		var isLoaded = (tracks.countWhere(function(track) { return (track.id == id); }) > 0); 
