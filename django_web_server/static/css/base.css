@@ -158,7 +158,9 @@ a
 /* MAP SELECTION AREA */
 
 .map-selection-area {    
-    border-style:dashed;
-    border-width:5px;
-    border-color:black;
+
+    -webkit-box-shadow:inset 0px 0px 0px 5px black;
+    -moz-box-shadow:inset 0px 0px 0px 5px black;
+    box-shadow:inset 0px 0px 0px 5px black;
 }
+

@@ -68,10 +68,6 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	//
 	$scope.elevationPlotCanvasId = 'ElevationPlotCanvas';
 	$scope.fileInputId = 'ImportGpxFileInput';
-	$scope.mapCanvasId = 'MapCanvas';
-	
-	$scope.mapSelectionAreaDivId = 'MapSelectionArea';
-	$scope.mapContextMenuDivId = 'MapContextMenu';
 
 	$scope.headerText = 'GeoNodeTek';
 	$scope.infoText = '';	

@@ -55,9 +55,9 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	// CONTEXT MENU
 
 	$scope.mapContextMenuElement = document
-		.getElementById($scope.$parent.mapContextMenuDivId);
+		.getElementById($scope.mapContextMenuDivId);
 
-	$scope.ShowMapContextMenu = function() {
+	$scope.showMapContextMenu = function() {
 		return (($scope.isSelected()) || ($scope.canZoomOut()));
 	};
 
@@ -485,7 +485,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	    var theta = magneticDeclinationDegrees.toRad();
 
-	    var dy = $scope.height / 2; // r * Math.sin(Math.PI / 2 - theta);
+	    var dy = range.height / 2; // r * Math.sin(Math.PI / 2 - theta);
 	    var r = dy * Math.sin(Math.PI / 2 - theta);
 
 	    var dx = r * Math.cos(Math.PI / 2 - theta);
@@ -604,8 +604,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.mapLatLonFromCanvasXY = function(x, y) {
 
-		var lon = ((x - $scope.vpHalfWidth) / $scope.scale) + $scope.midLon;
-		var lat = (($scope.vpHalfHeight - y) / $scope.scale) + $scope.midLat;
+		var lon = ((x - $scope.range.halfWidth) / $scope.scale) + $scope.domain.midLon;
+		var lat = (($scope.range.halfHeight - y) / $scope.scale) + $scope.domain.midLat;
 
 		return { 'lon' : lon, 'lat' : lat };
 	};
@@ -613,8 +613,6 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	$scope.genLocationText = function(lat, lon) {
 		return 'lat ' + lat.toFixed(6).toString() + ', lon ' + lon.toFixed(6).toString();
 	};
-
-	$scope.showMapContextMenu = false;
 
 	$scope.openContextMenu = function() {
 
@@ -710,16 +708,15 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	$scope.onMouseMove = function(mousePos) {
 
 		if (
-			((mousePos.x < 0) || (mousePos.x > $scope.width))
+			((mousePos.x < 0) || (mousePos.x > $scope.range.width))
 			||
-			((mousePos.y < 0) || (mousePos.y > $scope.height))
+			((mousePos.y < 0) || (mousePos.y > $scope.range.height))
 			)
 			return;
 
 		var latLon = $scope.mapLatLonFromCanvasXY(mousePos.x, mousePos.y);
 		
 		var locationText = $scope.genLocationText(latLon.lat, latLon.lon);
-		$scope.$emit(Event.INFO_TEXT_UPDATE, locationText);
 
 		if ($scope.selecting == true) {
 
