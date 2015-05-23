@@ -1,8 +1,7 @@
 function ElevationPlotController($rootScope, $scope, $http, $timeout) {
 
-	$scope.canvasId = $scope.$parent.elevationPlotCanvasId;
-	$scope.canvasElement = document
-		.getElementById($scope.canvasId);
+	$scope.canvasId = 'ElevationPlotCanvas';
+	$scope.canvasElement = document.getElementById($scope.canvasId);
 
 	$scope.context = $scope.canvasElement.getContext("2d");
 
@@ -13,20 +12,14 @@ function ElevationPlotController($rootScope, $scope, $http, $timeout) {
 			: $scope.context;					
 	};
 
-	$scope.resizeCanvasFromGrandParentNodeDims = function(factor) {
+	$scope.sizeCanvas = function() {
 
-		var canvasGrandParent = $scope.canvasElement
-			.parentNode
-			.parentNode
-			.parentNode; 
-
-		$scope.windowWidth = canvasGrandParent.clientWidth;
-		$scope.windowHeight = canvasGrandParent.clientHeight - 10;
+		var dims = $scope.$parent.getWindowDimensions();
 
 		// calc canvas dims
 		//
-		$scope.width = $scope.windowWidth * factor;
-		$scope.height = $scope.windowHeight * factor;
+		$scope.width = dims.width;
+		$scope.height = dims.height;
 
 		// set canvas dims
 		//
@@ -100,7 +93,7 @@ function ElevationPlotController($rootScope, $scope, $http, $timeout) {
 
 	$scope.redraw = function() {
 		$scope.refreshContext();
-		$scope.resizeCanvasFromGrandParentNodeDims();
+		$scope.sizeCanvas();
 		$scope.clearElePlot();		
 		$scope.drawElevationPlot();
 	};

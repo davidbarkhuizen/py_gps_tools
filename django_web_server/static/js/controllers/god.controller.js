@@ -66,7 +66,6 @@ function GodController($rootScope, $scope, $http, $timeout) {
 
 	// Controller Element Doc Ids
 	//
-	$scope.elevationPlotCanvasId = 'ElevationPlotCanvas';
 	$scope.fileInputId = 'ImportGpxFileInput';
 
 	$scope.headerText = 'GeoNodeTek';
@@ -152,4 +151,17 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	$scope.$on(Event.AJAX_ERROR, function(evt, error) {
 		$scope.globalDebug(error);
 	});
+
+	$scope.getWindowDimensions = function() {
+
+		var navbar = document.getElementById('navbar');
+		var fudge = navbar.parentNode.offsetHeight + 10;
+
+		var dims = {
+			height : window.innerHeight - fudge, 
+			width : document.body.offsetWidth
+		};
+
+		return dims;
+	};
 };

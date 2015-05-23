@@ -34,23 +34,6 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	
 	$scope.latLonViewPorts = [];
 
-	// selection area
-
-	// -----------------------------------------------------------
-
-	$scope.getWindowDims = function() {
-
-		var navbar = document.getElementById('navbar');
-		var fudge = navbar.parentNode.offsetHeight + 10;
-
-		var dims = {
-			height : window.innerHeight - fudge, 
-			width : document.body.offsetWidth
-		};
-
-		return dims;
-	};
-
 	// -----------------------------------------------------------
 	// CONTEXT MENU
 
@@ -761,7 +744,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	// handlers for angular.js events
 
 	$scope.drawMap = function() {
-		var dims = $scope.getWindowDims();	
+		// TODO - fix ref to parent
+		var dims = $scope.$parent.getWindowDimensions();	
 		$scope.draw($scope.context, dims.width, dims.height);  
 	};
 
