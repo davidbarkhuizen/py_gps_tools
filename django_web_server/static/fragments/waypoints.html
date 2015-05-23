@@ -10,7 +10,7 @@
 
 	<div ng-show='model.waypoints.length > 0'>
 		<div>
-			<div ng-show='!editing'>
+			<div ng-show='!editing' class='header'>
 				{{ model.selectedPoint.name }}
 			</div>
 			<div ng-show='editing'>
@@ -19,7 +19,7 @@
 					placeholder='{{ model.selectedPoint.name }}' 
 					ng-model='editCopy.name' 
 					size='32'
-					class='dashed-line-text-input'
+					class='dashed-line-text-input header'
 					ng-keypress='editKeyPress($event)'
 					/>
 			</div>
@@ -35,17 +35,9 @@
 			<a href='#' style='color:green;' ng-show='showSaveEdit()' ng-click='saveEdit()'>save edit</a>
 			<a href='#' style='color:green;' ng-show='showCancelEdit()' ng-click='cancelEdit()'>cancel edit</a>
 			
-			<a href='#' style='color:red;' ng-show='showDelete()' ng-click='confirmDeletion(model.selectedPoint.id)'>delete</a>
-		</div>
-		<div ng-show='showDeleteConfirmationPrompt()'>
-			<br/>
-			<div style='color:red;'>
-				are you sure that you want to delete waypoint '{{ model.selectedPoint.name }}' ?
-			</div>
-			<div>
-				<a href="#" ng-click='delete(model.selectedPoint.id)'>yes</a>
-				<a href="#" ng-click='userRequestedToDeleteId = null'>no</a>
-			</div>
+			<a href='#' style='color:red;' ng-show='showDelete()' ng-click='getDeletionConfirmation(model.selectedPoint.id)'>delete</a>
+			<a href="#" ng-show='showDeleteConfirmationPrompt()' ng-click='delete(model.selectedPoint.id)' style='color:red;'>confirm deletion</a>
+			<a href="#" ng-show='showDeleteConfirmationPrompt()' ng-click='cancelDelete()'>cancel</a>
 		</div>
 	</div>
 

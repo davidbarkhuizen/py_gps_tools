@@ -2,11 +2,6 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 	var model = $scope.$parent.model; 
 
-	$scope.editing = false;
-	$scope.editCopy = null;
-
-	$scope.deleting = false;
-
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 	$scope.timeString = function(dateVal) {
@@ -39,6 +34,9 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// EDIT
+
+	$scope.editing = false;
+	$scope.editCopy = null;
 
 	var kcEnter = 13, kcEsc = 27;
 	$scope.editKeyPress = function(evt) {
@@ -107,6 +105,62 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 	};
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// DELETE
+
+	$scope.deleting = false;
+
+	$scope.showDelete = function() { return !($scope.editing || $scope.deleting) };
+
+	$scope.cancelDelete = function() {
+		$scope.deleting = false;
+	};
+
+	$scope.getDeletionConfirmation = function(id) {
+
+		model.waypoints.forEach(function(pt) {
+			if (pt.id == id) {
+				model.selectedPoint = pt;
+				$scope.deleting = true;
+			}
+		});		
+	};
+	$scope.showDeleteConfirmationPrompt = function() {
+		return (model.selectedPoint) && ($scope.deleting == true);
+	};
+	$scope.deleteLocal = function(id) {
+
+		model.filteredWaypoints
+			.removeWhere(function(x){ return x.id == id; });
+
+		model.waypoints
+			.removeWhere(function(x){ return x.id == id; });
+
+		if ((model.selectedPoint !== undefined) && (model.selectedPoint.id == id)) {
+			$scope.selectFirstWayPoint();
+		}
+
+		$scope.deleting = false;
+	};
+
+	$scope.delete = function(id) {
+
+		var successFn = function() { 
+			$scope.deleteLocal(id);
+			$rootScope.$emit(Event.WAYPOINT_DELETED, id);
+		};
+
+		var failureFn = function(message) { 
+			console.log(message) 
+		};
+
+		var errorFn = function(error){
+			console.log(error);
+		};
+
+		httpDELETE($http, 'waypoint', id, successFn, failureFn, errorFn);
+	};
+
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// SELECT
 
 	$scope.selectPointById = function(id) {
@@ -130,54 +184,6 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 		model.selectedPoint = (model.waypoints.length > 0)
 			? model.waypoints[0]
 			: undefined;
-	};
-
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	// DELETE
-
-	$scope.showDelete = function() { return !($scope.editing || $scope.deleting) };
-
-	$scope.clearDeletionRequest = function() {
-		$scope.userRequestedToDeleteId = null;
-	};
-
-	$scope.userRequestedToDeleteId = null;
-	$scope.confirmDeletion = function(id) {
-		$scope.userRequestedToDeleteId = id;
-	};
-	$scope.showDeleteConfirmationPrompt = function() {
-		return (model.selectedPoint) && ($scope.userRequestedToDeleteId == model.selectedPoint.id);
-	};
-
-	$scope.deleteLocal = function(id) {
-
-		model.filteredWaypoints
-			.removeWhere(function(x){ return x.id == id; });
-
-		model.waypoints
-			.removeWhere(function(x){ return x.id == id; });
-
-		if ((model.selectedPoint !== undefined) && (model.selectedPoint.id == id)) {
-			$scope.selectFirstWayPoint();
-		}
-	};
-
-	$scope.delete = function(id) {
-
-		var successFn = function() { 
-			$scope.deleteLocal(id);
-			$rootScope.$emit(Event.WAYPOINT_DELETED, id);
-		};
-
-		var failureFn = function(message) { 
-			console.log(message) 
-		};
-
-		var errorFn = function(error){
-			console.log(error);
-		};
-
-		httpDELETE($http, 'waypoint', id, successFn, failureFn, errorFn);
 	};
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-

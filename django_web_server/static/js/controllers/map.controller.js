@@ -27,6 +27,10 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	$scope.selectionArea = document.getElementById($scope.selectionAreaDivId);
 
 	$scope.mapContextMenuDivId = 'MapContextMenu';
+	$scope.mapContextMenuElement = document.getElementById($scope.mapContextMenuDivId);
+
+	$scope.optionsMenuId = 'MapOptionsMenu';
+	$scope.optionsMenu = document.getElementById($scope.optionsMenuId);
 
 	$scope.exportCanvasId = 'ExportMapCanvas';
 	$scope.exportCanvas = document.getElementById($scope.exportCanvasId);
@@ -36,9 +40,6 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	// -----------------------------------------------------------
 	// CONTEXT MENU
-
-	$scope.mapContextMenuElement = document
-		.getElementById($scope.mapContextMenuDivId);
 
 	$scope.showMapContextMenu = function() {
 		return (($scope.isSelected()) || ($scope.canZoomOut()));
@@ -597,6 +598,28 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		return 'lat ' + lat.toFixed(6).toString() + ', lon ' + lon.toFixed(6).toString();
 	};
 
+	// ----------------------------------------------------------
+	// OPTIONS MENU
+
+	$scope.showOptionsMenu = false;
+	$scope.openOptionsMenu = function() {
+
+		var width = 100;
+
+		var style  = '';
+		style = style + 'top:' + (10) + 'px;';
+		style = style + 'left:' + ($scope.range.width - 10 - width) + 'px;'
+		style = style + 'width:' + (width) + 'px;';
+		
+		$scope.optionsMenu.setAttribute('style', style);
+		$scope.optionsMenu.className = $scope.optionsMenu.className.replace('ng-hide', ''); 
+	
+		$scope.showOptionsMenu = true;
+	};
+
+	// ----------------------------------------------------------
+	// CONTEXT MENU
+
 	$scope.openContextMenu = function() {
 
 		var pt1 = $scope.selectionPoints[0];
@@ -724,7 +747,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 			$scope.onLeftClickDown(mousePos);
 		}
 		else if (evt.buttons == 2) {
-			$scope.cancelSelection();
+			$scope.openOptionsMenu();
 		}
 	}, false);
 

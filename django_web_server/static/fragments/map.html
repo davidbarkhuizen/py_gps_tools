@@ -41,13 +41,21 @@
 			>zoom out</a>
 		<a href='#'
 			ng-click='areaSelectWayPoints()'
-			ng-class='(isSelected() == true) ? "active" : "inactive" '
+			ng-class='showMapSelectionArea ? "active" : "inactive" '
 			>selected waypoints</a>
+	</div>
+
+	<div id='MapOptionsMenu' 
+		class='map-options-menu'
+		ng-show='showMapOptionsMenu'
+		>
+		<a>one two</a>
+		<br/>
+		<a>one</a>
 	</div>
 
 	<canvas id="ExportMapCanvas"
 		ng-show='false'
 		>
 	</canvas>
-
 </div>

@@ -6,8 +6,12 @@ html, body {
     margin: 0;
 
 	font-family: courier !important;
-    font-size: 20px !important;
+    font-size: 20px;
     font-weight: bold !important;
+}
+
+.header {
+    font-size: 23.4px !important;
 }
 
 .wrapper {
@@ -138,6 +142,7 @@ a
 }
 
 /* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+/* Z-INDEX & POSITIONING */
 
 .map-canvas {
     z-index: 3;
@@ -154,6 +159,11 @@ a
     position: absolute;
 }
 
+.map-options-menu {
+    z-index: 4;
+    position: absolute;
+}
+
 /* -------------------------------------------------------*/
 /* MAP SELECTION AREA */
 
@@ -164,3 +174,6 @@ a
     box-shadow:inset 0px 0px 0px 5px black;
 }
 
+.map-options-menu {
+    text-align:right;
+}
