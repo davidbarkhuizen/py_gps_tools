@@ -384,42 +384,40 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	    }    
 	};
 
-	$scope.drawWayPoint = function(cx, cy, size, color, name, font, fontSize) {
-
-		console.log('drawWayPoint');
+	$scope.drawWayPoint = function(context, cx, cy, size, color, name, font, fontSize) {
 
 		if (color) {
-			$scope.context.fillStyle = color;
-			$scope.context.strokeStyle = color;
+			context.fillStyle = color;
+			context.strokeStyle = color;
 		}
 
 		// empty square
 		//
 		z = Math.floor(size / 2);		
-    	$scope.context.beginPath();
-		$scope.context.strokeRect(cx - z, cy - z, 2*z, 2*z);
-		$scope.context.stroke();		
+    	context.beginPath();
+		context.strokeRect(cx - z, cy - z, 2*z, 2*z);
+		context.stroke();		
 
 		// with center dot
 		//
-    	$scope.context.beginPath();
-		$scope.context.fillRect(cx, cy, 1, 1);
-		$scope.context.stroke();		
+    	context.beginPath();
+		context.fillRect(cx, cy, 1, 1);
+		context.stroke();		
 
 		/*
 		// empty circle
 		//
-		$scope.context.beginPath();
-		$scope.context.arc(pt.x, pt.y,5,0,Math.PI*2,true);
-		$scope.context.stroke();
+		context.beginPath();
+		context.arc(pt.x, pt.y,5,0,Math.PI*2,true);
+		context.stroke();
 		*/
 
 		// text
 		//
 		if (name !== undefined) {
-			$scope.context.font = fontSize + 'px ' + font;
-			$scope.context.textBaseline = 'middle';
-			$scope.context.fillText(name, cx + size, cy);
+			context.font = fontSize + 'px ' + font;
+			context.textBaseline = 'middle';
+			context.fillText(name, cx + size, cy);
 		}	
 	}
 
@@ -454,9 +452,9 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		}
 
 		if (corner == Corner.BOTTOM_RIGHT) {	
-			$scope.context.textAlign = 'right';
-			$scope.context.textBaseline = 'bottom';
-			$scope.context.fillText(text, range.width - fontSize, range.height - fontSize);
+			context.textAlign = 'right';
+			context.textBaseline = 'bottom';
+			context.fillText(text, range.width - fontSize, range.height - fontSize);
 		}
 	};
 
@@ -466,7 +464,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		var cy = range.height / 2;
 
 		context.lineWidth = 1;		
-		context.strokeStyle = Colour.RED;//Colour.LIGHTGREY;
+		context.strokeStyle = Colour.LIGHTGREY;
 
 		// true north line
 
@@ -474,18 +472,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 		context.moveTo(cx, 0);			
 	   	context.lineTo(cx, range.height);
-
-	   	console.log(cx, range.height);
-
 	    context.stroke();
-
-		context.beginPath();
-		context.moveTo(0, 0);			
-	   	context.lineTo(40, 40);
-	    context.lineTo(cx, cy);
-	    context.stroke();	    
-
-	    return;
 
 	    // magnetic north line
 
@@ -553,7 +540,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 				name = s;
 			}
 
-		    $scope.drawWayPoint(x, y, size, color, name, font, fontSize);
+		    $scope.drawWayPoint(context, x, y, size, color, name, font, fontSize);
 
 		    // TODO should draw marker large enough to contain all viewpoint   	
 		}
@@ -587,7 +574,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		var lineThickness = 2;
 		$scope.drawAllTracksEdgesColoured(context, lineThickness);
 		
-		$scope.drawWaypoints(context, 10, Colour.BLACK, 'helvetica', 15);
+		$scope.drawWaypoints(context, $scope.canvasWaypoints, 10, Colour.BLACK, 'helvetica', 15);
 
 		// title
 		//
@@ -629,13 +616,11 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		var left = 20;
 		var width = 100;
 
-		var height = 20;//Math.abs(pt1.y - pt2.y);
-		var top = $scope.height - (height + 10); //Math.min(pt1.y, pt2.y);
+		var height = 20;
+		var top = $scope.range.height - (height + 10);
 		
 		var style  = 'left:' + left + 'px;';
 		style = style + 'top:' + top + 'px;';
-		//style = style + 'width:' + width + 'px;';
-		//style = style + 'height:' + height + 'px;';
 
 		$scope.mapContextMenuElement.setAttribute('style', style);
 		$scope.mapContextMenuElement.className = $scope.mapContextMenuElement.className.replace('ng-hide', ''); 
@@ -643,7 +628,10 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.resizeCanvasSelectionArea = function() {
 
-		if ($scope.selectionPoints.length !== 2) return;
+		if ($scope.selectionPoints.length !== 2)
+			return;
+		if (($scope.selectionPoints[0] == undefined) || ($scope.selectionPoints[1] == undefined))
+			return;
 
 		var pt1 = $scope.selectionPoints[0];
 		var pt2 = $scope.selectionPoints[1];
