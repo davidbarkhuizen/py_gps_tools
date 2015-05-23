@@ -19,9 +19,19 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	// ---------------------------------------------
 	// ELEMENTS
 
-	$scope.canvas = document.getElementById($scope.$parent.mapCanvasId);
+	$scope.canvasId = 'MapCanvas';
+	$scope.canvas = document.getElementById($scope.canvasId);
 	$scope.context = $scope.canvas.getContext("2d");
 
+	$scope.selectionAreaDivId = 'MapSelectionArea';
+	$scope.selectionArea = document.getElementById($scope.selectionAreaDivId);
+
+	$scope.mapContextMenuDivId = 'MapContextMenu';
+
+	$scope.exportCanvasId = 'ExportMapCanvas';
+	$scope.exportCanvas = document.getElementById($scope.exportCanvasId);
+	$scope.exportContext = $scope.exportCanvas.getContext("2d");
+	
 	$scope.latLonViewPorts = [];
 
 	// selection area
@@ -61,9 +71,6 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	$scope.selectionPoints = [];
 
 	$scope.showMapSelectionArea = false;
-
-	$scope.selectionArea = document
-		.getElementById($scope.$parent.mapSelectionAreaDivId);
 
 	$scope.isSelected = function() {
 		return (($scope.showMapSelectionArea) && (!$scope.selecting));
@@ -591,6 +598,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		} else {
 			$scope.domain = domain;
 			$scope.range = range;
+			$scope.scale = scale;
 		}
 	};
 
@@ -820,4 +828,20 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 		$rootScope.$emit(Command.GOTO_VIEW, $scope.$parent.Views.WAYPOINTS);
 	};
+
+	// ------------------------------------------
+	// EXPORT
+
+	$rootScope.$on(Command.EXPORT_MAP, function(evt) {
+
+		// A-series paper proportions
+		var width = 1189, height = 841;
+		
+		$scope.draw($scope.exportContext, width, height, true);
+		
+		var fileName = tracks[0].name.replace(' ', '') + '.png';
+		var data = { canvas : $scope.exportCanvas, fileName : fileName };	
+		
+		$rootScope.$emit(Command.EXPORT_CANVAS, data);
+	});
 }

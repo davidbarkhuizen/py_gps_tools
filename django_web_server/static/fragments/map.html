@@ -13,7 +13,6 @@
 
 	<canvas id="MapCanvas"
 		class="map-canvas"
-		download="geonodetek.map.png"
 		ng-show='tracks.length > 0'
 		>
 	</canvas>
@@ -45,4 +44,10 @@
 			ng-class='(isSelected() == true) ? "active" : "inactive" '
 			>selected waypoints</a>
 	</div>
+
+	<canvas id="ExportMapCanvas"
+		ng-show='false'
+		>
+	</canvas>
+
 </div>

@@ -3,13 +3,11 @@ function GpxExportController($rootScope, $scope, $http) {
 	var model = $scope.$parent.model;
 	var tracks = $scope.$parent.tracks;
 
-	$scope.exportCanvas = function(id, fileName) {
-
-		var canvasElement = document.getElementById(id);
+	$scope.exportCanvas = function(canvas, fileName) {
 
 		var MIME_TYPE = "image/png";
 
-		var imgURL = canvasElement.toDataURL(MIME_TYPE);
+		var imgURL = canvas.toDataURL(MIME_TYPE);
 
 		var dlLink = document.createElement('a');
 		dlLink.download = fileName;
@@ -61,7 +59,10 @@ function GpxExportController($rootScope, $scope, $http) {
 	// MAP
 
 	$scope.exportMap = function() {
-		var fileName = tracks[0].name.replace(' ', '') + '.png';
-		$scope.exportCanvas($scope.$parent.mapCanvasId, fileName);
+		$rootScope.$emit(Command.EXPORT_MAP);
 	};
+
+	$rootScope.$on(Command.EXPORT_CANVAS, function(evt, data) {
+		$scope.exportCanvas(data.canvas, data.fileName);			
+	});		
 };

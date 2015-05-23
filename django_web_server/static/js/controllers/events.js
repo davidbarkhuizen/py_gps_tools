@@ -22,6 +22,9 @@ var Command = Object.freeze({
 	UNLOAD_TRACK : guid(),
 
 	EXPORT_WAYPOINTS : guid(),
+	EXPORT_MAP : guid(),
+
+	EXPORT_CANVAS : guid(),
 
 	GOTO_VIEW : guid(),
 });
