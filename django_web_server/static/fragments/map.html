@@ -48,12 +48,40 @@
 		class='map-options-menu'
 		ng-show='showOptionsMenu'
 		>
-		<a>one two</a>
-		<br/>
-		<a>one</a>
-		<br/>
-		<input type='checkbox'>&nbsp;dog</input>
+		<div>
+			options
+		</div>
 
+		<br/>
+		<div>
+			plot type
+
+			<div ng-repeat='plotType in PlotTypes'>
+				<input
+					ng-model="mapOptions.plotType"
+					value="{{ plotType }}"
+					type="radio"
+					ng-change='onOptionChange();'
+					>{{ plotType }}
+				</input>
+			</div>
+		</div>
+
+		<br/>
+
+		<div>
+			title position
+
+			<div ng-repeat='corner in Corners'>
+				<input
+					ng-model="mapOptions.titleCorner"
+					value="{{ corner }}"
+					type="radio"
+					ng-change='onOptionChange();'
+					>{{ corner }}
+				</input>
+			</div>
+		</div>
 	</div>
 	<canvas id="ExportMapCanvas"
 		ng-show='false'

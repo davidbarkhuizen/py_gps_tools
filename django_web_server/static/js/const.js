@@ -3,7 +3,7 @@ function toRgbString(r, g, b) {
 };
 
 var Colour = Object.freeze({
-	BLACK: toRgbString(0, 0, 0),
+	BLACK : toRgbString(0, 0, 0),
 	PURPLE : toRgbString(180, 0, 180),
 	RED : toRgbString(255, 0, 0),
 	GREEN : toRgbString(0, 255, 0),
@@ -17,9 +17,13 @@ var Colour = Object.freeze({
 	VERYDARKGREY : toRgbString(50, 50, 50),
 });
 
+// CORNER
+
 var Corner = Object.freeze({
-	TOP_LEFT : 0,
-	TOP_RIGHT : 1,
-	BOTTOM_RIGHT : 2,
-	BOTTOM_LEFT : 3
+	
+	CENTRE : 'centre',
+	TOP_LEFT : 'top left',
+	TOP_RIGHT : 'top right',
+	BOTTOM_RIGHT : 'bottom right',
+	BOTTOM_LEFT : 'bottom left'
 });

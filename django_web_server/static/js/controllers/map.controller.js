@@ -1,21 +1,32 @@
 function MapController($rootScope, $scope, $http, $timeout) {
 
-	var tracks = $scope.$parent.tracks;
-
-	var waypoints = $scope.$parent.model.waypoints; 
-	var filteredWaypoints = $scope.$parent.model.filteredWaypoints; 
-
-	$scope.canvasWaypoints = [];
-
 	// ---------------------------------------------
-	// DEFAULTS
+	// OPTIONS
+
+	$scope.PlotTypes = Object.freeze({
+		ELEVATION : 'elevation',
+		EDGES : 'solid',
+		POINTS : 'points'
+	});
+
+	$scope.Corners = Corner;
+
+	$scope.getDefaultMapOptions = function() {
+		return {
+			titleCorner: Corner.TOP_LEFT,
+			plotType : $scope.PlotTypes.SOLID 
+		};
+	};
+	$scope.mapOptions = $scope.getDefaultMapOptions();
 
 	$scope.defaultFont = 'helvetica';
 	$scope.defaultFontSizePx = 20;
 	$scope.defaultFontColour = Colour.BLACK;
 
-	$scope.defaultTitleCorner = Corner.TOP_LEFT;
-	
+	$scope.onOptionChange = function() {
+		$scope.drawMap();
+	};
+
 	// ---------------------------------------------
 	// ELEMENTS
 
@@ -35,7 +46,14 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	$scope.exportCanvasId = 'ExportMapCanvas';
 	$scope.exportCanvas = document.getElementById($scope.exportCanvasId);
 	$scope.exportContext = $scope.exportCanvas.getContext("2d");
-	
+
+	// -----------------------------------------------------------
+
+	var tracks = $scope.$parent.tracks;
+	var waypoints = $scope.$parent.model.waypoints; 
+	var filteredWaypoints = $scope.$parent.model.filteredWaypoints; 
+
+	$scope.canvasWaypoints = [];
 	$scope.latLonViewPorts = [];
 
 	// -----------------------------------------------------------
@@ -51,7 +69,6 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	// -----------------------------------------------------------
 	// SELECTION
 
-	// 
 	$scope.canvasSelections = [];
 
 	$scope.selecting = false;
@@ -132,14 +149,240 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		}
 	};
 
-	// ----------------------------------------------------------
-	// INITIAL 
+	$scope.mapLatLonFromCanvasXY = function(x, y) {
 
-	$scope.sizeCanvas = function(context, width, height) {
+		var lon = ((x - $scope.range.halfWidth) / $scope.scale) + $scope.domain.midLon;
+		var lat = (($scope.range.halfHeight - y) / $scope.scale) + $scope.domain.midLat;
 
-		context.canvas.width  = width;
-		context.canvas.height = height;	
+		return { 'lon' : lon, 'lat' : lat };
 	};
+
+	$scope.genLocationText = function(lat, lon) {
+		return 'lat ' + lat.toFixed(6).toString() + ', lon ' + lon.toFixed(6).toString();
+	};
+
+	// ----------------------------------------------------------
+	// OPTIONS MENU
+
+	$scope.showOptionsMenu = false;
+	$scope.openOptionsMenu = function() {
+
+		var width = 300;
+
+		var style  = '';
+		style = style + 'top:' + (10) + 'px;';
+		style = style + 'left:' + ($scope.range.width - 10 - width) + 'px;'
+		style = style + 'width:' + (width) + 'px;';
+		
+		$scope.optionsMenu.setAttribute('style', style);
+	
+		ngShow($scope.optionsMenu);
+
+		$scope.showOptionsMenu = true;
+	};
+
+	$scope.toggleOptionsMenu = function() {
+		if ($scope.showOptionsMenu == true) {
+			$scope.showOptionsMenu = false;
+			ngHide($scope.optionsMenu); 
+		}
+		else {
+			$scope.openOptionsMenu();
+		}
+	};
+
+	// ----------------------------------------------------------
+	// CONTEXT MENU
+
+	$scope.openContextMenu = function() {
+
+		var pt1 = $scope.selectionPoints[0];
+		var pt2 = $scope.selectionPoints[1];
+
+		var left = 20;
+		var width = 100;
+
+		var height = 20;
+		var top = $scope.range.height - (height + 10);
+		
+		var style  = 'left:' + left + 'px;';
+		style = style + 'top:' + top + 'px;';
+
+		$scope.contextMenu.setAttribute('style', style);
+		ngShow($scope.contextMenu); 
+	};
+
+	$scope.resizeCanvasSelectionArea = function() {
+
+		if ($scope.selectionPoints.length !== 2)
+			return;
+		if (($scope.selectionPoints[0] == undefined) || ($scope.selectionPoints[1] == undefined))
+			return;
+
+		var pt1 = $scope.selectionPoints[0];
+		var pt2 = $scope.selectionPoints[1];
+
+		var left = Math.min(pt1.x, pt2.x);
+		var top = Math.min(pt1.y, pt2.y);
+		var width = Math.abs(pt1.x - pt2.x);
+		var height = Math.abs(pt1.y - pt2.y);
+		
+		var style  = 'left:' + left + 'px;';
+		style = style + 'top:' + top + 'px;';
+		style = style + 'width:' + width + 'px;';
+		style = style + 'height:' + height + 'px;';
+
+		$scope.selectionArea.setAttribute('style', style);
+	};
+
+	$scope.getMousePos = function(evt) {
+		var rect = $scope.canvas.getBoundingClientRect();
+		return {
+			x: evt.clientX - rect.left,
+			y: evt.clientY - rect.top
+		};
+	};
+
+	// -----------------------------------------------------------
+	// document event handlers
+
+	$scope.onLeftClickDown = function(mouseCanvasPos) {		
+
+		$scope.selectionPoints.length = 0;
+		$scope.selectionPoints.push(mouseCanvasPos);
+		$scope.selectionPoints.push(mouseCanvasPos);
+
+		$scope.resizeCanvasSelectionArea();
+
+		$scope.selecting = true;
+
+		$scope.showMapSelectionArea = true;
+		$scope.$apply();
+
+		$scope.$emit(Event.MAP_SELECTION_BEGUN);
+	};
+
+	$scope.onLeftClickUp = function(mousePos) {
+
+		$scope.selectionPoints[1] = mousePos;
+		$scope.resizeCanvasSelectionArea();
+
+		$scope.selecting = false;
+
+		$scope.openContextMenu();
+	};	
+
+	$scope.onMouseMove = function(mousePos) {
+
+		if (
+			((mousePos.x < 0) || (mousePos.x > $scope.range.width))
+			||
+			((mousePos.y < 0) || (mousePos.y > $scope.range.height))
+			)
+			return;
+
+		var latLon = $scope.mapLatLonFromCanvasXY(mousePos.x, mousePos.y);
+		
+		var locationText = $scope.genLocationText(latLon.lat, latLon.lon);
+
+		if ($scope.selecting == true) {
+
+			$scope.selectionPoints[1] = mousePos;
+			$scope.resizeCanvasSelectionArea();
+		}
+	};
+
+	// MAP MOUSE MOVE
+	//
+	$scope.canvas.addEventListener('mousemove', function(evt) {
+		var mousePos = $scope.getMousePos(evt);
+		$scope.onMouseMove(mousePos);
+	}, false);
+
+	$scope.selectionArea.addEventListener('mousemove', function(evt) {
+		var mousePos = $scope.getMousePos(evt);
+		$scope.onMouseMove(mousePos);
+	}, false);
+
+	// MAP CLICK
+
+	$scope.onCanvasMouseDown = function(evt) {
+
+		var mousePos = $scope.getMousePos(evt);
+		if (evt.buttons == 1) {
+			$scope.onLeftClickDown(mousePos);
+		}
+		else if (evt.buttons == 2) {
+			$scope.toggleOptionsMenu();
+		}
+	};
+
+	$scope.canvas.addEventListener('mousedown', $scope.onCanvasMouseDown, false);
+	$scope.selectionArea.addEventListener('mousedown', $scope.onCanvasMouseDown, false);
+
+	// SELECTION MOUSE UP
+	
+	$scope.onMouseUp = function(evt) {
+
+		if (evt.buttons == 1) {
+			$scope.onLeftClickUp($scope.getMousePos(evt));
+		}
+		else if (evt.buttons == 2) {
+			// undo last zoom
+		}
+	};
+
+	$scope.canvas.addEventListener('mouseup', $scope.onMouseUp, false);
+	$scope.selectionArea.addEventListener('mouseup', $scope.onMouseUp, false);
+
+	// -----------------------------------------------------------
+	// WAYPOINT SELECTION	
+
+	$scope.areaSelectWayPoints = function() {
+
+		if ($scope.selectionPoints.length !== 2) {
+			throw '$scope.selectionPoints.length !== 2';
+		}
+
+		// determine selection area
+
+		var latLon1 = $scope.mapLatLonFromCanvasXY($scope.selectionPoints[0].x, $scope.selectionPoints[0].y);
+		var latLon2 = $scope.mapLatLonFromCanvasXY($scope.selectionPoints[1].x, $scope.selectionPoints[1].y);
+
+		var minMaxLat = { 'max' : Math.max(latLon1.lat, latLon2.lat), 'min' : Math.min(latLon1.lat, latLon2.lat) };
+		var minMaxLon = { 'max' : Math.max(latLon1.lon, latLon2.lon), 'min' : Math.min(latLon1.lon, latLon2.lon) };
+	
+		// determine which points fall inside
+
+		var isInside = function(wpt) {
+
+			var yes = 
+				(
+				(wpt.lat >= minMaxLat.min) 
+				&& (wpt.lat <= minMaxLat.max)
+				&& (wpt.lon >= minMaxLon.min) 
+				&& (wpt.lon <= minMaxLon.max)
+				);
+
+			return yes;
+		};
+
+		var inside = [];
+		waypoints.forEach(function(x) { if (isInside(x)) inside.push(x); });
+
+		// update model: filteredWaypoints, selectedPoint
+
+		filteredWaypoints.length = 0;
+		inside.forEach(function(x){ filteredWaypoints.push(x); });
+	
+		if (filteredWaypoints.length)
+			$scope.$parent.model.selectedPoint = filteredWaypoints[0];
+
+		$rootScope.$emit(Command.GOTO_VIEW, $scope.$parent.Views.WAYPOINTS);
+	};
+
+	// -----------------------------------------------------------
+	// RENDER
 
 	$scope.measureRange = function(width, height) {
 
@@ -170,7 +413,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 				domain.minMaxEle.max = track.minMaxEle.max;
 
 			if (track.minMaxEle.min <= domain.minMaxEle.min)
-				 domain.minMaxEle.min = domain.minMaxEle.min;
+				 domain.minMaxEle.min = track.minMaxEle.min;
 		});
 
 		// use currently defined view port
@@ -258,6 +501,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		// colour
 		//
 		var k = Math.floor(255.0 * (ele - domain.minMaxEle.min) / domain.eleDiff);
+
 		var rgbString = toRgbString(k, 255 - k, 0);
 
 		d =  { 'x' : x, 'y' : y, 'rgb' : rgbString };
@@ -300,6 +544,15 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		});
 	};
 
+	// -----------------------------------------------------------
+	// DRAW
+
+	$scope.sizeCanvas = function(context, width, height) {
+
+		context.canvas.width  = width;
+		context.canvas.height = height;	
+	};
+
 	$scope.blankCanvas = function(context, range) {
 
 		context.fillStyle = '#FFFFFF'; // white
@@ -307,6 +560,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	};
 
 	$scope.drawElevationHalo = function(thickness) {
+
+		thickness = (thickness == undefined) ? '5' : thickness;
 
 		$scope.context.beginPath();
 	    
@@ -548,21 +803,31 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		else			
 			scale = range.width / domain.lonDiff;
 
-		// RENDER & DRAW
-
-		$scope.sizeCanvas(context, range.width, range.height);
+		// RENDER
 
 		$scope.renderTrackPointsToCanvasSpace(domain, range, scale);
 		$scope.renderWayPointsToCanvasSpace(domain, range, scale);
 
+		// DRAW
+
+		$scope.sizeCanvas(context, range.width, range.height);
+
 		$scope.blankCanvas(context, range);
 
-		// $scope.drawElevationHalo();
-		// $scope.drawTrackVertices('#000000', 1.0);
-
 		var lineThickness = 2;
-		$scope.drawAllTracksEdgesColoured(context, lineThickness);
+
+		// PLOT TYPE
 		
+		if ($scope.mapOptions.plotType == $scope.PlotTypes.EDGES) {
+			$scope.drawAllTracksEdgesColoured(context, lineThickness);
+		}
+		else if ($scope.mapOptions.plotType == $scope.PlotTypes.POINTS) {
+			$scope.drawTrackVertices('#000000', 1.0);
+		}
+		else if ($scope.mapOptions.plotType == $scope.PlotTypes.ELEVATION) {
+			$scope.drawElevationHalo();
+		}
+				
 		$scope.drawWaypoints(context, $scope.canvasWaypoints, 10, Colour.BLACK, 'helvetica', 15);
 
 		// title
@@ -571,7 +836,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		if (tracks.length > 1)
 			titleText = titleText + ' + ' + (tracks.length - 1);
 
-		$scope.drawTitleText(context, range, titleText);
+		// context, range, text, corner, colour, font, defaultFontSizePx
+		$scope.drawTitleText(context, range, titleText, $scope.mapOptions.titleCorner);
 
 		$scope.drawCompass(context, range, 0);
 
@@ -584,195 +850,6 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		}
 	};
 
-	$scope.mapLatLonFromCanvasXY = function(x, y) {
-
-		var lon = ((x - $scope.range.halfWidth) / $scope.scale) + $scope.domain.midLon;
-		var lat = (($scope.range.halfHeight - y) / $scope.scale) + $scope.domain.midLat;
-
-		return { 'lon' : lon, 'lat' : lat };
-	};
-
-	$scope.genLocationText = function(lat, lon) {
-		return 'lat ' + lat.toFixed(6).toString() + ', lon ' + lon.toFixed(6).toString();
-	};
-
-	// ----------------------------------------------------------
-	// OPTIONS MENU
-
-	$scope.showOptionsMenu = false;
-	$scope.openOptionsMenu = function() {
-
-		var width = 100;
-
-		var style  = '';
-		style = style + 'top:' + (10) + 'px;';
-		style = style + 'left:' + ($scope.range.width - 10 - width) + 'px;'
-		style = style + 'width:' + (width) + 'px;';
-		
-		$scope.optionsMenu.setAttribute('style', style);
-	
-		ngShow($scope.optionsMenu);
-
-		$scope.showOptionsMenu = true;
-	};
-
-	$scope.toggleOptionsMenu = function() {
-		if ($scope.showOptionsMenu == true) {
-			$scope.showOptionsMenu = false;
-			ngHide($scope.optionsMenu); 
-		}
-		else {
-			$scope.openOptionsMenu();
-		}
-	};
-
-	// ----------------------------------------------------------
-	// CONTEXT MENU
-
-	$scope.openContextMenu = function() {
-
-		var pt1 = $scope.selectionPoints[0];
-		var pt2 = $scope.selectionPoints[1];
-
-		var left = 20;
-		var width = 100;
-
-		var height = 20;
-		var top = $scope.range.height - (height + 10);
-		
-		var style  = 'left:' + left + 'px;';
-		style = style + 'top:' + top + 'px;';
-
-		$scope.contextMenu.setAttribute('style', style);
-		ngShow($scope.contextMenu); 
-	};
-
-	$scope.resizeCanvasSelectionArea = function() {
-
-		if ($scope.selectionPoints.length !== 2)
-			return;
-		if (($scope.selectionPoints[0] == undefined) || ($scope.selectionPoints[1] == undefined))
-			return;
-
-		var pt1 = $scope.selectionPoints[0];
-		var pt2 = $scope.selectionPoints[1];
-
-		var left = Math.min(pt1.x, pt2.x);
-		var top = Math.min(pt1.y, pt2.y);
-		var width = Math.abs(pt1.x - pt2.x);
-		var height = Math.abs(pt1.y - pt2.y);
-		
-		var style  = 'left:' + left + 'px;';
-		style = style + 'top:' + top + 'px;';
-		style = style + 'width:' + width + 'px;';
-		style = style + 'height:' + height + 'px;';
-
-		$scope.selectionArea.setAttribute('style', style);
-	};
-
-	$scope.getMousePos = function(evt) {
-		var rect = $scope.canvas.getBoundingClientRect();
-		return {
-			x: evt.clientX - rect.left,
-			y: evt.clientY - rect.top
-		};
-	};
-
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	// document event handlers
-
-	$scope.onLeftClickDown = function(mouseCanvasPos) {		
-
-		$scope.selectionPoints.length = 0;
-		$scope.selectionPoints.push(mouseCanvasPos);
-		$scope.selectionPoints.push(mouseCanvasPos);
-
-		$scope.resizeCanvasSelectionArea();
-
-		$scope.selecting = true;
-
-		$scope.showMapSelectionArea = true;
-		$scope.$apply();
-
-		$scope.$emit(Event.MAP_SELECTION_BEGUN);
-	};
-
-	$scope.onLeftClickUp = function(mousePos) {
-
-		$scope.selectionPoints[1] = mousePos;
-		$scope.resizeCanvasSelectionArea();
-
-		$scope.selecting = false;
-
-		$scope.openContextMenu();
-	};	
-
-	$scope.onMouseMove = function(mousePos) {
-
-		if (
-			((mousePos.x < 0) || (mousePos.x > $scope.range.width))
-			||
-			((mousePos.y < 0) || (mousePos.y > $scope.range.height))
-			)
-			return;
-
-		var latLon = $scope.mapLatLonFromCanvasXY(mousePos.x, mousePos.y);
-		
-		var locationText = $scope.genLocationText(latLon.lat, latLon.lon);
-
-		if ($scope.selecting == true) {
-
-			$scope.selectionPoints[1] = mousePos;
-			$scope.resizeCanvasSelectionArea();
-		}
-	};
-
-	// MAP MOUSE MOVE
-	//
-	$scope.canvas.addEventListener('mousemove', function(evt) {
-		var mousePos = $scope.getMousePos(evt);
-		$scope.onMouseMove(mousePos);
-	}, false);
-
-	$scope.selectionArea.addEventListener('mousemove', function(evt) {
-		var mousePos = $scope.getMousePos(evt);
-		$scope.onMouseMove(mousePos);
-	}, false);
-
-	// MAP CLICK
-
-	$scope.onCanvasMouseDown = function(evt) {
-
-		var mousePos = $scope.getMousePos(evt);
-		if (evt.buttons == 1) {
-			$scope.onLeftClickDown(mousePos);
-		}
-		else if (evt.buttons == 2) {
-			$scope.toggleOptionsMenu();
-		}
-	};
-
-	$scope.canvas.addEventListener('mousedown', $scope.onCanvasMouseDown, false);
-	$scope.selectionArea.addEventListener('mousedown', $scope.onCanvasMouseDown, false);
-
-	// SELECTION MOUSE UP
-	
-	$scope.onMouseUp = function(evt) {
-
-		if (evt.buttons == 1) {
-			$scope.onLeftClickUp($scope.getMousePos(evt));
-		}
-		else if (evt.buttons == 2) {
-			// undo last zoom
-		}
-	};
-
-	$scope.canvas.addEventListener('mouseup', $scope.onMouseUp, false);
-	$scope.selectionArea.addEventListener('mouseup', $scope.onMouseUp, false);
-
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	// handlers for angular.js events
-
 	$scope.drawMap = function() {
 		// TODO - fix ref to parent
 		var dims = $scope.$parent.getWindowDimensions();	
@@ -780,6 +857,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	};
 
 	// RE-DRAW TRIGGERS
+	//
 	$scope.redrawTriggers = [
 		Event.TRACK_LOADED,
 		Event.TRACK_UNLOADED,
@@ -788,58 +866,14 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		Event.WAYPOINT_EDITED,
 		Event.WAYPOINT_DELETED
 		];
+
 	// register
+	//
 	$scope.redrawTriggers.forEach(function(trigger) {		
 		$rootScope.$on(trigger, $scope.drawMap);		
 	});
 
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	// WAYPOINT SELECTION	
-
-	$scope.areaSelectWayPoints = function() {
-
-		if ($scope.selectionPoints.length !== 2) {
-			throw '$scope.selectionPoints.length !== 2';
-		}
-
-		// determine selection area
-
-		var latLon1 = $scope.mapLatLonFromCanvasXY($scope.selectionPoints[0].x, $scope.selectionPoints[0].y);
-		var latLon2 = $scope.mapLatLonFromCanvasXY($scope.selectionPoints[1].x, $scope.selectionPoints[1].y);
-
-		var minMaxLat = { 'max' : Math.max(latLon1.lat, latLon2.lat), 'min' : Math.min(latLon1.lat, latLon2.lat) };
-		var minMaxLon = { 'max' : Math.max(latLon1.lon, latLon2.lon), 'min' : Math.min(latLon1.lon, latLon2.lon) };
-	
-		// determine which points fall inside
-
-		var isInside = function(wpt) {
-
-			var yes = 
-				(
-				(wpt.lat >= minMaxLat.min) 
-				&& (wpt.lat <= minMaxLat.max)
-				&& (wpt.lon >= minMaxLon.min) 
-				&& (wpt.lon <= minMaxLon.max)
-				);
-
-			return yes;
-		};
-
-		var inside = [];
-		waypoints.forEach(function(x) { if (isInside(x)) inside.push(x); });
-
-		// update model: filteredWaypoints, selectedPoint
-
-		filteredWaypoints.length = 0;
-		inside.forEach(function(x){ filteredWaypoints.push(x); });
-	
-		if (filteredWaypoints.length)
-			$scope.$parent.model.selectedPoint = filteredWaypoints[0];
-
-		$rootScope.$emit(Command.GOTO_VIEW, $scope.$parent.Views.WAYPOINTS);
-	};
-
-	// ------------------------------------------
+	// -----------------------------------------------------------
 	// EXPORT
 
 	$rootScope.$on(Command.EXPORT_MAP, function(evt) {
@@ -853,5 +887,5 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		var data = { canvas : $scope.exportCanvas, fileName : fileName };	
 		
 		$rootScope.$emit(Command.EXPORT_CANVAS, data);
-	});
+	});	
 }

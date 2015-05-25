@@ -123,11 +123,9 @@ function Track(data) {
 
 	var calcTrackStats = function() {
 
-		var minMaxUndef = { 'max' : -10000, 'min' : 10000 };
-
-		that.minMaxLat = minMaxUndef;
-		that.minMaxLon = minMaxUndef;
-		that.minMaxEle = minMaxUndef;
+		that.minMaxLat = { 'max' : -180, 'min' : 180 };
+		that.minMaxLon = { 'max' : -180, 'min' : 180 };
+		that.minMaxEle = { 'max' : -10000, 'min' : 10000 };
 		that.minMaxTime = { 'max' : undefined, 'min' : undefined };
 
 		var adjustMinMax = function(minMax, val) {
