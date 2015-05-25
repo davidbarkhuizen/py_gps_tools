@@ -18,11 +18,22 @@ function focusOnId(id) {
 	document.getElementById(id).focus();
 };
 
+function ngHide(element) {
+	if (element.className.toUpperCase().indexOf('NG-HIDE') == -1) {
+		element.className = element.className + ' ng-hide'
+	}
+}
+		
+function ngShow(element) {
+	element.className = element.className.replace('ng-hide', ''); 
+}
+
 // broofa @ http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
 //
 function guid() {
 
 	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+
 		.replace(/[xy]/g,
 			function(c) {
     			var r = Math.random()*16|0;

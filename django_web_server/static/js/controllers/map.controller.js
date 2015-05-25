@@ -26,8 +26,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	$scope.selectionAreaDivId = 'MapSelectionArea';
 	$scope.selectionArea = document.getElementById($scope.selectionAreaDivId);
 
-	$scope.mapContextMenuDivId = 'MapContextMenu';
-	$scope.mapContextMenuElement = document.getElementById($scope.mapContextMenuDivId);
+	$scope.contextMenuId = 'MapContextMenu';
+	$scope.contextMenu = document.getElementById($scope.contextMenuId);
 
 	$scope.optionsMenuId = 'MapOptionsMenu';
 	$scope.optionsMenu = document.getElementById($scope.optionsMenuId);
@@ -42,7 +42,10 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	// CONTEXT MENU
 
 	$scope.showContextMenu = function() {
-		return ($scope.haveSelection() || ($scope.canZoomOut()));
+		var state = ($scope.haveSelection() || ($scope.canZoomOut()));
+		if (state == false)
+			ngHide($scope.contextMenu);
+		return state;
 	};
 
 	// -----------------------------------------------------------
@@ -607,9 +610,20 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		style = style + 'width:' + (width) + 'px;';
 		
 		$scope.optionsMenu.setAttribute('style', style);
-		$scope.optionsMenu.className = $scope.optionsMenu.className.replace('ng-hide', ''); 
 	
+		ngShow($scope.optionsMenu);
+
 		$scope.showOptionsMenu = true;
+	};
+
+	$scope.toggleOptionsMenu = function() {
+		if ($scope.showOptionsMenu == true) {
+			$scope.showOptionsMenu = false;
+			ngHide($scope.optionsMenu); 
+		}
+		else {
+			$scope.openOptionsMenu();
+		}
 	};
 
 	// ----------------------------------------------------------
@@ -629,8 +643,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		var style  = 'left:' + left + 'px;';
 		style = style + 'top:' + top + 'px;';
 
-		$scope.mapContextMenuElement.setAttribute('style', style);
-		$scope.mapContextMenuElement.className = $scope.mapContextMenuElement.className.replace('ng-hide', ''); 
+		$scope.contextMenu.setAttribute('style', style);
+		ngShow($scope.contextMenu); 
 	};
 
 	$scope.resizeCanvasSelectionArea = function() {
@@ -734,7 +748,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 			$scope.onLeftClickDown(mousePos);
 		}
 		else if (evt.buttons == 2) {
-			$scope.openOptionsMenu();
+			$scope.toggleOptionsMenu();
 		}
 	};
 
