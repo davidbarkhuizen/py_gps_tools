@@ -14,7 +14,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	$scope.getDefaultMapOptions = function() {
 		return {
 			titleCorner: Corner.TOP_LEFT,
-			plotType : $scope.PlotTypes.SOLID 
+			plotType : $scope.PlotTypes.EDGES,
+			showWaypoints : 'true'
 		};
 	};
 	$scope.mapOptions = $scope.getDefaultMapOptions();
@@ -23,7 +24,9 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	$scope.defaultFontSizePx = 20;
 	$scope.defaultFontColour = Colour.BLACK;
 
-	$scope.onOptionChange = function() {
+	$scope.onOptionChange = function(e) {
+		console.log('$scope.mapOptions.showWaypoints');
+		console.log($scope.mapOptions.showWaypoints);
 		$scope.drawMap();
 	};
 
@@ -590,7 +593,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	    	for (var i in track){ 	
 
 		    	var pt = track[i];
-				$scope.context.fillStyle = pt.rgb;	
+				$scope.context.fillStyle = tracks[t].colour;;	
 				$scope.context.fillRect(pt.x - r, pt.y - r, 2*r + 1, 2*r + 1);
 	    	}
 	    }    
@@ -827,8 +830,14 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		else if ($scope.mapOptions.plotType == $scope.PlotTypes.ELEVATION) {
 			$scope.drawElevationHalo();
 		}
-				
-		$scope.drawWaypoints(context, $scope.canvasWaypoints, 10, Colour.BLACK, 'helvetica', 15);
+			
+		console.log('$scope.mapOptions.showWaypoints');
+		console.log($scope.mapOptions.showWaypoints);	
+		
+		if ($scope.mapOptions.showWaypoints == 'true') {
+
+			$scope.drawWaypoints(context, $scope.canvasWaypoints, 10, Colour.BLACK, 'helvetica', 15);
+		}
 
 		// title
 		//

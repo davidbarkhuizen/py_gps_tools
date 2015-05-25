@@ -54,7 +54,7 @@
 
 		<br/>
 		<div>
-			plot type
+			<span class='header'>plot type</span>
 
 			<div ng-repeat='plotType in PlotTypes'>
 				<input
@@ -70,8 +70,8 @@
 		<br/>
 
 		<div>
-			title position
-
+			<span class='header'>title location</span>
+			
 			<div ng-repeat='corner in Corners'>
 				<input
 					ng-model="mapOptions.titleCorner"
@@ -82,6 +82,30 @@
 				</input>
 			</div>
 		</div>
+
+		<br/>
+
+		<div>
+			<span class='header'>waypoints</span>
+			<br/>
+			<input
+				ng-model="mapOptions.showWaypoints"
+				value="true"
+				type="radio"
+				ng-change='onOptionChange();'
+				>show
+			</input>
+			<br/>
+			<input
+				ng-model="mapOptions.showWaypoints"
+				value="false"
+				type="radio"
+				ng-change='onOptionChange();'
+				>hide
+			</input>
+		</div>
+
+
 	</div>
 	<canvas id="ExportMapCanvas"
 		ng-show='false'
