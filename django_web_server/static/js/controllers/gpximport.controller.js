@@ -41,7 +41,7 @@ function GpxImportController($rootScope, $scope, $http, $timeout) {
 			};
 
 			var errorFn = function(error) {
-			    $scope.$emit(Event.AJAX_ERROR, error);
+			    $scope.$emit(Event.DEBUG_ERROR, error);
 			};
 
 			httpPOST($http, 'gpxfile', data, successFn, failureFn, errorFn);

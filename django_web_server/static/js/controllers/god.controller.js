@@ -36,7 +36,7 @@ function GodController($rootScope, $scope, $http, $timeout) {
 
 	$rootScope.$on(Command.GOTO_VIEW, function(evt, view) { $scope.view = view; });
 
-	$scope.$on(Event.AJAX_ERROR, function(evt, error) {
+	$scope.$on(Event.DEBUG_ERROR, function(evt, error) {
 		$scope.globalDebug(error);
 	});
 
@@ -148,9 +148,11 @@ function GodController($rootScope, $scope, $http, $timeout) {
 		$scope.view = $scope.Views.DEBUG;
 	};
 
-	$scope.$on(Event.AJAX_ERROR, function(evt, error) {
+	$scope.$on(Event.DEBUG_ERROR, function(evt, error) {
 		$scope.globalDebug(error);
 	});
+
+	// WINDOW / LAYOUT ----------------------------------------
 
 	$scope.getWindowDimensions = function() {
 

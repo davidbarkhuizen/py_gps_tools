@@ -41,8 +41,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	// -----------------------------------------------------------
 	// CONTEXT MENU
 
-	$scope.showMapContextMenu = function() {
-		return (($scope.isSelected()) || ($scope.canZoomOut()));
+	$scope.showContextMenu = function() {
+		return ($scope.haveSelection() || ($scope.canZoomOut()));
 	};
 
 	// -----------------------------------------------------------
@@ -56,8 +56,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.showMapSelectionArea = false;
 
-	$scope.isSelected = function() {
-		return (($scope.showMapSelectionArea) && (!$scope.selecting));
+	$scope.haveSelection = function() {
+		return ($scope.canvasSelections.length == 2);
 	};
 
 	$scope.cancelSelection = function() {
@@ -65,8 +65,6 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		$scope.selecting = false;
 		$scope.selectionPoints.length = 0;
 		$scope.showMapSelectionArea = false;
-
-		$scope.makeMapOpaque();
 	};
 
 	// ZOOM IN/OUT ----------------------------------------------
@@ -114,8 +112,6 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		//	
 		if ($scope.canvasSelections.length > 0) {
 
-			// console.log('redrawing selection area');
-
 			var newSelection = $scope.canvasSelections.pop();
 
 			$scope.selectionPoints.length = 0;
@@ -125,7 +121,6 @@ function MapController($rootScope, $scope, $http, $timeout) {
 			$scope.resizeCanvasSelectionArea();		
 
 			$scope.showMapSelectionArea = true;
-			$scope.makeMapSemiTransparent();
 		}
 		else {
 
@@ -670,17 +665,6 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	};
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-	$scope.makeMapOpaque = function() {
-		$scope.canvas.setAttribute('style', 'opacity:1.0;');
-	};	
-
-	$scope.makeMapSemiTransparent = function(opacity) {
-		opacity = (opacity == undefined) ? 0.8 : opacity;
-		$scope.canvas.setAttribute('style', 'opacity:' + opacity.toFixed(1) +' ;');
-	};
-
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// document event handlers
 
 	$scope.onLeftClickDown = function(mouseCanvasPos) {		
@@ -690,8 +674,6 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		$scope.selectionPoints.push(mouseCanvasPos);
 
 		$scope.resizeCanvasSelectionArea();
-
-		$scope.makeMapSemiTransparent();
 
 		$scope.selecting = true;
 
@@ -738,9 +720,14 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		$scope.onMouseMove(mousePos);
 	}, false);
 
-	// MAP MOUSE DOWN
-	//
-	$scope.canvas.addEventListener('mousedown', function(evt) {
+	$scope.selectionArea.addEventListener('mousemove', function(evt) {
+		var mousePos = $scope.getMousePos(evt);
+		$scope.onMouseMove(mousePos);
+	}, false);
+
+	// MAP CLICK
+
+	$scope.onCanvasMouseDown = function(evt) {
 
 		var mousePos = $scope.getMousePos(evt);
 		if (evt.buttons == 1) {
@@ -749,11 +736,14 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		else if (evt.buttons == 2) {
 			$scope.openOptionsMenu();
 		}
-	}, false);
+	};
+
+	$scope.canvas.addEventListener('mousedown', $scope.onCanvasMouseDown, false);
+	$scope.selectionArea.addEventListener('mousedown', $scope.onCanvasMouseDown, false);
 
 	// SELECTION MOUSE UP
-	//
-	$scope.canvas.addEventListener('mouseup', function(evt) {
+	
+	$scope.onMouseUp = function(evt) {
 
 		if (evt.buttons == 1) {
 			$scope.onLeftClickUp($scope.getMousePos(evt));
@@ -761,7 +751,10 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		else if (evt.buttons == 2) {
 			// undo last zoom
 		}
-	}, false);
+	};
+
+	$scope.canvas.addEventListener('mouseup', $scope.onMouseUp, false);
+	$scope.selectionArea.addEventListener('mouseup', $scope.onMouseUp, false);
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// handlers for angular.js events
@@ -792,7 +785,6 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	$scope.areaSelectWayPoints = function() {
 
 		if ($scope.selectionPoints.length !== 2) {
-			console.log($scope.selectionPoints);
 			throw '$scope.selectionPoints.length !== 2';
 		}
 

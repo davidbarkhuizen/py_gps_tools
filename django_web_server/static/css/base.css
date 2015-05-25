@@ -145,17 +145,17 @@ a
 /* Z-INDEX & POSITIONING */
 
 .map-canvas {
-    z-index: 3;
+    z-index: 1;
     display:inline-block;
 }
 
 .map-selection-area {
-    z-index: -1;
+    z-index: 2;
     position: absolute;
 }
 
 .map-context-menu {
-    z-index: 4;
+    z-index: 3;
     position: absolute;
 }
 
@@ -169,9 +169,9 @@ a
 
 .map-selection-area {    
 
-    -webkit-box-shadow:inset 0px 0px 0px 5px black;
-    -moz-box-shadow:inset 0px 0px 0px 5px black;
-    box-shadow:inset 0px 0px 0px 5px black;
+    -webkit-box-shadow:inset 0px 0px 0px 5px orange;
+    -moz-box-shadow:inset 0px 0px 0px 5px orange;
+    box-shadow:inset 0px 0px 0px 5px orange;
 }
 
 .map-options-menu {

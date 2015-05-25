@@ -25,7 +25,7 @@
 
 	<div id='MapContextMenu' 
 		class='map-context-menu'
-		ng-show='showMapContextMenu()'
+		ng-show='showContextMenu()'
 		>
 		<a href='#'
 			ng-click='cancelSelection()'
@@ -44,7 +44,6 @@
 			ng-class='showMapSelectionArea ? "active" : "inactive" '
 			>selected waypoints</a>
 	</div>
-
 	<div id='MapOptionsMenu' 
 		class='map-options-menu'
 		ng-show='showMapOptionsMenu'
@@ -52,8 +51,10 @@
 		<a>one two</a>
 		<br/>
 		<a>one</a>
-	</div>
+		<br/>
+		<input type='checkbox'>&nbsp;dog</input>
 
+	</div>
 	<canvas id="ExportMapCanvas"
 		ng-show='false'
 		>
