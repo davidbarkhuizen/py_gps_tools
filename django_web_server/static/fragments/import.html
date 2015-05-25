@@ -14,15 +14,68 @@
 		<br/>
 
 		<div>
-			<input
-				id="ImportGpxFileInput"
-				type="file"
-				multiple
-				name="file"/>
-			<br/>
-			<button ng-click="importSelectedFiles()">
-				import selected file
-			</button>
+			<div style='width:100%;height:100%;display:inline-block;vertical-align:top;'>
+				<div style='width:30%;height:80%;display:inline-block;vertical-align:top;'
+					>
+					<div>
+						<h3>
+							select files to import
+						</h3>
+						<input
+							id="ImportGpxFileInput"
+							type="file"
+							multiple
+							name="file"
+							onchange="angular.element(this).scope().filesChanged(this)"
+							ng-show='false'
+							/>
+						<button ng-click="browseFiles();">browse files</button>
+						<br/>
+						<br/>						
+						<div class='semi-short-list'>
+							<div ng-repeat='file in browsedFiles'>
+								{{ file.name  }}
+							</div>
+						</div>					
+						<br/>
+						<button ng-click="importFiles()">
+							import files
+						</button>
+					</div>
+				</div>
+				<div style='width:30%;height:80%;display:inline-block;vertical-align:top;'
+					>
+
+					<h3>
+						importing
+					</h3>
+					<div class='ultra-short-list'>
+						<div ng-repeat='file in fileQueue.reverse()'>
+							{{ file.name  }}
+						</div>
+					</div>
+					<h3>
+						import failed
+					</h3>
+					<div class='ultra-short-list action-required'>
+						<div ng-repeat='file in failedImports'>
+							<span title='{{ file.importFailureMessage }}'>{{ file.name  }}</span>
+						</div>
+					</div>
+
+				</div>
+				<div style='width:30%;height:80%;display:inline-block;vertical-align:top;'
+					>
+					<h3>
+						imported
+					</h3>
+					<div class='short-list'>
+						<div ng-repeat='file in successfulImports'>
+							<span class='no-action-required'>{{ file.name  }}</span>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

@@ -99,6 +99,27 @@ html, body {
     padding-right:10px;
 }
 
+.semi-short-list {
+    width:95%;
+
+    overflow:scroll;
+    overflow-y:scroll;
+    overflow-x:hidden;
+    min-height: 200px;
+    max-height: 200px;
+}
+
+
+.ultra-short-list {
+    width:95%;
+
+    overflow:scroll;
+    overflow-y:scroll;
+    overflow-x:hidden;
+    min-height: 100px;
+    max-height: 100px;
+}
+
 a 
 {
     color:purple;

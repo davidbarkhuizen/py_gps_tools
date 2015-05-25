@@ -94,35 +94,19 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	$scope.$on(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED, function(evt) {
 
 		if ($scope.view == $scope.Views.IMPORT) {
-			$scope.gotoOpenTrack();
+			// $scope.view = $scope.Views.TRACK_DATABASE;
 		}
 	});
 
 	// -------------------------------------------------------------------
-
-	/*
-	context.save();
-	context.translate(newx, newy);
-	context.rotate(-Math.PI/2);
-	context.textAlign = "center";
-	context.fillText("Your Label Here", labelXposition, 0);
-	context.restore();
-	 */
-
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-	$scope.$on(Event.MAP_SELECTION_BEGUN, function(evt) {
-		$scope.$apply();
-	});	
-
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// TRACK
 
 	$rootScope.$on(Event.TRACK_LOADED, function (evt) {
 		$scope.view = $scope.Views.MAP;
 	});
 
-	// DEBUG ----------------------------------------
+	// -------------------------------------------------------------------
+	// DEBUG
 
 	var debugSummaryElement = document.getElementById('DebugSummary');
 	var debugTraceElement = document.getElementById('DebugTrace');

@@ -1,15 +1,24 @@
 function GpxImportController($rootScope, $scope, $http, $timeout) {
 
 	$scope.fileInputId = $scope.$parent.fileInputId;
+	$scope.fileInput = document.getElementById($scope.fileInputId);
 
-	$scope.postMapDataFilesRecursive = function(files) {
+	$scope.browsedFiles = [];
+	$scope.fileQueue = [];
+	
+	$scope.failedImports = [];
+	$scope.successfulImports = [];
 
-		var file = files[0];
+	$scope.importing = false;
 
-		var remainder = [];
-		for (var i = 1; i < files.length; i++) {
-			remainder.push(files[i])
-		};	
+	$scope.uploadNextFile = function() {
+
+		if ($scope.fileQueue.length == 0) {
+			$scope.importing = false;			
+			return;
+		}
+
+		var file = $scope.fileQueue.pop(0);
 
 		var onLoad = function(evt) {
 
@@ -19,25 +28,26 @@ function GpxImportController($rootScope, $scope, $http, $timeout) {
 			};
 
 			var next = function() {
-		    	if (remainder.length == 0) {
-		    		clearFileInput($scope.fileInputId);
+		    	if ($scope.fileQueue.length == 0) {
 		    		$scope.$emit(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED);
 	    		}
 		    	else {
-		    		$scope.postMapDataFilesRecursive(remainder);
+		    		$scope.uploadNextFile();
 		    	}
 			};
 
 			var successFn = function(data, status, headers, config) {
 
 				$scope.$emit(Event.GPX_FILE_IMPORTED);
+				$scope.successfulImports.push(file);
 				next();
 			};
 
 			var failureFn = function(message) {
 				
-			    console.log('gpx file import failed:  ' + message);
-			    next();
+				file.importFailureMessage = message;
+			    $scope.failedImports.push(file);
+			    $scope.uploadNextFile();
 			};
 
 			var errorFn = function(error) {
@@ -62,13 +72,36 @@ function GpxImportController($rootScope, $scope, $http, $timeout) {
 
 	$scope.importSelectedFiles = function() {
 
-		var files = document
-			.getElementById($scope.fileInputId)
-			.files;
+		var files = $scope.fileInput.files;
 
 		if (files.length == 0)
 			return;
 
 		$scope.postMapDataFilesRecursive(files);
+	};
+
+	$scope.browseFiles = function() {
+		$scope.fileInput.click();
+	};	
+
+	$scope.filesChanged = function(fileElement) {
+		
+		for(var i = 0; i < $scope.fileInput.files.length; i++) {
+			$scope.browsedFiles.push($scope.fileInput.files[i]);			
+		}
+
+		clearFileInput($scope.fileInputId);
+		
+		$scope.$apply(); // WTF
+	};
+
+	$scope.importFiles = function() {
+		
+		while ($scope.browsedFiles.length > 0) {
+			var f = $scope.browsedFiles.pop();
+			$scope.fileQueue.push(f);
+		}
+
+		$scope.uploadNextFile();
 	};
 }

@@ -1,5 +1,14 @@
 function MapController($rootScope, $scope, $http, $timeout) {
 
+	/*
+	context.save();
+	context.translate(newx, newy);
+	context.rotate(-Math.PI/2);
+	context.textAlign = "center";
+	context.fillText("Your Label Here", labelXposition, 0);
+	context.restore();
+	 */
+
 	// ---------------------------------------------
 	// OPTIONS
 
