@@ -11,6 +11,10 @@ function GpxImportController($rootScope, $scope, $http, $timeout) {
 
 	$scope.importing = false;
 
+	$scope.cancelFileSelection = function() {
+		$scope.browsedFiles.length = 0;
+	}; 
+
 	$scope.uploadNextFile = function() {
 
 		if ($scope.fileQueue.length == 0) {

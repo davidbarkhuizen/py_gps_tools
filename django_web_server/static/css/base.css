@@ -84,6 +84,22 @@ html, body {
     padding-right:10px;
 }
 
+.medium-list {
+    width:95%;
+
+    overflow:scroll;
+    overflow-y:scroll;
+    overflow-x:hidden;
+    min-height: 450px;
+    max-height: 450px;
+
+    text-align: left;
+
+    padding-left:10px;
+    padding-right:10px;
+}
+
+
 .short-list {
     width:95%;
 
