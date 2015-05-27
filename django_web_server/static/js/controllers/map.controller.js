@@ -650,34 +650,25 @@ function MapController($rootScope, $scope, $http, $timeout) {
 			context.strokeStyle = color;
 		}
 
-		// empty square
-		//
-		z = Math.floor(size / 2);		
-    	context.beginPath();
-		context.strokeRect(cx - z, cy - z, 2*z, 2*z);
-		context.stroke();		
-
-		// with center dot
-		//
-    	context.beginPath();
-		context.fillRect(cx, cy, 1, 1);
-		context.stroke();		
-
-		/*
 		// empty circle
 		//
 		context.beginPath();
-		context.arc(pt.x, pt.y,5,0,Math.PI*2,true);
+		context.arc(cx, cy, 1, 0, Math.PI*2, true);
+		context.arc(cx, cy, 2, 0, Math.PI*2, true);
+		context.arc(cx, cy, 3, 0, Math.PI*2, true);
+		context.arc(cx, cy, 4, 0, Math.PI*2, true);
 		context.stroke();
-		*/
-
+		context.beginPath();
+		context.arc(cx, cy, 10, 0, Math.PI*2, true);
+		context.stroke();
+	
 		// text
 		//
 		if (name !== undefined) {
 			context.textAlign = 'left';
 			context.font = fontSize + 'px ' + font;
 			context.textBaseline = 'middle';
-			context.fillText(name, cx + size, cy);
+			context.fillText(name, cx + 15, cy);
 		}	
 	}
 
