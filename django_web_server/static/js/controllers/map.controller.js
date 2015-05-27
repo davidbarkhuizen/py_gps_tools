@@ -750,7 +750,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 		var measure = measures[measures.length - 1];
 
-		var startX = edgeOffset,
+		var startX = range.width - edgeOffset,
 			startY = range.height - edgeOffset;
 
 		var startLL = $scope.mapLatLonFromCanvasXY(startX, startY, domain, range, scale);
@@ -760,7 +760,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 			return haversineDistanceMetres(startLL.lat, startLL.lon, startLL.lat, endLL.lon);
 		}
 
-		var endX = binarySearch(distM, measure, startX, range.width, 20);
+		var endX = binarySearch(distM, measure, 0, startX, 20);
 
 		context.lineWidth = 2;		
 		context.strokeStyle = Colour.BLACK;
@@ -775,7 +775,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 		context.font = fontSize + 'px ' + font;
 		context.textBaseline = 'middle';
-		context.fillText(measure + ' m', endX + 10, startY);
+		context.textAlign = 'center';
+		context.fillText(measure + ' m', (startX + endX) / 2, startY + (edgeOffset / 2));
 	};
 
 	$scope.drawCompass = function(context, range, magneticDeclinationDegrees) {
