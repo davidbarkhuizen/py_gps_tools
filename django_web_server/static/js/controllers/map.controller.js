@@ -674,6 +674,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		// text
 		//
 		if (name !== undefined) {
+			context.textAlign = 'left';
 			context.font = fontSize + 'px ' + font;
 			context.textBaseline = 'middle';
 			context.fillText(name, cx + size, cy);
@@ -721,7 +722,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 		var scalesM = [ 
 			5, 
-			10, 
+			10,
+			20, 
 			25, 
 			50, 
 			100, 
@@ -729,7 +731,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 			250, 
 			500, 
 			1000,
-			5000 
+			5000,
+			10000 
 		];
 
 		var edgeOffset = 20;
@@ -775,10 +778,13 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	    var fontSize = 15;
 	    var font = $scope.defaultFont;
 
-		context.font = /*'bold ' +*/ fontSize + 'px ' + font;
+		context.fillStyle = $scope.defaultFontColour;
+		context.font = fontSize + 'px ' + font;
 		context.textBaseline = 'middle';
 		context.textAlign = 'center';
 		context.fillText(measure + ' m', (startX + endX) / 2, startY + (edgeOffset / 2));
+
+		context.fill();
 	};
 
 	$scope.drawCompass = function(context, range, magneticDeclinationDegrees) {
@@ -895,6 +901,16 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 		var lineThickness = 2;
 
+		// COMPASS
+		//
+		if ($scope.mapOptions.showCompass == 'true') {
+			$scope.drawCompass(context, range, 0);
+		}
+
+		// SCALE
+		//
+		$scope.drawScaleBar(context, domain, range, scale);
+
 		// PLOT TYPE
 		
 		if ($scope.mapOptions.plotType == $scope.PlotTypes.EDGES) {
@@ -921,16 +937,6 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 		// context, range, text, corner, colour, font, defaultFontSizePx
 		$scope.drawTitleText(context, range, titleText, $scope.mapOptions.titleCorner);
-
-		// COMPASS
-		//
-		if ($scope.mapOptions.showCompass == 'true') {
-			$scope.drawCompass(context, range, 0);
-		}
-
-		// SCALE
-		//
-		$scope.drawScaleBar(context, domain, range, scale);
 
 		// DISCARD OR SAVE STATE
 
