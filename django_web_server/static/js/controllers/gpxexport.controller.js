@@ -41,7 +41,7 @@ function GpxExportController($rootScope, $scope, $http) {
 	// WAYPOINTS
 
 	$scope.exportWaypointSet = function(waypoints, fileName) {
-		fileName = (fileName == undefined) ? 'geonodetek.waypoints.gpx' : fileName;
+		fileName = (fileName == undefined) ? 'GPXMaps.waypoints.gpx' : fileName;
 		
 		var xml = waypointsToGpx(waypoints);
 		$scope.exportXML(xml, fileName);
@@ -52,7 +52,7 @@ function GpxExportController($rootScope, $scope, $http) {
 	});
 
 	$scope.exportAllWaypoints = function() {
-		$scope.exportWaypointSet(model.waypoints, 'geonodetek.waypoints.');
+		$scope.exportWaypointSet(model.waypoints, 'GPXMaps.waypoints.');
 	};
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-

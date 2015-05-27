@@ -1,4 +1,4 @@
-var geoNodeTekControllers = angular.module('GeoNodeTekControllers', []);
+var GPXMapsControllers = angular.module('GPXMapsControllers', []);
 var controllers = [
 	['GodController', ['$rootScope', '$scope', '$http', '$timeout', GodController]],
 
@@ -11,8 +11,8 @@ var controllers = [
 	['MapController', ['$rootScope', '$scope', '$http', '$timeout', MapController]],
 	['WaypointsController', ['$rootScope', '$scope', '$http', '$timeout', WaypointsController]],
 ];
-controllers.forEach(function(ctrl) { geoNodeTekControllers.controller(ctrl[0], ctrl[1]); });
+controllers.forEach(function(ctrl) { GPXMapsControllers.controller(ctrl[0], ctrl[1]); });
 
-var appName = 'geoNodeTekApp';
-var appDependencies = ['GeoNodeTekControllers'];  
-var geoNodeTekApp = angular.module(appName, appDependencies);
+var appName = 'GPXMapsApp';
+var appDependencies = ['GPXMapsControllers'];  
+var GPXMapsApp = angular.module(appName, appDependencies);

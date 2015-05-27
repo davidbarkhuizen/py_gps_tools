@@ -68,26 +68,6 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	//
 	$scope.fileInputId = 'ImportGpxFileInput';
 
-	$scope.headerText = 'GeoNodeTek';
-	$scope.infoText = '';	
-
-	// map list, filter token, filtered list, selected item ------------
-
-	$scope.updateInfoText = function(msg) {
-		$scope.infoText = msg;
-		$scope.$apply();
-	};
-
-	// NAVIGATION ---------------------------
-
-	$scope.gotoMap = function() {
-
-		if ($scope.tracks.length > 0) {
-	    	$scope.headerText = 'map';
-	    	$scope.view = $scope.Views.MAP;
-		}
-	};
-
 	// -------------------------------------------------------------------
 	// GPX IMPORT - EXPORT
 

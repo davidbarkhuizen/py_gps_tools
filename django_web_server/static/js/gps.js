@@ -259,17 +259,17 @@ function toGpxXml(childNodes) {
 		'xmlns:gpxx' : "http://www.garmin.com/xmlschemas/GpxExtensions/v3",
 		'xmlns:wptx1':"http://www.garmin.com/xmlschemas/WaypointExtension/v1",
 		'xmlns:gpxtpx':"http://www.garmin.com/xmlschemas/TrackPointExtension/v1",
-		'creator':"GeoNodeTek",
+		'creator':"gpxmaps.net",
 		'version':"1.1",
 		'xmlns:xsi':"http://www.w3.org/2001/XMLSchema-instance",
 		'xsi:schemaLocation':"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www8.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://www8.garmin.com/xmlschemas/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd"
 	};
 
 	var metaDataAttrs = {
-		'href' : 'www.geonodetek.com'
+		'href' : 'www.gpxmaps.net'
 	};
 
-	var linkText = toNode('text', {}, ['GeoNodeTek']);
+	var linkText = toNode('text', {}, ['gpxmaps.net']);
 	var link = toNode('link', {}, [linkText]);
 	var metadata = toNode('metadata', metaDataAttrs, [link]);
 
