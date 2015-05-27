@@ -24,7 +24,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		return {
 			titleCorner: Corner.TOP_LEFT,
 			plotType : $scope.PlotTypes.EDGES,
-			showWaypoints : 'true'
+			showWaypoints : 'true',
+			showCompass : 'true'
 		};
 	};
 	$scope.mapOptions = $scope.getDefaultMapOptions();
@@ -34,8 +35,6 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	$scope.defaultFontColour = Colour.BLACK;
 
 	$scope.onOptionChange = function(e) {
-		console.log('$scope.mapOptions.showWaypoints');
-		console.log($scope.mapOptions.showWaypoints);
 		$scope.drawMap();
 	};
 
@@ -161,10 +160,14 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		}
 	};
 
-	$scope.mapLatLonFromCanvasXY = function(x, y) {
+	$scope.mapLatLonFromCanvasXY = function(x, y, domain, range, scale) {
 
-		var lon = ((x - $scope.range.halfWidth) / $scope.scale) + $scope.domain.midLon;
-		var lat = (($scope.range.halfHeight - y) / $scope.scale) + $scope.domain.midLat;
+		domain = (domain == undefined) ? $scope.domain : domain;
+		range = (range == undefined) ? $scope.range : range;
+		scale = (scale == undefined) ? $scope.scale : scale; 
+
+		var lon = ((x - range.halfWidth) / scale) + domain.midLon;
+		var lat = ((range.halfHeight - y) / scale) + domain.midLat;
 
 		return { 'lon' : lon, 'lat' : lat };
 	};
@@ -714,6 +717,67 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		}
 	};
 
+	$scope.drawScaleBar = function(context, domain, range, scale) {
+
+		var scalesM = [ 
+			5, 
+			10, 
+			25, 
+			50, 
+			100, 
+			200, 
+			250, 
+			500, 
+			1000,
+			5000 
+		];
+
+		var edgeOffset = 20;
+
+		var tl = { lat : domain.minMaxLat.min, lon : domain.minMaxLon.min };
+		var br = { lat : domain.minMaxLat.max, lon : domain.minMaxLon.max };
+
+		// horizontal
+		//
+		var lonDiffM = haversineDistanceMetres(tl.lat, tl.lon, tl.lat, br.lon);
+		
+		var guess = Math.round(lonDiffM / 5);
+		
+		var measures = scalesM.filter(function(x) { return x <= guess; });
+
+		if (measures.length == 0)
+			return;
+
+		var measure = measures[measures.length - 1];
+
+		var startX = edgeOffset,
+			startY = range.height - edgeOffset;
+
+		var startLL = $scope.mapLatLonFromCanvasXY(startX, startY, domain, range, scale);
+
+		var distM = function(endX) {
+			var endLL = $scope.mapLatLonFromCanvasXY(endX, startY, domain, range, scale);
+			return haversineDistanceMetres(startLL.lat, startLL.lon, startLL.lat, endLL.lon);
+		}
+
+		var endX = binarySearch(distM, measure, startX, range.width, 20);
+
+		context.lineWidth = 2;		
+		context.strokeStyle = Colour.BLACK;
+		context.beginPath();
+
+		context.moveTo(startX, startY);			
+	   	context.lineTo(endX, startY);
+	    context.stroke();
+
+	    var fontSize = 10;
+	    var font = $scope.defaultFont;
+
+		context.font = fontSize + 'px ' + font;
+		context.textBaseline = 'middle';
+		context.fillText(measure + ' m', endX + 10, startY);
+	};
+
 	$scope.drawCompass = function(context, range, magneticDeclinationDegrees) {
 
 		var cx = range.width / 2;
@@ -840,15 +904,13 @@ function MapController($rootScope, $scope, $http, $timeout) {
 			$scope.drawElevationHalo();
 		}
 			
-		console.log('$scope.mapOptions.showWaypoints');
-		console.log($scope.mapOptions.showWaypoints);	
-		
+		// WAYPOINTS
+		//
 		if ($scope.mapOptions.showWaypoints == 'true') {
-
 			$scope.drawWaypoints(context, $scope.canvasWaypoints, 10, Colour.BLACK, 'helvetica', 15);
 		}
 
-		// title
+		// PLOT TITLE
 		//
 		var titleText = tracks.length > 0 ? tracks[0].name : 'no tracks';
 		if (tracks.length > 1)
@@ -857,7 +919,17 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		// context, range, text, corner, colour, font, defaultFontSizePx
 		$scope.drawTitleText(context, range, titleText, $scope.mapOptions.titleCorner);
 
-		$scope.drawCompass(context, range, 0);
+		// COMPASS
+		//
+		if ($scope.mapOptions.showCompass == 'true') {
+			$scope.drawCompass(context, range, 0);
+		}
+
+		// SCALE
+		//
+		$scope.drawScaleBar(context, domain, range, scale);
+
+		// DISCARD OR SAVE STATE
 
 		if (discard == true) {
 			// nop, discard

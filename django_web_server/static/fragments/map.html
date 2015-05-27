@@ -53,6 +53,7 @@
 		</div>
 
 		<br/>
+
 		<div>
 			<span class='header'>plot type</span>
 
@@ -63,22 +64,6 @@
 					type="radio"
 					ng-change='onOptionChange();'
 					>{{ plotType }}
-				</input>
-			</div>
-		</div>
-
-		<br/>
-
-		<div>
-			<span class='header'>title location</span>
-			
-			<div ng-repeat='corner in Corners'>
-				<input
-					ng-model="mapOptions.titleCorner"
-					value="{{ corner }}"
-					type="radio"
-					ng-change='onOptionChange();'
-					>{{ corner }}
 				</input>
 			</div>
 		</div>
@@ -105,7 +90,44 @@
 			</input>
 		</div>
 
+		<br/>
 
+		<div>
+			<span class='header'>compass</span>
+
+			<br/>
+			<input
+				ng-model="mapOptions.showCompass"
+				value="true"
+				type="radio"
+				ng-change='onOptionChange();'
+				>show
+			</input>
+			<br/>
+			<input
+				ng-model="mapOptions.showCompass"
+				value="false"
+				type="radio"
+				ng-change='onOptionChange();'
+				>hide
+			</input>
+		</div>
+
+		<br/>
+
+		<div>
+			<span class='header'>title location</span>
+			
+			<div ng-repeat='corner in Corners'>
+				<input
+					ng-model="mapOptions.titleCorner"
+					value="{{ corner }}"
+					type="radio"
+					ng-change='onOptionChange();'
+					>{{ corner }}
+				</input>
+			</div>
+		</div>
 	</div>
 	<canvas id="ExportMapCanvas"
 		ng-show='false'

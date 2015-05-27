@@ -1,5 +1,44 @@
 // ---------------------------------------------------------------------
 
+function binarySearch(f, target, xMin, xMax, iterationCount) {
+	// assumes strictly monotonic function
+
+	var xMin = Math.min(xMin, xMax);
+	var xMax = Math.max(xMin, xMax); 
+
+	var
+		fXMin = f(xMin),
+		fXMax = f(xMax);
+
+	var x, fx;
+
+	function iterate() {
+
+		x = (xMin + xMax) / 2;
+		fx = f(x);
+
+		var gapFXMin = Math.abs(fXMin - target);
+		var gapFXMax = Math.abs(fXMax - target);
+		var gapFX = Math.abs(fx - target);
+
+		if (gapFXMin <= gapFXMax) {
+			xMax = x;
+			fXMax = f(xMax);
+		} else {
+			xMin = x;
+			fXMin = f(xMin);
+		}
+	}
+
+	for(var i = 0; i < iterationCount; i++) {
+		iterate();
+	}
+
+	return x;
+}
+
+// ---------------------------------------------------------------------
+
 function clearFileInput(id) {
 
 	var input = document.getElementById(id);
