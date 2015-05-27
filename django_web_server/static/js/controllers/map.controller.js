@@ -740,8 +740,10 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		// horizontal
 		//
 		var lonDiffM = haversineDistanceMetres(tl.lat, tl.lon, tl.lat, br.lon);
+		var latDiffM = haversineDistanceMetres(tl.lat, tl.lon, br.lat, tl.lon);
 		
-		var guess = Math.round(lonDiffM / 4);
+		var diffM = Math.max(lonDiffM, latDiffM);
+		var guess = Math.round(diffM / 4);
 		
 		var measures = scalesM.filter(function(x) { return x <= guess; });
 
@@ -762,7 +764,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 		var endX = binarySearch(distM, measure, 0, startX, 20);
 
-		context.lineWidth = 2;		
+		context.lineWidth = 1;		
 		context.strokeStyle = Colour.BLACK;
 		context.beginPath();
 
@@ -773,7 +775,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	    var fontSize = 15;
 	    var font = $scope.defaultFont;
 
-		context.font = 'bold ' + fontSize + 'px ' + font;
+		context.font = /*'bold ' +*/ fontSize + 'px ' + font;
 		context.textBaseline = 'middle';
 		context.textAlign = 'center';
 		context.fillText(measure + ' m', (startX + endX) / 2, startY + (edgeOffset / 2));
