@@ -741,7 +741,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		//
 		var lonDiffM = haversineDistanceMetres(tl.lat, tl.lon, tl.lat, br.lon);
 		
-		var guess = Math.round(lonDiffM / 5);
+		var guess = Math.round(lonDiffM / 4);
 		
 		var measures = scalesM.filter(function(x) { return x <= guess; });
 
@@ -770,10 +770,10 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	   	context.lineTo(endX, startY);
 	    context.stroke();
 
-	    var fontSize = 10;
+	    var fontSize = 15;
 	    var font = $scope.defaultFont;
 
-		context.font = fontSize + 'px ' + font;
+		context.font = 'bold ' + fontSize + 'px ' + font;
 		context.textBaseline = 'middle';
 		context.textAlign = 'center';
 		context.fillText(measure + ' m', (startX + endX) / 2, startY + (edgeOffset / 2));
