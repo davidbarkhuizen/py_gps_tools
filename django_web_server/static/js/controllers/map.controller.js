@@ -26,14 +26,14 @@ function MapController($rootScope, $scope, $http, $timeout) {
 			scaleBarLocation : Corner.BOTTOM_RIGHT,
 			plotType : $scope.PlotTypes.PATH,
 			showWaypoints : 'true',
-			showCompass : 'true'
+			showCompass : 'true',
+
+			font : 'courier new',
+			fontSizePx : 20,
+			fontColour : Colour.BLACK	
 		};
 	};
 	$scope.mapOptions = $scope.getDefaultMapOptions();
-
-	$scope.defaultFont = 'helvetica';
-	$scope.defaultFontSizePx = 20;
-	$scope.defaultFontColour = Colour.BLACK;
 
 	$scope.onOptionChange = function(e) {
 		$scope.drawMap();
@@ -669,7 +669,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		//
 		if (name !== undefined) {
 			context.textAlign = 'left';
-			context.font = fontSize + 'px ' + font;
+			context.font = fontSize + 'px ' + ' bold ' + font;
 			context.textBaseline = 'middle';
 			context.fillText(name, cx + 15, cy);
 		}	
@@ -677,39 +677,65 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.drawTitleText = function(context, range, text, corner, colour, font, fontSize) {
 
-		corner = (corner == undefined) ? $scope.defaultTitleCorner : corner;
-		colour = (colour == undefined) ? $scope.defaultFontColour : colour;
-		font = (font == undefined) ? $scope.defaultFont : font;
-		fontSize = (fontSize == undefined) ? $scope.defaultFontSizePx: fontSize;
+		var offset = 10;
+
+		corner = (corner == undefined) ? $scope.mapOptions.titleLocation : corner;
+		colour = (colour == undefined) ? $scope.mapOptions.fontColour : colour;
+		font = (font == undefined) ? $scope.mapOptions.font : font;
+		fontSize = (fontSize == undefined) ? $scope.mapOptions.fontSizePx: fontSize;
+
+		context.textBaseline = 'top';
 
 		context.fillStyle = colour;
 		context.font = 'bold ' + fontSize + 'px ' + font;
 
+		var textWidth = context.measureText(text).width;
+
+		var ulOffset = 0;
+
+		context.beginPath();
+		context.strokeStyle = colour;
+		context.lineWidth = 1;
+		
 		// top left
 		if (corner == Corner.TOP_LEFT) {
 			
 			context.textAlign = 'left';
-			context.fillText(text, fontSize, fontSize);
+			context.fillText(text, offset, offset);
+		
+			context.moveTo(offset, offset + fontSize + ulOffset);
+			context.lineTo(offset + textWidth, offset + fontSize + ulOffset);
 		}
 		
 		if (corner == Corner.TOP_RIGHT) {
 			
 			context.textAlign = 'right';
-			context.fillText(text, range.width - fontSize, fontSize);
+			context.fillText(text, range.width - offset, offset);
+		
+			context.moveTo(range.width - offset, offset + fontSize + ulOffset);
+			context.lineTo(range.width - (offset + textWidth), offset + fontSize + ulOffset);
 		}
 
 		if (corner == Corner.BOTTOM_LEFT) {
 			
 			context.textAlign = 'left';
 			context.textBaseline = 'bottom';
-			context.fillText(text, fontSize, range.height - fontSize);
+			context.fillText(text, offset, range.height - offset);
+
+			context.moveTo(offset, (range.height - offset) + ulOffset);
+			context.lineTo(offset + textWidth, (range.height - offset) + ulOffset);
 		}
 
 		if (corner == Corner.BOTTOM_RIGHT) {	
 			context.textAlign = 'right';
 			context.textBaseline = 'bottom';
-			context.fillText(text, range.width - fontSize, range.height - fontSize);
+			context.fillText(text, range.width - offset, range.height - offset);
+		
+			context.moveTo(range.width - offset, (range.height - offset) + ulOffset);
+			context.lineTo((range.width - offset) - textWidth, (range.height - offset) + ulOffset);
 		}
+
+		context.stroke();
 	};
 
 	$scope.drawScaleBar = function(context, domain, range, scale, corner) {
@@ -802,7 +828,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	    var fontSize = 15;
 	    var font = $scope.defaultFont;
 
-		context.fillStyle = $scope.defaultFontColour;
+		context.fillStyle = $scope.mapOptions.fontColour;
 		context.font = fontSize + 'px ' + font;
 		context.textBaseline = 'middle';
 		context.textAlign = 'center';
@@ -950,7 +976,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		// WAYPOINTS
 		//
 		if ($scope.mapOptions.showWaypoints == 'true') {
-			$scope.drawWaypoints(context, $scope.canvasWaypoints, 10, Colour.BLACK, 'helvetica', 15);
+			$scope.drawWaypoints(context, $scope.canvasWaypoints, 10, Colour.BLACK, $scope.mapOptions.font, 15);
 		}
 
 		// PLOT TITLE
