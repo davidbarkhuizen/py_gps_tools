@@ -684,6 +684,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		font = (font == undefined) ? $scope.mapOptions.font : font;
 		fontSize = (fontSize == undefined) ? $scope.mapOptions.fontSizePx: fontSize;
 
+		text = text.toUpperCase();
+
 		context.textBaseline = 'top';
 
 		context.fillStyle = colour;
