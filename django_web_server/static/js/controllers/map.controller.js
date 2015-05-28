@@ -18,6 +18,12 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		POINTS : 'points'
 	});
 
+	$scope.TrackSelectionTypes = Object.freeze({
+		BETWEEN : 'between',
+		BEFORE : 'before',
+		AFTER : 'after'
+	});
+
 	$scope.Corners = Corner;
 
 	$scope.getDefaultMapOptions = function() {
@@ -27,6 +33,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 			plotType : $scope.PlotTypes.PATH,
 			showWaypoints : 'true',
 			showCompass : 'true',
+
+			trackSelectionType : $scope.TrackSelectionTypes.BETWEEN,
 
 			font : 'courier new',
 			fontSizePx : 20,
@@ -59,6 +67,9 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	$scope.exportCanvas = document.getElementById($scope.exportCanvasId);
 	$scope.exportContext = $scope.exportCanvas.getContext("2d");
 
+	$scope.editTrackMenuId = 'MapEditTrackMenu';
+	$scope.editTrackMenu = document.getElementById($scope.editTrackMenuId);
+
 	// -----------------------------------------------------------
 
 	var tracks = $scope.$parent.tracks;
@@ -88,6 +99,12 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.showMapSelectionArea = false;
 
+	$scope.selectedSegmentTrack = null;
+	$scope.selectedSegment = null;
+	$scope.selectedSegmentSectionPoints = [];
+	$scope.selectedSegmentSectionStart = null;
+	$scope.selectedSegmentSectionEnd = null;
+
 	$scope.haveSelection = function() {
 		return ($scope.canvasSelections.length == 2);
 	};
@@ -97,6 +114,20 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		$scope.selecting = false;
 		$scope.selectionPoints.length = 0;
 		$scope.showMapSelectionArea = false;
+	};
+
+	$scope.getAreaSelection = function() {
+
+		var latLon1 = $scope.mapLatLonFromCanvasXY($scope.selectionPoints[0].x, $scope.selectionPoints[0].y);
+		var latLon2 = $scope.mapLatLonFromCanvasXY($scope.selectionPoints[1].x, $scope.selectionPoints[1].y);
+
+		var minMaxLat = { 'max' : Math.max(latLon1.lat, latLon2.lat), 'min' : Math.min(latLon1.lat, latLon2.lat) };
+		var minMaxLon = { 'max' : Math.max(latLon1.lon, latLon2.lon), 'min' : Math.min(latLon1.lon, latLon2.lon) };
+	
+		return {
+			topLeft : { lat : minMaxLat.min, lon : minMaxLon.min},
+			bottomRight : { lat : minMaxLat.max, lon : minMaxLon.max}
+		};
 	};
 
 	// ZOOM IN/OUT ----------------------------------------------
@@ -178,10 +209,144 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	};
 
 	// ----------------------------------------------------------
-	// OPTIONS MENU
+	// EDIT TRACK
 
-	$scope.showOptionsMenu = false;
-	$scope.openOptionsMenu = function() {
+	$scope.showEditTrackMenu = false;
+
+	$scope.openEditTrackMenu = function() {
+
+		$scope.closeOptionsMenu();
+
+		var style = $scope.getPositionStyleComponentForRightMenu();			
+		$scope.editTrackMenu.setAttribute('style', style);
+
+		ngShow($scope.editTrackMenu);
+		$scope.showEditTrackMenu = true;		
+		$scope.canvas.style.opacity = '0.5';
+	};
+
+	$scope.closeEditTrackMenu = function() {
+
+		ngHide($scope.editTrackMenu);
+		$scope.showEditTrackMenu = false;		
+		$scope.canvas.style.opacity = '1';
+	};
+
+	$scope.onTrackSelectionTypeChange = function() {
+		$scope.editTrack_AreaSelected();
+	};
+
+	$scope.deleteSelectedSegmentSectionPoints = function() {
+
+		$scope.selectedSegment.points.removeWhere(function(p){
+			return ($scope.selectedSegmentSectionPoints.indexOf(p) != -1);
+		});
+
+		$scope.selectedSegmentSectionPoints.length = 0;
+
+		$scope.closeEditTrackMenu();
+
+		$scope.drawMap();
+	};
+
+	$scope.editTrack_AreaSelected = function() {
+
+		var slx = $scope.getAreaSelection();
+
+		// determine which points fall inside the selection rectangle
+
+		var isInside = function(pt) {
+
+			var yes = 
+				(
+				((pt.lat >= slx.topLeft.lat) && (pt.lat <= slx.bottomRight.lat))
+				&& 
+				((pt.lon >= slx.topLeft.lon) && (pt.lon <= slx.bottomRight.lon))
+				);
+
+			return yes;
+		};
+
+		$scope.selectedSegmentTrack = null;
+		$scope.selectedSegment = null;
+
+		var matches = [];
+
+		tracks.forEach(function(track){
+
+			if (matches.length > 0)
+					return;
+
+			track.segments.forEach(function(segment) {
+
+				if (matches.length > 0)
+					return;
+
+				var segmentMatches = [];
+
+				segment.points.forEach(function(point) {
+					if (isInside(point)) {
+						segmentMatches.push(point);
+					}
+				});
+
+				if (segmentMatches.length > 0) {
+					segmentMatches.forEach(function(pt) { matches.push(pt); })
+
+					$scope.selectedSegment = segment;
+				}				
+			});
+
+			if (matches.length > 0)
+				$scope.selectedSegmentTrack = track;
+		});
+
+		matches.sort(function(a, b){
+
+			if (a.time < b.time)
+				return - 1;
+			else if (a.time > b.time)
+				return 1;
+			else
+				return 0;
+		});
+
+		$scope.selectedSegmentSectionStart = matches[0];
+		$scope.selectedSegmentSectionEnd = matches[matches.length - 1];
+
+		var minTime = $scope.selectedSegmentSectionStart.time;
+		var maxTime = $scope.selectedSegmentSectionEnd.time;
+
+		$scope.selectedSegmentSectionPoints.length = 0;
+
+		$scope.selectedSegment.points.forEach(function(p) {
+
+			var included = false;
+			switch ($scope.mapOptions.trackSelectionType) {
+				case $scope.TrackSelectionTypes.BETWEEN:
+					included = ((p.time >= minTime) && (p.time <= maxTime));
+					break;
+				case $scope.TrackSelectionTypes.BEFORE:
+					included = (p.time < minTime);
+					break;
+				case $scope.TrackSelectionTypes.AFTER:
+					included = (p.time > maxTime);
+					break;
+			}
+
+			if (included == true)
+				$scope.selectedSegmentSectionPoints.push(p);
+		});
+
+		$scope.drawMap();
+
+		$scope.openEditTrackMenu();
+	};
+
+	// ----------------------------------------------------------
+	// SHARED ACROSS RIGHT MENU
+
+	$scope.getPositionStyleComponentForRightMenu = function() {
 
 		var width = 300;
 
@@ -189,24 +354,39 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		style = style + 'top:' + (10) + 'px;';
 		style = style + 'left:' + ($scope.range.width - 10 - width) + 'px;'
 		style = style + 'width:' + (width) + 'px;';
-		
+
+		return style;
+	};
+
+	// ----------------------------------------------------------
+	// OPTIONS MENU
+
+	$scope.showOptionsMenu = false;
+	$scope.openOptionsMenu = function() {
+
+		$scope.closeEditTrackMenu();
+
+		var style = $scope.getPositionStyleComponentForRightMenu();			
 		$scope.optionsMenu.setAttribute('style', style);
 	
 		ngShow($scope.optionsMenu);
-
 		$scope.showOptionsMenu = true;
+		$scope.canvas.style.opacity = '0.5';
+	};
+
+	$scope.closeOptionsMenu = function() {
+
+		ngHide($scope.optionsMenu);
+		$scope.showOptionsMenu = false;		
+		$scope.canvas.style.opacity = '1';
 	};
 
 	$scope.toggleOptionsMenu = function() {
-		if ($scope.showOptionsMenu == true) {
-			$scope.showOptionsMenu = false;
-			ngHide($scope.optionsMenu); 
-			$scope.canvas.style.opacity = '1';
-		}
-		else {
+
+		if ($scope.showOptionsMenu == true)
+			$scope.closeOptionsMenu();
+		else
 			$scope.openOptionsMenu();
-			$scope.canvas.style.opacity = '0.5';
-		}
 	};
 
 	// ----------------------------------------------------------
@@ -646,7 +826,17 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	    }    
 	};
 
-	$scope.drawWayPoint = function(context, cx, cy, size, color, name, font, fontSize) {
+	$scope.drawselectedSegmentSectionPoints = function(context, domain, range, scale) {
+
+		var transformed = [];
+		$scope.selectedSegmentSectionPoints.forEach(function(p){
+			transformed.push($scope.transformPoint(domain, range, scale, p.lat, p.lon, p.ele));
+		});
+
+		$scope.drawEdges(context, transformed, 2, Colour.ORANGE);
+	};
+
+	$scope.drawWayPoint = function(context, cx, cy, size, color, text, font, fontSize) {
 
 		if (color) {
 			context.fillStyle = color;
@@ -667,11 +857,13 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	
 		// text
 		//
-		if (name !== undefined) {
+		if (text !== undefined) {
+			text = text.toUpperCase();
+
 			context.textAlign = 'left';
 			context.font = fontSize + 'px ' + ' bold ' + font;
 			context.textBaseline = 'middle';
-			context.fillText(name, cx + 15, cy);
+			context.fillText(text, cx + 15, cy);
 		}	
 	}
 
@@ -973,6 +1165,10 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		}
 		else if ($scope.mapOptions.plotType == $scope.PlotTypes.ELEVATION) {
 			$scope.drawElevationHalo();
+		}
+
+		if ($scope.selectedSegmentSectionPoints.length > 0) {
+			$scope.drawselectedSegmentSectionPoints(context, domain, range, scale);
 		}
 			
 		// WAYPOINTS

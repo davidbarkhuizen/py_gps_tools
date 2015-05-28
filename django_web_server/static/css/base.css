@@ -200,7 +200,9 @@ a
     position: absolute;
 }
 
-.map-options-menu {
+/* MUTUALLY EXCLUSIVE RIGHT MENUS */ 
+
+.right-overlay-menu {
     z-index: 4;
     position: absolute;
 }
@@ -215,6 +217,6 @@ a
     box-shadow:inset 0px 0px 0px 5px orange;
 }
 
-.map-options-menu {
+.right-overlay-menu {
     text-align:right;
 }

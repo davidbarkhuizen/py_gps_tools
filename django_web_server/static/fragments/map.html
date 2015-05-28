@@ -44,12 +44,13 @@
 			ng-class='showMapSelectionArea ? "active" : "inactive" '
 			>edit waypoints</a>
 		<a href='#'
-			ng-click='areaSelectWayPoints()'
+			ng-click='editTrack_AreaSelected()'
 			ng-class='showMapSelectionArea ? "active" : "inactive" '
 			>edit track</a>
 	</div>
+
 	<div id='MapOptionsMenu' 
-		class='map-options-menu'
+		class='map-options-menu right-overlay-menu'
 		ng-show='showOptionsMenu'
 		>
 		<div class='header'>
@@ -152,8 +153,35 @@
 			</div>
 
 		</div>
-
 	</div>
+
+	<div id='MapEditTrackMenu' 
+		class='map-edit-track-menu right-overlay-menu'
+		ng-show='showEditTrackMenu'
+		>
+		<h3 class='bold'>
+			edit track
+		</h3>
+
+		<div>
+			<span class='bold'>select</span>
+
+			<div ng-repeat='trackSelectionType in TrackSelectionTypes'>
+				<input
+					ng-model="mapOptions.trackSelectionType"
+					value="{{ trackSelectionType }}"
+					type="radio"
+					ng-change='onTrackSelectionTypeChange();'
+					>{{ trackSelectionType }}
+				</input>
+			</div>
+		</div>
+
+		<br/>
+
+		<a href='#' ng-click='deleteSelectedSegmentSectionPoints();'>delete</a>
+	</div>
+
 	<canvas id="ExportMapCanvas"
 		ng-show='false'
 		>

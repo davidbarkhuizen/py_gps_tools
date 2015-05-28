@@ -53,5 +53,5 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 		$scope.load(id);	
 	});
 
-	// $rootScope.$emit(Command.LOAD_TRACK, 40);
+	$rootScope.$emit(Command.LOAD_TRACK, 39);
 };
