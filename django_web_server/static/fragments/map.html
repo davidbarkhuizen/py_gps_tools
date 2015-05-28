@@ -42,92 +42,117 @@
 		<a href='#'
 			ng-click='areaSelectWayPoints()'
 			ng-class='showMapSelectionArea ? "active" : "inactive" '
-			>selected waypoints</a>
+			>edit waypoints</a>
+		<a href='#'
+			ng-click='areaSelectWayPoints()'
+			ng-class='showMapSelectionArea ? "active" : "inactive" '
+			>edit track</a>
 	</div>
 	<div id='MapOptionsMenu' 
 		class='map-options-menu'
 		ng-show='showOptionsMenu'
 		>
-		<div>
-			options
+		<div class='header'>
+			map options
 		</div>
 
 		<br/>
 
-		<div>
-			<span class='header'>plot type</span>
+		<div class='list' style='text-align:right;font-weight:normal;'>
 
-			<div ng-repeat='plotType in PlotTypes'>
+			<div>
+				<span class='bold'>plot type</span>
+
+				<div ng-repeat='plotType in PlotTypes'>
+					<input
+						ng-model="mapOptions.plotType"
+						value="{{ plotType }}"
+						type="radio"
+						ng-change='onOptionChange();'
+						>{{ plotType }}
+					</input>
+				</div>
+			</div>
+
+			<br/>
+
+			<div>
+				<span class='bold'>waypoints</span>
+				<br/>
 				<input
-					ng-model="mapOptions.plotType"
-					value="{{ plotType }}"
+					ng-model="mapOptions.showWaypoints"
+					value="true"
 					type="radio"
 					ng-change='onOptionChange();'
-					>{{ plotType }}
+					>show
 				</input>
-			</div>
-		</div>
-
-		<br/>
-
-		<div>
-			<span class='header'>waypoints</span>
-			<br/>
-			<input
-				ng-model="mapOptions.showWaypoints"
-				value="true"
-				type="radio"
-				ng-change='onOptionChange();'
-				>show
-			</input>
-			<br/>
-			<input
-				ng-model="mapOptions.showWaypoints"
-				value="false"
-				type="radio"
-				ng-change='onOptionChange();'
-				>hide
-			</input>
-		</div>
-
-		<br/>
-
-		<div>
-			<span class='header'>compass</span>
-
-			<br/>
-			<input
-				ng-model="mapOptions.showCompass"
-				value="true"
-				type="radio"
-				ng-change='onOptionChange();'
-				>show
-			</input>
-			<br/>
-			<input
-				ng-model="mapOptions.showCompass"
-				value="false"
-				type="radio"
-				ng-change='onOptionChange();'
-				>hide
-			</input>
-		</div>
-
-		<br/>
-
-		<div>
-			<span class='header'>title location</span>
-			
-			<div ng-repeat='corner in Corners'>
+				<br/>
 				<input
-					ng-model="mapOptions.titleCorner"
-					value="{{ corner }}"
+					ng-model="mapOptions.showWaypoints"
+					value="false"
 					type="radio"
 					ng-change='onOptionChange();'
-					>{{ corner }}
+					>hide
 				</input>
 			</div>
+
+			<br/>
+
+			<div>
+				<span class='bold'>compass</span>
+
+				<br/>
+				<input
+					ng-model="mapOptions.showCompass"
+					value="true"
+					type="radio"
+					ng-change='onOptionChange();'
+					>show
+				</input>
+				<br/>
+				<input
+					ng-model="mapOptions.showCompass"
+					value="false"
+					type="radio"
+					ng-change='onOptionChange();'
+					>hide
+				</input>
+			</div>
+
+			<br/>
+
+			<div>
+				<span class='bold'>title location</span>
+				
+				<div ng-repeat='corner in Corners'>
+					<input
+						ng-model="mapOptions.titleLocation"
+						value="{{ corner }}"
+						type="radio"
+						ng-change='onOptionChange();'
+						>{{ corner }}
+					</input>
+				</div>
+			</div>
+
+			<br/>
+
+			<div>
+				<span class='bold'>scale bar location</span>
+				
+				<div ng-repeat='corner in Corners'>
+					<input
+						ng-model="mapOptions.scaleBarLocation"
+						value="{{ corner }}"
+						type="radio"
+						ng-change='onOptionChange();'
+						>{{ corner }}
+					</input>
+				</div>
+			</div>
+
 		</div>
+
 	</div>
 	<canvas id="ExportMapCanvas"
 		ng-show='false'

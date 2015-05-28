@@ -7,7 +7,11 @@ html, body {
 
 	font-family: courier !important;
     font-size: 20px;
-    font-weight: bold !important;
+    font-weight: bold;
+}
+
+.bold {
+    font-weight: bold;
 }
 
 .header {

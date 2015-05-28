@@ -14,7 +14,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.PlotTypes = Object.freeze({
 		ELEVATION : 'elevation',
-		EDGES : 'solid',
+		PATH : 'path',
 		POINTS : 'points'
 	});
 
@@ -22,8 +22,9 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.getDefaultMapOptions = function() {
 		return {
-			titleCorner: Corner.TOP_LEFT,
-			plotType : $scope.PlotTypes.EDGES,
+			titleLocation: Corner.TOP_LEFT,
+			scaleBarLocation : Corner.BOTTOM_RIGHT,
+			plotType : $scope.PlotTypes.PATH,
 			showWaypoints : 'true',
 			showCompass : 'true'
 		};
@@ -200,9 +201,11 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		if ($scope.showOptionsMenu == true) {
 			$scope.showOptionsMenu = false;
 			ngHide($scope.optionsMenu); 
+			$scope.canvas.style.opacity = '1';
 		}
 		else {
 			$scope.openOptionsMenu();
+			$scope.canvas.style.opacity = '0.5';
 		}
 	};
 
@@ -709,9 +712,13 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		}
 	};
 
-	$scope.drawScaleBar = function(context, domain, range, scale) {
+	$scope.drawScaleBar = function(context, domain, range, scale, corner) {
 
-		var scalesM = [ 
+		corner = (corner == undefined) ? Corner.BOTTOM_RIGHT : corner;
+
+		// DETERMINE WHICH REFERENCE LENGTH IS APPROPRIATE
+
+		var referencesM = [ 
 			5, 
 			10,
 			20, 
@@ -726,45 +733,71 @@ function MapController($rootScope, $scope, $http, $timeout) {
 			10000 
 		];
 
-		var edgeOffset = 20;
-
 		var tl = { lat : domain.minMaxLat.min, lon : domain.minMaxLon.min };
 		var br = { lat : domain.minMaxLat.max, lon : domain.minMaxLon.max };
 
-		// horizontal
-		//
 		var lonDiffM = haversineDistanceMetres(tl.lat, tl.lon, tl.lat, br.lon);
 		var latDiffM = haversineDistanceMetres(tl.lat, tl.lon, br.lat, tl.lon);
 		
 		var diffM = Math.max(lonDiffM, latDiffM);
 		var guess = Math.round(diffM / 4);
 		
-		var measures = scalesM.filter(function(x) { return x <= guess; });
+		var refs = referencesM.filter(function(x) { return x <= guess; });
 
-		if (measures.length == 0)
+		if (refs.length == 0)
 			return;
 
-		var measure = measures[measures.length - 1];
+		var ref = refs[refs.length - 1];
 
-		var startX = range.width - edgeOffset,
-			startY = range.height - edgeOffset;
+		// GOAL-SEEK CORRECT CANVAS LENGTH
+
+		var edgeOffset = 20;
+
+		var startX, startY;
+
+		switch (corner) {
+			case Corner.BOTTOM_RIGHT:
+				startX = range.width - edgeOffset;
+				startY = range.height - edgeOffset;
+				break;
+			case Corner.TOP_RIGHT:
+				startX = range.width - edgeOffset;
+				startY = edgeOffset;
+				break;
+			case Corner.TOP_LEFT:
+				startX = edgeOffset;
+				startY = edgeOffset;
+				break;
+			case Corner.BOTTOM_LEFT:
+				startX = edgeOffset;
+				startY = range.height - edgeOffset;
+				break;
+			default:
+				throw "unknown corner - " + corner;
+		}
 
 		var startLL = $scope.mapLatLonFromCanvasXY(startX, startY, domain, range, scale);
 
+		var endY = startY;
+
 		var distM = function(endX) {
-			var endLL = $scope.mapLatLonFromCanvasXY(endX, startY, domain, range, scale);
-			return haversineDistanceMetres(startLL.lat, startLL.lon, startLL.lat, endLL.lon);
+			var endLL = $scope.mapLatLonFromCanvasXY(endX, endY, domain, range, scale);
+			return haversineDistanceMetres(startLL.lat, startLL.lon, endLL.lat, endLL.lon);
 		}
 
-		var endX = binarySearch(distM, measure, 0, startX, 20);
+		var endX = binarySearch(distM, ref, edgeOffset, range.width - edgeOffset, 20);
+
+		// DRAW
 
 		context.lineWidth = 1;		
 		context.strokeStyle = Colour.BLACK;
 		context.beginPath();
 
 		context.moveTo(startX, startY);			
-	   	context.lineTo(endX, startY);
+	   	context.lineTo(endX, endY);
 	    context.stroke();
+
+	    // DRAW TEXT
 
 	    var fontSize = 15;
 	    var font = $scope.defaultFont;
@@ -773,7 +806,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		context.font = fontSize + 'px ' + font;
 		context.textBaseline = 'middle';
 		context.textAlign = 'center';
-		context.fillText(measure + ' m', (startX + endX) / 2, startY + (edgeOffset / 2));
+		context.fillText(ref + ' m', (startX + endX) / 2, startY + (edgeOffset / 2) + 5);
 
 		context.fill();
 	};
@@ -900,11 +933,11 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 		// SCALE
 		//
-		$scope.drawScaleBar(context, domain, range, scale);
+		$scope.drawScaleBar(context, domain, range, scale, $scope.mapOptions.scaleBarLocation);
 
 		// PLOT TYPE
 		
-		if ($scope.mapOptions.plotType == $scope.PlotTypes.EDGES) {
+		if ($scope.mapOptions.plotType == $scope.PlotTypes.PATH) {
 			$scope.drawAllTracksEdgesColoured(context, lineThickness);
 		}
 		else if ($scope.mapOptions.plotType == $scope.PlotTypes.POINTS) {
@@ -927,7 +960,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 			titleText = titleText + ' + ' + (tracks.length - 1);
 
 		// context, range, text, corner, colour, font, defaultFontSizePx
-		$scope.drawTitleText(context, range, titleText, $scope.mapOptions.titleCorner);
+		$scope.drawTitleText(context, range, titleText, $scope.mapOptions.titleLocation);
 
 		// DISCARD OR SAVE STATE
 
