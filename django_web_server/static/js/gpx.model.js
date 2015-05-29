@@ -43,11 +43,12 @@ Number.prototype.pad = function(size) {
       while (s.length < (size || 2)) {s = "0" + s;}
       return s;
 }
+
 function toShortTimeString(dt) {
 	return dt.getHours().pad() + ':' + dt.getMinutes().pad();
-};
+}
 
-var parsePoint = function(pointString) {
+function parsePoint(pointString) {
 
 	// 2014-10-26 11:06:15|-25.938111|27.592123|1329.160000
 	// time, lat, lon, ele
@@ -62,9 +63,9 @@ var parsePoint = function(pointString) {
 	var t = new Date(Date.parse(datum[3]));
 
 	return new Point(lat, lon, ele, t);
-};
+}
 
-var parseWaypointDict = function(wp) {
+function parseWaypointDict(wp) {
 
 	var id = wp.id;
 	var name = wp.name;
@@ -76,7 +77,7 @@ var parseWaypointDict = function(wp) {
 	var time = Date.parse(wp.time);
 
 	return new WayPoint(id, name, lat, lon, ele, time);
-};
+}
 
 function Track(data) {
 
@@ -202,8 +203,6 @@ function Track(data) {
 	calcTrackStats();
 }
 
-// ---------------------------------------------------------------
-
 var xmlDoc = document
 	.implementation
 	.createDocument(null, null, null);
@@ -220,9 +219,11 @@ function toNode(tagName, attributes, children) {
 
     for(var i = 0; i < children.length; i++) {
         child = children[i];
+
         if(typeof child == 'string') {
             child = xmlDoc.createTextNode(child);
         }
+
         node.appendChild(child);
     }
 
@@ -237,14 +238,60 @@ function nodestoGpx(nodes) {
 	};
 
 	var linkTextNode = toNode('text', {}, ['gpxmaps.net']);
-	var linkNode = toNode('link', {}, [linkTextNode]);
+	var linkNode = toNode('link', {}, [linkTextNode], GPX.XMLNS);
 	var metaDataNode = toNode('metadata', metaDataAttrs, [linkNode]);
 	var gpxChildNodes = [metaDataNode].concat(nodes);
-	var gpxNode = toNode('gpx', GPX.RootAttributes, gpxChildNodes);
+	var gpxNode = toNode('gpx', GPX.RootAttributes, gpxChildNodes, GPX.XMLNS);
 
-	var xml = GPX.XmlHeader + new XMLSerializer().serializeToString(gpxNode);
+	var xml = (GPX.XmlHeader + new XMLSerializer().serializeToString(gpxNode))
+		.replace('<gpx ', "<gpx xmlns='http://www.topografix.com/GPX/1/1' "); // WTF
 
 	return xml;
+}
+
+function pointToNode(tag, point) {
+
+	var attributes = {};
+	var childNodes = [];
+
+	// ATTRIBUTES
+
+	// lat, lon
+
+	if (point.lat !== undefined) {
+		attributes.lat = point.lat.toFixed(6); 		
+	}
+
+	if (point.lon !== undefined) {
+		attributes.lon = point.lon.toFixed(6); 		
+	}
+
+	// CHILD ELEMENTS
+
+	// ele
+
+	if (point.ele !== undefined) {
+		var eleNode = toNode('ele', [], [point.ele.toFixed(6)]);
+		childNodes.push(eleNode);
+	}
+
+	// time	
+
+	if (point.time !== undefined) {
+		var timeNode = toNode('time', [], [toZTimeStr(new Date(point.time))]);
+		childNodes.push(timeNode);
+	}	
+
+	// name	
+
+	if (point.name !== undefined) {
+		var nameNode = toNode('name', [], [point.name]);
+		childNodes.push(nameNode);
+	}
+
+	// TODO sym
+
+	return toNode(tag, attributes, childNodes);
 }
 
 function waypointsToGpx(waypoints) {
@@ -252,41 +299,62 @@ function waypointsToGpx(waypoints) {
 	var nodes = [];
 	waypoints.forEach(function(wp){
 
-		var lat = wp.lat.toFixed(6);
-		var lon = wp.lon.toFixed(6);
-
-		var ele = toNode('ele', [], [wp.ele.toFixed(6)]);
-
-		function lpad0(s) {
-			return (s.length == 2) ? s : '0' + s;
-		}
-
-		function toZTimeStr(dt) {
-			// 2012-09-16T10:02:30Z
-
-			var dateS = dt.getUTCFullYear().toString() 
-				+ '-'
-				+ lpad0((dt.getUTCMonth() + 1).toString())
-				+ '-'
-				+ lpad0(dt.getUTCDate().toString());
-			
-			var timeS = lpad0(dt.getUTCHours().toString())
-				+ ':'
-				+ lpad0(dt.getMinutes().toString())
-				+ ':'
-				+ lpad0(dt.getSeconds().toString());
-
-			return dateS + 'T' + timeS + 'Z';
-		}
-
-		var time = toNode('time', [], [toZTimeStr(new Date(wp.time))]);
-
-		var name = toNode('name', [], [wp.name]);
-		
-		// sym
-
-		nodes.push(toNode('wpt', { 'lat' : lat, 'lon' : lon }, [ele, time, name]));
+		var wptNode = pointToNode('wpt', wp);
+		nodes.push(wptNode);
 	});
 
 	return nodestoGpx(nodes);
-};
+}
+
+function tracksToGpx(tracks) {
+
+	/*
+	<trk>
+		<name>ROSEBANK TO SLEEPY RIVER HEKPOORT</name>
+		<extensions/>
+		<trkseg>
+			<trkpt lat="-25.9381111711" lon="27.5921234395">
+				<ele>1329.16</ele>
+				<time>2014-10-26T11:06:15Z</time>
+			</trkpt>
+			<trkpt lat="-25.9381003585" lon="27.5921297260">
+				<ele>1331.56</ele>
+				<time>2014-10-26T11:06:25Z</time>
+			</trkpt>
+		</trkseg>
+	</trk>
+	*/
+
+	var trackNodes = [];	
+
+	tracks.forEach(function(track){
+
+		var trkChildNodes = [];
+
+		if (track.name !== undefined) {
+			var trkNameNode = toNode('name', [], [track.name]);
+			trkChildNodes.push(trkNameNode);
+		}
+
+		/*
+		// TODO TRACK EXTENSIONS
+		var trkExtensionsNode = toNode('extensions', [], []);
+		trkChildNodes.push(trkExtensionsNode);
+		*/
+
+		track.segments.forEach(function(segment){
+
+			var trkptNodes = segment.points.map(function(point){
+				return pointToNode('trkpt', point);
+			});
+
+			var trksegNode = toNode('trkseg', {}, trkptNodes);
+			trkChildNodes.push(trksegNode);
+		});
+
+		var trackNode = toNode('trk', [], trkChildNodes);
+		trackNodes.push(trackNode);
+	});
+
+	return nodestoGpx(trackNodes);
+}

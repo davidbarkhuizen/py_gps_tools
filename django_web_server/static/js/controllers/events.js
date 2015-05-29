@@ -23,6 +23,7 @@ var Command = Object.freeze({
 
 	EXPORT_WAYPOINTS : guid(),
 	EXPORT_MAP : guid(),
+	EXPORT_TRACKS : guid(),
 
 	EXPORT_CANVAS : guid(),
 

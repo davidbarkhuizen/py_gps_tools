@@ -11,6 +11,18 @@ Object.defineProperty(Array.prototype, "removeWhere", {
     }
 });
 
+Object.defineProperty(Array.prototype, "first", {
+	enumerable: false,
+	value: function(predicate) {
+
+		var matching = this.filter(predicate); 
+		
+		return (matching.length == 0)
+			 ? undefined
+			 : matching[0];
+    }
+});
+
 Object.defineProperty(Array.prototype, "countWhere", {
 	enumerable: false,
 	value: function(predicate) {

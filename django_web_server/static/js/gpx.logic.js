@@ -18,3 +18,24 @@ function haversineDistanceMetres(lat1, lon1, lat2, lon2) {
 
 	return d * 1000.0;
 }
+
+function lpad0(s) {
+	return (s.length == 2) ? s : '0' + s;
+}
+
+function toZTimeStr(dt) {
+
+	var dateS = dt.getUTCFullYear().toString() 
+		+ '-'
+		+ lpad0((dt.getUTCMonth() + 1).toString())
+		+ '-'
+		+ lpad0(dt.getUTCDate().toString());
+	
+	var timeS = lpad0(dt.getUTCHours().toString())
+		+ ':'
+		+ lpad0(dt.getMinutes().toString())
+		+ ':'
+		+ lpad0(dt.getSeconds().toString());
+
+	return dateS + 'T' + timeS + 'Z';
+}

@@ -1,4 +1,5 @@
 var TrackColours = Object.freeze([
+
 	Colour.BLACK, 
 	Colour.BLUE, 
 	Colour.PURPLE, 
@@ -19,7 +20,9 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 		return (unUsed.length > 0) ? unUsed[0] : [Colour.BLACK];
 	};
 
-	$scope.load = function(id) {
+	// LOAD
+
+	$scope.loadTrack = function(id) {
 
 		var matches = $scope.$parent.tracks
 			.filter(function(track){return (track.id == id);});
@@ -43,15 +46,26 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 		httpGET($http, 'track', { 'id' : id }, successFn, failFn, $scope.globalDebug);
 	};
 	
-	$scope.unload = function (id) {
+ 	$rootScope.$on(Command.LOAD_TRACK, function(evt, id) {
+		$scope.loadTrack(id);	
+	});
+
+ 	// UNLOAD
+
+	$scope.unloadTrack = function (id) {
 
 		$scope.$parent.tracks.removeWhere(function(track) { return (track.id == id); });
 		$scope.$emit(Event.TRACK_UNLOADED);
 	};
 
- 	$rootScope.$on(Command.LOAD_TRACK, function(evt, id) {
-		$scope.load(id);	
-	});
+	// EXPORT
 
-	$rootScope.$emit(Command.LOAD_TRACK, 39);
+	$scope.exportTrack = function(id) {
+		
+		var fileName = $scope.$parent.tracks
+			.first(function(track) { return (track.id == id); })
+			.name + '.gpx'
+		
+		$rootScope.$emit(Command.EXPORT_TRACKS, { ids : [id], fileName : fileName});
+	};
 };

@@ -65,4 +65,24 @@ function GpxExportController($rootScope, $scope, $http) {
 	$rootScope.$on(Command.EXPORT_CANVAS, function(evt, data) {
 		$scope.exportCanvas(data.canvas, data.fileName);			
 	});		
+
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// TRACK
+
+	$rootScope.$on(Command.EXPORT_TRACKS, function(evt, data) {
+
+		var matchingTracks = data.ids.map(function(id) {
+			return tracks.first(function(track){ return track.id == data.id; });
+		});		
+			
+		$scope.exportTracks(tracks, data.fileName);			
+	});		
+
+	$scope.exportTracks = function(tracks, fileName) {
+
+		fileName = (fileName == undefined) ? 'GPXMaps.track.gpx' : fileName;
+		
+		var xml = tracksToGpx(tracks);
+		$scope.exportXML(xml, fileName);
+	};
 };
