@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gpx
+	xmlns="http://www.topografix.com/GPX/1/1"
+	xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3"
+	xmlns:wptx1="http://www.garmin.com/xmlschemas/WaypointExtension/v1"
+	xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1"
+	creator="eTrex 20"
+	version="1.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www8.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://www8.garmin.com/xmlschemas/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd">
+	<metadata>
+		<link href="http://www.garmin.com">
+			<text>Garmin International</text>
+		</link>
+		<time>2014-10-26T13:39:18Z</time>
+	</metadata>
+	<trk>
+		<name>ROSEBANK TO SLEEPY RIVER HEKPOORT</name>
+		<extensions>
+			<gpxx:TrackExtension>
+				<gpxx:DisplayColor>Cyan</gpxx:DisplayColor>
+			</gpxx:TrackExtension>
+		</extensions>
+		<trkseg>
+			<trkpt lat="-25.9381111711" lon="27.5921234395">
+				<ele>1329.16</ele>
+				<time>2014-10-26T11:06:15Z</time>
+			</trkpt>
+			<trkpt lat="-25.9381003585" lon="27.5921297260">
+				<ele>1331.56</ele>
+				<time>2014-10-26T11:06:25Z</time>
+			</trkpt>
+		</trkseg>
+	</trk>
+</gpx>

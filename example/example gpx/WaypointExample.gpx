@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?><gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3" xmlns:wptx1="http://www.garmin.com/xmlschemas/WaypointExtension/v1" xmlns:gpxtpx="http://www.garmin.com/xmlschemas/TrackPointExtension/v1" creator="eTrex 20" version="1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www8.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/WaypointExtension/v1 http://www8.garmin.com/xmlschemas/WaypointExtensionv1.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd">
+
+<metadata>
+	<link href="http://www.garmin.com">
+		<text>Garmin International</text>
+	</link>
+	<time>2012-09-16T10:02:30Z</time>
+</metadata>
+
+<wpt lat="-26.482695" lon="28.212483">
+	<ele>1644.855591</ele>
+	<time>2012-09-16T10:02:30Z</time>
+	<name>START</name>
+	<sym>Flag, Blue</sym>
+</wpt>
+
+<wpt lat="-26.470267" lon="28.197299">
+	<ele>1685.437378</ele>
+	<time>2012-09-16T10:59:16Z</time>
+	<name>Terraces</name>
+	<sym>Flag, Blue</sym>
+</wpt>
+
+<wpt lat="-26.468686" lon="28.186555"><ele>1646.717163</ele><time>2012-09-16T11:37:26Z</time><name>beetreeruins</name><sym>Flag, Blue</sym></wpt><wpt lat="-26.471672" lon="28.182905"><ele>1653.047729</ele><time>2012-09-16T12:02:30Z</time><name>anglestone</name><sym>Flag, Blue</sym></wpt><wpt lat="-26.473866" lon="28.183408"><ele>1673.444336</ele><time>2012-09-16T12:10:50Z</time><name>standingstone</name><sym>Flag, Blue</sym></wpt><wpt lat="-26.475682" lon="28.183736"><ele>1685.815552</ele><time>2012-09-16T12:32:50Z</time><name>JUNCTION</name><sym>Flag, Blue</sym></wpt><wpt lat="-26.482122" lon="28.196188"><ele>1799.217896</ele><time>2012-09-16T13:20:22Z</time><name>twincairns</name><sym>Flag, Blue</sym></wpt></gpx>
