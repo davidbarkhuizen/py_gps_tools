@@ -19,8 +19,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	});
 
 	$scope.TrackSelectionTypes = Object.freeze({
-		BETWEEN : 'between',
 		BEFORE : 'before',
+		BETWEEN : 'between',
 		AFTER : 'after'
 	});
 
@@ -213,6 +213,17 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.showEditTrackMenu = false;
 
+	$scope.cancelEditTrack = function() {
+		$scope.selectedSegmentTrack = null;
+		$scope.selectedSegment = null;
+		$scope.selectedSegmentSectionPoints.length = 0;
+		$scope.selectedSegmentSectionStart = null;
+		$scope.selectedSegmentSectionEnd = null;
+
+		$scope.closeEditTrackMenu();
+		$scope.drawMap();
+	};
+
 	$scope.openEditTrackMenu = function() {
 
 		$scope.closeOptionsMenu();
@@ -394,14 +405,11 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.openContextMenu = function() {
 
-		var pt1 = $scope.selectionPoints[0];
-		var pt2 = $scope.selectionPoints[1];
-
-		var left = 20;
+		var left = 10;
 		var width = 100;
 
-		var height = 20;
-		var top = $scope.range.height - (height + 10);
+		var height = 15;
+		var top = $scope.range.height - height;
 		
 		var style  = 'left:' + left + 'px;';
 		style = style + 'top:' + top + 'px;';

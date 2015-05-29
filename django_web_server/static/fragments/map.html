@@ -164,9 +164,9 @@
 		</h3>
 
 		<div>
-			<span class='bold'>select</span>
+			<div class='bold'>select</div>
 
-			<div ng-repeat='trackSelectionType in TrackSelectionTypes'>
+			<div style='font-weight:normal;' ng-repeat='trackSelectionType in TrackSelectionTypes'>
 				<input
 					ng-model="mapOptions.trackSelectionType"
 					value="{{ trackSelectionType }}"
@@ -178,7 +178,8 @@
 		</div>
 
 		<br/>
-
+		<a href='#' ng-click='cancelEditTrack();'>cancel</a>
+		<br/>
 		<a href='#' ng-click='deleteSelectedSegmentSectionPoints();'>delete</a>
 	</div>
 

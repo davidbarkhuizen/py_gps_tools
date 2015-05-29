@@ -42,7 +42,7 @@ function TrackInfosController($rootScope, $scope, $http, $timeout) {
 		}
 		var matches = $scope.trackInfos.filter(matchFunction);
 		
-		matches.sort(function(a, b) { return a > b; });
+		matches.sort(function(a, b) { return a.name.localeCompare(b.name); });
 
 		// update filtered map list
 		//
@@ -58,6 +58,9 @@ function TrackInfosController($rootScope, $scope, $http, $timeout) {
 			
 			$scope.trackInfos.length = 0;
 			data.trackInfos.forEach(function(x) { $scope.trackInfos.push(x); });
+			data.trackInfos.sort(function(a, b) { 
+				return a.name.localeCompare(b.name); 
+			});
 
 			$scope.filter();
 		};
