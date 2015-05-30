@@ -249,9 +249,14 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.deleteSelectedSegmentSectionPoints = function() {
 
+		var lengthBefore = $scope.selectedSegment.points.length;
+
 		$scope.selectedSegment.points.removeWhere(function(p){
 			return ($scope.selectedSegmentSectionPoints.indexOf(p) != -1);
 		});
+
+		if ($scope.selectedSegment.points.length != lengthBefore)
+			$scope.selectedSegmentTrack.edited = true;
 
 		$scope.selectedSegmentSectionPoints.length = 0;
 
@@ -465,7 +470,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		$scope.showMapSelectionArea = true;
 		$scope.$apply();
 
-		$scope.$emit(Event.MAP_SELECTION_BEGUN);
+		$rootScope.$emit(Event.MAP_SELECTION_BEGUN);
 	};
 
 	$scope.onLeftClickUp = function(mousePos) {

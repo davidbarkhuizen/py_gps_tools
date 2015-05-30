@@ -55,7 +55,14 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 	$scope.unloadTrack = function (id) {
 
 		$scope.$parent.tracks.removeWhere(function(track) { return (track.id == id); });
-		$scope.$emit(Event.TRACK_UNLOADED);
+		$rootScope.$emit(Event.TRACK_UNLOADED);
+	};
+
+	$scope.reloadTrack = function (id) {
+
+		$scope.$parent.tracks.removeWhere(function(track) { return (track.id == id); });
+		$rootScope.$emit(Event.TRACK_UNLOADED);
+		$rootScope.$emit(Command.LOAD_TRACK, id);
 	};
 
 	// EXPORT
@@ -67,5 +74,15 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 			.name + '.gpx'
 		
 		$rootScope.$emit(Command.EXPORT_TRACKS, { ids : [id], fileName : fileName});
+	};
+
+	$scope.exportAllTracks = function() {
+
+		var ids = $scope.$parent.tracks.map(function(track) { return track.id; });		
+		$rootScope.$emit(Command.EXPORT_TRACKS, { ids : ids });
+	};
+
+	$scope.saveTrack = function(id) {
+
 	};
 };

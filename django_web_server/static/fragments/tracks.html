@@ -5,13 +5,12 @@
 	<h3>
 		tracks
 	</h3>
-	<div>
-		{{ tracks.length }} track(s) loaded
-	</div>
 	<div ng-show='tracks.length > 0'>
 		<div class='short-list'>
 			<div ng-repeat="track in tracks" style='color:{{track.colour}};'>
 				{{ track.name }}
+
+				<span ng-show='(track.edited == true)'><span style='color:red;'>(edited)</span> <a href='#' ng-click='saveTrack(track.id);'>save changes</a></span>
 				<br/>
 				{{ (track.totalDistanceM / 1000.0).toFixed(2) }} km
 				<br/>
@@ -20,6 +19,7 @@
 				{{ track.durationString }}
 				<br/>
 				<a href='#' ng-click='unloadTrack(track.id);'>unload</a>
+				<a href='#' ng-click='reloadTrack(track.id);'>reload</a>
 				<a href='#' ng-click='exportTrack(track.id);'>export</a>
 
 				<div ng-show='tracks.length > 1'>
@@ -28,7 +28,10 @@
 			</div>
 		</div>
 		<div>
-			...
+			{{ tracks.length }} track(s) loaded
+		</div>
+		<div>
+			<a href='#' ng-click='exportAllTracks();'>export all</a>
 		</div>
 	</div>
 

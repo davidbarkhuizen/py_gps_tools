@@ -46,6 +46,9 @@ function ElevationPlotController($rootScope, $scope, $http, $timeout) {
 
 	$scope.drawElevationPlot = function() {
 
+		if ($scope.$parent.tracks.length == 0)
+			return;
+
 		[width, height] = $scope.getCanvasDimensions();
 
 		var track = $scope.$parent.tracks[0];

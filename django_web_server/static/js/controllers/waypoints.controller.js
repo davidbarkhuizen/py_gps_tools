@@ -82,7 +82,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 			model.selectedPoint.name = $scope.editCopy.name;
 			$scope.editing = false;
-			$scope.$emit(Event.WAYPOINT_EDITED);
+			$rootScope.$emit(Event.WAYPOINT_EDITED);
 		};
 
 		var failureFn = function() {
@@ -90,7 +90,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 		};
 
 		var errorFn = function(error) {
-			$scope.$emit(Event.DEBUG_ERROR, error);
+			$rootScope.$emit(Event.DEBUG_ERROR, error);
 		};
 
 		httpPATCH($http, 'waypoint', $scope.editCopy, successFn, failureFn, errorFn);	
@@ -197,7 +197,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 	$scope.unloadAllWaypoints = function() {
 		model.waypoints.length = 0;
-		$scope.$emit(Event.WAYPOINTS_UNLOADED);
+		$rootScope.$emit(Event.WAYPOINTS_UNLOADED);
 	};	
 
 	// RELOAD FOR ALL TRACKS
@@ -227,7 +227,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 		});
 
 		if (changed)  {
-			$scope.$emit(Event.WAYPOINTS_LOADED);
+			$rootScope.$emit(Event.WAYPOINTS_LOADED);
 		}
 	};
 
@@ -253,7 +253,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 		};
 
 		var errorFn = function(error){
-			$scope.$emit(Event.DEBUG_ERROR, error);
+			$rootScope.$emit(Event.DEBUG_ERROR, error);
 		};
 
 		query = {

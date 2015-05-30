@@ -36,7 +36,7 @@ function GodController($rootScope, $scope, $http, $timeout) {
 
 	$rootScope.$on(Command.GOTO_VIEW, function(evt, view) { $scope.view = view; });
 
-	$scope.$on(Event.DEBUG_ERROR, function(evt, error) {
+	$rootScope.$on(Event.DEBUG_ERROR, function(evt, error) {
 		$scope.globalDebug(error);
 	});
 
@@ -71,7 +71,7 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	// -------------------------------------------------------------------
 	// GPX IMPORT - EXPORT
 
-	$scope.$on(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED, function(evt) {
+	$rootScope.$on(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED, function(evt) {
 
 		if ($scope.view == $scope.Views.IMPORT) {
 			// $scope.view = $scope.Views.TRACK_DATABASE;
@@ -112,7 +112,7 @@ function GodController($rootScope, $scope, $http, $timeout) {
 		$scope.view = $scope.Views.DEBUG;
 	};
 
-	$scope.$on(Event.DEBUG_ERROR, function(evt, error) {
+	$rootScope.$on(Event.DEBUG_ERROR, function(evt, error) {
 		$scope.globalDebug(error);
 	});
 

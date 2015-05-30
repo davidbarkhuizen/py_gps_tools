@@ -9,19 +9,34 @@
 	</h3>
 
 	<div>
-		map
-	</div>
-	<div ng-show='tracks.length > 0'>
-		<a href='#' ng-click='exportMap();'>export</a>
+		<div>
+			map
+		</div>
+		<div ng-show='tracks.length > 0'>
+			<a href='#' ng-click='exportMap();'>export</a>
+		</div>
 	</div>
 
 	<br/>
 
 	<div>
-		waypoints
+		<div>
+			waypoints
+		</div>
+		<div ng-show='model.waypoints.length > 0'>
+			<a href='#' ng-click='exportAllWaypoints();'>export all</a>
+		</div>
 	</div>
-	<div ng-show='model.waypoints.length > 0'>
-		<a href='#' ng-click='exportAllWaypoints();'>export all</a>
+
+	<br/>
+
+	<div>
+		<div>
+			tracks
+		</div>
+		<div ng-show='tracks.length > 0'>
+			<a href='#' ng-click='exportAllTracks();'>export all</a>
+		</div>
 	</div>
 
 	<a ng-show='false' id='GpxDownloadLink'>download .gpx</a>

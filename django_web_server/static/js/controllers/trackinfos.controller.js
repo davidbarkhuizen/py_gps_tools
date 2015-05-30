@@ -29,7 +29,7 @@ function TrackInfosController($rootScope, $scope, $http, $timeout) {
 			}
 		);
 		
-		$scope.$emit(Command.LOAD_TRACK, id);
+		$rootScope.$emit(Command.LOAD_TRACK, id);
 		tracks.length = 0;
 	};
 

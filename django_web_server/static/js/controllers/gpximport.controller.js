@@ -33,7 +33,7 @@ function GpxImportController($rootScope, $scope, $http, $timeout) {
 
 			var next = function() {
 		    	if ($scope.fileQueue.length == 0) {
-		    		$scope.$emit(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED);
+		    		$rootScope.$emit(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED);
 	    		}
 		    	else {
 		    		$scope.uploadNextFile();
@@ -42,7 +42,7 @@ function GpxImportController($rootScope, $scope, $http, $timeout) {
 
 			var successFn = function(data, status, headers, config) {
 
-				$scope.$emit(Event.GPX_FILE_IMPORTED);
+				$rootScope.$emit(Event.GPX_FILE_IMPORTED);
 				$scope.successfulImports.push(file);
 				next();
 			};
@@ -55,7 +55,7 @@ function GpxImportController($rootScope, $scope, $http, $timeout) {
 			};
 
 			var errorFn = function(error) {
-			    $scope.$emit(Event.DEBUG_ERROR, error);
+			    $rootScope.$emit(Event.DEBUG_ERROR, error);
 			};
 
 			httpPOST($http, 'gpxfile', data, successFn, failureFn, errorFn);
