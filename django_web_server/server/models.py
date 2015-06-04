@@ -12,11 +12,11 @@ class Gpx(models.Model):
 	#
 	name 				= models.CharField(max_length=512)
 	desc 				= models.CharField(max_length=1024, null=True)
-	author				= models.CharField(max_length=512, null=True)
-	linkURL				= models.CharField(max_length=2048, null=True)
-	linkText			= models.CharField(max_length=512, null=True)
+	#author				= models.CharField(max_length=512, null=True)
+	#linkURL				= models.CharField(max_length=2048, null=True)
+	#linkText			= models.CharField(max_length=512, null=True)
 	time 				= models.DateField(null=True)
-	keywords			= models.CharField(max_length=512, null=True)
+	#keywords			= models.CharField(max_length=512, null=True)
 	# bounds
 	minLat 				= models.DecimalField(max_digits=9, decimal_places=6, null=True)
 	minLon 				= models.DecimalField(max_digits=9, decimal_places=6, null=True)
