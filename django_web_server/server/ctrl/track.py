@@ -1,4 +1,4 @@
-from server.models import GpxTrack
+from server.models import Gpx
 from server.models import WayPoint
 
 from gpx.gpx import parse_gpx_xml_to_track
@@ -19,7 +19,7 @@ def get(request, params):
 
     id = params['id']
 
-    model = GpxTrack.objects.get(id=id)
+    model = Gpx.objects.get(id=id)
     
     if (model == None):
         return failure('could not find track with id = %s' % id)    

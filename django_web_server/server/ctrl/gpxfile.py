@@ -2,8 +2,10 @@ from hfx import success, failure
 
 from gpx.gpx import parse_gpx_xml_to_track, parse_gpx_xml_to_waypoints
 
-from server.models import GpxTrack
+from server.models import Gpx
 from server.models import WayPoint
+
+import hashlib
 
 def routing(request, qs):
 	
@@ -31,15 +33,21 @@ def post(request, params):
 			msg = 'missing json data'
 			raise
 
+		# SHA256
+		#
+		hashx = hashlib.sha256(xml)
+		xmlHash = hashx.hex_digest()
+		print(xmlHash)
+
 		# check if already exists
 		#
 		already_exists = False
-		for f in GpxTrack.objects.all():
+		for f in Gpx.objects.all():
 			if str(f.xml) == str(xml_string):
 				already_exists = True
 				break
 		if already_exists:
-			msg = 'already exists'
+			msg = 'an identical gpx file has already been imported'
 			raise Exception(msg)
 
 		# check that xml file can be parsed to either track or waypoint
@@ -72,7 +80,7 @@ def post(request, params):
 	# create track
 	#
 	if track != None:
-		gpx_file = GpxTrack(xml = xml_string, name = track.name, timestamp = track.time)
+		gpx_file = Gpx(xml = xml_string, name = track.name, timestamp = track.time)
 		gpx_file.save()
 
 	# create waypoints

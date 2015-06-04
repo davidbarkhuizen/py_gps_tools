@@ -22,6 +22,11 @@
 				ng-click="gotoView(Views.LOADED_TRACKS);"
 				ng-class="view == Views.LOADED_TRACKS ? 'nav-active' : 'nav-inactive'"
 				>loaded tracks</a>
+
+			<a href='#' 
+				ng-click="gotoView(Views.LOADED_WAYPOINTS);"
+				ng-class="view == Views.LOADED_WAYPOINTS ? 'nav-active' : 'nav-inactive'"
+				>loaded waypoints</a>
 			
 			<a href='#' 
 				ng-click="gotoView(Views.MAP);"
@@ -33,10 +38,6 @@
 				ng-class="view == Views.ELEVATION ? 'nav-active' : 'nav-inactive'"
 				>elevation</a>
 			
-			<a href='#' 
-				ng-click="gotoView(Views.WAYPOINTS);"
-				ng-class="view == Views.WAYPOINTS ? 'nav-active' : 'nav-inactive'"
-				>waypoints</a>
 			<a href='#' 
 				ng-click="gotoView(Views.EXPORT);"
 				ng-class="view == Views.EXPORT ? 'nav-active' : 'nav-inactive'"

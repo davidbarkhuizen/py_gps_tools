@@ -1,6 +1,6 @@
 from hfx import success
 
-from server.models import GpxTrack
+from server.models import Gpx
 
 def routing(request, qs):
 
@@ -11,7 +11,7 @@ def routing(request, qs):
 
 def get(request):
 
-	gpx_files = GpxTrack.objects.all().order_by('timestamp')
+	gpx_files = Gpx.objects.all().order_by('timestamp')
 
 	track_list = []
 	for gpx in gpx_files:

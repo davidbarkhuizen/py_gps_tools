@@ -7,6 +7,9 @@ from segment import Segment
 def def_log_fn(s):
     pass
 
+# ---------------------------------------------------------------
+# TIME
+
 import datetime
 DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
 
@@ -47,20 +50,93 @@ def parseGarmin11DateTimeString(s):
 
     return dt
 
-def parse_gpx_xml_to_track(xml_string, log = def_log_fn):
+# ---------------------------------------------------------------
+
+def blank_metadata():
+
+    return { 'name' : None,
+        'desc' : None,
+        'author' : None,
+        'linkURL' : None,
+        'linkText' : None,
+        'time' : None,
+        'keywords' : None,
+        'minLat' : None,
+        'minLon' : None,
+        'maxLat' : None,
+        'maxLon' : None 
+        }
+
+def parse_metadata(find, findall):
+
+    '''
+    linkURL             = models.CharField(max_length=2048)
+    linkText            = models.CharField(max_length=512)
+
+    keywords            = models.CharField(max_length=512)
+
+    minLat              = models.DecimalField(max_digits=9, decimal_places=6)
+    minLon              = models.DecimalField(max_digits=9, decimal_places=6)
+    maxLat              = models.DecimalField(max_digits=9, decimal_places=6)
+    maxLon              = models.DecimalField(max_digits=9, decimal_places=6)
+    '''
+
+    metadata = blank_metadata()
+
+    # time
+
+    try:
+        metadata_time_string = find('metadata/time').text
+        metadata_time = datetime.datetime.strptime(metadata_time_string, DATE_TIME_FORMAT)    
+        metadata['time'] = metadata_time
+    except Error, e:
+        pass
+
+    # simple fields
+
+    simpleFields = ['name', 'desc', 'author']
+
+    for field in simpleFields:
+        try:
+            metadata[field] = find('metadata/' + field).text
+        except Error, e:
+            pass
+
+    return metadata
+
+def parse_gpx_xml(xml_string, log = def_log_fn):
+    '''
+    return {
+        'tracks' : [],
+        'waypoints' : []
+    }
+    '''
 
     x = X(xml_string)
     ns = x.ns
     def find(path): return x.find(path)
     def findall(path): return x.findall(path)
 
+    '''
+    name                = models.CharField(max_length=512)
+    desc                = models.TextField()
+    author              = models.CharField(max_length=512)
+    linkURL             = models.CharField(max_length=2048)
+    linkText            = models.CharField(max_length=512)
+    time                = models.DateField()
+    keywords            = models.CharField(max_length=512)
+    minLat  = models.DecimalField(max_digits=9, decimal_places=6)
+    minLon  = models.DecimalField(max_digits=9, decimal_places=6)
+    maxLat  = models.DecimalField(max_digits=9, decimal_places=6)
+    maxLon  = models.DecimalField(max_digits=9, decimal_places=6)
+    '''
+
     # metadata time
 
-    metadata_time_stamp_string = find('metadata/time').text
-    meta_data_time = datetime.datetime.strptime(metadata_time_stamp_string, DATE_TIME_FORMAT)    
+    metadata = parse_metadata(find, findall)
 
-    log('metadata - time @ %s' % meta_data_time)
-  
+    # TRACK ---------------------------------------------
+
     # track
     
     gpx_track = Track('', [])
