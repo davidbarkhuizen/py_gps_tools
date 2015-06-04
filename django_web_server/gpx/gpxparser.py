@@ -156,43 +156,12 @@ def parse_tracks(find, findall, ns):
 
     return tracks
 
-def parse_gpx_xml(xml_string, log = def_log_fn):
 
-    x = X(xml_string)
-    ns = x.ns
-    def find(path): return x.find(path)
-    def findall(path): return x.findall(path)
-
-    def nsfind(path): return x.find(ns + path)
-    def nsfindall(path): return x.findall(ns + path)
-
-    metadata = parse_metadata(find, findall)
-    tracks = parse_tracks(find, findall, ns)
-    waypoints = []
-
-    return GPX(metadata, tracks, waypoints)
-
-def parse_gpx_xml_to_waypoints(xml_string, log = def_log_fn):
-
-    x = X(xml_string)
-    ns = x.ns
-    def find(path):
-        return x.find(path)
-    def findall(path):
-        return x.findall(path)
-
-    # metadata time
-    metadata_time_stamp_string = find('metadata/time').text
-    meta_data_time = parseGarmin11DateTimeString(metadata_time_stamp_string)    
-
-    log('metadata - time @ %s' % meta_data_time)
-
-    ## waypoints
+def parse_waypoints(find, findall, ns):
 
     waypoints = []
 
     xml_waypoints = findall('wpt')
-    log('way point count = %i ' % len(xml_waypoints))
 
     for xml_waypoint in xml_waypoints:       
           
@@ -206,4 +175,18 @@ def parse_gpx_xml_to_waypoints(xml_string, log = def_log_fn):
         
         waypoints.append(waypoint) 
 
-    return waypoints
+    return waypoints 
+
+def parse_gpx_xml(xml_string, log = def_log_fn):
+
+    x = X(xml_string)
+    ns = x.ns
+
+    def find(path): return x.find(path)
+    def findall(path): return x.findall(path)
+
+    metadata = parse_metadata(find, findall)
+    tracks = parse_tracks(find, findall, ns)
+    waypoints = parse_waypoints(find, findall, ns)
+
+    return GPX(metadata, tracks, waypoints)
