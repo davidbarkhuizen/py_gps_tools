@@ -1,11 +1,11 @@
-function TrackInfosController($rootScope, $scope, $http, $timeout) {
+function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
-	$scope.trackInfos = $scope.$parent.model.trackInfos;
+	$scope.gpxinfos = $scope.$parent.model.gpxinfos;
 	var tracks = $scope.$parent.tracks;
 
 	$scope.searchToken = '';
-	$scope.filteredTrackInfos = [];
-	$scope.selectedTrackInfo = null;
+	$scope.filteredGpxinfos = [];
+	$scope.selectedGpxinfo = null;
 
 	$scope.showAll = function() {
 		$scope.searchToken = '';
@@ -22,10 +22,10 @@ function TrackInfosController($rootScope, $scope, $http, $timeout) {
 
 	$scope.select = function(id) {
 
-		$scope.trackInfos.forEach(
+		$scope.gpxInfos.forEach(
 			function(x) {
 				if (x.id == id)
-					$scope.selectedTrackInfo = x;
+					$scope.selectedGpxinfo = x;
 			}
 		);
 		
@@ -38,16 +38,27 @@ function TrackInfosController($rootScope, $scope, $http, $timeout) {
 	$scope.filter = function() {	
 
 		var matchFunction = function(x) {
-			return (x.name.toUpperCase().indexOf($scope.searchToken.toUpperCase()) !== -1);
+
+			var token = $scope.searchToken.toUpperCase();
+
+			if ((token == null) || (token.length == 0))
+				return true;
+			
+			var hits = [x.name, x.file_name, x.track_names_concat]
+				.filter(function(z) { return z !== null})
+				.map(function(z) { return z.toUpperCase(); })
+				.filter(function(z) { return z.indexOf(token) !== -1})
+
+			return (hits.length > 0);
 		}
-		var matches = $scope.trackInfos.filter(matchFunction);
+		var matches = $scope.gpxinfos.filter(matchFunction);
 		
-		matches.sort(function(a, b) { return a.name.localeCompare(b.name); });
+		matches.sort(function(a, b) { return a.file_name.localeCompare(b.file_name); });
 
 		// update filtered map list
 		//
-		$scope.filteredTrackInfos.length = 0;
-		matches.forEach(function(x) {$scope.filteredTrackInfos.push(x); });
+		$scope.filteredGpxinfos.length = 0;
+		matches.forEach(function(x) {$scope.filteredGpxinfos.push(x); });
 	};
 
 	// load -------------------------------------------
@@ -56,10 +67,10 @@ function TrackInfosController($rootScope, $scope, $http, $timeout) {
 
 		var successFn = function(data) { 
 			
-			$scope.trackInfos.length = 0;
-			data.trackInfos.forEach(function(x) { $scope.trackInfos.push(x); });
-			data.trackInfos.sort(function(a, b) { 
-				return a.name.localeCompare(b.name); 
+			$scope.gpxinfos.length = 0;
+			data.gpxinfos.forEach(function(x) { $scope.gpxinfos.push(x); });
+			data.gpxinfos.sort(function(a, b) { 
+				return a.file_name.localeCompare(b.file_name); 
 			});
 
 			$scope.filter();
@@ -68,7 +79,7 @@ function TrackInfosController($rootScope, $scope, $http, $timeout) {
 			$scope.globalDebug(error);
 		};
 
-		httpGET($http, 'trackinfos', null, successFn, null, errorFn)
+		httpGET($http, 'gpxinfos', null, successFn, null, errorFn)
 	};
 
 	// TODO - MOVE TO GOD CONTROLLER - SHOULD FIRE AS PART OF GLOBAL INIT SEQUENCE VIA CMD

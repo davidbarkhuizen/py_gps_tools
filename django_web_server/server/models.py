@@ -21,6 +21,18 @@ class Gpx(models.Model):
 	# linkText			= models.CharField(max_length=512, null=True)
 	# keywords			= models.CharField(max_length=512, null=True)
 
+	def to_gpx_info(self):
+
+		return { 'id' : self.id,
+			'file_name' : self.file_name,
+			'name' : self.name,
+			'desc' : self.desc,
+			'time' : self.time.isoformat(),
+			'track_count': self.track_count,
+			'track_names_concat' : self.track_names_concat,
+			'waypoint_count' : self.waypoint_count
+		}
+
 class Waypoint(models.Model):
 
 	class Meta:

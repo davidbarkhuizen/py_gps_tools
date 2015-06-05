@@ -5,7 +5,7 @@ var controllers = [
 	['GpxImportController', ['$rootScope', '$scope', '$http', '$timeout', GpxImportController]],
 	['GpxExportController', ['$rootScope', '$scope', '$http', GpxExportController]],
 
-	['TrackInfosController', ['$rootScope', '$scope', '$http', '$timeout', TrackInfosController]],
+	['GpxDatabaseController', ['$rootScope', '$scope', '$http', '$timeout', GpxDatabaseController]],
 	['TracksController', ['$rootScope', '$scope', '$http', '$timeout', TracksController]],
 	['ElevationPlotController', ['$rootScope', '$scope', '$http', '$timeout', ElevationPlotController]],
 	['MapController', ['$rootScope', '$scope', '$http', '$timeout', MapController]],

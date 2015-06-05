@@ -1,6 +1,6 @@
 from hfx import success, failure
 
-from gpx.gpxparser import parse_gpx_xml
+from gpxlib.gpxparser import parse_gpx_xml
 
 from server.models import Gpx
 from server.models import Waypoint
@@ -13,7 +13,7 @@ def routing(request, qs):
 	if request.method == 'POST':
 		return post(request, request.POST)
 
-	raise Error(request.method)
+	raise Exception(request.method)
 
 def post(request, params):
 

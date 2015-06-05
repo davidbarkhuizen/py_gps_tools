@@ -3,7 +3,7 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	$scope.tracks = [];
 
 	$scope.model = {
-		trackInfos : [],
+		gpxinfos : [],
 		waypoints : [],
 		filteredWaypoints : [],
 		selectedPoint : null
@@ -19,7 +19,7 @@ function GodController($rootScope, $scope, $http, $timeout) {
 		IMPORT : guid(), 
 		EXPORT : guid(),
 
-		TRACK_DATABASE : guid(),
+		GPX_DATABASE : guid(),
 
 		MAP : guid(),
 		LOADED_TRACKS : guid(), 
@@ -74,7 +74,7 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	$rootScope.$on(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED, function(evt) {
 
 		if ($scope.view == $scope.Views.IMPORT) {
-			// $scope.view = $scope.Views.TRACK_DATABASE;
+			// $scope.view = $scope.Views.GPX_DATABASE;
 		}
 	});
 

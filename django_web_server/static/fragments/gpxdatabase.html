@@ -1,0 +1,45 @@
+<div
+	ng-show='view == Views.GPX_DATABASE'
+	ng-controller='GpxDatabaseController'
+	id='GpxDatabaseContainer'
+	>
+
+	<h3>gpx database</h3>
+
+	<input
+		id='GpxDatabaseFilterToken'
+		placeholder='search gpx database' 
+		ng-model='searchToken' 
+		ng-keyup='filter();' 
+		type='text' 
+		size='32'
+		class='dashed-line-text-input'
+		ng-class='(searchToken == "") || (filteredGpxInfos.length == 0) ? "action-required" : "no-action-required"'
+		data-focus-element
+		/>
+
+	<br/>
+	<br/>
+
+	<div class='medium-list' style='text-align:left;'>
+		<div ng-repeat="info in filteredGpxinfos">
+			<a href='#' ng-click='loadTrack(info.id);'>load</a>
+			<a href='#'
+				ng-click='addTrack(info.id);'
+				ng-class="(tracks.length == 0) || (trackIsLoaded(info.id) == true) ? 'inactive' : 'active'"
+				>add</a>
+			<span 
+				ng-class='((selectedGpxinfo !== null) && (selectedGpxinfo.id == gpxinfo.id)) ? "selected-text" : "";'
+				ng-click='select(gpxinfo.id);'
+				>
+				{{ info.time + ' ' + info.file_name.toLowerCase() + ' ' + info.track_count + ' track(s): ' + info.track_names_concat + ', ' + info.waypoint_count + ' waypoint(s)' }}
+			</span>
+		</div>
+	</div>
+
+	<br/>
+
+	<div>
+		showing {{ filteredGpxinfos.length }} of {{ gpxinfos.length }} gpx files in total (<a href='#' ng-click='showAll();'>show all</a>)
+	</div>
+</div>
