@@ -55,18 +55,16 @@ def parseGarmin11DateTimeString(s):
 
 def blank_metadata():
 
-    return { 'name' : None,
-        'desc' : None,
-        #'author' : None,
-        #'linkURL' : None,
-        #'linkText' : None,
-        'time' : None,
-        #'keywords' : None,
-        #'minLat' : None,
-        #'minLon' : None,
-        #'maxLat' : None,
-        #'maxLon' : None 
-        }
+    #'author' : None,
+    #'linkURL' : None,
+    #'linkText' : None,
+    #'keywords' : None,
+    #'minLat' : None,
+    #'minLon' : None,
+    #'maxLat' : None,
+    #'maxLon' : None 
+
+    return { 'name' : None, 'desc' : None, 'time' : None }
 
 def parse_metadata(find, findall):
     '''
@@ -155,7 +153,6 @@ def parse_tracks(find, findall, ns):
             pass
 
     return tracks
-
 
 def parse_waypoints(find, findall, ns):
 

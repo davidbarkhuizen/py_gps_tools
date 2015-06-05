@@ -11,11 +11,11 @@ def routing(request, qs):
 
 def get(request):
 
-	gpx_files = Gpx.objects.all().order_by('timestamp')
+	gpx_files = Gpx.objects.all().order_by('time')
 
 	track_list = []
 	for gpx in gpx_files:
-		track_info  = { 'name' : gpx.name, 'id' : gpx.id, 'timestamp' : str(gpx.timestamp) }
+		track_info  = { 'name' : gpx.name, 'id' : gpx.id, 'time' : str(gpx.time) }
 		track_list.append(track_info)
 
 	return success({ 'trackInfos' : track_list })

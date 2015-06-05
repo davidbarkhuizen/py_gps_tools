@@ -1,11 +1,12 @@
 from hfx import success, failure
 
-from gpx.gpx import parse_gpx_xml_to_track, parse_gpx_xml_to_waypoints
+from gpx.gpxparser import parse_gpx_xml
 
 from server.models import Gpx
 from server.models import WayPoint
 
-import hashlib
+# exception formatting
+import traceback
 
 def routing(request, qs):
 	
@@ -15,79 +16,36 @@ def routing(request, qs):
 	raise Error(request.method)
 
 def post(request, params):
-	
-	file_name = None
-	xml_string = None
 
-	track = None
-	way_points = None
+	fileNameKey = 'fileName'
+	if fileNameKey not in params.keys():
+		return failure('no file name') 
+	fileName = params[fileNameKey]
 
-	msg = None
+	xmlKey = 'xml'
+	if xmlKey not in params.keys():
+		return failure('no xml payload') 
+	xml = params[xmlKey]
+
+	if Gpx.objects.filter(xml=xml).exists():
+		return failure('already imported.')
+
 	try:
-		# get fileName, fileString JSON fields
-		#
-		try:
-			file_name = params['fileName']
-			xml_string = params['xml']
-		except Exception, e:
-			msg = 'missing json data'
-			raise
+		gpx = parse_gpx_xml(xml)
+	except Exception, e:
+		return failure('not a valid gpx file')
 
-		# SHA256
-		#
-		hashx = hashlib.sha256(xml)
-		xmlHash = hashx.hex_digest()
-		print(xmlHash)
+	# need to update track with default name from gpx file if none present in meta-data
+	# assuming only 1 track, otherwise gpx file name 1, gpx file name 2, etc...
 
-		# check if already exists
-		#
-		already_exists = False
-		for f in Gpx.objects.all():
-			if str(f.xml) == str(xml_string):
-				already_exists = True
-				break
-		if already_exists:
-			msg = 'an identical gpx file has already been imported'
-			raise Exception(msg)
-
-		# check that xml file can be parsed to either track or waypoint
-		#
-		try:
-			track = parse_gpx_xml_to_track(xml_string)
-		except Exception, e:
-			msg = 'not a valid track file'
-		try:
-			way_points = parse_gpx_xml_to_waypoints(xml_string)
-		except Exception, e:
-			print(e)
-			msg = 'not a valid waypoint file'
-			pass
-		if (track == None) and (way_points == None):
-			msg = 'file not recognised as either a track or waypoints'
-			raise Exception(msg)
-		else:
-			msg = None
-
-	# handle exception, return JSON with error code
-	#	
-	except Exception as e:
-
-		if (msg):
-			return failure(msg)
-		else:
-			raise e
-
-	# create track
-	#
-	if track != None:
-		gpx_file = Gpx(xml = xml_string, name = track.name, timestamp = track.time)
-		gpx_file.save()
+	gpx = Gpx(xml = xml, name = gpx.metadata['name'], time = gpx.metadata['time'])
+	gpx.save()
 
 	# create waypoints
 	#
-	if way_points != None:
+	if gpx.waypoints != None:
 
-		for incoming_way_point in way_points:
+		for incoming_way_point in gpx.waypoints:
 
 			wp = WayPoint(name = incoming_way_point.name.lower().strip(), lat = incoming_way_point.lat, lon = incoming_way_point.lon, ele = incoming_way_point.ele, time=incoming_way_point.time)
 

@@ -6,28 +6,26 @@ class Gpx(models.Model):
 		db_table = "Gpx"
 
 	xml 				= models.TextField()
-	xmlHash				= models.CharField(max_length=1024)
+	#xmlHash				= models.CharField(max_length=1024)
 
-	# gpx meta data fields
-	#
 	name 				= models.CharField(max_length=512)
 	desc 				= models.CharField(max_length=1024, null=True)
-	#author				= models.CharField(max_length=512, null=True)
-	#linkURL				= models.CharField(max_length=2048, null=True)
-	#linkText			= models.CharField(max_length=512, null=True)
 	time 				= models.DateField(null=True)
-	#keywords			= models.CharField(max_length=512, null=True)
+
+	trackCount 			= models.IntegerField()
+	trackNamesConcat 	= models.TextField()
+	waypointCount      	= models.IntegerField()
+
 	# bounds
 	minLat 				= models.DecimalField(max_digits=9, decimal_places=6, null=True)
 	minLon 				= models.DecimalField(max_digits=9, decimal_places=6, null=True)
 	maxLat 				= models.DecimalField(max_digits=9, decimal_places=6, null=True)
 	maxLon 				= models.DecimalField(max_digits=9, decimal_places=6, null=True)
 
-	# custom meta data fields
-	#
-	trackCount 			= models.IntegerField()
-	trackNamesConcat 	= models.TextField()
-	waypointCount      	= models.IntegerField()
+	# author			= models.CharField(max_length=512, null=True)
+	# linkURL			= models.CharField(max_length=2048, null=True)
+	# linkText			= models.CharField(max_length=512, null=True)
+	# keywords			= models.CharField(max_length=512, null=True)
 
 class WayPoint(models.Model):
 
