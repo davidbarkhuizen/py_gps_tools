@@ -5,32 +5,28 @@ class Gpx(models.Model):
 	class Meta:
 		db_table = "Gpx"
 
+	file_name			= models.CharField(max_length=1024)
 	xml 				= models.TextField()
-	#xmlHash				= models.CharField(max_length=1024)
 
-	name 				= models.CharField(max_length=512)
+	name 				= models.CharField(max_length=1024, null=True)
 	desc 				= models.CharField(max_length=1024, null=True)
 	time 				= models.DateField(null=True)
 
-	trackCount 			= models.IntegerField()
-	trackNamesConcat 	= models.TextField()
-	waypointCount      	= models.IntegerField()
-
-	# bounds
-	minLat 				= models.DecimalField(max_digits=9, decimal_places=6, null=True)
-	minLon 				= models.DecimalField(max_digits=9, decimal_places=6, null=True)
-	maxLat 				= models.DecimalField(max_digits=9, decimal_places=6, null=True)
-	maxLon 				= models.DecimalField(max_digits=9, decimal_places=6, null=True)
+	track_count			= models.IntegerField()
+	track_names_concat 	= models.TextField()
+	waypoint_count     	= models.IntegerField()
 
 	# author			= models.CharField(max_length=512, null=True)
 	# linkURL			= models.CharField(max_length=2048, null=True)
 	# linkText			= models.CharField(max_length=512, null=True)
 	# keywords			= models.CharField(max_length=512, null=True)
 
-class WayPoint(models.Model):
+class Waypoint(models.Model):
 
 	class Meta:
-		db_table = "WayPoint"
+		db_table = "Waypoint"
+
+	gpx = models.ForeignKey(Gpx)
 
 	name 	= models.CharField(max_length=1024)
 	lat 	= models.DecimalField(max_digits=9, decimal_places=6)
@@ -46,6 +42,7 @@ class WayPoint(models.Model):
 		
 		return { 
 				'id' : self.id, 
+				'gpx' : self.gpx.id,
 				'name' : self.name, 
 				'lat' : str(self.lat), 
 				'lon' : str(self.lon),

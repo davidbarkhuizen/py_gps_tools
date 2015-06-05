@@ -1,4 +1,4 @@
-from server.models import WayPoint
+from server.models import Waypoint
 from hfx import success, failure
 
 def routing(request, qs):
@@ -22,7 +22,7 @@ def get(request, params):
 		min_lon = params['minLon']
 		max_lon = params['maxLon']
 
-		waypoints = WayPoint.objects.filter(lat__lte=max_lat, lat__gte=min_lat,lon__lte=max_lon, lon__gte=min_lon)
+		waypoints = Waypoint.objects.filter(lat__lte=max_lat, lat__gte=min_lat,lon__lte=max_lon, lon__gte=min_lon)
 
 	wp_dicts = [wp.to_dict() for wp in waypoints]
 	return success({'waypoints' : wp_dicts})

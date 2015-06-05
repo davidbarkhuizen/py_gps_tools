@@ -3,7 +3,7 @@ from hfx import success, failure
 from gpx.gpxparser import parse_gpx_xml
 
 from server.models import Gpx
-from server.models import WayPoint
+from server.models import Waypoint
 
 # exception formatting
 import traceback
@@ -17,45 +17,61 @@ def routing(request, qs):
 
 def post(request, params):
 
-	fileNameKey = 'fileName'
-	if fileNameKey not in params.keys():
+	file_name_key = 'fileName'
+	if file_name_key not in params.keys():
 		return failure('no file name') 
-	fileName = params[fileNameKey]
+	file_name = params[file_name_key]
 
-	xmlKey = 'xml'
-	if xmlKey not in params.keys():
+	xml_key = 'xml'
+	if xml_key not in params.keys():
 		return failure('no xml payload') 
-	xml = params[xmlKey]
+	xml = params[xml_key]
 
-	if Gpx.objects.filter(xml=xml).exists():
-		return failure('already imported.')
+	if Gpx.objects.filter(xml=xml).exists() == True:
+		return failure('already imported')
 
 	try:
 		gpx = parse_gpx_xml(xml)
 	except Exception, e:
 		return failure('not a valid gpx file')
 
+	# TODO                                                                                       vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 	# need to update track with default name from gpx file if none present in meta-data
 	# assuming only 1 track, otherwise gpx file name 1, gpx file name 2, etc...
 
-	gpx = Gpx(xml = xml, name = gpx.metadata['name'], time = gpx.metadata['time'])
-	gpx.save()
+	track_names_concat = '|'.join([track.name for track in gpx.tracks]) if (len(gpx.tracks) > 0) else None
+
+	dbGPX = Gpx(xml = xml, 
+		file_name = file_name,
+
+		name = gpx.metadata['name'], 
+		desc = gpx.metadata['desc'], 
+		time = gpx.metadata['time'],
+
+		track_count = len(gpx.tracks),
+		waypoint_count = len(gpx.waypoints),
+		track_names_concat = track_names_concat
+		)
+
+	dbGPX.save()
 
 	# create waypoints
 	#
-	if gpx.waypoints != None:
+	for incoming_way_point in gpx.waypoints:
 
-		for incoming_way_point in gpx.waypoints:
+		wp = Waypoint(gpx = dbGPX,
+			name = incoming_way_point.name.strip(),
+			lat = incoming_way_point.lat, 
+			lon = incoming_way_point.lon, 
+			ele = incoming_way_point.ele, 
+			time = incoming_way_point.time
+			)
 
-			wp = WayPoint(name = incoming_way_point.name.lower().strip(), lat = incoming_way_point.lat, lon = incoming_way_point.lon, ele = incoming_way_point.ele, time=incoming_way_point.time)
+		if (Waypoint.objects.filter(lat=wp.lat, lon=wp.lon, ele=wp.ele).exists()):	
+			print('%s already exists, skipping' % wp.name)
+			continue
 
-			already_exists = False
-			matches = WayPoint.objects.filter(lat=wp.lat, lon=wp.lon, ele=wp.ele)
-			if (len(matches) > 0):	
-				print('%s already exists, skipping' % wp.name)
-				continue
-
-			wp.save()
-			print('created point %s' % wp.name)
+		wp.save()
+		print('created point %s' % wp.name)
 	
 	return success(None)

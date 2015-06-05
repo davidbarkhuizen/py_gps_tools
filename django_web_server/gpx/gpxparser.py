@@ -1,7 +1,7 @@
 from x import X
 from point import Point
 from track import Track
-from waypoint import WayPoint
+from waypoint import Waypoint
 from segment import Segment
 from gpx import GPX
 
@@ -168,7 +168,7 @@ def parse_waypoints(find, findall, ns):
         elevation = float(xml_waypoint.find(ns + 'ele').text)
         time = parseGarmin11DateTimeString(xml_waypoint.find(ns + 'time').text)
         
-        waypoint = WayPoint(name, lat, lon, elevation, time)
+        waypoint = Waypoint(name, lat, lon, elevation, time)
         
         waypoints.append(waypoint) 
 

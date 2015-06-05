@@ -1,5 +1,5 @@
 from server.models import Gpx
-from server.models import WayPoint
+from server.models import Waypoint
 
 from gpx.gpxparser import parse_gpx_xml
 

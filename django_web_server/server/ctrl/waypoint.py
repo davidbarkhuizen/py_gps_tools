@@ -1,4 +1,4 @@
-from server.models import WayPoint
+from server.models import Waypoint
 from hfx import success, failure
 
 def routing(request, qs):
@@ -15,7 +15,7 @@ def delete(request, params):
 	id = params['id']
 
 	try:
-		point = WayPoint.objects.get(id=id)
+		point = Waypoint.objects.get(id=id)
 		point.delete()
 		return success(None)
 	except Exception as e:      
@@ -27,7 +27,7 @@ def patch(request, params):
 	name = params['name']
 
 	try:
-		point = WayPoint.objects.get(id=id)
+		point = Waypoint.objects.get(id=id)
 		point.name = name
 		point.save()
 		return success(id)

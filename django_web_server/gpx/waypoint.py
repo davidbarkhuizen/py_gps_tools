@@ -1,11 +1,11 @@
 from point import Point
 
-class WayPoint(Point):
+class Waypoint(Point):
 
     def __init__(self, name, lat, lon, ele, time, id = None):
         self.id = id
         self.name = name
-        super(WayPoint,self).__init__(lat, lon, ele, time)
+        super(Waypoint,self).__init__(lat, lon, ele, time)
 
     def to_dict(self):
     	return {
