@@ -29,7 +29,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 			}
 		);
 		
-		$rootScope.$emit(Command.LOAD_TRACK, id);
+		//$rootScope.$emit(Command.LOAD_TRACK, id);
 		tracks.length = 0;
 	};
 
@@ -63,7 +63,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
 	// load -------------------------------------------
 
-	$scope.load = function() {
+	$scope.loadGpxinfos = function() {
 
 		var successFn = function(data) { 
 			
@@ -83,15 +83,10 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 	};
 
 	// TODO - MOVE TO GOD CONTROLLER - SHOULD FIRE AS PART OF GLOBAL INIT SEQUENCE VIA CMD
-	$scope.load();
+	$scope.loadGpxinfos();
 
-	$scope.loadTrack = function(id) {
-		tracks.length = 0;
-		$rootScope.$emit(Command.LOAD_TRACK, id);		
-	};
-
-	$scope.addTrack = function(id) {
-		$rootScope.$emit(Command.LOAD_TRACK, id);
+	$scope.loadGpx = function(id) {
+		$rootScope.$emit(Command.LOAD_GPX, id);		
 	};
 
 	// ----------------------------------------------

@@ -23,16 +23,20 @@
 
 	<div class='medium-list' style='text-align:left;'>
 		<div ng-repeat="info in filteredGpxinfos">
-			<a href='#' ng-click='loadTrack(info.id);'>load</a>
-			<a href='#'
+			<a href='#' ng-click='loadGpx(info.id);'>load</a>
+			<!-- <a href='#'
 				ng-click='addTrack(info.id);'
 				ng-class="(tracks.length == 0) || (trackIsLoaded(info.id) == true) ? 'inactive' : 'active'"
-				>add</a>
+				>add</a> -->
 			<span 
 				ng-class='((selectedGpxinfo !== null) && (selectedGpxinfo.id == gpxinfo.id)) ? "selected-text" : "";'
 				ng-click='select(gpxinfo.id);'
 				>
-				{{ info.time + ' ' + info.file_name.toLowerCase() + ' ' + info.track_count + ' track(s): ' + info.track_names_concat + ', ' + info.waypoint_count + ' waypoint(s)' }}
+				{{ info.time + ' ' + info.file_name.toLowerCase() }}
+			</span>
+			&nbsp;
+			<span style='font-size:15px;'>
+				{{ ' ' + info.track_count + ' track(s): ' + info.track_names_concat + ', ' + info.waypoint_count + ' waypoint(s)' }}
 			</span>
 		</div>
 	</div>

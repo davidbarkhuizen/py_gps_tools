@@ -86,9 +86,9 @@ function Track(data) {
 	// name
 	//
 	this.name = data.name;
-	this.id = data.id;
-	// time ?
 
+	// segments
+	//
 	this.segments = [];
 	data.segments.forEach(function(segment){ 
 		var points = [];

@@ -101,10 +101,10 @@ function ElevationPlotController($rootScope, $scope, $http, $timeout) {
 		$scope.drawElevationPlot();
 	};
 
-	$rootScope.$on(Event.TRACK_LOADED, function(evt) {
+	$rootScope.$on(Event.TRACKS_LOADED, function(evt) {
 		$scope.redraw();
 	});
-	$rootScope.$on(Event.TRACK_UNLOADED, function(evt) {
+	$rootScope.$on(Event.TRACKS_UNLOADED, function(evt) {
 		$scope.redraw();
 	});
 };

@@ -22,32 +22,24 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 
 	// LOAD
 
-	$scope.loadTrack = function(id) {
+	$scope.loadTracks = function(track_dicts) {
 
-		var matches = $scope.$parent.tracks
-			.filter(function(track){return (track.id == id);});
-		
-		if (matches.length > 0)
-			return;
+		var added = false;
 
-		var successFn = function(data) { 
+		track_dicts.forEach(function(track_dict){
 
-			var newTrack = new Track(data.track);
-			newTrack.colour = $scope.getUnusedTrackColour();
-			$scope.$parent.tracks.push(newTrack);
+			track = new Track(track_dict);
+			track.colour = $scope.getUnusedTrackColour();
+			$scope.$parent.tracks.push(track);
+			added = true;
+		});
 
-			$rootScope.$emit(Event.TRACK_LOADED, newTrack.id);
-		};
-
-		var failFn = function(status){
-			console.log('fail');
-		};
-
-		httpGET($http, 'track', { 'id' : id }, successFn, failFn, $scope.globalDebug);
+		if (added == true)
+			$rootScope.$emit(Event.TRACKS_LOADED);
 	};
 	
- 	$rootScope.$on(Command.LOAD_TRACK, function(evt, id) {
-		$scope.loadTrack(id);	
+ 	$rootScope.$on(Command.LOAD_TRACKS, function(evt, tracks) {
+		$scope.loadTracks(tracks);	
 	});
 
  	// UNLOAD
@@ -55,14 +47,13 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 	$scope.unloadTrack = function (id) {
 
 		$scope.$parent.tracks.removeWhere(function(track) { return (track.id == id); });
-		$rootScope.$emit(Event.TRACK_UNLOADED);
+		$rootScope.$emit(Event.TRACKS_UNLOADED);
 	};
 
 	$scope.reloadTrack = function (id) {
 
 		$scope.$parent.tracks.removeWhere(function(track) { return (track.id == id); });
-		$rootScope.$emit(Event.TRACK_UNLOADED);
-		$rootScope.$emit(Command.LOAD_TRACK, id);
+		$rootScope.$emit(Event.TRACKS_UNLOADED);
 	};
 
 	// EXPORT

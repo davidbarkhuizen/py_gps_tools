@@ -13,7 +13,10 @@ def routing(request, qs):
 	if request.method == 'POST':
 		return post(request, request.POST)
 
-	raise Exception(request.method)
+	if request.method == 'GET':
+		return get(request, request.GET)
+
+	raise Exception('unsupported HTTP method:  ' + request.method)
 
 def post(request, params):
 
@@ -75,3 +78,19 @@ def post(request, params):
 		print('created point %s' % wp.name)
 	
 	return success(None)
+
+def get(request, params):
+
+    id = params['id']
+    model = Gpx.objects.get(id=id)    
+    if (model == None):
+        return failure('could not find gpx with id = %s' % id)    
+
+    gpx = parse_gpx_xml(model.xml)
+
+    tracks = [track.to_dict() for track in gpx.tracks]     
+    waypoints = [waypoint.to_dict() for waypoint in gpx.waypoints]
+
+    data = { 'tracks' : tracks, 'waypoints' : waypoints }
+    
+    return success(data)

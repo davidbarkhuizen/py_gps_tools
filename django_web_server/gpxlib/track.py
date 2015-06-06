@@ -39,13 +39,12 @@ class Track(object):
         self.max_ele = max([pt.ele for pt in pt_itr()])
         self.min_ele = min([pt.ele for pt in pt_itr()])
 
-    def to_dict(self, id):
+    def to_dict(self, id = None):
 
         track_dict = { 
                 'id' : id,
 
                 'name' : self.name, 
-                'time' : self.time.isoformat(), 
                 'segments' : []
             }
 

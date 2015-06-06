@@ -186,13 +186,6 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 			: undefined;
 	};
 
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	// LOAD
-
-	$rootScope.$on(Event.TRACK_LOADED, function(evt, id) {
-		$scope.loadWaypointsForTrack(id);
-	});	
-
 	// UNLOAD
 
 	$scope.unloadAllWaypoints = function() {
