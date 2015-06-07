@@ -21,7 +21,7 @@
 	<br/>
 	<br/>
 
-	<div class='medium-list' style='text-align:left;'>
+	<div class='medium-list' style='text-align:left;margin-left:10px;'>
 		<div ng-repeat="info in filteredGpxinfos">
 			<a href='#' ng-click='loadGpx(info.id);'>load</a>
 			<!-- <a href='#'
@@ -44,6 +44,8 @@
 	<br/>
 
 	<div>
-		showing {{ filteredGpxinfos.length }} of {{ gpxinfos.length }} gpx files in total (<a href='#' ng-click='showAll();'>show all</a>)
+		showing {{ filteredGpxinfos.length }} of {{ gpxinfos.length }} gpx files in total (<a href='#' ng-click='showAll();'>show all</a>)	
+		<br/>
+		<a href="#" ng-click='loadGpxinfos();'>refresh</a>
 	</div>
 </div>

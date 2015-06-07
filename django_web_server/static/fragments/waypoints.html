@@ -15,7 +15,7 @@
 			</div>
 			<div ng-show='editing'>
 				<input
-					id='EditWayPointName'
+					id='EditWaypointName'
 					placeholder='{{ model.selectedPoint.name }}' 
 					ng-model='editCopy.name' 
 					size='32'
@@ -43,7 +43,7 @@
 
 	<br/>
 
-	<div class='medium-list'>
+	<div class='medium-short-list'>
 		<div ng-repeat='waypoint in filteredOrAll()'>
 			<span>{{ waypoint.lat.toFixed(6) }}, {{ waypoint.lon.toFixed(6) }}</span>
 			<a href='#' ng-click="selectPoint(waypoint)">{{ waypoint.name }} </a>

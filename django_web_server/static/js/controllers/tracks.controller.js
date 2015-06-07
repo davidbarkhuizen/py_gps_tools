@@ -22,13 +22,12 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 
 	// LOAD
 
-	$scope.loadTracks = function(track_dicts) {
+	$scope.loadTracks = function(tracks) {
 
 		var added = false;
 
-		track_dicts.forEach(function(track_dict){
+		tracks.forEach(function(track){
 
-			track = new Track(track_dict);
 			track.colour = $scope.getUnusedTrackColour();
 			$scope.$parent.tracks.push(track);
 			added = true;

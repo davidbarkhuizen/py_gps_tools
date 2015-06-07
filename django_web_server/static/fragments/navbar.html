@@ -16,23 +16,30 @@
 			<a href='#' 
 				ng-click="gotoView(Views.GPX_DATABASE);"
 				ng-class="view == Views.GPX_DATABASE ? 'nav-active' : 'nav-inactive'"
-				>database</a>
-			
-			<a href='#' 
-				ng-click="gotoView(Views.LOADED_TRACKS);"
-				ng-class="view == Views.LOADED_TRACKS ? 'nav-active' : 'nav-inactive'"
-				>loaded tracks</a>
+				>database</a>	
 
-			<a href='#' 
-				ng-click="gotoView(Views.LOADED_WAYPOINTS);"
-				ng-class="view == Views.LOADED_WAYPOINTS ? 'nav-active' : 'nav-inactive'"
-				>loaded waypoints</a>
-			
+			<span class='nav-inactive'>|</span>					
+
 			<a href='#' 
 				ng-click="gotoView(Views.MAP);"
 				ng-class="view == Views.MAP ? 'nav-active' : 'nav-inactive'"
 				>map</a>
+
+			<a href='#' 
+				ng-click="gotoView(Views.LOADED_GPXS);"
+				ng-class="view == Views.LOADED_GPXS ? 'nav-active' : 'nav-inactive'"
+				>gpx</a>
 			
+			<a href='#' 
+				ng-click="gotoView(Views.LOADED_TRACKS);"
+				ng-class="view == Views.LOADED_TRACKS ? 'nav-active' : 'nav-inactive'"
+				>tracks</a>
+
+			<a href='#' 
+				ng-click="gotoView(Views.LOADED_WAYPOINTS);"
+				ng-class="view == Views.LOADED_WAYPOINTS ? 'nav-active' : 'nav-inactive'"
+				>waypoints</a>
+
 			<a href='#' 
 				ng-click="gotoView(Views.ELEVATION);"
 				ng-class="view == Views.ELEVATION ? 'nav-active' : 'nav-inactive'"

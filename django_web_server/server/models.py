@@ -13,7 +13,7 @@ class Gpx(models.Model):
 	time 				= models.DateField(null=True)
 
 	track_count			= models.IntegerField()
-	track_names_concat 	= models.TextField()
+	track_names_concat 	= models.TextField(null=True)
 	waypoint_count     	= models.IntegerField()
 
 	# author			= models.CharField(max_length=512, null=True)

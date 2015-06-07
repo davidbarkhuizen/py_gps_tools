@@ -22,7 +22,7 @@ function Point(lat, lon, ele, time) {
 	this.cumulativeDistanceM = 0;
 }
 
-function WayPoint(id, name, lat, lon, ele, time) {
+function Waypoint(id, name, lat, lon, ele, time) {
 	this.id = id;
 	this.name = name;
 	// no inheritance :(
@@ -76,7 +76,7 @@ function parseWaypointDict(wp) {
 	
 	var time = Date.parse(wp.time);
 
-	return new WayPoint(id, name, lat, lon, ele, time);
+	return new Waypoint(id, name, lat, lon, ele, time);
 }
 
 function Track(data) {
@@ -202,6 +202,32 @@ function Track(data) {
 
 	calcTrackStats();
 }
+
+function GPX(name, desc, tracks, waypoints, file_name) {
+
+	this.name = name;
+	this.desc = desc;
+
+	this.tracks = tracks;
+	this.waypoints = waypoints;
+
+	this.file_name = file_name;
+
+	this.track_names = function() {
+		return this.tracks.map(function(track) { return track.name; });
+	};
+
+	this.track_count = function() {
+		return this.tracks.length;
+	};
+
+	this.waypoint_count = function() {
+		return this.waypoints.length;
+	};
+}
+
+// --------------------------------------------------------------------------
+// TO XML
 
 var xmlDoc = document
 	.implementation

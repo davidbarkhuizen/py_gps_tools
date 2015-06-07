@@ -3,6 +3,7 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	$scope.tracks = [];
 
 	$scope.model = {
+		gpxs : [],
 		gpxinfos : [],
 		waypoints : [],
 		filteredWaypoints : [],
@@ -22,6 +23,7 @@ function GodController($rootScope, $scope, $http, $timeout) {
 		GPX_DATABASE : guid(),
 
 		MAP : guid(),
+		LOADED_GPXS : guid(),
 		LOADED_TRACKS : guid(), 
 		ELEVATION : guid(),
 		WAYPOINTS : guid(),

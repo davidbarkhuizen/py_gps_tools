@@ -1,10 +1,38 @@
 <div id="GpxContainer"
-	ng-show='view == Views.GPX'
+	ng-show='view == Views.LOADED_GPXS'
 	ng-controller='GpxController'>
 
 	<div>
 		<h3>
-			Loaded .GPX Files
+			.GPX
 		</h3>
+		<div ng-repeat="gpx in model.gpxs" style='text-align:left; margin-left:10px;'>				
+			<div class='header'>
+				{{ ((gpx.name) && (gpx.name.length > 0)) ? gpx.name : 'no name' }}
+			</div>
+			<div>					
+				{{ ((gpx.file_name) && (gpx.file_name.length > 0)) ? gpx.file_name : 'no file name' }}
+			</div>
+			<br/>
+			<div id='GpxTracks'>
+				<div>					
+					{{ gpx.track_count() > 0 ? gpx.track_count().toString() + ' track(s)' : 'no tracks' }}
+				</div>
+				<div ng-show='gpx.track_count() > 0' style='margin-left:20px;'>
+					<div ng-repeat='track in gpx.tracks'>
+						{{ track.name }}
+						<div style='margin-left:20px;'>
+							{{ track.segments.length.toString() + ' segment(s)' }}
+						</div>
+					</div>
+				</div>
+			</div>
+			<br/>
+			<div id='GpxWaypoints'>
+				<a href='#' ng-click='gotoView(parent.Views.WAYPOINTS)'>				
+					{{ gpx.waypoint_count() > 0 ? gpx.waypoint_count().toString() + ' waypoints(s)' : 'no waypoints' }}
+				</a>
+			</div>
+		</div>
 	</div>
 </div>

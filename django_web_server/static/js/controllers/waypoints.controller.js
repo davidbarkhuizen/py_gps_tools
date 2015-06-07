@@ -27,7 +27,17 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 			? model.filteredWaypoints
 			: model.waypoints;
 
-		set = set.sort(function(a, b) { return a.name.localeCompare(b.name); });
+		set = set.sort(function(a, b) { 
+
+			if ((a == undefined) || (b == undefined))
+				return 0;
+
+			if ((a.name == undefined) || (b.name == undefined))
+				return 0;
+
+			try { return a.name.localeCompare(b.name); }
+			catch (e) { return 0; } 
+		});
 
 		return set;
 	};
@@ -58,7 +68,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 		$scope.editCopy = JSON.parse(JSON.stringify(model.selectedPoint)); 
 
-		$timeout(function() { focusOnId('EditWayPointName'); }, 10);
+		$timeout(function() { focusOnId('EditWaypointName'); }, 10);
 
 		$scope.deleting = false;
 		$scope.editing = true;
@@ -136,7 +146,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 			.removeWhere(function(x){ return x.id == id; });
 
 		if ((model.selectedPoint !== undefined) && (model.selectedPoint.id == id)) {
-			$scope.selectFirstWayPoint();
+			$scope.selectFirstWaypoint();
 		}
 
 		$scope.deleting = false;
@@ -172,7 +182,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 		model.selectedPoint = point;
 	};
 
-	$scope.selectFirstWayPoint = function() {
+	$scope.selectFirstWaypoint = function() {
 
 		model.selectedPoint = (model.filteredWaypoints.length > 0)
 			? model.filteredWaypoints[0]
@@ -193,6 +203,12 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 		$rootScope.$emit(Event.WAYPOINTS_UNLOADED);
 	};	
 
+	// LOAD
+
+	$rootScope.$on(Command.LOAD_WAYPOINTS, function(evt, waypoints){
+		$scope.mergeNewPoints(waypoints);
+	});
+
 	// RELOAD FOR ALL TRACKS
 	
 	$scope.reloadWaypointsForTracks = function() {
@@ -210,7 +226,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 		newPoints.forEach(function(newPoint) {
 
 			var exists  = function(existing) { 
-				return existing.id == newPoint.id; 
+				return false;s
 			};
 
 			if (!model.waypoints.containsWhere(exists)) {
@@ -238,7 +254,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 			$scope.mergeNewPoints(resultPoints);
 
 			if ((model.selectedPoint == undefined) || (model.selectedPoint == null))
-				$scope.selectFirstWayPoint();
+				$scope.selectFirstWaypoint();
 		};
 
 		var failureFn = function(message) { 

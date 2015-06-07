@@ -82,12 +82,20 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 		httpGET($http, 'gpxinfos', null, successFn, null, errorFn)
 	};
 
-	// TODO - MOVE TO GOD CONTROLLER - SHOULD FIRE AS PART OF GLOBAL INIT SEQUENCE VIA CMD
-	$scope.loadGpxinfos();
+	$rootScope.$on(Event.GPX_FILE_IMPORTED, function(evt){
+		$scope.loadGpxinfos();
+	});
+
+	// ----------------------------------------------
+	// UI COMMANDS
 
 	$scope.loadGpx = function(id) {
 		$rootScope.$emit(Command.LOAD_GPX, id);		
 	};
 
 	// ----------------------------------------------
+
+	// INIT
+	//
+	$scope.loadGpxinfos();
 };

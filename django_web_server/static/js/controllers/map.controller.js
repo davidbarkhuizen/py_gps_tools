@@ -549,7 +549,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	// -----------------------------------------------------------
 	// WAYPOINT SELECTION	
 
-	$scope.areaSelectWayPoints = function() {
+	$scope.areaSelectWaypoints = function() {
 
 		if ($scope.selectionPoints.length !== 2) {
 			throw '$scope.selectionPoints.length !== 2';
@@ -745,7 +745,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		}
 	};
 
-	$scope.renderWayPointsToCanvasSpace = function(domain, range, scale) {		
+	$scope.renderWaypointsToCanvasSpace = function(domain, range, scale) {		
 
 		$scope.canvasWaypoints.length = 0;
 
@@ -849,7 +849,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		$scope.drawEdges(context, transformed, 2, Colour.ORANGE);
 	};
 
-	$scope.drawWayPoint = function(context, cx, cy, size, color, text, font, fontSize) {
+	$scope.drawWaypoint = function(context, cx, cy, size, color, text, font, fontSize) {
 
 		if (color) {
 			context.fillStyle = color;
@@ -1126,7 +1126,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 				name = s;
 			}
 
-		    $scope.drawWayPoint(context, x, y, size, color, name, font, fontSize);
+		    $scope.drawWaypoint(context, x, y, size, color, name, font, fontSize);
 
 		    // TODO should draw marker large enough to contain all viewpoint   	
 		}
@@ -1148,7 +1148,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		// RENDER
 
 		$scope.renderTrackPointsToCanvasSpace(domain, range, scale);
-		$scope.renderWayPointsToCanvasSpace(domain, range, scale);
+		$scope.renderWaypointsToCanvasSpace(domain, range, scale);
 
 		// DRAW
 
@@ -1229,7 +1229,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	// register
 	//
-	$scope.redrawTriggers.forEach(function(trigger) {		
+	$scope.redrawTriggers.forEach(function(trigger) {	
 		$rootScope.$on(trigger, $scope.drawMap);		
 	});
 

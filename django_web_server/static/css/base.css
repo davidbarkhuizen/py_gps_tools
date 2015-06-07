@@ -145,14 +145,25 @@ a
     color:purple;
 }
 
-.navbar-inner > div > a.nav-active 
+.navbar-inner > div > .nav-active 
 {
     color:white;
 }
 
-.navbar-inner > div > a.nav-inactive
+.navbar-inner > div > a.nav-active 
+{
+    text-decoration: none;
+}
+
+.navbar-inner > div > .nav-inactive
 {
     color:lightgrey;
+    text-decoration: none;
+}
+
+.navbar-inner > div > a.nav-inactive
+{
+    text-decoration: none;
 }
 
 .active {

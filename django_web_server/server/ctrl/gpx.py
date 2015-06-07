@@ -91,6 +91,10 @@ def get(request, params):
     tracks = [track.to_dict() for track in gpx.tracks]     
     waypoints = [waypoint.to_dict() for waypoint in gpx.waypoints]
 
-    data = { 'tracks' : tracks, 'waypoints' : waypoints }
+    info = model.to_gpx_info()
+
+    data = { 'id' : id, 'file_name' : model.file_name, 
+    	'name' : info['name'], 'desc' : info['desc'],
+    	'tracks' : tracks, 'waypoints' : waypoints }
     
     return success(data)

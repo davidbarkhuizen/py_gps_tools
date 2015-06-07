@@ -1,4 +1,4 @@
-MEDIA_ROOT = '~/data/websites/geonodeztek/media_root/'
+MEDIA_ROOT = '~/data/websites/gpxmapsnet/media_root/'
 MEDIA_URL = '/MEDIA/'
 
 """
@@ -55,7 +55,7 @@ WSGI_APPLICATION = 'webserver.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/home/david/data/websites/geonodeztek/geonodeztek.db.sqlite3',
+        'NAME': '/home/david/data/websites/gpxmapsnet/gpxmapsnet.db.sqlite3',
     }
 }
 
