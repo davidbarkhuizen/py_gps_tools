@@ -6,33 +6,41 @@
 		<h3>
 			.GPX
 		</h3>
-		<div ng-repeat="gpx in model.gpxs" style='text-align:left; margin-left:10px;'>				
-			<div class='header'>
-				{{ ((gpx.name) && (gpx.name.length > 0)) ? gpx.name : 'no name' }}
-			</div>
-			<div>					
-				{{ ((gpx.file_name) && (gpx.file_name.length > 0)) ? gpx.file_name : 'no file name' }}
-			</div>
-			<br/>
-			<div id='GpxTracks'>
-				<div>					
-					{{ gpx.track_count() > 0 ? gpx.track_count().toString() + ' track(s)' : 'no tracks' }}
+		<div class='list'>
+			<div ng-repeat="gpx in model.gpxs" style='text-align:left; margin-left:10px;'>
+				<div class='header'>
+					{{ ((gpx.name) && (gpx.name.length > 0)) ? gpx.name : 'no name' }}
 				</div>
-				<div ng-show='gpx.track_count() > 0' style='margin-left:20px;'>
-					<div ng-repeat='track in gpx.tracks'>
-						{{ track.name }}
-						<div style='margin-left:20px;'>
-							{{ track.segments.length.toString() + ' segment(s)' }}
+				<div>					
+					{{ ((gpx.file_name) && (gpx.file_name.length > 0)) ? gpx.file_name : 'no file name' }}
+				</div>
+				<br/>
+				<div id='GpxTracks'>
+					<div>					
+						{{ gpx.track_count() > 0 ? gpx.track_count().toString() + ' track(s)' : 'no tracks' }}
+					</div>
+					<div ng-show='gpx.track_count() > 0' style='margin-left:20px;' ng-repeat='track in gpx.tracks'
+					>{{'- ' + track.name + ' - ' + track.segments.length.toString() + ' segment(s)' }}
+					</div>
+				</div>
+				<br/>
+				<div id='GpxWaypoints'>
+					<a href='#' ng-click='gotoView(parent.Views.WAYPOINTS)'>				{{ gpx.waypoint_count() > 0 ? gpx.waypoint_count().toString() + ' waypoints(s)' : 'no waypoints' }}
+					</a>
+					<div ng-show='(gpx.waypoints.length > 0)' class='short-list'>
+						<div ng-repeat='wpt in gpx.waypoints'>
+						{{ wpt.name }}
 						</div>
 					</div>
 				</div>
+				<div ng-show='((model.gpxs.length > 1) && (model.gpxs.indexOf(gpx) !== (model.gpxs.length - 1)))'>
+					<hr style='width:50%;'/>
+					<br/>
+				</div>
 			</div>
-			<br/>
-			<div id='GpxWaypoints'>
-				<a href='#' ng-click='gotoView(parent.Views.WAYPOINTS)'>				
-					{{ gpx.waypoint_count() > 0 ? gpx.waypoint_count().toString() + ' waypoints(s)' : 'no waypoints' }}
-				</a>
-			</div>
+		</div>
+		<div>
+			{{ model.gpxs.length }} gpx(s) loaded
 		</div>
 	</div>
 </div>

@@ -1,5 +1,18 @@
 function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
+	$scope.showTrackToggles = {};
+	$scope.showTrack = function(idx) {
+		return ($scope.showTrackToggles[idx] == true);
+	}
+
+	$scope.toggleShowTrack = function(idx) {
+		console.log(idx);
+		if ($scope.showTrackToggles[idx] == true)
+			$scope.showTrackToggles[idx] = false;
+		else
+			$scope.showTrackToggles[idx] = true;
+	};
+
 	$scope.gpxinfos = $scope.$parent.model.gpxinfos;
 	var tracks = $scope.$parent.tracks;
 
