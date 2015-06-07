@@ -1,5 +1,7 @@
 function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
+	// TOGGLE GPX DETAIL
+
 	$scope.showTrackToggles = {};
 	$scope.showTrack = function(idx) {
 		return ($scope.showTrackToggles[idx] == true);
@@ -13,12 +15,20 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 			$scope.showTrackToggles[idx] = true;
 	};
 
+	// -----------------------------------------
+
 	$scope.gpxinfos = $scope.$parent.model.gpxinfos;
 	var tracks = $scope.$parent.tracks;
 
-	$scope.searchToken = '';
-	$scope.filteredGpxinfos = [];
-	$scope.selectedGpxinfo = null;
+	$scope.gridOptions = {
+        enableSorting: true,
+        columnDefs: [
+          { name:'file name', field: 'file_name' },
+          { name:'name', field: 'name' },
+          { name:'desc', field: 'desc'},
+        ],
+        data: $scope.$parent.model.gpxinfos
+	};
 
 	$scope.showAll = function() {
 		$scope.searchToken = '';
@@ -35,15 +45,12 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
 	$scope.select = function(id) {
 
-		$scope.gpxInfos.forEach(
+		$scope.gpxinfos.forEach(
 			function(x) {
 				if (x.id == id)
 					$scope.selectedGpxinfo = x;
 			}
 		);
-		
-		//$rootScope.$emit(Command.LOAD_TRACK, id);
-		tracks.length = 0;
 	};
 
 	// filter -----------------------------------------
@@ -87,6 +94,8 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 			});
 
 			$scope.filter();
+
+			$scope.gridOptions.data = $scope.
 		};
 		var errorFn = function(error){
 			$scope.globalDebug(error);

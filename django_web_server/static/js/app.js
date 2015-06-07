@@ -1,17 +1,20 @@
-var GPXMapsControllers = angular.module('GPXMapsControllers', []);
+var GPXMapsControllers = angular.module('GPXMapsControllers', ['ui.grid']);
+
+var commonDependencies = [ '$rootScope', '$scope', '$http', '$timeout']; 
+
 var controllers = [
-	['GodController', ['$rootScope', '$scope', '$http', '$timeout', GodController]],
+	['GodController', commonDependencies.concat([GodController])],
 
-	['GpxImportController', ['$rootScope', '$scope', '$http', '$timeout', GpxImportController]],
-	['GpxExportController', ['$rootScope', '$scope', '$http', GpxExportController]],
+	['GpxImportController', commonDependencies.concat([GpxImportController])],
+	['GpxExportController', commonDependencies.concat([GpxExportController])],
 
-	['GpxDatabaseController', ['$rootScope', '$scope', '$http', '$timeout', GpxDatabaseController]],
-	['GpxController', ['$rootScope', '$scope', '$http', '$timeout', GpxController]],
+	['GpxDatabaseController', commonDependencies.concat([GpxDatabaseController])],
+	['GpxController', commonDependencies.concat([GpxController])],
 
-	['TracksController', ['$rootScope', '$scope', '$http', '$timeout', TracksController]],
-	['ElevationPlotController', ['$rootScope', '$scope', '$http', '$timeout', ElevationPlotController]],
-	['MapController', ['$rootScope', '$scope', '$http', '$timeout', MapController]],
-	['WaypointsController', ['$rootScope', '$scope', '$http', '$timeout', WaypointsController]],
+	['TracksController', commonDependencies.concat([TracksController])],
+	['ElevationPlotController', commonDependencies.concat([ElevationPlotController])],
+	['MapController', commonDependencies.concat([MapController])],
+	['WaypointsController', commonDependencies.concat([WaypointsController])],
 ];
 controllers.forEach(function(ctrl) { GPXMapsControllers.controller(ctrl[0], ctrl[1]); });
 
