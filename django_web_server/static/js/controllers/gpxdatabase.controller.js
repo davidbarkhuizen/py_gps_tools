@@ -1,23 +1,45 @@
 function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
+	$scope.gpxs = $scope.$parent.model.gpxs;	
+
 	$scope.gpxinfos = $scope.$parent.model.gpxinfos;
-	var tracks = $scope.$parent.tracks;
+	$scope.selectedGpxinfo = null;
+
+	$scope.selectGpx = function(id) {
+
+		if ((id == null) || (id == undefined))
+			return;
+
+		$scope.gpxinfos.forEach(function(info) {
+			if (info.id == id)
+				$scope.selectedGpxinfo = info;
+		});
+	};
 
 	// -------------------------------------------------
 	// GRID
 
-	var loadCellTemplate = '<a href="" ng-click="grid.appScope.loadGpx(row.entity.id)">+</a>';
+	var loadCellTemplate = '<a href="" ng-click="grid.appScope.loadGpx(row.entity.id)" "><img style="margin-bottom:-5px;" ng-src="/static/img/icon/button_plus_green_16.png"></a>';
 	var blankHeaderTemplate = '';
 
-	$scope.gridOptions = {        
+	$scope.gridOptions = {      
+
+        data: $scope.$parent.model.gpxinfos,  
+        
         showGridFooter: true,
+        
         enableGridMenu: false,
+
+		enableRowSelection: true,
+		multiSelect:false,
+		enableSelectionBatchEvent: false, // single event only
+		enableRowHeaderSelection: false, // no header, click row to select
+
         columnDefs: [
         	{ 	
         		name: '',
 				field: 'id', 
 				width: '50', 
-				cellClass: '', 
 				cellTemplate: loadCellTemplate,
 				enableSorting: false, 
 				enableHiding: false,
@@ -41,13 +63,15 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 				name:'desc', 
 				field: 'desc', 
 				cellClass: 'grid-cell-text',
+				headerTooltip: 'Custom header string',
 				cellTooltip: function(row) { return row.entity.name; } 
 			},			
 			{ 
 				enableSorting: true,
-				name:'tracks', 
+				name:'trk', 
 				field: 'track_count', 
-				width: '100',
+				headerTooltip:  'track count',
+				width: '60',
 				cellTooltip: function(row) { 
 					
 					var concatted = row.entity.track_names_concat;
@@ -60,19 +84,31 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 			},		
 			{ 
 				enableSorting: true,
-				name:'waypoint', 
+				name:'wpt', 
 				field: 'waypoint_count', 
-				width: '140' 
+				headerTooltip:  'waypoint count',
+				width: '60' 
 			},
         ],
-        data: $scope.$parent.model.gpxinfos
+
+		onRegisterApi: function(gridApi) {
+
+			gridApi.selection.on.rowSelectionChanged($scope, function(row){
+
+				if ((row == undefined) || (row.entity.id == null) || (row.entity.id == undefined))
+					return;
+
+				$scope.selectGpx(row.entity.id);
+			});
+	    },
 	};
 
 	// -------------------------------------------------
 
-	$scope.trackIsLoaded = function(id) {
+	$scope.gpxIsLoaded = function(id) {
 
-		var isLoaded = (tracks.countWhere(function(track) { return (track.id == id); }) > 0); 
+		var isLoaded = ($scope.gpxs.countWhere(function(x) { return (x.id == id); }) > 0); 
+		console.log(id.toString() + ' isLoaded = ' + isLoaded.toString());
 		return isLoaded;
 	};
 
@@ -106,6 +142,9 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 	// UI COMMANDS
 
 	$scope.loadGpx = function(id) {
+		if ($scope.gpxIsLoaded(id))
+			return;
+
 		$rootScope.$emit(Command.LOAD_GPX, id);		
 	};
 

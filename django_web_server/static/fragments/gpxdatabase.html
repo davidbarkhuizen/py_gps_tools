@@ -8,11 +8,37 @@
 		my gpx files
 	</h3>
 
-	<br/>
+	<div id='SelectedGpxinfo' style='text-align:left;margin-left:20px'>
+		<div>
+			name - 
+			<span>{{ selectedGpxinfo.name }} </span>
+		</div>
+		<div>
+			file name - 
+			<span>{{ selectedGpxinfo.file_name }} </span>
+		</div>
+		<div>
+			track count - 
+			<span>{{ selectedGpxinfo.track_count }} </span>
+		</div>
+		<div>
+			track names - 
+			<span>{{ selectedGpxinfo.track_names_concat.replace('|', ', ') }} </span>
+		</div>
+		<div>
+			waypoint count - 
+			<span>{{ selectedGpxinfo.waypoint_count }} </span>
+		</div>
+		<div>
+		<a href='#' ng-click='loadGpx(selectedGpxinfo.id)' ng-class='((selectedGpxinfo == null) || (gpxIsLoaded(selectedGpxinfo.id) == true) ? 'inactive' : 'active'>load</a>
+		</div>
+	</div>
+
 	<br/>
 
 	<div
 		ui-grid="gridOptions"
+		ui-grid-selection
 		style='width=100%;height=300px;'
 		class="grid-medium"
 	></div>
