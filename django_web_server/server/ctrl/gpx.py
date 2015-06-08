@@ -95,6 +95,6 @@ def get(request, params):
 
     data = { 'id' : id, 'file_name' : model.file_name, 
     	'name' : info['name'], 'desc' : info['desc'],
-    	'tracks' : tracks, 'waypoints' : waypoints }
+    	'tracks' : tracks, 'waypoints' : waypoints, 'xml' : model.xml  }
     
     return success(data)

@@ -8,6 +8,19 @@ function dateValToTimeString(dateVal) {
 	}
 };
 
+function getChildNodeText(element, nodeName) {
+
+	var tags = element.getElementsByTagName(nodeName);
+	if (tags.length == 0)
+		return undefined; 
+
+	var targetElement = tags[0].firstChild;
+	if (targetElement == undefined)
+		return undefined;
+
+	return targetElement.nodeValue;
+}
+
 // ---------------------------------------------------------------------
 
 function binarySearch(f, target, xMin, xMax, iterationCount) {

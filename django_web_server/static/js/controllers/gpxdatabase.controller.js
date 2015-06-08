@@ -125,11 +125,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
 	$scope.gpxIsLoaded = function(id) {
 
-		$scope.gpxs.forEach(function(x) { console.log(x.id, x.name, x.file_name); });
-		console.log($scope.gpxs.length);
-
 		var isLoaded = ($scope.gpxs.countWhere(function(x) { return (x.id == id); }) > 0); 
-		console.log(id.toString() + ' isLoaded = ' + isLoaded.toString());
 		return isLoaded;
 	};
 
@@ -144,11 +140,6 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 			data.gpxinfos.sort(function(a, b) { 
 				return a.file_name.localeCompare(b.file_name); 
 			});
-
-			if ($scope.$parent.model.gpxinfos.length > 0) {
-				console.log('loadGpxinfos');
-				console.log($scope.$parent.model.gpxinfos[0].time.toString());
-			}
 
 			$scope.gridOptions.data = $scope.$parent.model.gpxinfos;
 		};

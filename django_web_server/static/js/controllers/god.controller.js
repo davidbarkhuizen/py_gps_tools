@@ -11,25 +11,10 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	};
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	// VIEWS
+	// VIEWS	
 
-	$scope.Views = Object.freeze({
-		DEBUG : guid(),
-		HOME : guid(),
-
-		IMPORT : guid(), 
-		EXPORT : guid(),
-
-		GPX_DATABASE : guid(),
-
-		MAP : guid(),
-		LOADED_GPXS : guid(),
-		LOADED_TRACKS : guid(), 
-		ELEVATION : guid(),
-		WAYPOINTS : guid(),
-	});	
-	
-	$scope.view = $scope.Views.HOME;
+	$scope.Views = Views;
+	$scope.view = Views.HOME;
 
 	$scope.gotoView = function(newView) {
 		$scope.view = newView;	
@@ -92,8 +77,8 @@ function GodController($rootScope, $scope, $http, $timeout) {
 
 	$rootScope.$on(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED, function(evt) {
 
-		if ($scope.view == $scope.Views.IMPORT) {
-			// $scope.view = $scope.Views.GPX_DATABASE;
+		if ($scope.view == Views.IMPORT) {
+			// $scope.view = Views.GPX_DATABASE;
 		}
 	});
 
@@ -101,7 +86,7 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	// TRACK
 
 	$rootScope.$on(Event.TRACKS_LOADED, function (evt) {
-		$scope.view = $scope.Views.MAP;
+		$scope.view = Views.MAP;
 	});
 
 	// -------------------------------------------------------------------
@@ -128,7 +113,7 @@ function GodController($rootScope, $scope, $http, $timeout) {
 
 		debugTraceElement.innerHTML = traceE.innerHTML;
 
-		$scope.view = $scope.Views.DEBUG;
+		$scope.view = Views.DEBUG;
 	};
 
 	$rootScope.$on(Event.DEBUG_ERROR, function(evt, error) {

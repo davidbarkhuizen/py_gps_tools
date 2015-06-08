@@ -589,7 +589,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		if (filteredWaypoints.length)
 			$scope.$parent.model.selectedPoint = filteredWaypoints[0];
 
-		$rootScope.$emit(Command.GOTO_VIEW, $scope.$parent.Views.LOADED_WAYPOINTS);
+		$rootScope.$emit(Command.GOTO_VIEW, Views.LOADED_WAYPOINTS);
 	};
 
 	// -----------------------------------------------------------

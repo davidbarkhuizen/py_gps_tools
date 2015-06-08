@@ -39,3 +39,20 @@ function toZTimeStr(dt) {
 
 	return dateS + 'T' + timeS + 'Z';
 }
+
+function parseGPX11DateTimeString(s) {
+
+    // YYYY-MM-DDThh:mm:ssZ
+
+    var year = s.substring(0, 4);
+    var month = s.substring(5, 7);
+    var day = s.substring(8, 10);
+
+    // http://www.w3.org/TR/NOTE-datetime
+    var hours = s.substring(11, 13);
+    var mins = s.substring(14, 16);
+    var secs = s.substring(17, 19);
+
+    var dt = new Date(years, months - 1, days, hours, mins, secs;
+    return dt;
+}

@@ -1,6 +1,6 @@
 function GpxController($rootScope, $scope, $http, $timeout) {
 
-	var model = $scope.$parent.model; 
+	var model = $scope.$parent.model;
 
 	$scope.loadGpx = function(id) {
 
@@ -34,11 +34,11 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 				$rootScope.$emit(Command.LOAD_WAYPOINTS, waypoints);
 			}
 
-			var gpx = new GPX(data.name, data.desc, tracks, waypoints, data.file_name);
+			var gpx = new GPX(data.name, data.desc, tracks, waypoints, data.file_name, data.xml);
 			gpx.id = data.id;
 			model.gpxs.push(gpx);
 
-			$rootScope.$emit(Command.GOTO_VIEW, $scope.$parent.Views.LOADED_GPXS);
+			$rootScope.$emit(Command.GOTO_VIEW, Views.LOADED_GPXS);
 		};
 
 		var failFn = function(status){

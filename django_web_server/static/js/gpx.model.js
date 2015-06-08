@@ -14,7 +14,14 @@ archeological
 
 */
 
-function Point(lat, lon, ele, time) {
+function Point(trkptElement) {
+	'''
+		<trkpt lat="-25.9381111711" lon="27.5921234395">
+			<ele>1329.16</ele>
+			<time>2014-10-26T11:06:15Z</time>
+		</trkpt>
+	'''
+
 	this.lat = lat;
 	this.lon = lon;
 	this.ele = ele;
@@ -32,10 +39,20 @@ function Waypoint(id, name, lat, lon, ele, time) {
 	this.time = time;
 }
 
-function Segment(name, points) {
+function Segment(name, trksegElement) {
+
 	this.name = name;
 	this.points = points;
 	this.totalDistanceM = 0;
+
+	// trkpt
+	//
+	this.points = [];
+	var points = trksegElement.getElementsByTagName('trkpt');
+	for(var i = 0; i < points.length; i++){
+		var point = new Point(points[i]);
+		this.points.push(segment);
+	}
 }
 
 Number.prototype.pad = function(size) {
@@ -79,24 +96,25 @@ function parseWaypointDict(wp) {
 	return new Waypoint(id, name, lat, lon, ele, time);
 }
 
-function Track(data) {
+function Track(trkElement) {
 
 	var that = this;
 
-	// name
-	//
-	this.name = data.name;
+	this.name = getChildNodeText(trkElement, 'name');
+	this.cmt = getChildNodeText(trkElement, 'cmt');
+	this.desc = getChildNodeText(trkElement, 'desc');
+	this.src = getChildNodeText(trkElement, 'src');
+	this.number = getChildNodeText(trkElement, 'number');
+	this.type = getChildNodeText(trkElement, 'type');
 
-	// segments
+	// trkseg
 	//
 	this.segments = [];
-	data.segments.forEach(function(segment){ 
-		var points = [];
-		segment.points.forEach(function(point) {
-			points.push(parsePoint(point));
-		});
-		that.segments.push(new Segment('', points));
-	});
+	var trksegs = trkElement.getElementsByTagName('trkseg');
+	for(var i = 0; i < trksegs.length; i++){
+		var segment = new Segment(trksegs[i]);
+		this.segments.push(segment);
+	}
 
 	var calcTrackStats = function() {
 
@@ -203,7 +221,54 @@ function Track(data) {
 	calcTrackStats();
 }
 
-function GPX(name, desc, tracks, waypoints, file_name) {
+function GPX(name, desc, tracks, waypoints, file_name, xml) {
+
+	// metadata
+	//
+	this.time = undefined;
+	this.name = undefined;
+	this.desc = undefined;
+
+	this.tracks = [];
+
+	if (xml !== undefined) {
+		if (xml.startsWith('<?xml')) {
+			var token = '?>';
+			var startIdx = xml.indexOf(token) + token.length;
+
+			var parser = new DOMParser();
+			var xmlDOM = parser.parseFromString(xml, "text/xml");
+
+			// METADATA
+			//
+			var metadatas = xmlDOM.getElementsByTagName('metadata');
+			if (metadatas.length > 0) {
+				var metadata = metadatas[0];
+
+				var timeStr = getChildNodeText(metadata, 'time');
+				this.time = ((timeStr !== undefined) && (timeStr !== ''))
+					? new Date(Date.parse(timeStr))
+					: undefined;
+
+				this.desc = getChildNodeText(metadata, 'desc'); 
+				this.name = getChildNodeText(metadata, 'name'); 
+				this.keywords = getChildNodeText(metadata, 'keywords'); 
+			}
+
+			var trks = xmlDOM.getElementsByTagName('trk');
+			for(var i = 0; i < trks.length; i++){
+				var trkElement = trks[i];
+				var track = new Track(trkElement);
+				this.tracks.push(track);
+			}
+
+			// SERIALIZE
+			// 
+			var serialiser = new XMLSerializer();
+			var str = serialiser.serializeToString(xmlDOM);
+			console.log(str);
+		}
+	}
 
 	this.name = name;
 	this.desc = desc;
@@ -270,7 +335,7 @@ function nodestoGpx(nodes) {
 	var gpxNode = toNode('gpx', GPX.RootAttributes, gpxChildNodes, GPX.XMLNS);
 
 	var xml = (GPX.XmlHeader + new XMLSerializer().serializeToString(gpxNode))
-		.replace('<gpx ', "<gpx xmlns='http://www.topografix.com/GPX/1/1' "); // WTF
+		.replace('<gpx ', "<gpx xmlns='http://www.topografix.com/GPX/1/1' "); // lol
 
 	return xml;
 }
