@@ -26,7 +26,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
         data: $scope.$parent.model.gpxinfos,  
         
-        showGridFooter: true,
+        //showGridFooter: true,
         
         enableGridMenu: false,
 
@@ -34,6 +34,8 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 		multiSelect:false,
 		enableSelectionBatchEvent: false, // single event only
 		enableRowHeaderSelection: false, // no header, click row to select
+
+		enableFiltering: true,
 
         columnDefs: [
         	{ 	
@@ -43,6 +45,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 				cellTemplate: loadCellTemplate,
 				enableSorting: false, 
 				enableHiding: false,
+				enableFiltering: false,
 			},
 			{ 	
 				enableSorting: true,
@@ -68,6 +71,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 			},			
 			{ 
 				enableSorting: true,
+				enableFiltering: false,
 				name:'trk', 
 				field: 'track_count', 
 				headerTooltip:  'track count',
@@ -84,6 +88,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 			},		
 			{ 
 				enableSorting: true,
+				enableFiltering: false,
 				name:'wpt', 
 				field: 'waypoint_count', 
 				headerTooltip:  'waypoint count',

@@ -23,23 +23,17 @@
 		</div>
 		<div>
 			track names - 
-			<span>{{ selectedGpxinfo.track_names_concat.replace('|', ', ') }} </span>
+			<span>{{ selectedGpxinfo.track_names_concat.split('|').join(', ') }} </span>
 		</div>
 		<div>
 			waypoint count - 
 			<span>{{ selectedGpxinfo.waypoint_count }} </span>
 		</div>
-		<div>
-		<a href='#' ng-click='loadGpx(selectedGpxinfo.id)' ng-class='((selectedGpxinfo == null) || (gpxIsLoaded(selectedGpxinfo.id) == true) ? 'inactive' : 'active'>load</a>
-		</div>
 	</div>
-
 	<br/>
-
 	<div
 		ui-grid="gridOptions"
 		ui-grid-selection
-		style='width=100%;height=300px;'
 		class="grid-medium"
 	></div>
 </div>
