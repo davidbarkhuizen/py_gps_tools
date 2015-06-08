@@ -20,9 +20,18 @@
 					<div>					
 						{{ gpx.track_count() > 0 ? gpx.track_count().toString() + ' track(s)' : 'no tracks' }}
 					</div>
-					<div ng-show='gpx.track_count() > 0' style='margin-left:20px;' ng-repeat='track in gpx.tracks'
-					>{{'- ' + track.name + ' - ' + track.segments.length.toString() + ' segment(s)' }}
-					</div>
+					<ul>
+						<li ng-show='gpx.track_count() > 0' style='margin-left:20px;' ng-repeat='track in gpx.tracks'
+						>{{ track.name }}
+							<br/>
+							<ul>
+								{{ track.segments.length.toString() + ' segment(s)' }}
+								<li ng-repeat='segment in track.segments'>
+									{{ (1 + track.segments.indexOf(segment)).toString() +  segment.points.length.toString() }} points
+								</li>
+							</ul>
+						</li>
+					</ul>
 				</div>
 				<br/>
 				<div id='GpxWaypoints'>
