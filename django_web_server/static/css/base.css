@@ -230,3 +230,10 @@ a
 .right-overlay-menu {
     text-align:right;
 }
+
+/* -------------------------------------------------------*/
+/* GRID */
+
+.grid-cell-text {
+    text-align:left;
+}

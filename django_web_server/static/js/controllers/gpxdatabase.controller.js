@@ -1,84 +1,55 @@
 function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
-	// TOGGLE GPX DETAIL
-
-	$scope.showTrackToggles = {};
-	$scope.showTrack = function(idx) {
-		return ($scope.showTrackToggles[idx] == true);
-	}
-
-	$scope.toggleShowTrack = function(idx) {
-		console.log(idx);
-		if ($scope.showTrackToggles[idx] == true)
-			$scope.showTrackToggles[idx] = false;
-		else
-			$scope.showTrackToggles[idx] = true;
-	};
-
-	// -----------------------------------------
-
 	$scope.gpxinfos = $scope.$parent.model.gpxinfos;
 	var tracks = $scope.$parent.tracks;
+
+	// -------------------------------------------------
+	// GRID
+
+	// var textCellTemplate = '<button class="btn primary" ng-click="grid.appScope.showMe()">Click Me</button>';
 
 	$scope.gridOptions = {
         enableSorting: true,
         columnDefs: [
-          { name:'file name', field: 'file_name' },
-          { name:'name', field: 'name' },
-          { name:'desc', field: 'desc'},
+			{ 	
+				name:'file name', 
+				field: 'file_name', 
+				width: '400', 
+				cellClass: 'grid-cell-text', 
+				cellTooltip: function(row) { return row.entity.file_name; } 
+			},			
+			{ 
+				name:'name', 
+				field: 'name', 
+				cellClass: 'grid-cell-text',
+				cellTooltip: function(row) { return row.entity.name; } 
+			},			
+			{
+				name:'desc', 
+				field: 'desc', 
+				cellClass: 'grid-cell-text',
+				cellTooltip: function(row) { return row.entity.name; } 
+			},			
+			{ 
+				name:'tracks', 
+				field: 'track_count', 
+				width: '100' 
+			},		
+			{ 
+				name:'waypoints', 
+				field: 'waypoint_count', 
+				width: '140' 
+			},
         ],
         data: $scope.$parent.model.gpxinfos
 	};
 
-	$scope.showAll = function() {
-		$scope.searchToken = '';
-		$scope.filter();	
-	};
+	// -------------------------------------------------
 
 	$scope.trackIsLoaded = function(id) {
 
 		var isLoaded = (tracks.countWhere(function(track) { return (track.id == id); }) > 0); 
 		return isLoaded;
-	};
-
-	// select -----------------------------------------
-
-	$scope.select = function(id) {
-
-		$scope.gpxinfos.forEach(
-			function(x) {
-				if (x.id == id)
-					$scope.selectedGpxinfo = x;
-			}
-		);
-	};
-
-	// filter -----------------------------------------
-
-	$scope.filter = function() {	
-
-		var matchFunction = function(x) {
-
-			var token = $scope.searchToken.toUpperCase();
-
-			if ((token == null) || (token.length == 0))
-				return true;
-			
-			var hits = [x.name, x.file_name, x.track_names_concat]
-				.filter(function(z) { return z !== null})
-				.map(function(z) { return z.toUpperCase(); })
-				.filter(function(z) { return z.indexOf(token) !== -1})
-
-			return (hits.length > 0);
-		}
-		var matches = $scope.gpxinfos.filter(matchFunction);
-		
-		matches.sort(function(a, b) { return a.file_name.localeCompare(b.file_name); });
-
-		// update filtered map list
-		//
-		$scope.filteredGpxinfos.length = 0;
-		matches.forEach(function(x) {$scope.filteredGpxinfos.push(x); });
 	};
 
 	// load -------------------------------------------
@@ -93,10 +64,9 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 				return a.file_name.localeCompare(b.file_name); 
 			});
 
-			$scope.filter();
-
-			$scope.gridOptions.data = $scope.
+			$scope.gridOptions.data = $scope.$parent.model.gpxinfos;
 		};
+		
 		var errorFn = function(error){
 			$scope.globalDebug(error);
 		};

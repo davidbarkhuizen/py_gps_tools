@@ -33,10 +33,27 @@ function GodController($rootScope, $scope, $http, $timeout) {
 
 	$scope.gotoView = function(newView) {
 		$scope.view = newView;	
-		$timeout($scope.giveActiveViewFocus, 100);
+	
+		var bindWindow = function () {
+
+			// focus on element marked with ? attribute 
+			// 
+			$scope.giveActiveViewFocus();
+
+			// ui-grids only display correctly after this event if
+			// initially rendered off-screen
+			//
+			var evt = document.createEvent('HTMLEvents');
+			evt.initEvent('resize', true, false);
+			window.dispatchEvent(evt);
+		};
+
+		$timeout(bindWindow, 100);
 	};
 
-	$rootScope.$on(Command.GOTO_VIEW, function(evt, view) { $scope.view = view; });
+	$rootScope.$on(Command.GOTO_VIEW, function(evt, view) { 
+		$scope.gotoView(view);
+	});
 
 	$rootScope.$on(Event.DEBUG_ERROR, function(evt, error) {
 		$scope.globalDebug(error);
