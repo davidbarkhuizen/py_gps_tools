@@ -35,6 +35,7 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 			}
 
 			var gpx = new GPX(data.name, data.desc, tracks, waypoints, data.file_name);
+			gpx.id = data.id;
 			model.gpxs.push(gpx);
 
 			$rootScope.$emit(Command.GOTO_VIEW, $scope.$parent.Views.LOADED_GPXS);

@@ -2,13 +2,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 	var model = $scope.$parent.model; 
 
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-	$scope.timeString = function(dateVal) {
-
-		var d = new Date(dateVal);
-		return d.toString();
-	};
+	$scope.dateValToTimeString = dateValToTimeString;
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// FILTERING

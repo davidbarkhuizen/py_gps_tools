@@ -1,5 +1,7 @@
 function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
+	$scope.dateValToTimeString = dateValToTimeString;
+
 	$scope.gpxs = $scope.$parent.model.gpxs;	
 
 	$scope.gpxinfos = $scope.$parent.model.gpxinfos;
@@ -19,7 +21,9 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 	// -------------------------------------------------
 	// GRID
 
-	var loadCellTemplate = '<a href="" ng-click="grid.appScope.loadGpx(row.entity.id)" "><img style="margin-bottom:-5px;" ng-src="/static/img/icon/button_plus_green_16.png"></a>';
+	var loadIconSrcRef = '/static/img/icon/purple-circle-16.png';
+	var loadIconImgTemplate = '<img style="margin-bottom:-5px;" ng-src="' + loadIconSrcRef + '">';
+	var loadCellTemplate = '<a href="" ng-click="grid.appScope.loadGpx(row.entity.id)" ">' + loadIconImgTemplate + '</a>';
 	var blankHeaderTemplate = '';
 
 	$scope.gridOptions = {      
@@ -41,12 +45,21 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
         	{ 	
         		name: '',
 				field: 'id', 
-				width: '50', 
+				width: '80', 
 				cellTemplate: loadCellTemplate,
+				headerCellTemplate: '<br/>load',
 				enableSorting: false, 
 				enableHiding: false,
 				enableFiltering: false,
 			},
+			{ 	
+				enableSorting: true,
+				enableFiltering: false,
+				name:'time', 
+				field: 'time', 
+				width: '150', 
+				// cellTooltip: function(row) { return row.entity.file_name; } 
+			},	
 			{ 	
 				enableSorting: true,
 				name:'file name', 
@@ -112,6 +125,9 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
 	$scope.gpxIsLoaded = function(id) {
 
+		$scope.gpxs.forEach(function(x) { console.log(x.id, x.name, x.file_name); });
+		console.log($scope.gpxs.length);
+
 		var isLoaded = ($scope.gpxs.countWhere(function(x) { return (x.id == id); }) > 0); 
 		console.log(id.toString() + ' isLoaded = ' + isLoaded.toString());
 		return isLoaded;
@@ -128,6 +144,11 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 			data.gpxinfos.sort(function(a, b) { 
 				return a.file_name.localeCompare(b.file_name); 
 			});
+
+			if ($scope.$parent.model.gpxinfos.length > 0) {
+				console.log('loadGpxinfos');
+				console.log($scope.$parent.model.gpxinfos[0].time.toString());
+			}
 
 			$scope.gridOptions.data = $scope.$parent.model.gpxinfos;
 		};
@@ -147,7 +168,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 	// UI COMMANDS
 
 	$scope.loadGpx = function(id) {
-		if ($scope.gpxIsLoaded(id))
+		if ($scope.gpxIsLoaded(id) == true)
 			return;
 
 		$rootScope.$emit(Command.LOAD_GPX, id);		

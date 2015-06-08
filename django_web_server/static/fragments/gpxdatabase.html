@@ -4,18 +4,33 @@
 	id='GpxDatabaseContainer'
 	>
 
-	<h3>
-		my gpx files ({{ gpxinfos.length  }})
-	</h3>
+	<br/>
+	<div class='header'>
+		my .GPX files ({{ gpxinfos.length  }})
+	</div>
 
-	<div id='SelectedGpxinfo' style='text-align:left;margin-left:20px'>
-		<div>
-			name - 
-			<span>{{ selectedGpxinfo.name }} </span>
-		</div>
+	<div>
+		<a href="#" ng-click='gotoView(Views.IMPORT)'>import</a>
+		<a href="#" ng-click='gotoView(Views.LOADED_GPXS)' style='text-decoration:underline;'>loaded gpxs</a>
+		<a href="#" ng-click='gotoView(Views.MAP)'>map</a>
+	</div>
+
+	<div id='SelectedGpxinfo' style='text-align:left;margin:20px'>
 		<div>
 			file name - 
 			<span>{{ selectedGpxinfo.file_name }} </span>
+		</div>
+		<div>
+			gpx name - 
+			<span>{{ selectedGpxinfo.name }} </span>
+		</div>
+		<div>
+			gpx time - 
+			<span>{{ dateValToTimeString(selectedGpxinfo.time) }} </span>
+		</div>
+		<div>
+			gpx description - 
+			<span>{{ selectedGpxinfo.desc }} </span>
 		</div>
 		<div>
 			track count - 
@@ -30,7 +45,7 @@
 			<span>{{ selectedGpxinfo.waypoint_count }} </span>
 		</div>
 	</div>
-	<br/>
+
 	<div
 		ui-grid="gridOptions"
 		ui-grid-selection

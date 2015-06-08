@@ -1,3 +1,13 @@
+function dateValToTimeString(dateVal) {
+
+	try {
+		var d = new Date(dateVal);
+		return d.toString();
+	} catch (e) {
+		return '';
+	}
+};
+
 // ---------------------------------------------------------------------
 
 function binarySearch(f, target, xMin, xMax, iterationCount) {

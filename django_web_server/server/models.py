@@ -10,7 +10,7 @@ class Gpx(models.Model):
 
 	name 				= models.CharField(max_length=1024, null=True)
 	desc 				= models.CharField(max_length=1024, null=True)
-	time 				= models.DateField(null=True)
+	time 				= models.DateTimeField(null=True)
 
 	track_count			= models.IntegerField()
 	track_names_concat 	= models.TextField(null=True)
@@ -22,6 +22,9 @@ class Gpx(models.Model):
 	# keywords			= models.CharField(max_length=512, null=True)
 
 	def to_gpx_info(self):
+
+		print('dog')
+		print(self.time)
 
 		return { 'id' : self.id,
 			'file_name' : self.file_name,

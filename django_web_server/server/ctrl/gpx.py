@@ -47,8 +47,8 @@ def post(request, params):
 	dbGPX = Gpx(xml = xml, 
 		file_name = file_name,
 
-		name = gpx.metadata['name'], 
-		desc = gpx.metadata['desc'], 
+		name = gpx.metadata['name'],
+		desc = gpx.metadata['desc'],
 		time = gpx.metadata['time'],
 
 		track_count = len(gpx.tracks),
