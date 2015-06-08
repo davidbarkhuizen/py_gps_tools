@@ -10,6 +10,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
 	$scope.gridOptions = {
         enableSorting: true,
+        showGridFooter: true,
         columnDefs: [
 			{ 	
 				name:'file name', 
@@ -33,10 +34,19 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 			{ 
 				name:'tracks', 
 				field: 'track_count', 
-				width: '100' 
+				width: '100',
+				cellTooltip: function(row) { 
+					
+					var concatted = row.entity.track_names_concat;
+
+					if ((concatted == undefined) || (concatted == null) || (concatted == ''))
+						return 'no tracks'; 
+					else
+						return concatted.replace('|', '\r\n');
+				}
 			},		
 			{ 
-				name:'waypoints', 
+				name:'waypoint', 
 				field: 'waypoint_count', 
 				width: '140' 
 			},
