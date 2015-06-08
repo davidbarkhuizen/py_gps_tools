@@ -6,13 +6,24 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 	// -------------------------------------------------
 	// GRID
 
-	// var textCellTemplate = '<button class="btn primary" ng-click="grid.appScope.showMe()">Click Me</button>';
+	var loadCellTemplate = '<a href="" ng-click="grid.appScope.loadGpx(row.entity.id)">+</a>';
+	var blankHeaderTemplate = '';
 
-	$scope.gridOptions = {
-        enableSorting: true,
+	$scope.gridOptions = {        
         showGridFooter: true,
+        enableGridMenu: false,
         columnDefs: [
+        	{ 	
+        		name: '',
+				field: 'id', 
+				width: '50', 
+				cellClass: '', 
+				cellTemplate: loadCellTemplate,
+				enableSorting: false, 
+				enableHiding: false,
+			},
 			{ 	
+				enableSorting: true,
 				name:'file name', 
 				field: 'file_name', 
 				width: '400', 
@@ -20,6 +31,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 				cellTooltip: function(row) { return row.entity.file_name; } 
 			},			
 			{ 
+				enableSorting: true,
 				name:'name', 
 				field: 'name', 
 				cellClass: 'grid-cell-text',
@@ -32,6 +44,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 				cellTooltip: function(row) { return row.entity.name; } 
 			},			
 			{ 
+				enableSorting: true,
 				name:'tracks', 
 				field: 'track_count', 
 				width: '100',
@@ -46,6 +59,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 				}
 			},		
 			{ 
+				enableSorting: true,
 				name:'waypoint', 
 				field: 'waypoint_count', 
 				width: '140' 
