@@ -167,11 +167,12 @@ function GPX(xml) {
 	this.waypoints = [];
 
 	var parser = new DOMParser();
-	var xmlDOM = parser.parseFromString(xml, "text/xml");
+	
+	this.xmlDOM = parser.parseFromString(xml, "text/xml");
 
 	// metadata
 	//
-	var metadatas = xmlDOM.getElementsByTagName('metadata');
+	var metadatas = this.xmlDOM.getElementsByTagName('metadata');
 	if (metadatas.length > 0) {
 		var metadata = metadatas[0];
 
@@ -187,7 +188,7 @@ function GPX(xml) {
 
 	// trk
 	//
-	var trks = xmlDOM.getElementsByTagName('trk');
+	var trks = this.xmlDOM.getElementsByTagName('trk');
 	for(var i = 0; i < trks.length; i++){
 		var trk = trks[i];
 		var track = new Track(trk);
@@ -196,7 +197,7 @@ function GPX(xml) {
 
 	// wpt
 	//
-	var wpts = xmlDOM.getElementsByTagName('wpt');
+	var wpts = this.xmlDOM.getElementsByTagName('wpt');
 	for(var i = 0; i < wpts.length; i++){
 		var wpt = wpts[i];
 		var point = new Point(wpt);

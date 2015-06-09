@@ -17,6 +17,8 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 
 			var gpx = new GPX(data.xml);
 			gpx.id = data.id;
+			gpx.file_name = data.file_name;
+
 			model.gpxs.push(gpx);
 
 			// tracks
