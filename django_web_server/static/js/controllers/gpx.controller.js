@@ -29,7 +29,7 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 			});
 
 			if (trackAdded == true) {
-				$rootScope.$emit(Command.LOAD_TRACKS, tracks);
+				$rootScope.$emit(Event.TRACKS_LOADED);
 			}
 
 			// waypoints
@@ -42,7 +42,7 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 			});
 
 			if (waypointsAdded == true) {
-				$rootScope.$emit(Command.LOAD_WAYPOINTS, waypoints);
+				$rootScope.$emit(Event.WAYPOINTS_LOADED);
 			}
 
 			// change view

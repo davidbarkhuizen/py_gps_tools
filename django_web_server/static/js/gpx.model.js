@@ -1,4 +1,4 @@
-function Point(trkpt) {
+function Point(pt) {
 	/*
 	<trkpt lat="-25.9381111711" lon="27.5921234395">
 		<ele>1329.16</ele>
@@ -6,25 +6,15 @@ function Point(trkpt) {
 	</trkpt>
 	*/
 
-	this.lat = parseFloat(trkpt.getAttribute('lat'));
-	this.lon = parseFloat(trkpt.getAttribute('lon'));
-	this.ele = parseFloat(getChildNodeText(trkpt, 'ele'));
-	this.time = parseGPX11DateTimeString(getChildNodeText(trkpt, 'time'));
+	this.lat = parseFloat(pt.getAttribute('lat'));
+	this.lon = parseFloat(pt.getAttribute('lon'));
+	this.ele = parseFloat(getChildNodeText(pt, 'ele'));
+	this.time = parseGPX11DateTimeString(getChildNodeText(pt, 'time'));
+	this.name = getChildNodeText(pt, 'name')
 
 	// track/segment stat
 	//
 	this.cumulativeDistanceM = 0;
-}
-
-function Waypoint(id, name, lat, lon, ele, time) {
-
-	this.id = id;
-	this.name = name;
-	// no inheritance :(
-	this.lat = lat;
-	this.lon = lon;
-	this.ele = ele;
-	this.time = time;
 }
 
 function Segment(trkseg) {
@@ -44,37 +34,6 @@ function Segment(trkseg) {
 		var point = new Point(points[i]);
 		this.points.push(point);
 	}
-}
-
-function parsePoint(pointString) {
-
-	// 2014-10-26 11:06:15|-25.938111|27.592123|1329.160000
-	// time, lat, lon, ele
-
-	var datum = pointString.split("|")
-
-	//var timeStr = datum[0];
-
-	var lat = parseFloat(datum[0]);
-	var lon = parseFloat(datum[1]);
-	var ele = parseFloat(datum[2]);
-	var t = new Date(Date.parse(datum[3]));
-
-	return new Point(lat, lon, ele, t);
-}
-
-function parseWaypointDict(wp) {
-
-	var id = wp.id;
-	var name = wp.name;
-
-	var lat = parseFloat(wp.lat);
-	var lon = parseFloat(wp.lon);
-	var ele = parseFloat(wp.ele);
-	
-	var time = Date.parse(wp.time);
-
-	return new Waypoint(id, name, lat, lon, ele, time);
 }
 
 function Track(trk) {
@@ -230,17 +189,28 @@ function GPX(xml) {
 	//
 	var trks = xmlDOM.getElementsByTagName('trk');
 	for(var i = 0; i < trks.length; i++){
-		var trkElement = trks[i];
-		var track = new Track(trkElement);
+		var trk = trks[i];
+		var track = new Track(trk);
 		this.tracks.push(track);
+	}
+
+	// wpt
+	//
+	var wpts = xmlDOM.getElementsByTagName('wpt');
+	for(var i = 0; i < wpts.length; i++){
+		var wpt = wpts[i];
+		var point = new Point(wpt);
+		this.waypoints.push(point);
 	}
 
 	// SERIALIZE
 	// 
+	/*
 	var serialiser = new XMLSerializer();
 	var str = serialiser.serializeToString(xmlDOM);
 	console.log(str);
-
+	*/
+	
 	this.track_names = function() {
 		return this.tracks.map(function(track) { return track.name; });
 	};
