@@ -11,7 +11,7 @@ function GodController($rootScope, $scope, $http, $timeout) {
 		selectedPoint : undefined
 	};
 
-	$scope.gpxEditor = new GPXEditor($scope.model.gpxs); 
+	$scope.gpxEditor = new GPXEditor($scope.model.gpxs, $scope.model.tracks, $scope.model.waypoints); 
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// VIEWS	

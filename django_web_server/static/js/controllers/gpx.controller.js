@@ -62,10 +62,23 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 		$scope.loadGpx(id);	
 	});
 
+ 	// UPDATE_WAYPOINT_NAME
+ 	//
 	$scope.updateWaypointName = function(waypoint, name) {
 		$scope.$parent.gpxEditor.updateWaypointName(waypoint, name);
+		$rootScope.$emit(Event.WAYPOINT_EDITED);
 	};
 	$rootScope.$on(Command.UPDATE_WAYPOINT_NAME, function(evt, data) {
 		$scope.updateWaypointName(data.waypoint, data.name);
+	});
+
+	// WAYPOINT_EDITED
+	//
+	$scope.deleteWaypoint = function(waypoint) {		
+		$scope.$parent.gpxEditor.deleteWaypoint(waypoint);
+		$rootScope.$emit(Event.WAYPOINT_DELETED, waypoint);
+	};
+	$rootScope.$on(Command.DELETE_WAYPOINT, function(evt, waypoint) {
+		$scope.deleteWaypoint(waypoint);
 	});
 }

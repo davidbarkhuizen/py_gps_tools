@@ -38,7 +38,7 @@
 			<a href='#' style='color:green;' ng-show='showCancelEdit()' ng-click='cancelEdit()'>cancel edit</a>
 			
 			<a href='#' style='color:red;' ng-show='showDelete()' ng-click='getDeletionConfirmation(model.selectedPoint.id)'>delete</a>
-			<a href="#" ng-show='showDeleteConfirmationPrompt()' ng-click='delete(model.selectedPoint.id)' style='color:red;'>confirm deletion</a>
+			<a href="#" ng-show='showDeleteConfirmationPrompt()' ng-click='delete();' style='color:red;'>confirm deletion</a>
 			<a href="#" ng-show='showDeleteConfirmationPrompt()' ng-click='cancelDelete()'>cancel</a>
 		</div>
 	</div>

@@ -1,6 +1,10 @@
-function GPXEditor(gpxs) {
+function GPXEditor(gpxs, tracks, waypoints) {
+
+	var that = this;
 
 	this.gpxs = gpxs;
+	this.tracks = tracks;
+	this.waypoints = waypoints;
 
 	this.gpxForWaypoint = function(waypoint) {
 
@@ -27,5 +31,20 @@ function GPXEditor(gpxs) {
 
 		waypoint.edited = true;
 		this.gpxForWaypoint(waypoint).edited = true;
+	};
+
+	this.deleteWaypoint = function(waypoint) {
+
+		var gpx = this.gpxForWaypoint(waypoint);
+
+		// xml
+		//
+		waypoint.node.parentNode.removeChild(waypoint.node);
+
+		// model
+		//
+		that.waypoints.removeWhere(function(x){ return (x == waypoint); });
+
+		gpx.edited = true;
 	};
 }
