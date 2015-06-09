@@ -30,6 +30,25 @@ function getChildNodeText(element, nodeName) {
 	return targetElement.nodeValue;
 }
 
+function setChildNodeText(element, nodeName, text) {
+
+	if (element === undefined)
+		return undefined;
+
+	var tags = [];
+	try { tags = element.getElementsByTagName(nodeName); }
+	catch (e) { console.log('%s %o', nodeName, element); throw e; }
+
+	if (tags.length == 0)
+		return undefined; 
+
+	var targetElement = tags[0].firstChild;
+	if (targetElement === undefined)
+		return undefined;
+
+	targetElement.nodeValue = text;
+}
+
 // ---------------------------------------------------------------------
 
 function binarySearch(f, target, xMin, xMax, iterationCount) {

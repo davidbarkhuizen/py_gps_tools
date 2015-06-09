@@ -11,9 +11,10 @@
 			<div ng-repeat="gpx in model.gpxs" style='text-align:left; margin-left:10px;'>
 				<div class='header'>
 					{{ ((gpx.name) && (gpx.name.length > 0)) ? gpx.name : 'no name' }}
+					<span class='red' ng-show='(gpx.edited == true)'>(edited)</span>
 				</div>
 				<div>					
-					{{ ((gpx.file_name) && (gpx.file_name.length > 0)) ? gpx.file_name : 'no file name' }}
+					{{ ((gpx.fileName) && (gpx.fileName.length > 0)) ? gpx.fileName : 'no file name' }}
 				</div>
 				<br/>
 				<div id='GpxTracks'>

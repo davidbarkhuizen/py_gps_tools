@@ -237,3 +237,11 @@ a
 .grid-cell-text {
     text-align:left;
 }
+
+.grid-medium {
+    font-size: 15px;
+}
+
+/* -------------------------------------------------------*/
+
+.red { color:red; }

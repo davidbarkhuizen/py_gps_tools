@@ -58,6 +58,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 				name:'time', 
 				field: 'time', 
 				width: '150', 
+				cellTooltip: true,
 				// cellTooltip: function(row) { return row.entity.file_name; } 
 			},	
 			{ 	

@@ -24,7 +24,11 @@ var Command = Object.freeze({
 	LOAD_TRACKS : guid(),
 	LOAD_WAYPOINTS : guid(),
 
-	// ----------------------------
+	// --------------------------------------------------------
+
+	UPDATE_WAYPOINT_NAME : guid(),
+
+	// ---------------------------------------------------------
 
 	UNLOAD_TRACK : guid(),
 

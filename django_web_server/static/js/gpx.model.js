@@ -6,6 +6,8 @@ function Point(pt) {
 	</trkpt>
 	*/
 
+	this.node = pt;
+
 	this.lat = parseFloat(pt.getAttribute('lat'));
 	this.lon = parseFloat(pt.getAttribute('lon'));
 	this.ele = parseFloat(getChildNodeText(pt, 'ele'));
@@ -161,7 +163,9 @@ function Track(trk) {
 	calcTrackStats();
 }
 
-function GPX(xml) {
+function GPX(xml, fileName) {
+
+	this.fileName = fileName;
 
 	this.tracks = [];
 	this.waypoints = [];
@@ -211,6 +215,15 @@ function GPX(xml) {
 	var str = serialiser.serializeToString(xmlDOM);
 	console.log(str);
 	*/
+
+	this.label = function() {
+
+		var options = [this.name, this.fileName, 'no name'];
+		for(i = 0; i < options.length; i++) {
+			if (options[i] !== undefined)
+				return options[i];
+		}
+	}
 	
 	this.track_names = function() {
 		return this.tracks.map(function(track) { return track.name; });
@@ -224,6 +237,8 @@ function GPX(xml) {
 		return this.waypoints.length;
 	};
 }
+
+// --------------------------------------------------------------------------
 
 // --------------------------------------------------------------------------
 // TO XML

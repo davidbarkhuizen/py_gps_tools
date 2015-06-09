@@ -15,9 +15,8 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 
 		var successFn = function(data) {
 
-			var gpx = new GPX(data.xml);
+			var gpx = new GPX(data.xml, data.file_name);
 			gpx.id = data.id;
-			gpx.file_name = data.file_name;
 
 			model.gpxs.push(gpx);
 
@@ -61,5 +60,12 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 
  	$rootScope.$on(Command.LOAD_GPX, function(evt, id) {
 		$scope.loadGpx(id);	
+	});
+
+	$scope.updateWaypointName = function(waypoint, name) {
+		$scope.$parent.gpxEditor.updateWaypointName(waypoint, name);
+	};
+	$rootScope.$on(Command.UPDATE_WAYPOINT_NAME, function(evt, data) {
+		$scope.updateWaypointName(data.waypoint, data.name);
 	});
 }

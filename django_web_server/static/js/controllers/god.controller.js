@@ -7,8 +7,11 @@ function GodController($rootScope, $scope, $http, $timeout) {
 		gpxinfos : [],
 		waypoints : [],
 		filteredWaypoints : [],
-		selectedPoint : null
+		
+		selectedPoint : undefined
 	};
+
+	$scope.gpxEditor = new GPXEditor($scope.model.gpxs); 
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// VIEWS	

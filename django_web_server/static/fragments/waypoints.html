@@ -8,10 +8,12 @@
 		waypoints ({{ model.waypoints.length }})
 	</h3>
 
-	<div ng-show='model.waypoints.length > 0'>
+	<div id='SelectedWaypoint'>
 		<div>
-			<div ng-show='!editing' class='header'>
-				{{ model.selectedPoint.name }}
+			<div ng-show='(!editing)' class='header'>
+				<div style='padding-top:1px;margin-bottom:9px;'>
+				{{ (model.selectedPoint === undefined) ? "no point selected" : model.selectedPoint.name }}
+				</div>
 			</div>
 			<div ng-show='editing'>
 				<input
@@ -27,7 +29,7 @@
 				lat {{ model.selectedPoint.lat }}, lon {{ model.selectedPoint.lon }}
 			</div>
 			<div>
-				{{ dateValToTimeString(model.selectedPoint.time) }}
+				{{  (model.selectedPoint === undefined) ? '-' : dateValToTimeString(model.selectedPoint.time) }}
 			</div>
 		</div>
 		<div>
@@ -43,16 +45,19 @@
 
 	<br/>
 
-	<div class='medium-short-list'>
-		<div ng-repeat='waypoint in filteredOrAll()'>
-			<span>{{ waypoint.lat.toFixed(6) }}, {{ waypoint.lon.toFixed(6) }}</span>
-			<a href='#' ng-click="selectPoint(waypoint)">{{ waypoint.name }} </a>
-		</div>
-	</div>
+	<div
+		ui-grid="gridOptions"
+		ui-grid-selection
+		class="grid-medium"
+	></div>
 
-	<br/>
+<!-- 	<div ng-repeat='waypoint in filteredOrAll()'>
+		<span>{{ waypoint.lat.toFixed(6) }}, {{ waypoint.lon.toFixed(6) }}</span>
+		<a href='#' ng-click="selectPoint(waypoint)">{{ waypoint.name }} </a>
+	</div> -->
 
-	<div>
+
+	<!-- <div>
 		showing {{ filteredOrAll().length }} points of {{ model.waypoints.length }} in total (<a href='#' ng-click='showAll();'>show all</a>)
 	</div>
 	<div>							
@@ -69,5 +74,5 @@
 	<br/>
 	<div>
 		<a href='#' ng-click='gotoView(Views.MAP);'>map</a>
-	</div>
+	</div> -->
 </div>

@@ -1,39 +1,79 @@
 function WaypointsController($rootScope, $scope, $http, $timeout) {
 
-	var model = $scope.$parent.model; 
+	$scope.model = $scope.$parent.model; 
 
 	$scope.dateValToTimeString = dateValToTimeString;
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	// FILTERING
 
-	$scope.showAll = function() {
-		model.filteredWaypoints.length = 0;
+	var timeCellTemplate = '<span>{{ row.entity.time.toISOString() }}</span>';
+
+	$scope.gridOptions = {
+
+		data: $scope.$parent.model.waypoints,
+
+		enableRowSelection: true,
+		multiSelect:false,
+		enableSelectionBatchEvent: false, // single event only
+		enableRowHeaderSelection: false, // no header, click row to select
+
+		enableFiltering: true,
+
+		columnDefs: [
+			{
+				name: 'gpx',
+				enableHiding: false,
+				enableFiltering: false,
+				cellTemplate: '<span>{{ grid.appScope.$parent.gpxEditor.gpxForWaypoint(row.entity).label() }}</span>'
+			},
+			{
+				name: 'time',
+				field: 'time',
+				cellTemplate: timeCellTemplate,
+
+				enableHiding: false,
+				enableFiltering: false,
+			},
+			{
+				name: 'latitude',
+				field: 'lat',
+
+				enableHiding: false,
+				enableFiltering: false,
+			},
+			{
+				name: 'longitude',
+				field: 'lon',
+
+				enableHiding: false,
+				enableFiltering: false,
+			},
+			{
+				name: 'name',
+				field: 'name',
+
+				enableHiding: false,
+				enableFiltering: true,
+			}
+		],
+
+		onRegisterApi: function(gridApi) {
+
+			gridApi.selection.on.rowSelectionChanged($scope, function(row){
+
+				if ((row === undefined) || (row.entity=== undefined))
+					return;
+
+				$scope.selectWaypoint(row.entity);
+			});
+	    },
 	};
 
-	$scope.filteredOrAll = function() {
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// SELECT
 
-		if (model.waypoints.length == 0) {
-			model.filteredWaypoints.length = 0; 
-		}
-
-		var set = (model.filteredWaypoints.length > 0)
-			? model.filteredWaypoints
-			: model.waypoints;
-
-		set = set.sort(function(a, b) { 
-
-			if ((a === undefined) || (b === undefined))
-				return 0;
-
-			if ((a.name === undefined) || (b.name === undefined))
-				return 0;
-
-			try { return a.name.localeCompare(b.name); }
-			catch (e) { return 0; } 
-		});
-
-		return set;
+	$scope.selectWaypoint = function(waypoint) {
+		$scope.model.selectedPoint = waypoint;
 	};
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -53,14 +93,11 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 	$scope.showEdit = function() { 
 		return !($scope.editing || $scope.deleting) 
 	};
-	$scope.edit = function(id) { 
-		if (id) {
-			$scope.selectPointById(id);
-		} 
+	$scope.edit = function() { 
 
-		if (!model.selectedPoint) return;
+		if (!$scope.model.selectedPoint) return;
 
-		$scope.editCopy = JSON.parse(JSON.stringify(model.selectedPoint)); 
+		$scope.editCopy = JSON.parse(JSON.stringify($scope.model.selectedPoint)); 
 
 		$timeout(function() { focusOnId('EditWaypointName'); }, 10);
 
@@ -74,7 +111,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 			(
 			($scope.editing == true) 
 			&& 
-			(JSON.stringify($scope.editCopy) !== JSON.stringify(model.selectedPoint))
+			(JSON.stringify($scope.editCopy) !== JSON.stringify($scope.model.selectedPoint))
 			);
 
 		return x;
@@ -82,22 +119,10 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 	$scope.saveEdit = function() {
 
-		var successFn = function() {
+		//$scope.model.selectedPoint.name = $scope.editCopy.name;
+		$scope.editing = false;
 
-			model.selectedPoint.name = $scope.editCopy.name;
-			$scope.editing = false;
-			$rootScope.$emit(Event.WAYPOINT_EDITED);
-		};
-
-		var failureFn = function() {
-			console.log('failed');
-		};
-
-		var errorFn = function(error) {
-			$rootScope.$emit(Event.DEBUG_ERROR, error);
-		};
-
-		httpPATCH($http, 'waypoint', $scope.editCopy, successFn, failureFn, errorFn);	
+		$rootScope.$emit(Command.UPDATE_WAYPOINT_NAME, { waypoint: $scope.model.selectedPoint, name: $scope.editCopy.name});
 	};
 
 	$scope.showCancelEdit = function() {
@@ -121,25 +146,25 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 	$scope.getDeletionConfirmation = function(id) {
 
-		model.waypoints.forEach(function(pt) {
+		$scope.model.waypoints.forEach(function(pt) {
 			if (pt.id == id) {
-				model.selectedPoint = pt;
+				$scope.model.selectedPoint = pt;
 				$scope.deleting = true;
 			}
 		});		
 	};
 	$scope.showDeleteConfirmationPrompt = function() {
-		return (model.selectedPoint) && ($scope.deleting == true);
+		return ($scope.model.selectedPoint) && ($scope.deleting == true);
 	};
 	$scope.deleteLocal = function(id) {
 
-		model.filteredWaypoints
+		$scope.model.filteredWaypoints
 			.removeWhere(function(x){ return x.id == id; });
 
-		model.waypoints
+		$scope.model.waypoints
 			.removeWhere(function(x){ return x.id == id; });
 
-		if ((model.selectedPoint !== undefined) && (model.selectedPoint.id == id)) {
+		if (($scope.model.selectedPoint !== undefined) && ($scope.model.selectedPoint.id == id)) {
 			$scope.selectFirstWaypoint();
 		}
 
@@ -167,33 +192,24 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// SELECT
 
-	$scope.selectPointById = function(id) {
-
-	    model.waypoints.forEach(function(x) { if (x.id == id) model.selectedPoint = x;  });
-	};
-
-	$scope.selectPoint = function(point) {
-		model.selectedPoint = point;
-	};
-
 	$scope.selectFirstWaypoint = function() {
 
-		model.selectedPoint = (model.filteredWaypoints.length > 0)
-			? model.filteredWaypoints[0]
+		$scope.model.selectedPoint = ($scope.model.filteredWaypoints.length > 0)
+			? $scope.model.filteredWaypoints[0]
 			: undefined;
 
-		if (model.selectedPoint !== undefined)
+		if ($scope.model.selectedPoint !== undefined)
 			return;
 
-		model.selectedPoint = (model.waypoints.length > 0)
-			? model.waypoints[0]
+		$scope.model.selectedPoint = ($scope.model.waypoints.length > 0)
+			? $scope.model.waypoints[0]
 			: undefined;
 	};
 
 	// UNLOAD
 
 	$scope.unloadAllWaypoints = function() {
-		model.waypoints.length = 0;
+		$scope.model.waypoints.length = 0;
 		$rootScope.$emit(Event.WAYPOINTS_UNLOADED);
 	};	
 
@@ -206,7 +222,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 	// RELOAD FOR ALL TRACKS
 	
 	$scope.reloadWaypointsForTracks = function() {
-		model.waypoints.length = 0;
+		$scope.model.waypoints.length = 0;
 
 		$scope.$parent.tracks.forEach(function(track) {
 			$scope.loadWaypointsForTrack(track.id);
@@ -223,8 +239,8 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 				return false;s
 			};
 
-			if (!model.waypoints.containsWhere(exists)) {
-				model.waypoints.push(newPoint);
+			if (!$scope.model.waypoints.containsWhere(exists)) {
+				$scope.model.waypoints.push(newPoint);
 				changed = true;
 			}
 		});
@@ -247,7 +263,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 			$scope.mergeNewPoints(resultPoints);
 
-			if ((model.selectedPoint === undefined) || (model.selectedPoint === null))
+			if (($scope.model.selectedPoint === undefined) || ($scope.model.selectedPoint === null))
 				$scope.selectFirstWaypoint();
 		};
 
@@ -281,7 +297,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 	// EXPORT
 
 	$scope.exportAllWaypoints = function(fileName) {
-		var data = { waypoints : model.waypoints, fileName : fileName };
+		var data = { waypoints : $scope.model.waypoints, fileName : fileName };
 		$rootScope.$emit(Command.EXPORT_WAYPOINTS, data);
 	};
 }
