@@ -23,10 +23,10 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 		set = set.sort(function(a, b) { 
 
-			if ((a == undefined) || (b == undefined))
+			if ((a === undefined) || (b === undefined))
 				return 0;
 
-			if ((a.name == undefined) || (b.name == undefined))
+			if ((a.name === undefined) || (b.name === undefined))
 				return 0;
 
 			try { return a.name.localeCompare(b.name); }
@@ -247,7 +247,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 			$scope.mergeNewPoints(resultPoints);
 
-			if ((model.selectedPoint == undefined) || (model.selectedPoint == null))
+			if ((model.selectedPoint === undefined) || (model.selectedPoint === null))
 				$scope.selectFirstWaypoint();
 		};
 

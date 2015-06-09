@@ -41,7 +41,7 @@ function GpxExportController($rootScope, $scope, $http) {
 	// WAYPOINTS
 
 	$scope.exportWaypointSet = function(waypoints, fileName) {
-		fileName = (fileName == undefined) ? 'gpxmaps.net.waypoints.gpx' : fileName;
+		fileName = (fileName === undefined) ? 'gpxmaps.net.waypoints.gpx' : fileName;
 		
 		var xml = waypointsToGpx(waypoints);
 		$scope.exportXML(xml, fileName);
@@ -80,7 +80,7 @@ function GpxExportController($rootScope, $scope, $http) {
 
 	$scope.exportTracks = function(tracks, fileName) {
 
-		fileName = (fileName == undefined) ? 'GPXMaps.track.gpx' : fileName;
+		fileName = (fileName === undefined) ? 'GPXMaps.track.gpx' : fileName;
 		
 		var xml = tracksToGpx(tracks);
 		$scope.exportXML(xml, fileName);

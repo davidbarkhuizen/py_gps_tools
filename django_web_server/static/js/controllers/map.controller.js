@@ -194,9 +194,9 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.mapLatLonFromCanvasXY = function(x, y, domain, range, scale) {
 
-		domain = (domain == undefined) ? $scope.domain : domain;
-		range = (range == undefined) ? $scope.range : range;
-		scale = (scale == undefined) ? $scope.scale : scale; 
+		domain = (domain === undefined) ? $scope.domain : domain;
+		range = (range === undefined) ? $scope.range : range;
+		scale = (scale === undefined) ? $scope.scale : scale; 
 
 		var lon = ((x - range.halfWidth) / scale) + domain.midLon;
 		var lat = ((range.halfHeight - y) / scale) + domain.midLat;
@@ -427,7 +427,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 		if ($scope.selectionPoints.length !== 2)
 			return;
-		if (($scope.selectionPoints[0] == undefined) || ($scope.selectionPoints[1] == undefined))
+		if (($scope.selectionPoints[0] === undefined) || ($scope.selectionPoints[1] === undefined))
 			return;
 
 		var pt1 = $scope.selectionPoints[0];
@@ -772,7 +772,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.drawElevationHalo = function(thickness) {
 
-		thickness = (thickness == undefined) ? '5' : thickness;
+		thickness = (thickness === undefined) ? '5' : thickness;
 
 		$scope.context.beginPath();
 	    
@@ -884,10 +884,10 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 		var offset = 10;
 
-		corner = (corner == undefined) ? $scope.mapOptions.titleLocation : corner;
-		colour = (colour == undefined) ? $scope.mapOptions.fontColour : colour;
-		font = (font == undefined) ? $scope.mapOptions.font : font;
-		fontSize = (fontSize == undefined) ? $scope.mapOptions.fontSizePx: fontSize;
+		corner = (corner === undefined) ? $scope.mapOptions.titleLocation : corner;
+		colour = (colour === undefined) ? $scope.mapOptions.fontColour : colour;
+		font = (font === undefined) ? $scope.mapOptions.font : font;
+		fontSize = (fontSize === undefined) ? $scope.mapOptions.fontSizePx: fontSize;
 
 		text = text.toUpperCase();
 
@@ -947,7 +947,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.drawScaleBar = function(context, domain, range, scale, corner) {
 
-		corner = (corner == undefined) ? Corner.BOTTOM_RIGHT : corner;
+		corner = (corner === undefined) ? Corner.BOTTOM_RIGHT : corner;
 
 		// DETERMINE WHICH REFERENCE LENGTH IS APPROPRIATE
 

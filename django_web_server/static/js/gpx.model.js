@@ -68,10 +68,10 @@ function Track(trk) {
 			var max = minMax.max;
 			var min = minMax.min;
 
-			if ((max == undefined) || (val > max)) { 
+			if ((max === undefined) || (val > max)) { 
 				max = val; 
 			}
-			if ((min == undefined) || (val < min)) { 
+			if ((min === undefined) || (val < min)) { 
 				min = val; 
 			}
 
@@ -256,7 +256,7 @@ function toNode(tagName, attributes, children) {
 }
 
 function nodestoGpx(nodes) {
-	nodes = (nodes == undefined) ? [] : nodes;
+	nodes = (nodes === undefined) ? [] : nodes;
 
 	var metaDataAttrs = {
 		'href' : 'www.gpxmaps.net'

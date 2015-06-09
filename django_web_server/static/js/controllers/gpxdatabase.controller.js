@@ -9,7 +9,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
 	$scope.selectGpx = function(id) {
 
-		if ((id == null) || (id == undefined))
+		if ((id == null) || (id === undefined))
 			return;
 
 		$scope.gpxinfos.forEach(function(info) {
@@ -93,7 +93,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 					
 					var concatted = row.entity.track_names_concat;
 
-					if ((concatted == undefined) || (concatted == null) || (concatted == ''))
+					if ((concatted === undefined) || (concatted == null) || (concatted == ''))
 						return 'no tracks'; 
 					else
 						return concatted.replace('|', '\r\n');
@@ -113,7 +113,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
 			gridApi.selection.on.rowSelectionChanged($scope, function(row){
 
-				if ((row == undefined) || (row.entity.id == null) || (row.entity.id == undefined))
+				if ((row === undefined) || (row.entity.id == null) || (row.entity.id === undefined))
 					return;
 
 				$scope.selectGpx(row.entity.id);

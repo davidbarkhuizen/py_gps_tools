@@ -7,7 +7,7 @@ function ElevationPlotController($rootScope, $scope, $http, $timeout) {
 
 	$scope.refreshContext = function() {
 		
-		$scope.context = (($scope.context == undefined) || ($scope.context == null))
+		$scope.context = (($scope.context === undefined) || ($scope.context == null))
 			?  document.getElementById($scope.canvasId).getContext("2d")
 			: $scope.context;					
 	};
@@ -36,7 +36,7 @@ function ElevationPlotController($rootScope, $scope, $http, $timeout) {
 
 	$scope.clearElePlot = function(fillStyle) {
 
-		fillStyle = (fillStyle == undefined) ? '#FFFFFF' : fillStyle;
+		fillStyle = (fillStyle === undefined) ? '#FFFFFF' : fillStyle;
 		$scope.context.fillStyle = fillStyle;	
 
 		var widthHeight = $scope.getCanvasDimensions();

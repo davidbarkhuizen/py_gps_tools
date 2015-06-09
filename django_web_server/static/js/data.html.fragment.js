@@ -28,7 +28,7 @@ window.onload = function () {
 	           		fragmentElement.parentNode.replaceChild(toInsert, fragmentElement);
 
 					var remaining = document.querySelectorAll('[' + attr + ']');					
-					if ((remaining == undefined) || (remaining.length == 0)) {
+					if ((remaining === undefined) || (remaining.length == 0)) {
 						angular.resumeBootstrap();
 						window.name = window.name.replace(ngDeferToken, '');
 					}

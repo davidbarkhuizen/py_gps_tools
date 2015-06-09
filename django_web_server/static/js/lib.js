@@ -24,7 +24,7 @@ function getChildNodeText(element, nodeName) {
 		return undefined; 
 
 	var targetElement = tags[0].firstChild;
-	if (targetElement == undefined)
+	if (targetElement === undefined)
 		return undefined;
 
 	return targetElement.nodeValue;
