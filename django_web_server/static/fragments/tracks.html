@@ -18,9 +18,9 @@
 				<br/>
 				{{ track.durationString }}
 				<br/>
-				<a href='#' ng-click='unloadTrack(track.id);'>unload</a>
-				<a href='#' ng-click='reloadTrack(track.id);'>reload</a>
-				<a href='#' ng-click='exportTrack(track.id);'>export</a>
+				<a href='#' ng-click='deleteTrack(track);'>delete</a>
+				<a href='#' ng-click='reloadTrack(track);'>reload</a>
+				<a href='#' ng-click='exportTrack(track);'>export</a>
 
 				<div ng-show='tracks.length > 1'>
 					<br/>

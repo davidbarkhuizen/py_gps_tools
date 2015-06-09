@@ -41,12 +41,11 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 		$scope.loadTracks(tracks);	
 	});
 
- 	// UNLOAD
+ 	// DELETE
 
-	$scope.unloadTrack = function (id) {
+	$scope.deleteTrack = function (track) {
 
-		$scope.$parent.tracks.removeWhere(function(track) { return (track.id == id); });
-		$rootScope.$emit(Event.TRACKS_UNLOADED);
+		$rootScope.$emit(Command.DELETE_TRACK, track);
 	};
 
 	$scope.reloadTrack = function (id) {

@@ -7,7 +7,7 @@ var Event = Object.freeze({
 	GPXS_LOADED : guid(),
 
 	TRACKS_LOADED : guid(),
-	TRACKS_UNLOADED : guid(),
+	TRACK_DELETED : guid(),
 
 	TRACK_SELECTED : guid(),
 
@@ -21,16 +21,14 @@ var Event = Object.freeze({
 var Command = Object.freeze({
 	
 	LOAD_GPX : guid(),
+	UPDATE_WAYPOINT_NAME : guid(),
+
 	LOAD_TRACKS : guid(),
 	LOAD_WAYPOINTS : guid(),
 
-	// --------------------------------------------------------
-
-	UPDATE_WAYPOINT_NAME : guid(),
+	DELETE_TRACK : guid(),
 
 	// ---------------------------------------------------------
-
-	UNLOAD_TRACK : guid(),
 
 	EXPORT_WAYPOINTS : guid(),
 	EXPORT_MAP : guid(),

@@ -21,33 +21,19 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 			model.gpxs.push(gpx);
 
 			// tracks
-
-			var trackAdded = false;
-
-			gpx.tracks.forEach(function(track){ 
-				tracks.push(track); 
-				trackAdded = true;
-			});
-
-			if (trackAdded == true) {
-				$rootScope.$emit(Event.TRACKS_LOADED);
+			//
+			if (gpx.tracks.length > 0) {
+				$rootScope.$emit(Command.LOAD_TRACKS, gpx.tracks);
 			}
 
 			// waypoints
-
-			var waypointsAdded = false;
-
-			gpx.waypoints.forEach(function(waypoint){ 
-				model.waypoints.push(waypoint); 
-				waypointsAdded = true;
-			});
-
-			if (waypointsAdded == true) {
-				$rootScope.$emit(Event.WAYPOINTS_LOADED);
+			//
+			if (gpx.waypoints.length > 0) {
+				$rootScope.$emit(Command.LOAD_WAYPOINTS, gpx.waypoints);
 			}
 
 			// change view
-
+			//
 			$rootScope.$emit(Command.GOTO_VIEW, Views.LOADED_GPXS);
 		};
 
@@ -72,7 +58,7 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 		$scope.updateWaypointName(data.waypoint, data.name);
 	});
 
-	// WAYPOINT_EDITED
+	// DELETE_WAYPOINT
 	//
 	$scope.deleteWaypoint = function(waypoint) {		
 		$scope.$parent.gpxEditor.deleteWaypoint(waypoint);
@@ -80,5 +66,15 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 	};
 	$rootScope.$on(Command.DELETE_WAYPOINT, function(evt, waypoint) {
 		$scope.deleteWaypoint(waypoint);
+	});
+
+	// DELETE_TRACK
+	//
+	$scope.deleteTrack = function(track) {		
+		$scope.$parent.gpxEditor.deleteTrack(track);
+		$rootScope.$emit(Event.TRACK_DELETED, track);
+	};
+	$rootScope.$on(Command.DELETE_TRACK, function(evt, track) {
+		$scope.deleteTrack(track);
 	});
 }
