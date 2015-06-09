@@ -1,35 +1,23 @@
-/*
-WAY POINTS
+function Point(trkpt) {
+	/*
+	<trkpt lat="-25.9381111711" lon="27.5921234395">
+		<ele>1329.16</ele>
+		<time>2014-10-26T11:06:15Z</time>
+	</trkpt>
+	*/
 
-navigational/logistical
-- start/end
-- junction
-- toilets
-- camp
-- water point
-- landmark (cairn, very large stone, giant tree, distinct ruin, mineshaft, building) 
+	this.lat = parseFloat(trkpt.getAttribute('lat'));
+	this.lon = parseFloat(trkpt.getAttribute('lon'));
+	this.ele = parseFloat(getChildNodeText(trkpt, 'ele'));
+	this.time = parseGPX11DateTimeString(getChildNodeText(trkpt, 'time'));
 
-archeological
-- indestinct ruins
-
-*/
-
-function Point(trkptElement) {
-	'''
-		<trkpt lat="-25.9381111711" lon="27.5921234395">
-			<ele>1329.16</ele>
-			<time>2014-10-26T11:06:15Z</time>
-		</trkpt>
-	'''
-
-	this.lat = lat;
-	this.lon = lon;
-	this.ele = ele;
-	this.time = time;
+	// track/segment stat
+	//
 	this.cumulativeDistanceM = 0;
 }
 
 function Waypoint(id, name, lat, lon, ele, time) {
+
 	this.id = id;
 	this.name = name;
 	// no inheritance :(
@@ -39,30 +27,23 @@ function Waypoint(id, name, lat, lon, ele, time) {
 	this.time = time;
 }
 
-function Segment(name, trksegElement) {
+function Segment(trkseg) {
 
-	this.name = name;
-	this.points = points;
+	/*
+	<trkseg>
+		<trkpt/>
+		<trkpt/>
+	</trkseg>
+	*/
+
 	this.totalDistanceM = 0;
 
-	// trkpt
-	//
-	this.points = [];
-	var points = trksegElement.getElementsByTagName('trkpt');
+	this.points = [];	
+	var points = trkseg.getElementsByTagName('trkpt');
 	for(var i = 0; i < points.length; i++){
 		var point = new Point(points[i]);
-		this.points.push(segment);
+		this.points.push(point);
 	}
-}
-
-Number.prototype.pad = function(size) {
-      var s = String(this);
-      while (s.length < (size || 2)) {s = "0" + s;}
-      return s;
-}
-
-function toShortTimeString(dt) {
-	return dt.getHours().pad() + ':' + dt.getMinutes().pad();
 }
 
 function parsePoint(pointString) {
@@ -96,21 +77,21 @@ function parseWaypointDict(wp) {
 	return new Waypoint(id, name, lat, lon, ele, time);
 }
 
-function Track(trkElement) {
+function Track(trk) {
 
 	var that = this;
 
-	this.name = getChildNodeText(trkElement, 'name');
-	this.cmt = getChildNodeText(trkElement, 'cmt');
-	this.desc = getChildNodeText(trkElement, 'desc');
-	this.src = getChildNodeText(trkElement, 'src');
-	this.number = getChildNodeText(trkElement, 'number');
-	this.type = getChildNodeText(trkElement, 'type');
+	this.name = getChildNodeText(trk, 'name');
+	this.cmt = getChildNodeText(trk, 'cmt');
+	this.desc = getChildNodeText(trk, 'desc');
+	this.src = getChildNodeText(trk, 'src');
+	this.number = getChildNodeText(trk, 'number');
+	this.type = getChildNodeText(trk, 'type');
 
 	// trkseg
 	//
 	this.segments = [];
-	var trksegs = trkElement.getElementsByTagName('trkseg');
+	var trksegs = trk.getElementsByTagName('trkseg');
 	for(var i = 0; i < trksegs.length; i++){
 		var segment = new Segment(trksegs[i]);
 		this.segments.push(segment);
@@ -221,62 +202,44 @@ function Track(trkElement) {
 	calcTrackStats();
 }
 
-function GPX(name, desc, tracks, waypoints, file_name, xml) {
+function GPX(xml) {
+
+	this.tracks = [];
+	this.waypoints = [];
+
+	var parser = new DOMParser();
+	var xmlDOM = parser.parseFromString(xml, "text/xml");
 
 	// metadata
 	//
-	this.time = undefined;
-	this.name = undefined;
-	this.desc = undefined;
+	var metadatas = xmlDOM.getElementsByTagName('metadata');
+	if (metadatas.length > 0) {
+		var metadata = metadatas[0];
 
-	this.tracks = [];
+		var timeStr = getChildNodeText(metadata, 'time');
+		this.time = ((timeStr !== undefined) && (timeStr !== ''))
+			? new Date(Date.parse(timeStr))
+			: undefined;
 
-	if (xml !== undefined) {
-		if (xml.startsWith('<?xml')) {
-			var token = '?>';
-			var startIdx = xml.indexOf(token) + token.length;
-
-			var parser = new DOMParser();
-			var xmlDOM = parser.parseFromString(xml, "text/xml");
-
-			// METADATA
-			//
-			var metadatas = xmlDOM.getElementsByTagName('metadata');
-			if (metadatas.length > 0) {
-				var metadata = metadatas[0];
-
-				var timeStr = getChildNodeText(metadata, 'time');
-				this.time = ((timeStr !== undefined) && (timeStr !== ''))
-					? new Date(Date.parse(timeStr))
-					: undefined;
-
-				this.desc = getChildNodeText(metadata, 'desc'); 
-				this.name = getChildNodeText(metadata, 'name'); 
-				this.keywords = getChildNodeText(metadata, 'keywords'); 
-			}
-
-			var trks = xmlDOM.getElementsByTagName('trk');
-			for(var i = 0; i < trks.length; i++){
-				var trkElement = trks[i];
-				var track = new Track(trkElement);
-				this.tracks.push(track);
-			}
-
-			// SERIALIZE
-			// 
-			var serialiser = new XMLSerializer();
-			var str = serialiser.serializeToString(xmlDOM);
-			console.log(str);
-		}
+		this.desc = getChildNodeText(metadata, 'desc'); 
+		this.name = getChildNodeText(metadata, 'name'); 
+		this.keywords = getChildNodeText(metadata, 'keywords'); 
 	}
 
-	this.name = name;
-	this.desc = desc;
+	// trk
+	//
+	var trks = xmlDOM.getElementsByTagName('trk');
+	for(var i = 0; i < trks.length; i++){
+		var trkElement = trks[i];
+		var track = new Track(trkElement);
+		this.tracks.push(track);
+	}
 
-	this.tracks = tracks;
-	this.waypoints = waypoints;
-
-	this.file_name = file_name;
+	// SERIALIZE
+	// 
+	var serialiser = new XMLSerializer();
+	var str = serialiser.serializeToString(xmlDOM);
+	console.log(str);
 
 	this.track_names = function() {
 		return this.tracks.map(function(track) { return track.name; });

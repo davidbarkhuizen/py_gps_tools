@@ -1,6 +1,7 @@
 function GpxController($rootScope, $scope, $http, $timeout) {
 
 	var model = $scope.$parent.model;
+	var tracks = $scope.$parent.tracks;
 
 	$scope.loadGpx = function(id) {
 
@@ -14,29 +15,37 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 
 		var successFn = function(data) {
 
-			var tracks = [];
-			data.tracks.forEach(function(track_dict){ 
-				var track = new Track(track_dict);
+			var gpx = new GPX(data.xml);
+			gpx.id = data.id;
+			model.gpxs.push(gpx);
+
+			// tracks
+
+			var trackAdded = false;
+
+			gpx.tracks.forEach(function(track){ 
 				tracks.push(track); 
+				trackAdded = true;
 			});
 
-			if (tracks.length > 0) {
+			if (trackAdded == true) {
 				$rootScope.$emit(Command.LOAD_TRACKS, tracks);
 			}
 
-			var waypoints = [];
-			data.waypoints.forEach(function(waypoint_dict){ 
-				var waypoint = parseWaypointDict(waypoint_dict);
-				waypoints.push(waypoint); 
+			// waypoints
+
+			var waypointsAdded = false;
+
+			gpx.waypoints.forEach(function(waypoint){ 
+				model.waypoints.push(waypoint); 
+				waypointsAdded = true;
 			});
 
-			if (waypoints.length > 0) {
+			if (waypointsAdded == true) {
 				$rootScope.$emit(Command.LOAD_WAYPOINTS, waypoints);
 			}
 
-			var gpx = new GPX(data.name, data.desc, tracks, waypoints, data.file_name, data.xml);
-			gpx.id = data.id;
-			model.gpxs.push(gpx);
+			// change view
 
 			$rootScope.$emit(Command.GOTO_VIEW, Views.LOADED_GPXS);
 		};

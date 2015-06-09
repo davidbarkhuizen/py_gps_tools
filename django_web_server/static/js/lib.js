@@ -1,3 +1,6 @@
+parseFloat
+
+
 function dateValToTimeString(dateVal) {
 
 	try {
@@ -10,7 +13,13 @@ function dateValToTimeString(dateVal) {
 
 function getChildNodeText(element, nodeName) {
 
-	var tags = element.getElementsByTagName(nodeName);
+	if (element === undefined)
+		return undefined;
+
+	var tags = [];
+	try { tags = element.getElementsByTagName(nodeName); }
+	catch (e) { console.log('%s %o', nodeName, element); throw e; }
+
 	if (tags.length == 0)
 		return undefined; 
 

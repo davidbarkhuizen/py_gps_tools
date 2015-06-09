@@ -49,10 +49,20 @@ function parseGPX11DateTimeString(s) {
     var day = s.substring(8, 10);
 
     // http://www.w3.org/TR/NOTE-datetime
-    var hours = s.substring(11, 13);
-    var mins = s.substring(14, 16);
-    var secs = s.substring(17, 19);
+    var hour = s.substring(11, 13);
+    var min = s.substring(14, 16);
+    var sec = s.substring(17, 19);
 
-    var dt = new Date(years, months - 1, days, hours, mins, secs;
+    var dt = new Date(year, month - 1, day, hour, min, sec);
     return dt;
+}
+
+Number.prototype.pad = function(size) {
+      var s = String(this);
+      while (s.length < (size || 2)) {s = "0" + s;}
+      return s;
+}
+
+function toShortTimeString(dt) {
+	return dt.getHours().pad() + ':' + dt.getMinutes().pad();
 }
