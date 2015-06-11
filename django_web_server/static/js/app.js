@@ -3,20 +3,24 @@ var GPXMapsControllers = angular.module('GPXMapsControllers', ['ui.grid', 'ui.gr
 var commonDependencies = [ '$rootScope', '$scope', '$http', '$timeout']; 
 
 var controllers = [
-	['GodController', commonDependencies.concat([GodController])],
+	['GodController', [GodController]],
 
-	['GpxImportController', commonDependencies.concat([GpxImportController])],
-	['GpxExportController', commonDependencies.concat([GpxExportController])],
+	['GpxImportController', [GpxImportController]],
+	['GpxExportController', [GpxExportController]],
 
-	['GpxDatabaseController', commonDependencies.concat([GpxDatabaseController])],
-	['GpxController', commonDependencies.concat([GpxController])],
+	['GpxDatabaseController', [GpxDatabaseController]],
+	['GpxController', [GpxController]],
+	['GpxEditorController', [GpxEditorController]],
 
-	['TracksController', commonDependencies.concat([TracksController])],
-	['ElevationPlotController', commonDependencies.concat([ElevationPlotController])],
-	['MapController', commonDependencies.concat([MapController])],
-	['WaypointsController', commonDependencies.concat([WaypointsController])],
+	['TracksController', [TracksController]],
+	['ElevationPlotController', [ElevationPlotController]],
+	['MapController', [MapController]],
+	['WaypointsController', [WaypointsController]],
 ];
-controllers.forEach(function(ctrl) { GPXMapsControllers.controller(ctrl[0], ctrl[1]); });
+
+controllers.forEach(function(ctrl) { 
+	GPXMapsControllers.controller(ctrl[0], commonDependencies.concat(ctrl[1]));
+});
 
 var appName = 'GPXMapsApp';
 var appDependencies = ['GPXMapsControllers'];  

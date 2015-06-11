@@ -8,9 +8,9 @@ function GPXEditor(gpxs, tracks, waypoints) {
 
 	this.gpxForWaypoint = function(waypoint) {
 
-		for(i = 0; i < gpxs.length; i++) {
+		for(i = 0; i < this.gpxs.length; i++) {
 
-			var gpx = gpxs[i];
+			var gpx = this.gpxs[i];
 
 			if (gpx.waypoints.indexOf(waypoint) !== -1)
 				return gpx;
@@ -21,12 +21,26 @@ function GPXEditor(gpxs, tracks, waypoints) {
 
 	this.gpxForTrack = function(track) {
 
-		for(i = 0; i < gpxs.length; i++) {
+		var target = undefined;
 
-			var gpx = gpxs[i];
-
+		this.gpxs.forEach(function(gpx){
 			if (gpx.tracks.indexOf(track) !== -1)
-				return gpx;
+				target = gpx;
+		});
+
+		return target;
+	};
+
+	this.segmentForPoint = function(point) {
+
+		var allSegments = []; 
+		that.tracks.forEach(function(track){ allSegments.concat(track.segments); });
+
+		for(i = 0; i < allSegments.length; i++) {
+			var segment = allSegments[i];
+
+			if (segment.node == point.node.parentNode)
+				return segment;
 		}
 
 		return undefined;
@@ -76,4 +90,66 @@ function GPXEditor(gpxs, tracks, waypoints) {
 
 		gpx.edited = true;
 	};
+
+
+	this.deleteTrackSegmentSection = function(pathSelectionType, endPoints) {
+
+		// XML
+
+		if (endPoints[0].parentNode !== endPoints[1].parentNode)
+			throw 'end points do not belong to the same track segment';
+
+		var trkseg = endPoints[0].parentNode;
+
+		var before = [], between = [], after = [];
+
+		var trkpts = trkseg.children;
+		var stage = PathSelectionType.BEFORE:
+		for(i = 0; i < trkpts.length; i++) {
+
+			var trkpt = trkpts[i];
+			var isEndPoint = ((trkpt === endPoints[0].node) || (trkpts[i] === endPoints[1].node));
+
+			if (stage == PathSelectionType.BEFORE) {
+				
+				if (!isEndPoint)
+					before.push(trkpt);
+				else {
+					stage = PathSelectionType.BETWEEN;
+					between.push(trkpt);
+				}
+
+				continue;
+			}
+
+			if (stage == PathSelectionType.BETWEEN) {
+
+				between.push(trkpt);
+				
+				if (isEndPoint)
+					stage = PathSelectionType.AFTER;
+				
+				continue;
+			}
+
+			after.push(trkpt);
+		}
+
+		var toRemove = undefined;
+		switch (pathSelectionType) {
+			case PathSelectionType.BEFORE:
+				toRemove = before;
+				break;
+			case PathSelectionType.BETWEEN:
+				toRemove = between;
+				break;
+			case PathSelectionType.AFTER:
+				toRemove = after;
+				break;
+		}
+
+		toRemove.forEach(function(trkpt){
+			trkseg.removeChild(trkpt);						
+		});
+	}
 }

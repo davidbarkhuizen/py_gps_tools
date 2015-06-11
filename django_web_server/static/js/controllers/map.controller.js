@@ -1,14 +1,5 @@
 function MapController($rootScope, $scope, $http, $timeout) {
 
-	/*
-	context.save();
-	context.translate(newx, newy);
-	context.rotate(-Math.PI/2);
-	context.textAlign = "center";
-	context.fillText("Your Label Here", labelXposition, 0);
-	context.restore();
-	 */
-
 	// ---------------------------------------------
 	// OPTIONS
 
@@ -18,12 +9,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		POINTS : 'points'
 	});
 
-	$scope.TrackSelectionTypes = Object.freeze({
-		BEFORE : 'before',
-		BETWEEN : 'between',
-		AFTER : 'after'
-	});
-
+	$scope.PathSelectionTypes = PathSelectionType;
 	$scope.Corners = Corner;
 
 	$scope.getDefaultMapOptions = function() {
@@ -34,7 +20,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 			showWaypoints : 'true',
 			showCompass : 'true',
 
-			trackSelectionType : $scope.TrackSelectionTypes.BETWEEN,
+			pathSelectionType : $scope.PathSelectionTypes.BETWEEN,
 
 			font : 'courier new',
 			fontSizePx : 20,
@@ -249,20 +235,20 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.deleteSelectedSegmentSectionPoints = function() {
 
-		var lengthBefore = $scope.selectedSegment.points.length;
+		var data = {
 
-		$scope.selectedSegment.points.removeWhere(function(p){
-			return ($scope.selectedSegmentSectionPoints.indexOf(p) != -1);
-		});
+			pathSelectionType:  $scope.mapOptions.pathSelectionType,
+			endPoints:  [
+				$scope.selectedSegment.points[0], 
+				$scope.selectedSegment.points[$scope.selectedSegment.points.length - 1]
+			],
+		};
 
-		if ($scope.selectedSegment.points.length != lengthBefore)
-			$scope.selectedSegmentTrack.edited = true;
+		$rootScope.$emit(GpxEditorCommand.DELETE_TRKSEG_SECTION, data);
 
 		$scope.selectedSegmentSectionPoints.length = 0;
 
 		$scope.closeEditTrackMenu();
-
-		$scope.drawMap();
 	};
 
 	$scope.editTrack_AreaSelected = function() {
@@ -338,14 +324,14 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		$scope.selectedSegment.points.forEach(function(p) {
 
 			var included = false;
-			switch ($scope.mapOptions.trackSelectionType) {
-				case $scope.TrackSelectionTypes.BETWEEN:
+			switch ($scope.mapOptions.pathSelectionType) {
+				case $scope.PathSelectionTypes.BETWEEN:
 					included = ((p.time >= minTime) && (p.time <= maxTime));
 					break;
-				case $scope.TrackSelectionTypes.BEFORE:
+				case $scope.PathSelectionTypes.BEFORE:
 					included = (p.time < minTime);
 					break;
-				case $scope.TrackSelectionTypes.AFTER:
+				case $scope.PathSelectionTypes.AFTER:
 					included = (p.time > maxTime);
 					break;
 			}

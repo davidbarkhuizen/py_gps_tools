@@ -5,7 +5,6 @@ function Point(pt) {
 		<time>2014-10-26T11:06:15Z</time>
 	</trkpt>
 	*/
-
 	this.node = pt;
 
 	this.lat = parseFloat(pt.getAttribute('lat'));
@@ -20,15 +19,13 @@ function Point(pt) {
 }
 
 function Segment(trkseg) {
-
 	/*
 	<trkseg>
 		<trkpt/>
 		<trkpt/>
 	</trkseg>
 	*/
-
-	this.totalDistanceM = 0;
+	this.node = trkseg;
 
 	this.points = [];	
 	var points = trkseg.getElementsByTagName('trkpt');
@@ -36,13 +33,14 @@ function Segment(trkseg) {
 		var point = new Point(points[i]);
 		this.points.push(point);
 	}
+
+	this.totalDistanceM = 0;
 }
 
 function Track(trk) {
+	this.node = trk;
 
 	var that = this;
-
-	this.node = trk;
 
 	this.name = getChildNodeText(trk, 'name');
 	this.cmt = getChildNodeText(trk, 'cmt');

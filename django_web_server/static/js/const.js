@@ -25,3 +25,9 @@ var Corner = Object.freeze({
 	BOTTOM_RIGHT : 'bottom right',
 	BOTTOM_LEFT : 'bottom left'
 });
+
+var PathSelectionType = Object.freeze({
+		BEFORE : 'before',
+		BETWEEN : 'between',
+		AFTER : 'after'
+});
