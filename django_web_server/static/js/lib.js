@@ -1,6 +1,3 @@
-parseFloat
-
-
 function dateValToTimeString(dateVal) {
 
 	try {

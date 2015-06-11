@@ -56,7 +56,7 @@ function GPXEditor(gpxs, tracks, waypoints) {
 		}
 
 		return undefined;
-	}
+	};
 
 	this.segmentForPoint = function(point) {
 
@@ -218,7 +218,7 @@ function GPXEditor(gpxs, tracks, waypoints) {
 
 	    if (segment.points.length == 0)
 	    	that.deleteTrackSegment(segment);
-	}
+	};
 
 	this.deleteTrackSegment = function(segment) {
 
@@ -234,5 +234,11 @@ function GPXEditor(gpxs, tracks, waypoints) {
 		track.segments.remove(segment);
 
 		gpx.edited = true;
-	}
+	};
+
+	this.copyTrackToGpx = function(track, toGpx) {
+
+		var fromGpx = that.gpxForTrack(track);
+
+	};
 }

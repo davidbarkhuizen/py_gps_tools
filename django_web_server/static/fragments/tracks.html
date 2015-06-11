@@ -3,14 +3,12 @@
 	ng-controller='TracksController'
 	>
 	<h3>
-		tracks ({{ tracks.length }})
+		tracks ({{ getTracks().length }})
 	</h3>
 	<div ng-show='tracks.length > 0'>
 		<div class='medium-list'>
-			<div ng-repeat="track in tracks" style='color:{{track.colour}};'>
+			<div ng-repeat="track in getTracks()" style='color:{{track.colour}};'>
 				{{ track.name }}
-
-				<span ng-show='(track.edited == true)'><span style='color:red;'>(edited)</span> <a href='#' ng-click='saveTrack(track.id);'>save changes</a></span>
 				<br/>
 				{{ (track.totalDistanceM / 1000.0).toFixed(2) }} km
 				<br/>
@@ -19,9 +17,23 @@
 				{{ track.durationString }}
 				<br/>
 				<a href='#' ng-click='deleteTrack(track);'>delete</a>
-				<a href='#' ng-click='reloadTrack(track);'>reload</a>
 				<a href='#' ng-click='exportTrack(track);'>export</a>
+				<a href='#' ng-show='(model.gpxs.length > 1)' ng-click='copyInfo.trackToCopy = track;'>copy to</a>
+				<span ng-show='(copyInfo.trackToCopy === track)'>
+					
+					<!-- <select ng-model='gpxIdToCopyTo'>
+						<option ng-repeat='gpx in otherGpxsForTrack(track)' value='{{ gpx.id }}'>
+							{{ gpx.label() }}
+						</option>
+					</select> -->
 
+					<select
+						ng-model="copyInfo.gpxToCopyTo"
+						ng-options="gpx as gpx.label() for gpx in otherGpxsForTrack(track)">
+    				</select>
+					<a href='#' ng-click='copyTrackToGpx();'>copy</a>
+					<a href='#' ng-click='copyInfo.trackToCopy = undefined;'>cancel</a>
+				</span>
 				<div ng-show='tracks.length > 1'>
 					<br/>
 				</div>

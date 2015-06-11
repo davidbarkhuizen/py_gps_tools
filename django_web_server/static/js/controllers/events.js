@@ -32,6 +32,8 @@ var Command = Object.freeze({
 	DELETE_TRACK : guid(),
 	DELETE_TRKSEG_SECTION : guid(),
 
+	COPY_TRACK_TO_GPX : guid(),
+
 	// ---------------------------------------------------------
 
 	EXPORT_WAYPOINTS : guid(),

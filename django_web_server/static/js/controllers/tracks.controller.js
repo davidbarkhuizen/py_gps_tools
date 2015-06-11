@@ -9,9 +9,33 @@ var TrackColours = Object.freeze([
 
 function TracksController($rootScope, $scope, $http, $timeout) {
 
+	$scope.getTracks = function(track) {
+
+		var tracks = [];
+
+		$scope.$parent.model.gpxs.forEach(function(gpx) {
+			tracks = tracks.concat(gpx.tracks);
+		});
+
+		return tracks;
+	};
+
+	$scope.otherGpxsForTrack = function(track) {
+
+		var otherGpxs = [];
+
+		$scope.$parent.model.gpxs.forEach(function(gpx) {
+			if (gpx.tracks.indexOf(track) == -1) {
+				otherGpxs.push(gpx);
+			}
+		});
+
+		return otherGpxs;
+	};
+
 	$scope.getUnusedTrackColour = function() {
 
-		var inUse = $scope.$parent.tracks
+		var inUse = $scope.getTracks()
 			.map(function(x) { return x.colour; });
 
 		var unUsed = TrackColours
@@ -41,6 +65,23 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 		$scope.loadTracks(tracks);	
 	});
 
+ 	// COPY TRACK
+
+	$scope.copyInfo = {
+		trackToCopy: null,
+		gpxIdToCopyTo: null
+	};
+
+ 	$scope.setTrackToCopy = function(track) {
+ 		$scope.trackToCopy = track;
+ 	};
+
+	$scope.copyTrackToGpx = function() {
+
+		var data = { gpx: $scope.copyInfo.gpxToCopyTo, track: $scope.copyInfo.trackToCopy };
+		$rootScope.$emit(Command.COPY_TRACK_TO_GPX, data);
+	};
+
  	// DELETE
 
 	$scope.deleteTrack = function (track) {
@@ -48,30 +89,22 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 		$rootScope.$emit(Command.DELETE_TRACK, track);
 	};
 
-	$scope.reloadTrack = function (id) {
-
-		$scope.$parent.tracks.removeWhere(function(track) { return (track.id == id); });
-		$rootScope.$emit(Event.TRACKS_UNLOADED);
-	};
-
 	// EXPORT
 
-	$scope.exportTrack = function(id) {
+	$scope.exportTrack = function(track) {
 		
-		var fileName = $scope.$parent.tracks
-			.first(function(track) { return (track.id == id); })
-			.name + '.gpx'
-		
-		$rootScope.$emit(Command.EXPORT_TRACKS, { ids : [id], fileName : fileName});
+		var name = (track.name !== undefined)
+			? track.name
+			: 'track';
+
+		var fileName = name + '.gpx'
+	
+		$rootScope.$emit(Command.EXPORT_TRACKS, { tracks : [track], fileName : fileName});
 	};
 
 	$scope.exportAllTracks = function() {
 
 		var ids = $scope.$parent.tracks.map(function(track) { return track.id; });		
 		$rootScope.$emit(Command.EXPORT_TRACKS, { ids : ids });
-	};
-
-	$scope.saveTrack = function(id) {
-
 	};
 };

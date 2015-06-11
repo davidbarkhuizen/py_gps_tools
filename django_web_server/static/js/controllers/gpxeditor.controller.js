@@ -5,6 +5,9 @@ function GpxEditorController($rootScope, $scope, $http, $timeout) {
 	var tracks = $scope.$parent.tracks;
 	$scope.gpxEditor = new GPXEditor(model.gpxs, tracks, model.waypoints);
 
+	// lol
+	$scope.$parent.gpxEditor = $scope.gpxEditor;
+
 	$rootScope.$on(Command.DELETE_TRKSEG_SECTION, function(evt, data) {
 
 		$scope.gpxEditor.deleteTrackSegmentSection(data.pathSelectionType, data.endPoints);
@@ -42,7 +45,16 @@ function GpxEditorController($rootScope, $scope, $http, $timeout) {
 		$rootScope.$emit(Event.TRACK_DELETED, track);
 	};
 	$rootScope.$on(Command.DELETE_TRACK, function(evt, track) {
-
 		$scope.deleteTrack(track);
+	});
+
+	// COPY TRACK
+	//
+	$scope.copyTrackToGpx = function(track, gpx) {
+		$scope.gpxEditor.copyTrackToGpx(track, gpx);
+		$rootScope.$emit(Event.GPX_EDITED);	
+	};
+	$rootScope.$on(Command.COPY_TRACK_TO_GPX, function(evt, data) {
+		$scope.copyTrackToGpx(data.track, data.gpx);
 	});
 }
