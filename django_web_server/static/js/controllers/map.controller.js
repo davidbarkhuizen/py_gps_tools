@@ -98,7 +98,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	$scope.cancelSelection = function() {
 		
 		$scope.selecting = false;
-		$scope.selectionPoints.length = 0;
+		$scope.selectionPoints[0] = undefined;
+		$scope.selectionPoints[1] = undefined;
 		$scope.showMapSelectionArea = false;
 
 		$scope.closeEditTrackMenu();

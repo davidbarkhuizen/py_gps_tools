@@ -176,24 +176,17 @@ function GPXEditor(gpxs, tracks, waypoints) {
 			after.push(trkpt);
 		}
 
-		console.log('before = ', before.length);
-		console.log('between = ', between.length);
-		console.log('after = ', after.length);
-
 		var trkptsToRemove = undefined;
 		switch (pathSelectionType) {
 
 			case PathSelectionType.BEFORE:
 				trkptsToRemove = before;
-				console.log('before');
 				break;
 			case PathSelectionType.BETWEEN:
 				trkptsToRemove = between;
-				console.log('between');
 				break;
 			case PathSelectionType.AFTER:
 				trkptsToRemove = after;
-				console.log('after');
 				break;
 		}
 
