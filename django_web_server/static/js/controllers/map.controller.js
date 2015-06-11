@@ -100,6 +100,19 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		$scope.selecting = false;
 		$scope.selectionPoints.length = 0;
 		$scope.showMapSelectionArea = false;
+
+		$scope.closeEditTrackMenu();
+	};
+
+	$scope.cancelEditTrackSelection = function() {	
+
+		$scope.selectedSegmentTrack = null;
+		$scope.selectedSegment = null;
+		$scope.selectedSegmentSectionPoints.length = 0;
+		$scope.selectedSegmentSectionStart = null;
+		$scope.selectedSegmentSectionEnd = null;
+
+		$scope.cancelSelection();
 	};
 
 	$scope.getAreaSelection = function() {
@@ -229,7 +242,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		$scope.canvas.style.opacity = '1';
 	};
 
-	$scope.onTrackSelectionTypeChange = function() {
+	$scope.onPathSelectionTypeChange = function() {
 		$scope.editTrack_AreaSelected();
 	};
 
@@ -239,16 +252,13 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 			pathSelectionType:  $scope.mapOptions.pathSelectionType,
 			endPoints:  [
-				$scope.selectedSegment.points[0], 
-				$scope.selectedSegment.points[$scope.selectedSegment.points.length - 1]
+				$scope.selectedSegmentSectionStart, 
+				$scope.selectedSegmentSectionEnd
 			],
 		};
 
-		$rootScope.$emit(GpxEditorCommand.DELETE_TRKSEG_SECTION, data);
-
-		$scope.selectedSegmentSectionPoints.length = 0;
-
-		$scope.closeEditTrackMenu();
+		$scope.cancelEditTrackSelection();
+		$rootScope.$emit(Command.DELETE_TRKSEG_SECTION, data);
 	};
 
 	$scope.editTrack_AreaSelected = function() {
@@ -796,6 +806,9 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	};
 
 	$scope.drawEdges = function(context, points, thickness, color) {
+
+		if (points.length === 0)
+			return;
 		
 		// style
 		//
@@ -1210,7 +1223,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		Event.WAYPOINTS_LOADED,
 		Event.WAYPOINTS_UNLOADED,
 		Event.WAYPOINT_EDITED,
-		Event.WAYPOINT_DELETED
+		Event.WAYPOINT_DELETED,
+		Event.GPX_EDITED,
 		];
 
 	// register

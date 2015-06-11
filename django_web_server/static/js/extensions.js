@@ -1,3 +1,16 @@
+Object.defineProperty(Array.prototype, "remove", {
+	enumerable: false,
+	value: function(match) {
+		var that = this;
+
+		var toRetain = this.filter(function(x) { return (x !== match); });
+		this.length = 0;
+		toRetain.forEach(function(x) { that.push(x)});
+
+		return this;
+    }
+});
+
 Object.defineProperty(Array.prototype, "removeWhere", {
 	enumerable: false,
 	value: function(predicate) {
@@ -30,6 +43,20 @@ Object.defineProperty(Array.prototype, "countWhere", {
 		var count = 0;
 		this.forEach(function(x) { count = predicate(x) ? count + 1 : count; });
 		return count;
+    }
+});
+
+Object.defineProperty(Array.prototype, "contains", {
+	enumerable: false,
+	value: function(match) {
+		var that = this;
+
+		for(var i = 0; i < this.length; i++) {
+			if (this[i] == match)
+				return true;
+		}
+
+		return false;
     }
 });
 

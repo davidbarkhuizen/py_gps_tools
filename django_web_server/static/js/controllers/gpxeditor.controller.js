@@ -1,8 +1,3 @@
-var GpxEditorCommand = Object.freeze({
-
-	DELETE_TRKSEG_SECTION: guid(),
-});
-
 function GpxEditorController($rootScope, $scope, $http, $timeout) {
 
 	// init
@@ -10,30 +5,11 @@ function GpxEditorController($rootScope, $scope, $http, $timeout) {
 	var tracks = $scope.$parent.tracks;
 	$scope.gpxEditor = new GPXEditor(model.gpxs, tracks, model.waypoints);
 
-	$rootScope.$on(GpxEditorCommand.DELETE_TRKSEG_SECTION, function(evt, data) {
+	$rootScope.$on(Command.DELETE_TRKSEG_SECTION, function(evt, data) {
 
 		$scope.gpxEditor.deleteTrackSegmentSection(data.pathSelectionType, data.endPoints);
 
-		switch (pathSelectionType) {
-			case PathSelectionType.BEFORE:
-				break;
-			case PathSelectionType.BEFORE:
-				break;
-		}
-
-		/*
-		var lengthBefore = $scope.selectedSegment.points.length;
-
-		$scope.selectedSegment.points.removeWhere(function(p){
-			return ($scope.selectedSegmentSectionPoints.indexOf(p) !== -1);
-		});
-
-		if ($scope.selectedSegment.points.length !== lengthBefore)
-			$scope.selectedSegmentTrack.edited = true;
-
-		$scope.drawMap();
-		*/
-
+		$rootScope.$emit(Event.GPX_EDITED);
 	});
 
  	// UPDATE_WAYPOINT_NAME

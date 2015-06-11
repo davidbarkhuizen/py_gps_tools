@@ -166,13 +166,13 @@
 		<div>
 			<div class='bold'>select</div>
 
-			<div style='font-weight:normal;' ng-repeat='trackSelectionType in TrackSelectionTypes'>
+			<div style='font-weight:normal;' ng-repeat='pathSelectionType in PathSelectionTypes'>
 				<input
-					ng-model="mapOptions.trackSelectionType"
-					value="{{ trackSelectionType }}"
+					ng-model="mapOptions.pathSelectionType"
+					value="{{ pathSelectionType }}"
 					type="radio"
-					ng-change='onTrackSelectionTypeChange();'
-					>{{ trackSelectionType }}
+					ng-change='onPathSelectionTypeChange();'
+					>{{ pathSelectionType }}
 				</input>
 			</div>
 		</div>

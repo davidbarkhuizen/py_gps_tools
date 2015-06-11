@@ -10,12 +10,15 @@ var Event = Object.freeze({
 	TRACK_DELETED : guid(),
 
 	TRACK_SELECTED : guid(),
+	MAP_SELECTION_BEGUN : guid(),
 
 	WAYPOINTS_LOADED : guid(),
 	WAYPOINTS_UNLOADED : guid(),
 
 	WAYPOINT_EDITED : guid(),
 	WAYPOINT_DELETED : guid(),
+
+	GPX_EDITED : guid(),
 });
 
 var Command = Object.freeze({
@@ -27,6 +30,7 @@ var Command = Object.freeze({
 	LOAD_WAYPOINTS : guid(),
 
 	DELETE_TRACK : guid(),
+	DELETE_TRKSEG_SECTION : guid(),
 
 	// ---------------------------------------------------------
 
