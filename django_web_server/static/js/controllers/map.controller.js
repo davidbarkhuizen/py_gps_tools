@@ -1226,6 +1226,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		Event.WAYPOINT_EDITED,
 		Event.WAYPOINT_DELETED,
 		Event.GPX_EDITED,
+		Event.GPXS_UNLOADED,
 		];
 
 	// register

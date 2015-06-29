@@ -1,6 +1,6 @@
 function GpxEditorController($rootScope, $scope, $http, $timeout) {
 
-	$scope.gpxEditor = new GPXEditor($scope.$parent.model.gpxs);
+	$scope.gpxEditor = new GPXEditor($scope.$parent.model.gpxs, $scope.$parent.tracks, $scope.$parent.model.waypoints);
 
 	// lol
 	$scope.$parent.gpxEditor = $scope.gpxEditor;
@@ -53,5 +53,15 @@ function GpxEditorController($rootScope, $scope, $http, $timeout) {
 	};
 	$rootScope.$on(Command.COPY_TRACK_TO_GPX, function(evt, data) {
 		$scope.copyTrackToGpx(data.track, data.gpx);
+	});
+
+	// UNLOAD_GPX
+	//
+	$scope.unloadGPX = function(gpx) {
+		$scope.gpxEditor.unloadGPX(gpx);
+		$rootScope.$emit(Event.GPXS_UNLOADED);
+	};
+	$rootScope.$on(Command.UNLOAD_GPX, function(evt, gpx) {
+		$scope.unloadGPX(gpx);
 	});
 }

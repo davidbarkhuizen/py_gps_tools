@@ -54,6 +54,14 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 		$scope.loadGpx(id);	
 	});
 
+	$scope.unloadGpx = function(gpx) {
+		
+		if ($scope.selectedGpx == gpx)
+			$scope.selectedGpx = undefined;
+
+		$rootScope.$emit(Command.UNLOAD_GPX, gpx);
+	};
+
 	// GRID -----------------------
 
 	$scope.selectGpx = function(id) {
@@ -70,7 +78,7 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 
 	var unloadIconSrcRef = '/static/img/icon/delete_16.png';
 	var unloadIconImgTemplate = '<img ng-src="' + unloadIconSrcRef + '">';
-	var unloadCellTemplate = '<div style="padding-top:5px;"><a href="#" ng-click="grid.appScope.unloadGpx(row.entity.id)" ">' + unloadIconImgTemplate + '</a></div>';
+	var unloadCellTemplate = '<div style="padding-top:5px;"><a href="#" ng-click="grid.appScope.unloadGpx(row.entity)" ">' + unloadIconImgTemplate + '</a></div>';
 
 	$scope.gridOptions = {
 

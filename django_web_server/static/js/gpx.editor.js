@@ -3,6 +3,8 @@ function GPXEditor(gpxs, tracks, waypoints) {
 	var that = this;
 
 	this.gpxs = gpxs;
+	this.tracks = tracks;
+	this.waypoints = waypoints;
 
 	this.aggregateGpxTracks = function() {
 
@@ -240,5 +242,28 @@ function GPXEditor(gpxs, tracks, waypoints) {
 
 		var track = new Track(trk);
 		toGpx.tracks.push(track);
+	};
+
+	this.unloadGPX = function(gpx) {
+
+		// model - tracks
+		//
+		gpx.tracks.forEach(function(track){
+			that.tracks.removeWhere(function(x){ return (x == track); });
+		});
+
+		// model - waypoints
+		//
+		gpx.waypoints.forEach(function(waypoint){
+			that.waypoints.removeWhere(function(x){ return (x == waypoint); });
+		});
+
+		// model - gpxs
+		//
+		that.gpxs.removeWhere(function(x){ return (x == gpx); });
+
+		// xml
+		//
+		gpx.node.parentNode.removeChild(gpx.node);
 	};
 }
