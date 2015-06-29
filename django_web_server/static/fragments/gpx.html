@@ -1,13 +1,61 @@
-<div id="GpxContainer"
+<div
 	ng-show='view == Views.LOADED_GPXS'
-	ng-controller='GpxController'>
+	ng-controller='GpxController'
+	id='GpxContainer'
+	>
+
+	<br/>
+	<div class='header'>
+		loaded .GPX files ({{ model.gpxs.length  }})
+	</div>
 
 	<div>
-		<h3>
-			.GPX ({{ model.gpxs.length }})
-		</h3>
-		<a href="#" ng-click='gotoView(Views.MAP)'>go to map</a>
-		<div class='list'>
+		<a href="#" ng-click='gotoView(Views.MAP)'>map</a>
+		<a href="#" ng-click='gotoView(Views.TRACKS)'>tracks</a>
+		<a href="#" ng-click='gotoView(Views.WAYPOINTS)'>waypoints</a>
+		<a href="#" ng-click='gotoView(Views.GPX_DATABASE)' style='text-decoration:underline;'>my gpxs</a>
+		<a href="#" ng-click='' style='text-decoration:underline;'>unload all</a>
+	</div>
+
+	<div id='SelectedGpx' style='text-align:left;margin:20px'>
+		<div>
+			file name:
+			<span>{{ selectedGpx.fileName }} </span>
+		</div>
+		<div>
+			metadata name: 
+			<span>{{ selectedGpx.name }} </span>
+		</div>
+		<div>
+			gpx time: 
+			<span>{{ dateValToTimeString(selectedGpx.time) }} </span>
+		</div>
+		<div>
+			gpx description: 
+			<span>{{ selectedGpx.desc }} </span>
+		</div>
+		<div>
+			track count:
+			<span>{{ selectedGpx.track_count() }} </span>
+		</div>
+		<div>
+			tracks:
+			<span>{{ selectedGpx.track_names_concat(', ') }} </span>
+		</div>
+		<div>
+			waypoint count:
+			<span>{{ selectedGpx.waypoint_count() }} </span>
+		</div>
+	</div>
+
+	<div
+		ui-grid="gridOptions"
+		ui-grid-selection
+		class="grid-medium"
+	></div>
+</div>
+
+<!-- 		<div class='list'>
 			<div ng-repeat="gpx in model.gpxs" style='text-align:left; margin-left:10px;'>
 				<div class='header'>
 					{{ ((gpx.name) && (gpx.name.length > 0)) ? gpx.name : 'no name' }}
@@ -49,9 +97,4 @@
 					<br/>
 				</div>
 			</div>
-		</div>
-		<div>
-			{{ model.gpxs.length }} gpx(s) loaded
-		</div>
-	</div>
-</div>
+		</div> -->

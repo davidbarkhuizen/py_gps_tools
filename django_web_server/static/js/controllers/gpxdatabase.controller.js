@@ -21,7 +21,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 	// -------------------------------------------------
 	// GRID
 
-	var loadIconSrcRef = '/static/img/icon/purple_button/button_plus_violet_20.png';
+	var loadIconSrcRef = '/static/img/icon/green_plus_16.png';
 	var loadIconImgTemplate = '<img ng-src="' + loadIconSrcRef + '">';
 	var loadCellTemplate = '<div style="padding-top:5px;"><a href="#" ng-click="grid.appScope.loadGpx(row.entity.id)" ">' + loadIconImgTemplate + '</a></div>';
 	var blankHeaderTemplate = '';

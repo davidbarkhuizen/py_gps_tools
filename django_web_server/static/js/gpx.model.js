@@ -165,6 +165,8 @@ function Track(trk) {
 
 function GPX(xml, fileName) {
 
+	var that = this;
+
 	this.fileName = fileName;
 
 	this.tracks = [];
@@ -224,7 +226,7 @@ function GPX(xml, fileName) {
 
 	this.label = function() {
 
-		var options = [this.name, this.fileName, 'no name'];
+		var options = [that.name, that.fileName, 'no name'];
 		for(i = 0; i < options.length; i++) {
 			if (options[i] !== undefined)
 				return options[i];
@@ -232,15 +234,20 @@ function GPX(xml, fileName) {
 	}
 	
 	this.track_names = function() {
-		return this.tracks.map(function(track) { return track.name; });
+		return that.tracks.map(function(track) { return track.name; });
+	};
+
+	this.track_names_concat = function(token) {
+		token = (token == undefined) ? ', ' : token;
+		return that.track_names().join(token);
 	};
 
 	this.track_count = function() {
-		return this.tracks.length;
+		return that.tracks.length;
 	};
 
 	this.waypoint_count = function() {
-		return this.waypoints.length;
+		return that.waypoints.length;
 	};
 }
 

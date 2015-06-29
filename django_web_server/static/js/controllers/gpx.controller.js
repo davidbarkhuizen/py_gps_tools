@@ -3,6 +3,8 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 	var model = $scope.$parent.model;
 	var tracks = $scope.$parent.tracks;
 
+	$scope.selectedGpx = undefined;
+
 	$scope.loadGpx = function(id) {
 
 		/*
@@ -32,6 +34,10 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 				$rootScope.$emit(Command.LOAD_WAYPOINTS, gpx.waypoints);
 			}
 
+			if (($scope.selectedGpx == undefined) || (model.gpxs.contains(gpx) == false)) {
+				$scope.selectedGpx = gpx;
+			}
+
 			// change view
 			//
 			$rootScope.$emit(Command.GOTO_VIEW, Views.LOADED_GPXS);
@@ -47,4 +53,92 @@ function GpxController($rootScope, $scope, $http, $timeout) {
  	$rootScope.$on(Command.LOAD_GPX, function(evt, id) {
 		$scope.loadGpx(id);	
 	});
+
+	// GRID -----------------------
+
+	$scope.selectGpx = function(id) {
+
+		if ((id == null) || (id === undefined))
+			return;
+
+		model.gpxs.forEach(function(gpx) {
+			if (gpx.id == id) {
+				$scope.selectedGpx = gpx;
+			}
+		});
+	};
+
+	var unloadIconSrcRef = '/static/img/icon/delete_16.png';
+	var unloadIconImgTemplate = '<img ng-src="' + unloadIconSrcRef + '">';
+	var unloadCellTemplate = '<div style="padding-top:5px;"><a href="#" ng-click="grid.appScope.unloadGpx(row.entity.id)" ">' + unloadIconImgTemplate + '</a></div>';
+
+	$scope.gridOptions = {
+
+		data: $scope.$parent.model.gpxs,
+
+		enableRowSelection: true,
+		multiSelect:false,
+		enableSelectionBatchEvent: false, // single event only
+		enableRowHeaderSelection: false, // no header, click row to select
+
+		columnDefs: [
+			{ 	
+				field: 'id', 
+				width: '80', 
+				cellTemplate: unloadCellTemplate,
+				headerCellTemplate: '<span>unload</span>',
+				enableSorting: false, 
+				enableHiding: false,
+				enableFiltering: false,
+			},
+			{
+				field: 'fileName',
+				enableHiding: false,
+				enableFiltering: false,				
+				headerCellTemplate: '<span>file name</span>',
+				cellTooltip: true,
+			},
+			{
+				field: 'name',
+				enableHiding: false,
+				enableFiltering: false,
+				headerCellTemplate: '<span>metadata name</span>',
+				cellTooltip: true,
+			},
+			{
+				field: 'waypoints',
+				enableHiding: false,
+				enableFiltering: false,
+				width:'100',
+				headerCellTemplate: '<span>waypoint<br/>count</span>',
+				cellTemplate: '<span>{{ row.entity.waypoints.length }}</span>',
+			},
+			{
+				name: 'trackCount',
+				enableHiding: false,
+				enableFiltering: false,
+				width:'100',
+				headerCellTemplate: '<span>track<br/>count</span>',
+				cellTemplate: '<span>{{ row.entity.tracks.length }}</span>',
+			},
+			{
+				name: 'trackNames',
+				enableHiding: false,
+				enableFiltering: false,
+				headerCellTemplate: '<span>track names</span>',
+				cellTemplate: "<span title={{row.entity.track_names_concat()}}>{{ row.entity.track_names_concat() }}</span>",
+			},
+		],
+
+		onRegisterApi: function(gridApi) {
+
+			gridApi.selection.on.rowSelectionChanged($scope, function(row){
+
+				if ((row === undefined) || (row.entity.id == null) || (row.entity.id === undefined))
+					return;
+
+				$scope.selectGpx(row.entity.id);
+			});
+	    },
+	};
 }
