@@ -16,7 +16,7 @@
 				<br/>
 				{{ track.durationString }}
 				<br/>
-				<a href='#' ng-click='deleteTrack(track);'>delete</a>
+				<a href='#' ng-click='unloadTrack(track);'>unload</a>
 				<a href='#' ng-click='exportTrack(track);'>export</a>
 				<a href='#' ng-show='(model.gpxs.length > 1)' ng-click='copyInfo.trackToCopy = track;'>copy to</a>
 				<span ng-show='(copyInfo.trackToCopy === track)'>

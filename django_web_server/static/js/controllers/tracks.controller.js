@@ -82,11 +82,11 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 		$rootScope.$emit(Command.COPY_TRACK_TO_GPX, data);
 	};
 
- 	// DELETE
+ 	// UNLOAD
 
-	$scope.deleteTrack = function (track) {
+	$scope.unloadTrack = function(track) {
 
-		$rootScope.$emit(Command.DELETE_TRACK, track);
+		$rootScope.$emit(Command.UNLOAD_TRACK, track);
 	};
 
 	// EXPORT

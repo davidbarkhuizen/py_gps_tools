@@ -34,15 +34,15 @@ function GpxEditorController($rootScope, $scope, $http, $timeout) {
 		$scope.deleteWaypoint(waypoint);
 	});
 
-	// DELETE_TRACK
+	// UNLOAD_TRACK
 	//
-	$scope.deleteTrack = function(track) {	
+	$scope.unloadTrack = function(track) {	
 
 		$scope.gpxEditor.deleteTrack(track);
-		$rootScope.$emit(Event.TRACK_DELETED, track);
+		$rootScope.$emit(Event.TRACKS_UNLOADED, track);
 	};
-	$rootScope.$on(Command.DELETE_TRACK, function(evt, track) {
-		$scope.deleteTrack(track);
+	$rootScope.$on(Command.UNLOAD_TRACK, function(evt, track) {
+		$scope.unloadTrack(track);
 	});
 
 	// COPY TRACK
