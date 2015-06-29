@@ -1,9 +1,6 @@
 function GpxEditorController($rootScope, $scope, $http, $timeout) {
 
-	// init
-	var model = $scope.$parent.model;
-	var tracks = $scope.$parent.tracks;
-	$scope.gpxEditor = new GPXEditor(model.gpxs, tracks, model.waypoints);
+	$scope.gpxEditor = new GPXEditor($scope.$parent.model.gpxs);
 
 	// lol
 	$scope.$parent.gpxEditor = $scope.gpxEditor;

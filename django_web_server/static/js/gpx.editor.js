@@ -4,10 +4,6 @@ function GPXEditor(gpxs, tracks, waypoints) {
 
 	this.gpxs = gpxs;
 
-	// wtf
-	this.tracks = tracks;
-	this.waypoints = waypoints;
-
 	this.aggregateGpxTracks = function() {
 
 		var gpxTracks = [];
@@ -23,7 +19,6 @@ function GPXEditor(gpxs, tracks, waypoints) {
 	this.gpxForWaypoint = function(waypoint) {
 
 		for(i = 0; i < that.gpxs.length; i++) {
-
 			var gpx = that.gpxs[i];
 
 			if (gpx.waypoints.indexOf(waypoint) !== -1)
@@ -72,8 +67,6 @@ function GPXEditor(gpxs, tracks, waypoints) {
 			if (segment.node == point.node.parentNode)
 				return segment;
 		}
-
-		console.log('%o', point);
 
 		return undefined;
 	};
@@ -240,5 +233,12 @@ function GPXEditor(gpxs, tracks, waypoints) {
 
 		var fromGpx = that.gpxForTrack(track);
 
+		// var node = document.importNode(externalNode, deep);
+
+		var trk = toGpx.xmlDOM.importNode(track.node, true);
+		toGpx.node.appendChild(trk);
+
+		var track = new Track(trk);
+		toGpx.tracks.push(track);
 	};
 }

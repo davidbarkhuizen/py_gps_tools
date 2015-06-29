@@ -174,6 +174,12 @@ function GPX(xml, fileName) {
 	
 	this.xmlDOM = parser.parseFromString(xml, "text/xml");
 
+	var gpxs = this.xmlDOM.getElementsByTagName('gpx');
+	if (gpxs.length != 1)
+		throw "expected one and only one gpx element in a file";
+
+	this.node = gpxs[0]; 
+
 	// metadata
 	//
 	var metadatas = this.xmlDOM.getElementsByTagName('metadata');
