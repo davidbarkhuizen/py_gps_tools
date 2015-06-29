@@ -16,6 +16,8 @@ var controllers = [
 	['ElevationPlotController', [ElevationPlotController]],
 	['MapController', [MapController]],
 	['WaypointsController', [WaypointsController]],
+	['HelpController', [HelpController]],
+	['AccountController', [AccountController]],
 ];
 
 controllers.forEach(function(ctrl) { 

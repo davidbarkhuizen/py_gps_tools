@@ -50,10 +50,18 @@
 				ng-click="gotoView(Views.EXPORT);"
 				ng-class="view == Views.EXPORT ? 'nav-active' : 'nav-inactive'"
 				>export</a>
+
+			<a href='#' 
+				ng-click="gotoView(Views.HELP);"
+				ng-class="view == Views.HELP ? 'nav-active' : 'nav-inactive'"
+				>help</a>
 		</div>
 
 		<div style='float:right;'>
-			david
+			<a href='#' 
+				ng-click="gotoView(Views.ACCOUNT);"
+				ng-class="view == Views.ACCOUNT ? 'nav-active' : 'nav-inactive'"
+				>david</a>
 		</div>
 		
 		<div style='clear:both;'>

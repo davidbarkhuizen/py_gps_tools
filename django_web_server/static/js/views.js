@@ -12,4 +12,8 @@ var Views = Object.freeze({
 	LOADED_TRACKS : guid(), 
 	ELEVATION : guid(),
 	WAYPOINTS : guid(),
+
+	HELP : guid(),
+
+	ACCOUNT	: guid(),
 });	
