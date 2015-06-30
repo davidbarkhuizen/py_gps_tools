@@ -5,6 +5,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 	$scope.gpxs = $scope.$parent.model.gpxs;	
 
 	$scope.gpxinfos = $scope.$parent.model.gpxinfos;
+
 	$scope.selectedGpxinfo = null;
 
 	$scope.selectGpx = function(id) {
@@ -21,11 +22,21 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 	// -------------------------------------------------
 	// GRID
 
+	$scope.gridApi = undefined;
+
+	$scope.selectFirstGridRow = function() {
+		$scope.gridApi.selection.selectRow($scope.gridOptions.data[0]);
+	}
+	$scope.selectFirstGridRowDelayed = function() {
+		$timeout($scope.selectFirstGridRow, 0);
+	};
+
 	var loadIconSrcRef = '/static/img/icon/green_plus_16.png';
 	var loadIconImgTemplate = '<img ng-src="' + loadIconSrcRef + '">';
 	var loadCellTemplate = '<div style="padding-top:5px;"><a href="#" ng-click="grid.appScope.loadGpx(row.entity.id)" ">' + loadIconImgTemplate + '</a></div>';
 	var blankHeaderTemplate = '';
 
+	$scope.gridApi = undefined;
 	$scope.gridOptions = {      
 
         data: $scope.$parent.model.gpxinfos,  
@@ -112,6 +123,8 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
 		onRegisterApi: function(gridApi) {
 
+			$scope.gridApi = gridApi;
+
 			gridApi.selection.on.rowSelectionChanged($scope, function(row){
 
 				if ((row === undefined) || (row.entity.id == null) || (row.entity.id === undefined))
@@ -143,6 +156,14 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 			});
 
 			$scope.gridOptions.data = $scope.$parent.model.gpxinfos;
+
+			$scope.selectFirstGridRowDelayed();
+
+			// select 1st row
+			//
+			if (($scope.selectedGpxinfo == undefined) || (gpxinfos.contains($scope.selectedGpxinfo) == false)) {
+				$scope.selectFirstGridRowDelayed();
+			}
 		};
 		
 		var errorFn = function(error){

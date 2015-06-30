@@ -34,8 +34,10 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 				$rootScope.$emit(Command.LOAD_WAYPOINTS, gpx.waypoints);
 			}
 
-			if (($scope.selectedGpx == undefined) || (model.gpxs.contains(gpx) == false)) {
-				$scope.selectedGpx = gpx;
+			// select 1st row
+			//
+			if (($scope.selectedGpx == undefined) || (model.gpxs.contains($scope.selectedGpx) == false)) {
+				$scope.selectFirstGridRowDelayed();
 			}
 
 			// change view
@@ -76,9 +78,18 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 		});
 	};
 
+	$scope.selectFirstGridRow = function() {
+		$scope.gridApi.selection.selectRow($scope.gridOptions.data[0]);
+	}
+	$scope.selectFirstGridRowDelayed = function() {
+		$timeout($scope.selectFirstGridRow, 0);
+	};
+
 	var unloadIconSrcRef = '/static/img/icon/delete_16.png';
 	var unloadIconImgTemplate = '<img ng-src="' + unloadIconSrcRef + '">';
 	var unloadCellTemplate = '<div style="padding-top:5px;"><a href="#" ng-click="grid.appScope.unloadGpx(row.entity)" ">' + unloadIconImgTemplate + '</a></div>';
+
+	$scope.gridApi = undefined;
 
 	$scope.gridOptions = {
 
@@ -139,6 +150,8 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 		],
 
 		onRegisterApi: function(gridApi) {
+
+			$scope.gridApi = gridApi;
 
 			gridApi.selection.on.rowSelectionChanged($scope, function(row){
 
