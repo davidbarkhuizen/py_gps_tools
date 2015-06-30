@@ -5,8 +5,26 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 	$scope.dateValToTimeString = dateValToTimeString;
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// SELECT
+
+	$scope.selectWaypoint = function(waypoint) {
+
+		$scope.model.selectedPoint = waypoint;
+	};
+
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// GRID
 
 	var timeCellTemplate = '<span>{{ row.entity.time.toISOString() }}</span>';
+
+	$scope.gridApi = undefined;
+
+	$scope.selectFirstGridRow = function() {
+		$scope.gridApi.selection.selectRow($scope.gridOptions.data[0]);
+	}
+	$scope.selectFirstGridRowDelayed = function() {
+		$timeout($scope.selectFirstGridRow, 0);
+	};
 
 	$scope.gridOptions = {
 
@@ -59,21 +77,13 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 		onRegisterApi: function(gridApi) {
 
-			gridApi.selection.on.rowSelectionChanged($scope, function(row){
+			$scope.gridApi = gridApi;
 
-				if ((row === undefined) || (row.entity=== undefined))
-					return;
+			gridApi.selection.on.rowSelectionChanged($scope, function(row){
 
 				$scope.selectWaypoint(row.entity);
 			});
 	    },
-	};
-
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	// SELECT
-
-	$scope.selectWaypoint = function(waypoint) {
-		$scope.model.selectedPoint = waypoint;
 	};
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -166,23 +176,6 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 		}
 	});
 
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	// SELECT
-
-	$scope.selectFirstWaypoint = function() {
-
-		$scope.model.selectedPoint = ($scope.model.filteredWaypoints.length > 0)
-			? $scope.model.filteredWaypoints[0]
-			: undefined;
-
-		if ($scope.model.selectedPoint !== undefined)
-			return;
-
-		$scope.model.selectedPoint = ($scope.model.waypoints.length > 0)
-			? $scope.model.waypoints[0]
-			: undefined;
-	};
-
 	// UNLOAD
 
 	$scope.unloadAllWaypoints = function() {
@@ -225,6 +218,8 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 		if (changed)  {
 			$rootScope.$emit(Event.WAYPOINTS_LOADED);
 		}
+
+		$scope.selectFirstGridRowDelayed();
 	};
 
 	$scope.getAndMergeForArea = function(minLat, maxLat, minLon, maxLon) {
