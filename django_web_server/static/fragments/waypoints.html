@@ -9,6 +9,7 @@
 		loaded waypoints ({{ model.waypoints.length }})
 	</div>
 	<a href='#' class='underline' ng-click='exportAllWaypoints();'>export all as .GPX</a>
+	<a href='#' class='underline' ng-click='exportAllWaypointsAsTxt();'>export all as .TXT</a>
 	<br/>
 
 	<br/>
@@ -49,7 +50,7 @@
 				href='#'
 				ng-click='copySelectedWaypointCoordinatesToClipBoard()'
 				class='underline'
-			>copy co-ords to clipboard</a>
+			>copy to clipboard</a>
 		</div>
 	</div>
 

@@ -16,6 +16,18 @@ function Point(pt) {
 	// track/segment stat
 	//
 	this.cumulativeDistanceM = 0;
+
+	this.toStr = function() {
+
+		var str = '{0} ({1}, {2}) @ {3}m [{4}]'.format(
+			this.name === undefined ? 'point' : this.name,
+			this.lat, 
+			this.lon,
+			this.ele,
+			this.time);
+		
+		return str;
+	};
 }
 
 function Segment(trkseg) {

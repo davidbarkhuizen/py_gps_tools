@@ -8,6 +8,9 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 		
 		if (($scope.model.selectedPoint === null) || ($scope.model.selectedPoint === undefined))
 			return;
+
+		var s = $scope.model.selectedPoint.toStr();
+		copyToClipboard(s);
 	}
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -275,7 +278,12 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 	// EXPORT
 
 	$scope.exportAllWaypoints = function(fileName) {
-		var data = { waypoints : $scope.model.waypoints, fileName : fileName };
+		var data = { waypoints : $scope.model.waypoints, fileName : fileName, format : 'GPX' };
+		$rootScope.$emit(Command.EXPORT_WAYPOINTS, data);
+	};
+
+	$scope.exportAllWaypointsAsTxt = function(fileName) {
+		var data = { waypoints : $scope.model.waypoints, fileName : fileName, format : 'TXT' };
 		$rootScope.$emit(Command.EXPORT_WAYPOINTS, data);
 	};
 }

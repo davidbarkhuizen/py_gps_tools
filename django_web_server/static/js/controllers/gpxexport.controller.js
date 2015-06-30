@@ -19,40 +19,56 @@ function GpxExportController($rootScope, $scope, $http) {
 		document.body.removeChild(dlLink);
 	};
 
-	$scope.exportXML = function(xml, fileName) {
+	$scope.exportXML = function(xml, fileName, mimeType) {
 
-		var MIME_TYPE = 'text/xml';
-		var blob = new Blob([xml], {type: MIME_TYPE});
+		mimeType = (mimeType === undefined) ? 'text/xml' : mimeType;
+
+		var blob = new Blob([xml], {type: mimeType});
 
 		var dlBlobURL = window.URL.createObjectURL(blob);
 
 		var dlLink = document.createElement('a');
 		dlLink.download = fileName;
 		dlLink.href = dlBlobURL;
-		dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
+		dlLink.dataset.downloadurl = [mimeType, dlLink.download, dlLink.href].join(':');
 
 		document.body.appendChild(dlLink);
 		dlLink.click();
 		document.body.removeChild(dlLink);
 	};
 
-
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// WAYPOINTS
 
-	$scope.exportWaypointSet = function(waypoints, fileName) {
+	$scope.exportWaypointSetAsGpx = function(waypoints, fileName) {
 		fileName = (fileName === undefined) ? 'gpxmaps.net.waypoints.gpx' : fileName;
 		
 		var xml = waypointsToGpx(waypoints);
 		$scope.exportXML(xml, fileName);
 	};
 
+	$scope.exportWaypointSetAsTxt = function(waypoints, fileName) {
+		fileName = (fileName === undefined) ? 'gpxmaps.net.waypoints.txt' : fileName;
+		
+		var lines = [];
+		waypoints.forEach(function(wpt){ lines.push(wpt.toStr()); });
+		var txt = lines.join('\r\n');
+
+		$scope.exportXML(txt, fileName, 'text/xml');
+	};
+
 	$rootScope.$on(Command.EXPORT_WAYPOINTS, function(evt, data) {
-		$scope.exportWaypointSet(data.waypoints, data.fileName);
+
+		if (data.format == 'TXT') {
+			$scope.exportWaypointSetAsTxt(data.waypoints, data.fileName);
+		}
+		else {
+			$scope.exportWaypointSetAsGpx(data.waypoints, data.fileName);
+		}
 	});
 
 	$scope.exportAllWaypoints = function() {
-		$scope.exportWaypointSet(model.waypoints);
+		$scope.exportWaypointSetAsGpx(model.waypoints);
 	};
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
