@@ -65,7 +65,9 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 	};
 
 	$scope.unloadAll = function() {
-		model.gpxs.forEach(function(gpx){ $scope.unloadGpx(gpx);  });
+
+		var gpxs = model.gpxs.slice();
+		gpxs.forEach(function(gpx){ $scope.unloadGpx(gpx); });
 	};
 
 	// GRID -----------------------
