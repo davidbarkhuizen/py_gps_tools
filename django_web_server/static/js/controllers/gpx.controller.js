@@ -64,6 +64,10 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 		$rootScope.$emit(Command.UNLOAD_GPX, gpx);
 	};
 
+	$scope.unloadAll = function() {
+		model.gpxs.forEach(function(gpx){ $scope.unloadGpx(gpx);  });
+	};
+
 	// GRID -----------------------
 
 	$scope.selectGpx = function(id) {
