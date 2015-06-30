@@ -4,6 +4,12 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 	$scope.dateValToTimeString = dateValToTimeString;
 
+	$scope.copySelectedWaypointCoordinatesToClipBoard = function() {
+		
+		if (($scope.model.selectedPoint === null) || ($scope.model.selectedPoint === undefined))
+			return;
+	}
+
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// SELECT
 

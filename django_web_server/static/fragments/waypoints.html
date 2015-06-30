@@ -4,10 +4,14 @@
 	style='vertical-align:top;'
 	>
 
-	<h3>
+	<br/>
+	<div class='header'>
 		loaded waypoints ({{ model.waypoints.length }})
-	</h3>
+	</div>
 	<a href='#' class='underline' ng-click='exportAllWaypoints();'>export all as .GPX</a>
+	<br/>
+
+	<br/>
 
 	<div id='SelectedWaypoint'>
 		<div>
@@ -41,6 +45,11 @@
 			<a href='#' style='color:red;' ng-show='showDelete()' ng-click='getDeletionConfirmation(model.selectedPoint.id)'>delete</a>
 			<a href="#" ng-show='showDeleteConfirmationPrompt()' ng-click='delete();' style='color:red;'>confirm deletion</a>
 			<a href="#" ng-show='showDeleteConfirmationPrompt()' ng-click='cancelDelete()'>cancel</a>
+			<a
+				href='#'
+				ng-click='copySelectedWaypointCoordinatesToClipBoard()'
+				class='underline'
+			>copy co-ords to clipboard</a>
 		</div>
 	</div>
 
