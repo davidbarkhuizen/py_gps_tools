@@ -2,6 +2,20 @@ function copyToClipboard(text) {
   window.prompt("Copy to clipboard: Ctrl+C, Enter", text);
 }
 
+function basicFilter(searchTerm, cellValue) {
+
+	if ((searchTerm === undefined) || (searchTerm === null) || (searchTerm == ''))
+		return true;
+
+	if ((cellValue === undefined) || (cellValue === null) || (cellValue == ''))
+		return false;
+
+	searchTerm = searchTerm.toLowerCase().trim();
+	cellValue = cellValue.toLowerCase().trim();
+
+	return (cellValue.indexOf(searchTerm) !== -1);
+}
+
 function dateValToTimeString(dateVal) {
 
 	try {

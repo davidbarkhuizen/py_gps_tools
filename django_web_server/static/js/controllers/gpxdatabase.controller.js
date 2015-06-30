@@ -78,21 +78,27 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 				field: 'file_name', 
 				width: '400', 
 				cellClass: 'grid-cell-text', 
-				cellTooltip: function(row) { return row.entity.file_name; } 
-			},			
+				cellTooltip: function(row) { return row.entity.file_name; },
+				enableFiltering: true,
+				filter: { condition: basicFilter }
+			},
 			{ 
 				enableSorting: true,
 				name:'name', 
 				field: 'name', 
 				cellClass: 'grid-cell-text',
-				cellTooltip: function(row) { return row.entity.name; } 
+				cellTooltip: function(row) { return row.entity.name; },
+				enableFiltering: true,
+				filter: { condition: basicFilter }
 			},			
 			{
 				name:'desc', 
 				field: 'desc', 
 				cellClass: 'grid-cell-text',
 				headerTooltip: 'Custom header string',
-				cellTooltip: function(row) { return row.entity.name; } 
+				cellTooltip: function(row) { return row.entity.name; },
+				enableFiltering: true,
+				filter: { condition: basicFilter }
 			},			
 			{ 
 				enableSorting: true,

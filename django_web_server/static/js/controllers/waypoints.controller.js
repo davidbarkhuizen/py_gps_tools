@@ -81,6 +81,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 				enableHiding: false,
 				enableFiltering: true,
+				filter: { condition: basicFilter }
 			}
 		],
 
