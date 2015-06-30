@@ -1,9 +1,9 @@
-<div id='Stats'
+<div id='LoadedTracks'
 	ng-show='view == Views.LOADED_TRACKS'
 	ng-controller='TracksController'
 	>
 	<h3>
-		tracks ({{ getTracks().length }})
+		loaded tracks ({{ getTracks().length }})
 	</h3>
 	<div ng-show='tracks.length > 0'>
 		<div class='medium-list'>
