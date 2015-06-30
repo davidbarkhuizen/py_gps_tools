@@ -11,7 +11,7 @@ var Views = Object.freeze({
 	LOADED_GPXS : guid(),
 	LOADED_TRACKS : guid(), 
 	ELEVATION : guid(),
-	WAYPOINTS : guid(),
+	LOADED_WAYPOINTS : guid(),
 
 	HELP : guid(),
 

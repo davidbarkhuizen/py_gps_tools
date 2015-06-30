@@ -11,8 +11,8 @@
 
 	<div>
 		<a href="#" ng-click='gotoView(Views.MAP)'>map</a>
-		<a href="#" ng-click='gotoView(Views.TRACKS)'>tracks</a>
-		<a href="#" ng-click='gotoView(Views.WAYPOINTS)'>waypoints</a>
+		<a href="#" ng-click='gotoView(Views.LOADED_TRACKS)'>tracks</a>
+		<a href="#" ng-click='gotoView(Views.LOADED_WAYPOINTS)'>waypoints</a>
 		<a href="#" ng-click='gotoView(Views.GPX_DATABASE)' class='underline'>my gpxs</a>
 		<a href="#" ng-click='' class='underline'>unload all</a>
 	</div>
@@ -85,7 +85,7 @@
 				</div>
 				<br/>
 				<div id='GpxWaypoints'>
-					<a href='#' ng-click='gotoView(Views.WAYPOINTS)'>				{{ gpx.waypoint_count() > 0 ? gpx.waypoint_count().toString() + ' waypoints(s)' : 'no waypoints' }}
+					<a href='#' ng-click='gotoView(Views.LOADED_WAYPOINTS)'>				{{ gpx.waypoint_count() > 0 ? gpx.waypoint_count().toString() + ' waypoints(s)' : 'no waypoints' }}
 					</a>
 					<div ng-show='(gpx.waypoints.length > 0)' class='short-list'>
 						<div ng-repeat='wpt in gpx.waypoints'>
