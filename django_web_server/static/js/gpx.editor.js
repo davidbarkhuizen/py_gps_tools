@@ -235,8 +235,6 @@ function GPXEditor(gpxs, tracks, waypoints) {
 
 		var fromGpx = that.gpxForTrack(track);
 
-		// var node = document.importNode(externalNode, deep);
-
 		var trk = toGpx.xmlDOM.importNode(track.node, true);
 		toGpx.node.appendChild(trk);
 

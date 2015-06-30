@@ -2,9 +2,24 @@
 	ng-show='view == Views.LOADED_TRACKS'
 	ng-controller='TracksController'
 	>
-	<h3>
+
+	<br/>
+	<div class='header'>
 		loaded tracks ({{ getTracks().length }})
-	</h3>
+	</div>
+	<div>	
+		<a href='#'
+				ng-click='exportAllTracks();'
+				class='underline'
+				>export all</a>
+		<a href="#"
+			ng-click='gotoView(Views.GPX_DATABASE);'
+			class='underline'
+			>my gpxs</a>
+	</div>
+	</br>
+	</br>
+	
 	<div ng-show='tracks.length > 0'>
 		<div class='medium-list'>
 			<div ng-repeat="track in getTracks()" style='color:{{track.colour}};'>
@@ -21,12 +36,6 @@
 				<a href='#' ng-show='(model.gpxs.length > 1)' ng-click='copyInfo.trackToCopy = track;'>copy to</a>
 				<span ng-show='(copyInfo.trackToCopy === track)'>
 					
-					<!-- <select ng-model='gpxIdToCopyTo'>
-						<option ng-repeat='gpx in otherGpxsForTrack(track)' value='{{ gpx.id }}'>
-							{{ gpx.label() }}
-						</option>
-					</select> -->
-
 					<select
 						ng-model="copyInfo.gpxToCopyTo"
 						ng-options="gpx as gpx.label() for gpx in otherGpxsForTrack(track)">
@@ -39,19 +48,5 @@
 				</div>
 			</div>
 		</div>
-
-		<br/>
-		
-		<div>
-			{{ tracks.length }} track(s) loaded
-		</div>
-		<div>
-			<a href='#' ng-click='exportAllTracks();'>export all</a>
-		</div>
-	</div>
-
-	<div>
-		<br/>
-		<a href="#" ng-click='gotoView(Views.GPX_DATABASE);'>gpx database</a>
 	</div>
 </div>

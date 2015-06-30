@@ -80,6 +80,7 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 
 		var data = { gpx: $scope.copyInfo.gpxToCopyTo, track: $scope.copyInfo.trackToCopy };
 		$rootScope.$emit(Command.COPY_TRACK_TO_GPX, data);
+		$scope.copyInfo.trackToCopy = undefined;
 	};
 
  	// UNLOAD
