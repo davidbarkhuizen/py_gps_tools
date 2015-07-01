@@ -6,7 +6,7 @@
 
 	<br/>
 	<div class='header'>
-		my .GPX files ({{ gpxinfos.length  }})
+		my .GPX files ({{ model.gpxinfos.length  }})
 	</div>
 
 	<div>
@@ -18,31 +18,31 @@
 	<div id='SelectedGpxinfo' style='text-align:left;margin:20px'>
 		<div>
 			file name:
-			<span>{{ selectedGpxinfo.file_name }} </span>
+			<span>{{ model.selectedGpxinfo.file_name }} </span>
 		</div>
 		<div>
 			gpx name: 
-			<span>{{ selectedGpxinfo.name }} </span>
+			<span>{{ model.selectedGpxinfo.name }} </span>
 		</div>
 		<div>
 			gpx time: 
-			<span>{{ dateValToTimeString(selectedGpxinfo.time) }} </span>
+			<span>{{ dateValToTimeString(model.selectedGpxinfo.time) }} </span>
 		</div>
 		<div>
 			gpx description: 
-			<span>{{ selectedGpxinfo.desc }} </span>
+			<span>{{ model.selectedGpxinfo.desc }} </span>
 		</div>
 		<div>
 			track count:
-			<span>{{ selectedGpxinfo.track_count }} </span>
+			<span>{{ model.selectedGpxinfo.track_count }} </span>
 		</div>
 		<div>
 			track names:
-			<span>{{ selectedGpxinfo.track_names_concat.split('|').join(', ') }} </span>
+			<span>{{ model.selectedGpxinfo.track_names_concat.split('|').join(', ') }} </span>
 		</div>
 		<div>
 			waypoint count:
-			<span>{{ selectedGpxinfo.waypoint_count }} </span>
+			<span>{{ model.selectedGpxinfo.waypoint_count }} </span>
 		</div>
 	</div>
 

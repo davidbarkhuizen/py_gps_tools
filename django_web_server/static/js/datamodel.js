@@ -3,6 +3,8 @@ function DataModel() {
 	var that = this;
 
 	this.gpxinfos = [];
+	that.selectedGpxinfo = null;
+
 	this.gpxs = [];
 
 	this.waypoints = [];
@@ -18,8 +20,6 @@ function DataModel() {
 		that.gpxs.forEach(function(gpx) {
 			that.tracks = that.tracks.concat(gpx.tracks);
 		});
-
-		console.log('getTracks:  ', that.tracks);
 
 		return that.tracks;
 	};

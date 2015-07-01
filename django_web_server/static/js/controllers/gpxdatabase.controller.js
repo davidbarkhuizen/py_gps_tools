@@ -2,20 +2,16 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
 	$scope.dateValToTimeString = dateValToTimeString;
 
-	$scope.gpxs = $scope.$parent.model.gpxs;	
-
-	$scope.gpxinfos = $scope.$parent.model.gpxinfos;
-
-	$scope.selectedGpxinfo = null;
+	$scope.model = $scope.$parent.model;
 
 	$scope.selectGpx = function(id) {
 
 		if ((id == null) || (id === undefined))
 			return;
 
-		$scope.gpxinfos.forEach(function(info) {
+		$scope.model.gpxinfos.forEach(function(info) {
 			if (info.id == id)
-				$scope.selectedGpxinfo = info;
+				$scope.model.selectedGpxinfo = info;
 		});
 	};
 
@@ -39,7 +35,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 	$scope.gridApi = undefined;
 	$scope.gridOptions = {      
 
-        data: $scope.$parent.model.gpxinfos,  
+        data: $scope.model.gpxinfos,
         
         //showGridFooter: true,
         
@@ -145,7 +141,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
 	$scope.gpxIsLoaded = function(id) {
 
-		var isLoaded = ($scope.gpxs.countWhere(function(x) { return (x.id == id); }) > 0); 
+		var isLoaded = ($scope.model.gpxs.countWhere(function(x) { return (x.id == id); }) > 0); 
 		return isLoaded;
 	};
 
@@ -155,19 +151,19 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
 		var successFn = function(data) { 
 			
-			$scope.gpxinfos.length = 0;
-			data.gpxinfos.forEach(function(x) { $scope.gpxinfos.push(x); });
+			$scope.model.gpxinfos.length = 0;
+			data.gpxinfos.forEach(function(x) { $scope.model.gpxinfos.push(x); });
 			data.gpxinfos.sort(function(a, b) { 
 				return a.file_name.localeCompare(b.file_name); 
 			});
 
-			$scope.gridOptions.data = $scope.$parent.model.gpxinfos;
+			$scope.gridOptions.data = $scope.model.gpxinfos;
 
 			$scope.selectFirstGridRowDelayed();
 
 			// select 1st row
 			//
-			if (($scope.selectedGpxinfo == undefined) || (gpxinfos.contains($scope.selectedGpxinfo) == false)) {
+			if (($scope.model.selectedGpxinfo == undefined) || (gpxinfos.contains($scope.model.selectedGpxinfo) == false)) {
 				$scope.selectFirstGridRowDelayed();
 			}
 		};

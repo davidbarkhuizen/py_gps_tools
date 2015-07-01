@@ -11,19 +11,6 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 
 	$scope.model = $scope.$parent.model;
 
-	$scope.gpxForTrack = function(track) {
-
-		var matchingGpx = null;
-
-		$scope.model.gpxs.forEach(function(gpx) {
-			if (gpx.tracks.indexOf(track) !== -1) {
-				matchingGpx = gpx;
-			}
-		});
-
-		return matchingGpx;
-	};
-
 	$scope.getUnusedTrackColour = function() {
 
 		var inUse = $scope.model.getTracks()

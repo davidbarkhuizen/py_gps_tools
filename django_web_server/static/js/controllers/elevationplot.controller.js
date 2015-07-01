@@ -1,5 +1,7 @@
 function ElevationPlotController($rootScope, $scope, $http, $timeout) {
 
+	$scope.model = $scope.$parent.model;
+
 	$scope.canvasId = 'ElevationPlotCanvas';
 	$scope.canvasElement = document.getElementById($scope.canvasId);
 
@@ -46,12 +48,14 @@ function ElevationPlotController($rootScope, $scope, $http, $timeout) {
 
 	$scope.drawElevationPlot = function() {
 
-		if ($scope.$parent.tracks.length == 0)
+		var tracks = $scope.model.getTracks();
+
+		if (tracks.length == 0)
 			return;
 
 		[width, height] = $scope.getCanvasDimensions();
 
-		var track = $scope.$parent.tracks[0];
+		var track = tracks[0]; // TODO all tracks to common scale
 		var context = $scope.context;
 
 		var minEle = track.minMaxEle.min;
