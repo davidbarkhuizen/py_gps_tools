@@ -175,7 +175,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 		httpGET($http, 'gpxinfos', null, successFn, null, errorFn)
 	};
 
-	$rootScope.$on(Event.GPX_FILE_IMPORTED, function(evt){
+	$rootScope.$on(Event.GPX_FILE_IMPORT_SUCCEEDED, function(evt){
 		$scope.loadGpxinfos();
 	});
 

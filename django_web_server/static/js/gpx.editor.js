@@ -1,21 +1,32 @@
-function GPXEditor(gpxs, tracks, waypoints) {
+function GPXEditor(gpxs) {
 
 	var that = this;
 
 	this.gpxs = gpxs;
-	this.tracks = tracks;
-	this.waypoints = waypoints;
 
-	this.aggregateGpxTracks = function() {
+	this.getUnusedTrackColour = function() {
 
-		var gpxTracks = [];
-		that.gpxs.forEach(function(gpx){
-			gpx.tracks.forEach(function(track){
-				gpxTracks.push(track);
+		var inUse = that.getTracks()
+			.map(function(x) { return x.colour; })
+			.filter(function(x) { return (x !== undefined); });
+
+		var unUsed = TrackColours
+			.filter(function(x) { 
+				return ((x !== undefined) && (inUse.indexOf(x) == -1)); 
 			});
+
+		return (unUsed.length > 0) ? unUsed[0] : [Colour.BLACK];
+	};
+
+	this.getTracks = function() {
+
+		var tracks = [];
+
+		that.gpxs.forEach(function(gpx){
+			tracks = tracks.concat(gpx.tracks);
 		});
 
-		return gpxTracks;	
+		return tracks;	
 	};			
 
 	this.gpxForWaypoint = function(waypoint) {
@@ -32,19 +43,19 @@ function GPXEditor(gpxs, tracks, waypoints) {
 
 	this.gpxForTrack = function(track) {
 
-		var target = undefined;
+		for(i = 0; i < that.gpxs.length; i++) {
+			var gpx = that.gpxs[i];
 
-		that.gpxs.forEach(function(gpx){
 			if (gpx.tracks.indexOf(track) !== -1)
-				target = gpx;
-		});
+				return gpx;
+		}
 
-		return target;
+		return undefined;
 	};
 
 	this.trackForSegment = function(segment) {
 
-		var allTracks = that.aggregateGpxTracks();
+		var allTracks = that.getTracks();
 		for(var i = 0; i < allTracks.length; i++) {
 			var track = allTracks[i];
 
@@ -58,7 +69,7 @@ function GPXEditor(gpxs, tracks, waypoints) {
 	this.segmentForPoint = function(point) {
 
 		var allSegments = []; 
-		that.aggregateGpxTracks()
+		that.getTracks()
 			.forEach(function(track){ 
 				allSegments = allSegments.concat(track.segments); 
 			});
@@ -95,10 +106,6 @@ function GPXEditor(gpxs, tracks, waypoints) {
 		//
 		waypoint.node.parentNode.removeChild(waypoint.node);
 
-		// model
-		//
-		that.waypoints.removeWhere(function(x){ return (x == waypoint); });
-
 		gpx.edited = true;
 	};
 
@@ -112,7 +119,6 @@ function GPXEditor(gpxs, tracks, waypoints) {
 
 		// model
 		//
-		that.tracks.removeWhere(function(x){ return (x == track); });
 		gpx.tracks.removeWhere(function(x){ return (x == track); });
 
 		gpx.edited = true;
@@ -244,18 +250,6 @@ function GPXEditor(gpxs, tracks, waypoints) {
 
 	this.unloadGPX = function(gpx) {
 
-		// model - tracks
-		//
-		gpx.tracks.forEach(function(track){
-			that.tracks.removeWhere(function(x){ return (x == track); });
-		});
-
-		// model - waypoints
-		//
-		gpx.waypoints.forEach(function(waypoint){
-			that.waypoints.removeWhere(function(x){ return (x == waypoint); });
-		});
-
 		// model - gpxs
 		//
 		that.gpxs.removeWhere(function(x){ return (x == gpx); });
@@ -264,4 +258,17 @@ function GPXEditor(gpxs, tracks, waypoints) {
 		//
 		gpx.node.parentNode.removeChild(gpx.node);
 	};
+
+	this.loadGPX = function(gpx) {
+
+		// tracks
+		//
+		gpx.tracks.forEach(function(track){
+			track.colour = that.getUnusedTrackColour();
+		});
+
+		// model
+		//
+		that.gpxs.push(gpx);
+	}
 }

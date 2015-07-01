@@ -42,7 +42,7 @@ function GpxImportController($rootScope, $scope, $http, $timeout) {
 
 			var successFn = function(data, status, headers, config) {
 
-				$rootScope.$emit(Event.GPX_FILE_IMPORTED);
+				$rootScope.$emit(Event.GPX_FILE_IMPORT_SUCCEEDED);
 				$scope.successfulImports.push(file);
 				next();
 			};

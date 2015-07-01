@@ -18,6 +18,15 @@ var Colour = Object.freeze({
 	VERYDARKGREY : toRgbString(50, 50, 50),
 });
 
+var TrackColours = Object.freeze([
+
+	Colour.BLACK, 
+	Colour.BLUE, 
+	Colour.PURPLE, 
+	Colour.DARKGREEN, 
+	Colour.RED
+]);
+
 var Corner = Object.freeze({
 	
 	TOP_LEFT : 'top left',

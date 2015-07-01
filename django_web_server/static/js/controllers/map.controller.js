@@ -1,5 +1,8 @@
 function MapController($rootScope, $scope, $http, $timeout) {
 
+	var model = $scope.$parent.model;
+	$scope.model = model;
+
 	// ---------------------------------------------
 	// OPTIONS
 
@@ -58,8 +61,6 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	// -----------------------------------------------------------
 
-	var tracks = $scope.$parent.tracks;
-	var waypoints = $scope.$parent.model.waypoints; 
 	var filteredWaypoints = $scope.$parent.model.filteredWaypoints; 
 
 	$scope.canvasWaypoints = [];
@@ -285,7 +286,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 		var matches = [];
 
-		tracks.forEach(function(track){
+		model.tracks.forEach(function(track){
 
 			if (matches.length > 0)
 					return;
@@ -609,6 +610,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.measureDomain = function() {
 
+		var tracks = model.getTracks();
+
 		var latLonViewPorts = $scope.latLonViewPorts;
 
 		var domain = {};
@@ -723,6 +726,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.renderTrackPointsToCanvasSpace = function(domain, range, scale) {
 
+		var tracks = model.getTracks();
+
 		$scope.canvasPoints = [];
 
 		for (var t in tracks) {
@@ -745,6 +750,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	$scope.renderWaypointsToCanvasSpace = function(domain, range, scale) {		
 
 		$scope.canvasWaypoints.length = 0;
+
+		var waypoints = model.getWaypoints();
 
 		waypoints.forEach(function(point) {
 			var canvasWaypoint = $scope.transformPoint(domain, range, scale, point.lat, point.lon, point.ele, point.name);
@@ -829,6 +836,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	};
 	
 	$scope.drawAllTracksEdgesColoured = function(context, thickness) {    
+
+		var tracks = model.getTracks();
 
 		for (var t in $scope.canvasPoints) {
 			
@@ -1134,6 +1143,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.draw = function(context, width, height, discard) {
 
+		var tracks = model.getTracks();
+
 		var domain = $scope.measureDomain();
 		var range = $scope.measureRange(width, height);
 
@@ -1219,7 +1230,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	// RE-DRAW TRIGGERS
 	//
 	$scope.redrawTriggers = [
-		Event.TRACKS_LOADED,
+		Event.TRACK_LOADED,
 		Event.TRACKS_UNLOADED,
 		Event.WAYPOINTS_LOADED,
 		Event.WAYPOINTS_UNLOADED,

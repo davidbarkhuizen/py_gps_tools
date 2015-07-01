@@ -1,7 +1,6 @@
 <div id='LoadedTracks'
 	ng-show='view == Views.LOADED_TRACKS'
-	ng-controller='TracksController'
-	>
+	ng-controller='TracksController'>
 
 	<br/>
 	<div class='header'>
@@ -16,7 +15,7 @@
 
 	</br>
 	
-	<div ng-show='tracks.length > 0'>
+	<div ng-show='model.getTracks().length > 0'>
 		<div class='medium-list'>
 			<div ng-repeat="track in model.getTracks()" style='color:{{track.colour}};'>
 				<span class='subtext'>GPX:{{ model.gpxForTrack(track).label() }}</span>

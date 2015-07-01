@@ -4,7 +4,8 @@ var Event = Object.freeze({
 
 	GPX_FILE_IMPORT_SUCCEEDED : guid(),
 	GPX_FILE_IMPORT_PROCESS_COMPLETED : guid(),
-	GPXS_LOADED : guid(),
+
+	GPX_LOADED : guid(),
 	GPXS_UNLOADED : guid(),
 
 	TRACKS_LOADED : guid(),
@@ -29,7 +30,6 @@ var Command = Object.freeze({
 
 	UPDATE_WAYPOINT_NAME : guid(),
 
-	LOAD_TRACKS : guid(),
 	LOAD_WAYPOINTS : guid(),
 
 	UNLOAD_TRACK : guid(),

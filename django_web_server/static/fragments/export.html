@@ -12,7 +12,7 @@
 		<div>
 			map
 		</div>
-		<div ng-show='tracks.length > 0'>
+		<div ng-show='model.getTracks().length > 0'>
 			<a href='#' ng-click='exportMap();'>export</a>
 		</div>
 	</div>
@@ -23,7 +23,7 @@
 		<div>
 			waypoints
 		</div>
-		<div ng-show='model.waypoints.length > 0'>
+		<div ng-show='model.getWaypoints().length > 0'>
 			<a href='#' ng-click='exportAllWaypoints();'>export all</a>
 		</div>
 	</div>
@@ -34,7 +34,7 @@
 		<div>
 			tracks
 		</div>
-		<div ng-show='tracks.length > 0'>
+		<div ng-show='model.getTracks().length > 0'>
 			<a href='#' ng-click='exportAllTracks();'>export all</a>
 		</div>
 	</div>

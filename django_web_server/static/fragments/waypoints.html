@@ -6,7 +6,7 @@
 
 	<br/>
 	<div class='header'>
-		loaded waypoints ({{ model.waypoints.length }})
+		loaded waypoints ({{ model.getWaypoints().length }})
 	</div>
 	<a href='#' class='underline' ng-click='exportAllWaypoints();'>export all as .GPX</a>
 	<a href='#' class='underline' ng-click='exportAllWaypointsAsTxt();'>export all as .TXT</a>
@@ -61,29 +61,4 @@
 		ui-grid-selection
 		class="grid-medium"
 	></div>
-
-<!-- 	<div ng-repeat='waypoint in filteredOrAll()'>
-		<span>{{ waypoint.lat.toFixed(6) }}, {{ waypoint.lon.toFixed(6) }}</span>
-		<a href='#' ng-click="selectPoint(waypoint)">{{ waypoint.name }} </a>
-	</div> -->
-
-
-	<!-- <div>
-		showing {{ filteredOrAll().length }} points of {{ model.waypoints.length }} in total (<a href='#' ng-click='showAll();'>show all</a>)
-	</div>
-	<div>							
-		<a href='#'
-			ng-click='exportAllWaypoints();'
-			>export all</a>
-		<a href='#'
-			ng-click='unloadAllWaypoints();'
-			>unload all</a>
-		<a href='#' 
-			ng-click='reloadWaypointsForTracks();'
-			>refresh</a>
-	</div>
-	<br/>
-	<div>
-		<a href='#' ng-click='gotoView(Views.MAP);'>map</a>
-	</div> -->
 </div>

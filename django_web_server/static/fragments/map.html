@@ -2,8 +2,7 @@
 	ng-show='view == Views.MAP'
 	ng-controller='MapController'
 	>
-
-	<div ng-show='(tracks.length == 0)'>
+	<div ng-show='(model.getTracks().length == 0)'>
 		<br/>
 		<span>no tracks loaded</span>
 		<br/>
@@ -13,7 +12,7 @@
 
 	<canvas id="MapCanvas"
 		class="map-canvas"
-		ng-show='tracks.length > 0'
+		ng-show='(model.getTracks().length > 0)'
 		>
 	</canvas>
 

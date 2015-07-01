@@ -1,8 +1,7 @@
 function GodController($rootScope, $scope, $http, $timeout) {
 
-	$scope.tracks = [];
-
 	$scope.model = new DataModel();
+	$scope.gpxEditor = new GPXEditor($scope.model.gpxs);
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// VIEWS	

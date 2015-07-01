@@ -37,7 +37,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 	$scope.gridOptions = {
 
-		data: $scope.$parent.model.waypoints,
+		data: $scope.$parent.model.getWaypoints(),
 
 		enableRowSelection: true,
 		multiSelect:false,
@@ -186,94 +186,16 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 		}
 	});
 
+	$rootScope.$on(Event.WAYPOINTS_LOADED, function(evt, data){
+		$scope.selectFirstGridRowDelayed();
+	});	
+
 	// UNLOAD
 
 	$scope.unloadAllWaypoints = function() {
 		$scope.model.waypoints.length = 0;
 		$rootScope.$emit(Event.WAYPOINTS_UNLOADED);
 	};	
-
-	// LOAD
-
-	$rootScope.$on(Command.LOAD_WAYPOINTS, function(evt, waypoints){
-		$scope.mergeNewPoints(waypoints);
-	});
-
-	// RELOAD FOR ALL TRACKS
-	
-	$scope.reloadWaypointsForTracks = function() {
-		$scope.model.waypoints.length = 0;
-
-		$scope.$parent.tracks.forEach(function(track) {
-			$scope.loadWaypointsForTrack(track.id);
-		});
-	};	
-
-	$scope.mergeNewPoints = function(newPoints) {
-
-		var changed = false;
-
-		newPoints.forEach(function(newPoint) {
-
-			var exists  = function(existing) { 
-				return false;s
-			};
-
-			if (!$scope.model.waypoints.containsWhere(exists)) {
-				$scope.model.waypoints.push(newPoint);
-				changed = true;
-			}
-		});
-
-		if (changed)  {
-			$rootScope.$emit(Event.WAYPOINTS_LOADED);
-		}
-
-		$scope.selectFirstGridRowDelayed();
-	};
-
-	$scope.getAndMergeForArea = function(minLat, maxLat, minLon, maxLon) {
-
-		var successFn = function(data) {	
-
-			var resultPoints = [];	
-
-			data.waypoints.forEach(function(wpd){
-				var wp = parseWaypointDict(wpd);
-				resultPoints.push(wp);
-			});
-
-			$scope.mergeNewPoints(resultPoints);
-
-			if (($scope.model.selectedPoint === undefined) || ($scope.model.selectedPoint === null))
-				$scope.selectFirstWaypoint();
-		};
-
-		var failureFn = function(message) { 
-			console.log(message) 
-		};
-
-		var errorFn = function(error){
-			$rootScope.$emit(Event.DEBUG_ERROR, error);
-		};
-
-		query = {
-			'minLat' : minLat,
-			'maxLat' : maxLat,
-			'minLon' : minLon,
-			'maxLon' : maxLon
-		};
-
-		httpGET($http, 'waypoints', query, successFn, failureFn, errorFn);
-	};
-
-	$scope.loadWaypointsForTrack = function(id) {
-
-		var track = $scope.$parent.tracks.filter(function(x) {return x.id == id;})[0];
-		if (track) {
-			$scope.getAndMergeForArea(track.minMaxLat.min, track.minMaxLat.max, track.minMaxLon.min, track.minMaxLon.max);
-		}
-	};
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// EXPORT

@@ -1,6 +1,10 @@
 function GpxController($rootScope, $scope, $http, $timeout) {
 
 	var model = $scope.$parent.model;
+	var gpxEditor = $scope.$parent.gpxEditor;
+
+	// ----------------------------------
+	// LOAD
 
 	$scope.loadGpx = function(id) {
 
@@ -8,19 +12,16 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 
 			var gpx = new GPX(data.xml, data.file_name);
 			gpx.id = data.id;
+			gpxEditor.loadGPX(gpx);
 
-			model.gpxs.push(gpx);
+			$rootScope.$emit(Event.GPX_LOADED);
 
-			// tracks
-			//
 			if (gpx.tracks.length > 0) {
-				$rootScope.$emit(Command.LOAD_TRACKS, gpx.tracks);
+				$rootScope.$emit(Event.TRACKS_LOADED);
 			}
 
-			// waypoints
-			//
 			if (gpx.waypoints.length > 0) {
-				$rootScope.$emit(Command.LOAD_WAYPOINTS, gpx.waypoints);
+				$rootScope.$emit(Event.WAYPOINTS_LOADED);
 			}
 
 			// select 1st row
@@ -44,6 +45,9 @@ function GpxController($rootScope, $scope, $http, $timeout) {
  	$rootScope.$on(Command.LOAD_GPX, function(evt, id) {
 		$scope.loadGpx(id);	
 	});
+
+	// ----------------------------------
+	// UNLOAD
 
 	$scope.unloadGpx = function(gpx) {
 		

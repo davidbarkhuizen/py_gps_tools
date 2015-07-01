@@ -8,21 +8,36 @@ function DataModel() {
 	this.gpxs = [];
 	this.selectedGpx = undefined;
 
-	this.waypoints = [];
+	var waypoints = [];
+	this.getWaypoints = function(){
+
+		var collated = [];
+		
+		that.gpxs.forEach(function(gpx) {
+			collated = collated.concat(gpx.waypoints);
+		});
+
+		waypoints.length = 0;
+		collated.forEach(function(waypoint){ waypoints.push(waypoint); });
+		return waypoints;
+	};
 	this.filteredWaypoints = [];
 
 	this.selectedPoint = undefined;
 
-	this.tracks = [];
+	var tracks = [];
 	this.getTracks = function() {
 
-		that.tracks.length = 0;
-
+		var collated = [];
+		
 		that.gpxs.forEach(function(gpx) {
-			that.tracks = that.tracks.concat(gpx.tracks);
+			collated = collated.concat(gpx.tracks);
 		});
 
-		return that.tracks;
+		tracks.length = 0;
+		collated.forEach(function(track){ tracks.push(track); });
+
+		return tracks;
 	};
 
 	this.otherGpxsForTrack = function(track) {
