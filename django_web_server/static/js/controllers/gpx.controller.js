@@ -17,7 +17,7 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 			$rootScope.$emit(Event.GPX_LOADED);
 
 			if (gpx.tracks.length > 0) {
-				$rootScope.$emit(Event.TRACKS_LOADED);
+				$rootScope.$emit(Event.TRACK_LOADED);
 			}
 
 			if (gpx.waypoints.length > 0) {

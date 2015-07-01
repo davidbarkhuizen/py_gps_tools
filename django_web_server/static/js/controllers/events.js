@@ -8,7 +8,7 @@ var Event = Object.freeze({
 	GPX_LOADED : guid(),
 	GPXS_UNLOADED : guid(),
 
-	TRACKS_LOADED : guid(),
+	TRACK_LOADED : guid(),
 	TRACKS_UNLOADED : guid(),
 
 	TRACK_SELECTED : guid(),

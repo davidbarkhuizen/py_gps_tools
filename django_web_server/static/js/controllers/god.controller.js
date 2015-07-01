@@ -74,7 +74,7 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	// -------------------------------------------------------------------
 	// TRACK
 
-	$rootScope.$on(Event.TRACKS_LOADED, function (evt) {
+	$rootScope.$on(Event.TRACK_LOADED, function (evt) {
 		$scope.view = Views.MAP;
 	});
 
