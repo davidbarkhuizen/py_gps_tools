@@ -6,6 +6,7 @@ function DataModel() {
 	that.selectedGpxinfo = null;
 
 	this.gpxs = [];
+	this.selectedGpx = undefined;
 
 	this.waypoints = [];
 	this.filteredWaypoints = [];

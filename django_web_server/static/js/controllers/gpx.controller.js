@@ -2,8 +2,6 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 
 	var model = $scope.$parent.model;
 
-	$scope.selectedGpx = undefined;
-
 	$scope.loadGpx = function(id) {
 
 		var successFn = function(data) {
@@ -27,7 +25,7 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 
 			// select 1st row
 			//
-			if (($scope.selectedGpx == undefined) || (model.gpxs.contains($scope.selectedGpx) == false)) {
+			if (($scope.model.selectedGpx == undefined) || (model.gpxs.contains($scope.model.selectedGpx) == false)) {
 				$scope.selectFirstGridRowDelayed();
 			}
 
@@ -49,8 +47,8 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 
 	$scope.unloadGpx = function(gpx) {
 		
-		if ($scope.selectedGpx == gpx)
-			$scope.selectedGpx = undefined;
+		if ($scope.model.selectedGpx == gpx)
+			$scope.model.selectedGpx = undefined;
 
 		$rootScope.$emit(Command.UNLOAD_GPX, gpx);
 	};
@@ -70,7 +68,7 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 
 		model.gpxs.forEach(function(gpx) {
 			if (gpx.id == id) {
-				$scope.selectedGpx = gpx;
+				$scope.model.selectedGpx = gpx;
 			}
 		});
 	};
