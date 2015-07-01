@@ -4,7 +4,7 @@
 	ng-controller='ElevationPlotController'
 	>
 
-	<div ng-show='(tracks.length == 0)'>
+	<div ng-show='(model.getTracks().length == 0)'>
 		<br/>
 		<span>no tracks loaded</span>
 		<br/>
@@ -15,7 +15,7 @@
 	<canvas
 		id="ElevationPlotCanvas"
 		class="elevation-canvas"
-		ng-show='(tracks.length > 0)'
+		ng-show='(model.getTracks().length > 0)'
 		>
 	</canvas>					
 </div>

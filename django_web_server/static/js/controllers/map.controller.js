@@ -1143,16 +1143,10 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.draw = function(context, width, height, discard) {
 
-		console.log('draw');
-
 		var tracks = model.getTracks();
 
 		var domain = $scope.measureDomain();
 		var range = $scope.measureRange(width, height);
-
-		console.dir('tracks ', tracks);
-		console.dir('domain ', domain);
-		console.dir('range ', range);
 
 		var scale = null;
 		// too tall, use y to scale
@@ -1229,8 +1223,6 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.drawMap = function() {
 
-		console.log('map - redraw');
-		
 		// TODO - fix ref to parent
 		var dims = $scope.$parent.getWindowDimensions();	
 		$scope.draw($scope.context, dims.width, dims.height);  
