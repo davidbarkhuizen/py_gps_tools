@@ -1,19 +1,10 @@
 function GpxController($rootScope, $scope, $http, $timeout) {
 
 	var model = $scope.$parent.model;
-	var tracks = $scope.$parent.tracks;
 
 	$scope.selectedGpx = undefined;
 
 	$scope.loadGpx = function(id) {
-
-		/*
-		var matches = $scope.$parent.tracks
-			.filter(function(track){return (track.id == id);});
-		
-		if (matches.length > 0)
-			return;
-		*/
 
 		var successFn = function(data) {
 

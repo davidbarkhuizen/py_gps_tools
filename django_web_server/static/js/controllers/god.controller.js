@@ -70,10 +70,6 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	// GPX IMPORT - EXPORT
 
 	$rootScope.$on(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED, function(evt) {
-
-		if ($scope.view == Views.IMPORT) {
-			// $scope.view = Views.GPX_DATABASE;
-		}
 	});
 
 	// -------------------------------------------------------------------
