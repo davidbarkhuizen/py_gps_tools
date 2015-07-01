@@ -2,15 +2,7 @@ function GodController($rootScope, $scope, $http, $timeout) {
 
 	$scope.tracks = [];
 
-	$scope.model = {
-		
-		gpxs : [],
-		gpxinfos : [],
-		waypoints : [],
-		filteredWaypoints : [],
-		
-		selectedPoint : undefined
-	};
+	$scope.model = new DataModel();
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// VIEWS	
