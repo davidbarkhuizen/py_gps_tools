@@ -10,11 +10,13 @@
 	</div>
 
 	<div>
+		<a href="#" ng-click='unloadAll();' class='underline'>unload all</a>
+	</div>
+	<div>
+		<a href="#" ng-click='gotoView(Views.GPX_DATABASE)' class='underline'>my gpxs</a>
 		<a href="#" ng-click='gotoView(Views.MAP)'>map</a>
 		<a href="#" ng-click='gotoView(Views.LOADED_TRACKS)'>tracks</a>
-		<a href="#" ng-click='gotoView(Views.LOADED_WAYPOINTS)'>waypoints</a>
-		<a href="#" ng-click='gotoView(Views.GPX_DATABASE)' class='underline'>my gpxs</a>
-		<a href="#" ng-click='unloadAll();' class='underline'>unload all</a>
+		<a href="#" ng-click='gotoView(Views.LOADED_WAYPOINTS)'>waypoints</a>		
 	</div>
 
 	<div id='SelectedGpx' style='text-align:left;margin:20px'>

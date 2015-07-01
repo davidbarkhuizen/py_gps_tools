@@ -9,7 +9,7 @@ var TrackColours = Object.freeze([
 
 function TracksController($rootScope, $scope, $http, $timeout) {
 
-	$scope.getTracks = function(track) {
+	$scope.getTracks = function() {
 
 		var tracks = [];
 
@@ -33,13 +33,28 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 		return otherGpxs;
 	};
 
+	$scope.gpxForTrack = function(track) {
+
+		var matchingGpx = null;
+
+		$scope.$parent.model.gpxs.forEach(function(gpx) {
+			if (gpx.tracks.indexOf(track) !== -1) {
+				matchingGpx = gpx;
+			}
+		});
+
+		return matchingGpx;
+	};
+
 	$scope.getUnusedTrackColour = function() {
 
 		var inUse = $scope.getTracks()
 			.map(function(x) { return x.colour; });
 
 		var unUsed = TrackColours
-			.filter(function(x) { return inUse.indexOf(x) == -1; });
+			.filter(function(x) { 
+				return ((x !== undefined) && (inUse.indexOf(x) == -1)); 
+			});
 
 		return (unUsed.length > 0) ? unUsed[0] : [Colour.BLACK];
 	};
@@ -108,4 +123,19 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 		var ids = $scope.$parent.tracks.map(function(track) { return track.id; });		
 		$rootScope.$emit(Command.EXPORT_TRACKS, { ids : ids });
 	};
+
+	// MAINTENANCE ACTIVITIES IN RESPONSE TO EVENTS
+
+	$scope.fixTracksWithNoColour = function() {
+
+		$scope.getTracks().forEach(function(track){
+			if (track.colour === undefined) {
+				track.colour = $scope.getUnusedTrackColour();
+			}
+		});
+	};
+
+	$rootScope.$on(Event.GPX_EDITED, function(evt, data) {
+		$scope.fixTracksWithNoColour();
+	});
 };

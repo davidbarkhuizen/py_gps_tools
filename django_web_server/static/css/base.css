@@ -10,6 +10,14 @@ html, body {
     font-weight: bold;
 }
 
+.text {
+    font-size: 20px;
+}
+
+.subtext {
+    font-size: 15px;
+}
+
 a 
 {
     text-decoration: none;

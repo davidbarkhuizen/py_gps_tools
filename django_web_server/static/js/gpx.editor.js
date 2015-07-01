@@ -238,8 +238,8 @@ function GPXEditor(gpxs, tracks, waypoints) {
 		var trk = toGpx.xmlDOM.importNode(track.node, true);
 		toGpx.node.appendChild(trk);
 
-		var track = new Track(trk);
-		toGpx.tracks.push(track);
+		var newTrack = new Track(trk);
+		toGpx.tracks.push(newTrack);
 	};
 
 	this.unloadGPX = function(gpx) {
