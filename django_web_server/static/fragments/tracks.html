@@ -5,7 +5,7 @@
 
 	<br/>
 	<div class='header'>
-		loaded tracks ({{ getTracks().length }})
+		loaded tracks ({{ model.getTracks().length }})
 	</div>
 	<div>	
 		<a href='#' ng-click='exportAllTracks();' class='underline'>export all</a>
@@ -18,8 +18,8 @@
 	
 	<div ng-show='tracks.length > 0'>
 		<div class='medium-list'>
-			<div ng-repeat="track in getTracks()" style='color:{{track.colour}};'>
-				<span class='subtext'>GPX:{{ gpxForTrack(track).label() }}</span>
+			<div ng-repeat="track in model.getTracks()" style='color:{{track.colour}};'>
+				<span class='subtext'>GPX:{{ model.gpxForTrack(track).label() }}</span>
 				<br/>
 				{{ track.name }}
 				<br/>
@@ -40,7 +40,7 @@
 					
 					<select
 						ng-model="copyInfo.gpxToCopyTo"
-						ng-options="gpx as gpx.label() for gpx in otherGpxsForTrack(track)">
+						ng-options="gpx as gpx.label() for gpx in model.otherGpxsForTrack(track)">
     				</select>
 					<a href='#' ng-click='copyTrackToGpx();'>copy</a>
 					<a href='#' ng-click='copyInfo.trackToCopy = undefined;'>cancel</a>

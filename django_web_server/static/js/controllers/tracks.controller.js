@@ -9,35 +9,13 @@ var TrackColours = Object.freeze([
 
 function TracksController($rootScope, $scope, $http, $timeout) {
 
-	$scope.getTracks = function() {
-
-		var tracks = [];
-
-		$scope.$parent.model.gpxs.forEach(function(gpx) {
-			tracks = tracks.concat(gpx.tracks);
-		});
-
-		return tracks;
-	};
-
-	$scope.otherGpxsForTrack = function(track) {
-
-		var otherGpxs = [];
-
-		$scope.$parent.model.gpxs.forEach(function(gpx) {
-			if (gpx.tracks.indexOf(track) == -1) {
-				otherGpxs.push(gpx);
-			}
-		});
-
-		return otherGpxs;
-	};
+	$scope.model = $scope.$parent.model;
 
 	$scope.gpxForTrack = function(track) {
 
 		var matchingGpx = null;
 
-		$scope.$parent.model.gpxs.forEach(function(gpx) {
+		$scope.model.gpxs.forEach(function(gpx) {
 			if (gpx.tracks.indexOf(track) !== -1) {
 				matchingGpx = gpx;
 			}
@@ -48,7 +26,7 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 
 	$scope.getUnusedTrackColour = function() {
 
-		var inUse = $scope.getTracks()
+		var inUse = $scope.model.getTracks()
 			.map(function(x) { return x.colour; });
 
 		var unUsed = TrackColours
@@ -128,7 +106,7 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 
 	$scope.fixTracksWithNoColour = function() {
 
-		$scope.getTracks().forEach(function(track){
+		$scope.model.getTracks().forEach(function(track){
 			if (track.colour === undefined) {
 				track.colour = $scope.getUnusedTrackColour();
 			}
