@@ -39,18 +39,33 @@
 			</div>
 		</div>
 		<div>
-			<a href='#' style='color:green;' ng-show='showEdit()' ng-click='edit()'>edit</a>
-			<a href='#' style='color:green;' ng-show='showSaveEdit()' ng-click='saveEdit()'>save edit</a>
-			<a href='#' style='color:green;' ng-show='showCancelEdit()' ng-click='cancelEdit()'>cancel edit</a>
-			
-			<a href='#' style='color:red;' ng-show='showDelete()' ng-click='getDeletionConfirmation(model.selectedPoint.id)'>delete</a>
-			<a href="#" ng-show='showDeleteConfirmationPrompt()' ng-click='delete();' style='color:red;'>confirm deletion</a>
-			<a href="#" ng-show='showDeleteConfirmationPrompt()' ng-click='cancelDelete()'>cancel</a>
-			<a
-				href='#'
-				ng-click='copySelectedWaypointCoordinatesToClipBoard()'
-				class='underline'
-			>copy to clipboard</a>
+			<a href='#' style='color:green;'
+				ng-show='showEdit()'
+				ng-click='edit()'
+				>edit</a>
+			<a href='#' style='color:green;'
+				ng-show='showSaveEdit()'
+				ng-click='saveEdit()'
+				>save edit</a>
+			<a href='#' style='color:green;'
+				ng-show='showCancelEdit()'
+				ng-click='cancelEdit()'
+				>cancel edit</a>			
+			<a href='#' style='color:red;'
+				ng-show='showDelete()'
+				ng-click='getDeletionConfirmation(model.selectedPoint.id)'
+				>delete</a>
+			<a href="#" style='color:red;'
+				ng-show='showDeleteConfirmationPrompt()'
+				ng-click='delete();'				
+				>confirm deletion</a>
+			<a href="#"
+				ng-show='showDeleteConfirmationPrompt()'
+				ng-click='cancelDelete()'
+				>cancel</a>
+			<a href='#' class='underline's
+				ng-click='copySelectedWaypointCoordinatesToClipBoard()'				
+				>copy to clipboard</a>
 		</div>
 	</div>
 

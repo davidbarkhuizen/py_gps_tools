@@ -163,7 +163,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
 			// select 1st row
 			//
-			if (($scope.model.selectedGpxinfo == undefined) || (gpxinfos.contains($scope.model.selectedGpxinfo) == false)) {
+			if (($scope.model.selectedGpxinfo == undefined) || ($scope.model.gpxinfos.contains($scope.model.selectedGpxinfo) == false)) {
 				$scope.selectFirstGridRowDelayed();
 			}
 		};

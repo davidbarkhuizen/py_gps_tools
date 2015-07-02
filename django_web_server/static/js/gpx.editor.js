@@ -101,10 +101,8 @@ function GPXEditor(gpxs) {
 	this.deleteWaypoint = function(waypoint) {
 
 		var gpx = this.gpxForWaypoint(waypoint);
-
-		// xml
-		//
 		waypoint.node.parentNode.removeChild(waypoint.node);
+		gpx.waypoints.removeWhere(function(x){ return (x === waypoint); });
 
 		gpx.edited = true;
 	};

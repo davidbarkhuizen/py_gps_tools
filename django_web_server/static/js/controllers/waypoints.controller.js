@@ -173,15 +173,17 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 	$scope.delete = function() {
 
 		$scope.deleting = false;
-		$rootScope.$emit(Event.WAYPOINT_DELETED);
-
 		$rootScope.$emit(Command.DELETE_WAYPOINT, $scope.model.selectedPoint);
 	};
 
 	$rootScope.$on(Event.WAYPOINT_DELETED, function(evt, waypoint) {
+
 		if ($scope.model.selectedPoint == waypoint) {
-			$scope.model.selectedPoint = ($scope.model.waypoints.length > 0)
-				? $scope.model.waypoints[0]
+			
+			var waypoints = $scope.model.getWaypoints(); 
+
+			$scope.model.selectedPoint = (waypoints.length > 0)
+				? waypoints[0]
 				: undefined;
 		}
 	});
