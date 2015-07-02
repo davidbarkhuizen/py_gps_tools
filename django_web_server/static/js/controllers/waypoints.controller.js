@@ -25,6 +25,19 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 		$scope.copyInfo.showCopyAll = false;
 	};
 
+	$scope.copyToGpx = function(waypoint, gpx) {
+
+		if ((model.gpxs.length == 1) || (gpx === null) || (gpx === undefined))
+			return;
+
+		$rootScope.$emit(Command.COPY_WAYPOINTS_TO_GPX, {
+			waypoints: [waypoint],
+			gpx: $scope.copyInfo.gpxToCopyTo
+		});
+
+		$scope.copyInfo.showCopyToGpx = false;
+	};
+
 	$scope.copySelectedWaypointCoordinatesToClipBoard = function() {
 		
 		if (($scope.model.selectedPoint === null) || ($scope.model.selectedPoint === undefined))

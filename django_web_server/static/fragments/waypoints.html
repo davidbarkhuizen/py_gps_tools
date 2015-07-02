@@ -59,27 +59,43 @@
 				ng-show='showEdit()'
 				ng-click='edit()'
 				>edit</a>
-			<a href='#' style='color:green;'
+			<a href='#' style='color:green;' class='underline'
 				ng-show='showSaveEdit()'
 				ng-click='saveEdit()'
 				>save edit</a>
-			<a href='#' style='color:green;'
+			<a href='#' style='color:green;' class='underline'
 				ng-show='showCancelEdit()'
 				ng-click='cancelEdit()'
-				>cancel edit</a>			
+				>cancel edit</a>	
+
 			<a href='#' style='color:red;'
 				ng-show='showDelete()'
 				ng-click='getDeletionConfirmation(model.selectedPoint.id)'
 				>delete</a>
-			<a href="#" style='color:red;'
+			<a href="#" style='color:red;' class='underline'
 				ng-show='showDeleteConfirmationPrompt()'
 				ng-click='delete();'				
-				>confirm deletion</a>
-			<a href="#"
+				>confirm delete</a>
+			<a href="#" class='underline'
 				ng-show='showDeleteConfirmationPrompt()'
 				ng-click='cancelDelete()'
-				>cancel</a>
-			<a href='#' class='underline's
+				>cancel delete</a>
+
+			<!-- COPY TO .GPX -->
+			<a href='#' class='underline'
+				ng-show='(model.gpxs.length > 1)'
+				ng-click='copyInfo.showCopyToGpx = true;'
+				>copy to .GPX</a>
+			<span ng-show='(copyInfo.showCopyToGpx === true)'>		
+				<select
+					ng-model="copyInfo.gpxToCopyTo"
+					ng-options="gpx as gpx.label() for gpx in model.gpxs">
+				</select>
+				<a href='#' ng-click='copyToGpx(model.selectedPoint, copyInfo.gpxToCopyTo);'>copy</a>
+				<a href='#' ng-click='copyInfo.showCopyAll = false;'>cancel copy</a>
+			</span>
+
+			<a href='#' class='underline'
 				ng-click='copySelectedWaypointCoordinatesToClipBoard()'				
 				>copy to clipboard</a>
 		</div>
