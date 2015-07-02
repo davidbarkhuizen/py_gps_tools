@@ -24,6 +24,8 @@ var Event = Object.freeze({
 });
 
 var Command = Object.freeze({
+
+	COPY_WAYPOINTS_TO_GPX : guid(),
 	
 	LOAD_GPX : guid(),
 	UNLOAD_GPX : guid(),

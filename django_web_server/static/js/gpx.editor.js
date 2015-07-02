@@ -84,6 +84,22 @@ function GPXEditor(gpxs) {
 		return undefined;
 	};
 
+	// WAYPOINTS ------------------------------------------------
+
+	this.copyWaypointsToGpx = function(waypoints, gpx) {
+
+		waypoints
+			.filter(function(x){ return (that.gpxForWaypoint(x) !== gpx); })
+			.forEach(function(waypoint) {
+
+				var wpt = gpx.xmlDOM.importNode(waypoint.node, true);
+				gpx.node.appendChild(wpt);
+
+				var newWaypoint = new Point(wpt);
+				gpx.waypoints.push(newWaypoint);
+			});
+	};
+
 	this.updateWaypointName = function(waypoint, newName) {
 
 		// xml
@@ -107,6 +123,8 @@ function GPXEditor(gpxs) {
 		gpx.edited = true;
 	};
 
+	// TRACKS ------------------------------------------------
+
 	this.deleteTrack = function(track) {
 
 		var gpx = this.gpxForTrack(track);
@@ -121,6 +139,19 @@ function GPXEditor(gpxs) {
 
 		gpx.edited = true;
 	};
+
+	this.copyTrackToGpx = function(track, toGpx) {
+
+		var fromGpx = that.gpxForTrack(track);
+
+		var trk = toGpx.xmlDOM.importNode(track.node, true);
+		toGpx.node.appendChild(trk);
+
+		var newTrack = new Track(trk);
+		toGpx.tracks.push(newTrack);
+	};
+
+	// TRACKS SEGMENT ------------------------------------------------
 
 	this.deleteTrackSegmentSection = function(pathSelectionType, endPoints) {
 
@@ -235,16 +266,7 @@ function GPXEditor(gpxs) {
 		gpx.edited = true;
 	};
 
-	this.copyTrackToGpx = function(track, toGpx) {
-
-		var fromGpx = that.gpxForTrack(track);
-
-		var trk = toGpx.xmlDOM.importNode(track.node, true);
-		toGpx.node.appendChild(trk);
-
-		var newTrack = new Track(trk);
-		toGpx.tracks.push(newTrack);
-	};
+	// GPX ------------------------------------------------
 
 	this.unloadGPX = function(gpx) {
 

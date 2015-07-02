@@ -9,6 +9,15 @@ function GpxEditorController($rootScope, $scope, $http, $timeout) {
 		$rootScope.$emit(Event.GPX_EDITED);
 	});
 
+	// COPY_WAYPOINTS_TO_GPX
+	// 
+	$scope.copyWaypointsToGpx = function(waypoints, gpx) {
+		gpxEditor.copyWaypointsToGpx(waypoints, gpx);
+	};
+	$rootScope.$on(Command.COPY_WAYPOINTS_TO_GPX, function(evt, data) {
+		$scope.copyWaypointsToGpx(data.waypoints, data.gpx);
+	});
+
  	// UPDATE_WAYPOINT_NAME
  	//
 	$scope.updateWaypointName = function(waypoint, name) {

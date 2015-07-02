@@ -1,8 +1,29 @@
 function WaypointsController($rootScope, $scope, $http, $timeout) {
 
+	var model = $scope.$parent.model;
 	$scope.model = $scope.$parent.model; 
 
 	$scope.dateValToTimeString = dateValToTimeString;
+
+	// COPY
+
+	$scope.copyInfo = {
+		showCopyAll: false,
+		gpxToCopyTo: null
+	};
+
+	$scope.copyAllToGpx = function() {
+
+		if ((model.gpxs.length == 1) || ($scope.copyInfo.gpxToCopyTo === null))
+			return;
+
+		$rootScope.$emit(Command.COPY_WAYPOINTS_TO_GPX, {
+			waypoints: model.getWaypoints(),
+			gpx: $scope.copyInfo.gpxToCopyTo
+		});
+
+		$scope.copyInfo.showCopyAll = false;
+	};
 
 	$scope.copySelectedWaypointCoordinatesToClipBoard = function() {
 		
@@ -171,26 +192,9 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 		return ($scope.model.selectedPoint) && ($scope.deleting == true);
 	};
 	$scope.delete = function() {
-
 		$scope.deleting = false;
 		$rootScope.$emit(Command.DELETE_WAYPOINT, $scope.model.selectedPoint);
 	};
-
-	$rootScope.$on(Event.WAYPOINT_DELETED, function(evt, waypoint) {
-
-		if ($scope.model.selectedPoint == waypoint) {
-			
-			var waypoints = $scope.model.getWaypoints(); 
-
-			$scope.model.selectedPoint = (waypoints.length > 0)
-				? waypoints[0]
-				: undefined;
-		}
-	});
-
-	$rootScope.$on(Event.WAYPOINTS_LOADED, function(evt, data){
-		$scope.selectFirstGridRowDelayed();
-	});	
 
 	// UNLOAD
 
@@ -211,4 +215,23 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 		var data = { waypoints : $scope.model.waypoints, fileName : fileName, format : 'TXT' };
 		$rootScope.$emit(Command.EXPORT_WAYPOINTS, data);
 	};
+
+	// DATA MODEL CHANGED
+
+	$rootScope.$on(Event.WAYPOINT_DELETED, function(evt, waypoint) {
+
+		if ($scope.model.selectedPoint == waypoint) {
+			
+			var waypoints = $scope.model.getWaypoints(); 
+
+			$scope.model.selectedPoint = (waypoints.length > 0)
+				? waypoints[0]
+				: undefined;
+		}
+	});
+
+	$rootScope.$on(Event.WAYPOINTS_LOADED, function(evt, data){
+
+		$scope.selectFirstGridRowDelayed();
+	});
 }
