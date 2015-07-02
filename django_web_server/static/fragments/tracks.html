@@ -13,40 +13,44 @@
 		<a href="#" ng-click='gotoView(Views.GPX_DATABASE);' class='underline'>my gpxs</a>
 	</div>
 
-	</br>
-	
+	<br/>
+
 	<div ng-show='model.getTracks().length > 0'>
 		<div class='medium-list'>
 			<div ng-repeat="track in model.getTracks()" style='color:{{track.colour}};'>
-				<span class='subtext'>GPX:{{ model.gpxForTrack(track).label() }}</span>
+				<hr ng-show='model.getTracks().indexOf(track) !== 0' style='width:50%;'/>
+				<div>
+					{{ track.name }}
+				</div>
+				<div>
+					<a href='#' ng-click='unloadTrack(track);'>unload</a>
+					<a href='#' ng-click='exportTrack(track);'>export</a>
+					<a href='#' ng-show='(model.gpxs.length > 1)' ng-click='copyInfo.trackToCopy = track;'>copy to gpx</a>
+					<span ng-show='(copyInfo.trackToCopy === track)'>					
+						<select
+							ng-model="copyInfo.gpxToCopyTo"
+							ng-options="gpx as gpx.label() for gpx in model.otherGpxsForTrack(track)">
+	    				</select>
+						<a href='#' ng-click='copyTrackToGpx();'>copy</a>
+						<a href='#' ng-click='copyInfo.trackToCopy = undefined;'>cancel</a>
+					</span>
+				</div>
+				<div class='subtext'>
+					GPX:  {{ model.gpxForTrack(track).label() }}
+				</div>
 				<br/>
-				{{ track.name }}
-				<br/>
-				{{ (track.totalDistanceM / 1000.0).toFixed(2) }} km
-				<br/>
-				vertical range = {{ track.eleDiff.toFixed(0) }} m (between {{ track.minMaxEle.min.toFixed(0) }} m and {{ track.minMaxEle.max.toFixed(0) }} m)
-				<br/>
-				{{ track.durationString }}
+				<div>
+					Total Distance:  {{ (track.totalDistanceM / 1000.0).toFixed(2) }} km
+				</div>
+				<div>
+					Vertical Range:  {{ track.eleDiff.toFixed(0) }} m (between {{ track.minMaxEle.min.toFixed(0) }} m and {{ track.minMaxEle.max.toFixed(0) }} m)
+				</div>
+				Duration:  {{ track.durationString }}
 				<br/>
 				{{ track.segments.length }} Track Segments
 				<div ng-repeat='segment in track.segments'>
 					{{ track.segments.indexOf(segment) + 1 }} - {{ segment.points.length }} points
 				</div>
-					<a href='#' ng-click='unloadTrack(track);'>unload</a>
-				<a href='#' ng-click='exportTrack(track);'>export</a>
-				<a href='#' ng-show='(model.gpxs.length > 1)' ng-click='copyInfo.trackToCopy = track;'>copy to gpx</a>
-				<span ng-show='(copyInfo.trackToCopy === track)'>
-					
-					<select
-						ng-model="copyInfo.gpxToCopyTo"
-						ng-options="gpx as gpx.label() for gpx in model.otherGpxsForTrack(track)">
-    				</select>
-					<a href='#' ng-click='copyTrackToGpx();'>copy</a>
-					<a href='#' ng-click='copyInfo.trackToCopy = undefined;'>cancel</a>
-				</span>
-
-				<br/>
-				<br/>
 			</div>
 		</div>
 	</div>
