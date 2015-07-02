@@ -45,19 +45,4 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 		var ids = $scope.$parent.tracks.map(function(track) { return track.id; });		
 		$rootScope.$emit(Command.EXPORT_TRACKS, { ids : ids });
 	};
-
-	// MAINTENANCE ACTIVITIES IN RESPONSE TO EVENTS
-
-	$scope.fixTracksWithNoColour = function() {
-
-		$scope.model.getTracks().forEach(function(track){
-			if (track.colour === undefined) {
-				track.colour = $scope.getUnusedTrackColour();
-			}
-		});
-	};
-
-	$rootScope.$on(Event.GPX_EDITED, function(evt, data) {
-		$scope.fixTracksWithNoColour();
-	});
 };

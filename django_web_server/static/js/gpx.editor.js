@@ -148,6 +148,7 @@ function GPXEditor(gpxs) {
 		toGpx.node.appendChild(trk);
 
 		var newTrack = new Track(trk);
+		newTrack.colour = that.getUnusedTrackColour();
 		toGpx.tracks.push(newTrack);
 	};
 
