@@ -85,7 +85,8 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 				name: 'gpx',
 				enableHiding: false,
 				enableFiltering: false,
-				cellTemplate: '<span>{{ grid.appScope.$parent.gpxEditor.gpxForWaypoint(row.entity).label() }}</span>'
+				cellTemplate: '<span>{{ grid.appScope.$parent.gpxEditor.gpxForWaypoint(row.entity).label() }}</span>',
+				enableCellEdit: false,
 			},
 			{
 				name: 'time',
@@ -94,6 +95,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 				enableHiding: false,
 				enableFiltering: false,
+				enableCellEdit: false,
 			},
 			{
 				name: 'latitude',
@@ -101,6 +103,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 				enableHiding: false,
 				enableFiltering: false,
+				enableCellEdit: false,
 			},
 			{
 				name: 'longitude',
@@ -108,6 +111,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 				enableHiding: false,
 				enableFiltering: false,
+				enableCellEdit: false,
 			},
 			{
 				name: 'name',
@@ -115,7 +119,8 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 				enableHiding: false,
 				enableFiltering: true,
-				filter: { condition: basicFilter }
+				filter: { condition: basicFilter },
+				enableCellEdit: true,
 			}
 		],
 
@@ -123,69 +128,33 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 			$scope.gridApi = gridApi;
 
+			// selection.on.rowSelectionChanged
+			//
 			gridApi.selection.on.rowSelectionChanged($scope, function(row){
-
 				$scope.selectWaypoint(row.entity);
 			});
+
+			// edit.on.afterCellEdit
+			//
+          	gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
+	            
+          		var editable = ['name'];
+          		if (editable.indexOf(colDef.field) == -1)
+          			return;
+
+      			switch (colDef.field) {
+					case 'name':
+						$rootScope.$emit(Command.UPDATE_WAYPOINT_NAME, { waypoint: rowEntity, name: newValue });
+						break;
+				}
+          	});
 	    },
 	};
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// EDIT
 
-	$scope.editing = false;
-	$scope.editCopy = null;
-
-	var kcEnter = 13, kcEsc = 27;
-	$scope.editKeyPress = function(evt) {
-		if (evt.charCode == 0) {
-			if (evt.keyCode == kcEnter) $scope.saveEdit();
-			else if (evt.keyCode == kcEsc) $scope.cancelEdit();
-		}
-	};
-
-	$scope.showEdit = function() { 
-		return !($scope.editing || $scope.deleting) 
-	};
-	$scope.edit = function() { 
-
-		if (!$scope.model.selectedPoint) return;
-
-		$scope.editCopy = JSON.parse(JSON.stringify($scope.model.selectedPoint)); 
-
-		$timeout(function() { focusOnId('EditWaypointName'); }, 10);
-
-		$scope.deleting = false;
-		$scope.editing = true;
-	};
-
-	$scope.showSaveEdit = function() { 
-
-		var x =   
-			(
-			($scope.editing == true) 
-			&& 
-			(JSON.stringify($scope.editCopy) !== JSON.stringify($scope.model.selectedPoint))
-			);
-
-		return x;
-	};
-
-	$scope.saveEdit = function() {
-
-		//$scope.model.selectedPoint.name = $scope.editCopy.name;
-		$scope.editing = false;
-
-		$rootScope.$emit(Command.UPDATE_WAYPOINT_NAME, { waypoint: $scope.model.selectedPoint, name: $scope.editCopy.name});
-	};
-
-	$scope.showCancelEdit = function() {
-		return $scope.editing;
-	};
-
-	$scope.cancelEdit = function() {
-		$scope.editing = false;
-	};
+	// $rootScope.$emit(Command.UPDATE_WAYPOINT_NAME, { waypoint: $scope.model.selectedPoint, name: $scope.editCopy.name});
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// DELETE

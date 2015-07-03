@@ -102,16 +102,15 @@ function GPXEditor(gpxs) {
 
 	this.updateWaypointName = function(waypoint, newName) {
 
-		// xml
-		//
 		setChildNodeText(waypoint.node, 'name', newName);
 
-		// model
-		//
-		waypoint.name = newName;
+		var gpx = that.gpxForWaypoint(waypoint);
 
-		waypoint.edited = true;
-		this.gpxForWaypoint(waypoint).edited = true;
+		var updatedPoint = new Point(waypoint.node);		
+		gpx.waypoints[gpx.waypoints.indexOf(waypoint)] = updatedPoint;
+
+		updatedPoint.edited = true;
+		gpx.edited = true;
 	};
 
 	this.deleteWaypoint = function(waypoint) {

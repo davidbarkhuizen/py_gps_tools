@@ -1,7 +1,6 @@
 function GpxExportController($rootScope, $scope, $http) {
 
 	var model = $scope.$parent.model;
-	var tracks = $scope.$parent.tracks;
 
 	$scope.exportCanvas = function(canvas, fileName) {
 
@@ -43,7 +42,7 @@ function GpxExportController($rootScope, $scope, $http) {
 	$scope.exportWaypointSetAsGpx = function(waypoints, fileName) {
 		fileName = (fileName === undefined) ? 'gpxmaps.net.waypoints.gpx' : fileName;
 		
-		var xml = waypointsToGpxs(waypoints);
+		var xml = waypointsToGpx(model.getWaypoints());
 		$scope.exportXML(xml, fileName);
 	};
 
@@ -51,7 +50,7 @@ function GpxExportController($rootScope, $scope, $http) {
 		fileName = (fileName === undefined) ? 'gpxmaps.net.waypoints.txt' : fileName;
 		
 		var lines = [];
-		waypoints.forEach(function(wpt){ lines.push(wpt.toStr()); });
+		model.getWaypoints().forEach(function(wpt){ lines.push(wpt.toStr()); });
 		var txt = lines.join('\r\n');
 
 		$scope.exportXML(txt, fileName, 'text/xml');
