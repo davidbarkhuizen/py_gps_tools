@@ -33,9 +33,13 @@
 	<div id='SelectedWaypoint'>
 		<div>
 			<div class='header'>
-				<div style='padding-top:1px;margin-bottom:9px;'>
 				{{ (model.selectedPoint === undefined) ? "no point selected" : model.selectedPoint.name }}
-				</div>
+			</div>
+			<div>
+				lat {{ model.selectedPoint.lat }}, lon {{ model.selectedPoint.lon }}
+			</div>
+			<div>
+				{{  (model.selectedPoint === undefined) ? '-' : dateValToTimeString(model.selectedPoint.time) }}
 			</div>
 		</div>
 		<div>

@@ -69,6 +69,12 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 		$timeout($scope.selectFirstGridRow, 0);
 	};
 
+	// DELETE WAYPOINT
+	//
+	var deleteIconSrcRef = '/static/img/icon/black_button/button_black_delete_16.png';
+	var deleteIconImgTemplate = '<img ng-src="' + deleteIconSrcRef + '">';
+	var deleteCellTemplate = '<div style="padding-top:5px;"><a href="#" title="delete" ng-click="grid.appScope.delete(row.entity)" ">' + deleteIconImgTemplate + '</a></div>';
+
 	$scope.gridOptions = {
 
 		data: $scope.$parent.model.getWaypoints(),
@@ -81,6 +87,16 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 		enableFiltering: true,
 
 		columnDefs: [
+			{ 	
+				name: 'delete',
+				width: '40', 
+				cellTemplate: deleteCellTemplate,
+				headerCellTemplate: '<span></span>',
+				enableSorting: false, 
+				enableHiding: false,
+				enableFiltering: false,
+				enableCellEdit: false,
+			},
 			{
 				name: 'gpx',
 				enableHiding: false,
@@ -159,31 +175,9 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// DELETE
 
-	$scope.deleting = false;
-
-	$scope.showDelete = function() { return !($scope.editing || $scope.deleting) };
-
-	$scope.cancelDelete = function() {
-		$scope.deleting = false;
+	$scope.delete = function(waypoint) {
+		$rootScope.$emit(Command.DELETE_WAYPOINT, waypoint);
 	};
-
-	$scope.getDeletionConfirmation = function() {
-		$scope.deleting = true;
-	};
-	$scope.showDeleteConfirmationPrompt = function() {
-		return ($scope.model.selectedPoint) && ($scope.deleting == true);
-	};
-	$scope.delete = function() {
-		$scope.deleting = false;
-		$rootScope.$emit(Command.DELETE_WAYPOINT, $scope.model.selectedPoint);
-	};
-
-	// UNLOAD
-
-	$scope.unloadAllWaypoints = function() {
-		$scope.model.waypoints.length = 0;
-		$rootScope.$emit(Event.WAYPOINTS_UNLOADED);
-	};	
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// EXPORT
