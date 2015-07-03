@@ -235,10 +235,25 @@ function GPX(xml, fileName) {
 		that.name = getChildNodeText(metadata, 'name');
 	};
 
+	this.parseAndSetMetaDataDesc = function() {
+
+		that.desc = null;
+
+		var metadata = that.getMetaDataNode();
+		if (metadata === undefined)
+			return;
+
+		that.desc = getChildNodeText(metadata, 'desc');
+	};
+
 	// metadata
 	//
 	var metadatas = this.xmlDOM.getElementsByTagName('metadata');
 	if (metadatas.length > 0) {
+
+		that.parseAndSetMetaDataName();
+		that.parseAndSetMetaDataDesc();
+
 		var metadata = metadatas[0];
 
 		var timeStr = getChildNodeText(metadata, 'time');
@@ -248,8 +263,6 @@ function GPX(xml, fileName) {
 
 		this.desc = getChildNodeText(metadata, 'desc'); 
 		this.keywords = getChildNodeText(metadata, 'keywords'); 
-
-		this.parseAndSetMetaDataName();
 	}
 
 	// trk
@@ -353,6 +366,30 @@ function GPX(xml, fileName) {
 		// MODEL
 
 		that.parseAndSetMetaDataName();
+	}
+
+	this.createUpdateMetaDataDescNode = function(desc) {
+
+		// XML
+
+		var metadata = that.getCreateMetaDataNode();		
+
+		var descNode = null;
+		var descs = metadata.getElementsByTagName('desc');
+		if (descs.length > 0) {
+			// ALREADY EXISTS
+			descNode = descs[0];
+		} else {
+			// DNE
+			descNode = that.xmlDOM.createElement('desc');
+			metadata.appendChild(descNode);
+		}
+
+		descNode.innerHTML = desc;
+
+		// MODEL
+
+		that.parseAndSetMetaDataDesc();
 	}
 }
 

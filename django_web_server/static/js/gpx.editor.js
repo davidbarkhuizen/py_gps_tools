@@ -300,12 +300,11 @@ function GPXEditor(gpxs) {
 
 	this.updateGpxName = function(gpx, name) {
 		gpx.createUpdateMetaDataNameNode(name);
+		gpx.edited = true;
 	};
 
 	this.updateGpxDesc = function(gpx, desc) {
-		// check if node already exists
-		// - if so, update
-		// - if not, create and set (may have to create metadata node)
-		// update model
+		gpx.createUpdateMetaDataDescNode(desc);
+		gpx.edited = true;
 	};
 }
