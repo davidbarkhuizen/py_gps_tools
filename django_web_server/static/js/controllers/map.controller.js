@@ -286,7 +286,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 		var matches = [];
 
-		model.tracks.forEach(function(track){
+		model.getTracks().forEach(function(track){
 
 			if (matches.length > 0)
 					return;
