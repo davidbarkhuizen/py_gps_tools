@@ -212,7 +212,28 @@ function GPX(xml, fileName) {
 	if (gpxs.length != 1)
 		throw "expected one and only one gpx element in a file";
 
-	this.node = gpxs[0]; 
+	this.node = gpxs[0];
+
+	that.getMetaDataNode = function() {
+
+		var metadatas = that.xmlDOM.getElementsByTagName('metadata');
+
+		if (metadatas.length == 0)
+			return undefined;
+
+		return metadatas[0];
+	};
+
+	this.parseAndSetMetaDataName = function() {
+
+		that.name = null;
+
+		var metadata = that.getMetaDataNode();
+		if (metadata === undefined)
+			return;
+
+		that.name = getChildNodeText(metadata, 'name');
+	};
 
 	// metadata
 	//
@@ -226,8 +247,9 @@ function GPX(xml, fileName) {
 			: undefined;
 
 		this.desc = getChildNodeText(metadata, 'desc'); 
-		this.name = getChildNodeText(metadata, 'name'); 
 		this.keywords = getChildNodeText(metadata, 'keywords'); 
+
+		this.parseAndSetMetaDataName();
 	}
 
 	// trk
@@ -287,6 +309,51 @@ function GPX(xml, fileName) {
 	this.toXml = function() {
 		return new XMLSerializer().serializeToString(that.xmlDOM);
 	};
+
+	this.getCreateMetaDataNode = function() {
+
+		// metadata
+		//
+		var metadatas = that.xmlDOM.getElementsByTagName('metadata');
+		
+		// already exists
+		//
+		if (metadatas.length > 0) 
+			return metadatas[0];
+
+		// DNE, create
+		//
+		var gpx = that.xmlDOM.getElementsByTagName('gpx')[0];
+		var metadata = that.xmlDOM.createElement('metadata');
+		gpx.appendChild(metadata);
+
+		return metadata;
+	};
+
+	this.createUpdateMetaDataNameNode = function(name) {
+
+		// XML
+
+		var metadata = that.getCreateMetaDataNode();		
+
+		var nameNode = null;
+
+		var names = metadata.getElementsByTagName('name');
+		if (names.length > 0) {
+			// ALREADY EXISTS
+			nameNode = names[0];
+		} else {
+			// DNE
+			nameNode = that.xmlDOM.createElement('name');
+			metadata.appendChild(nameNode);
+		}
+
+		nameNode.innerHTML = name;
+
+		// MODEL
+
+		that.parseAndSetMetaDataName();
+	}
 }
 
 // --------------------------------------------------------------------------

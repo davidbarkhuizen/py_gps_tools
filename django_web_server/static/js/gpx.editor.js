@@ -293,17 +293,13 @@ function GPXEditor(gpxs) {
 		that.gpxs.push(gpx);
 	}
 
-	this.updateGpxFileName = function(gpx, fileName) {
-		
+	this.updateGpxFileName = function(gpx, fileName) {		
 		gpx.fileName = fileName;
 		gpx.edited = true;
 	};
 
 	this.updateGpxName = function(gpx, name) {
-		// check if node already exists
-		// - if so, update
-		// - if not, create and set (may have to create metadata node)
-		// update model
+		gpx.createUpdateMetaDataNameNode(name);
 	};
 
 	this.updateGpxDesc = function(gpx, desc) {

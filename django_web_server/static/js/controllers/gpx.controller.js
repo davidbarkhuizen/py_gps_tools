@@ -212,16 +212,15 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 
       			switch (colDef.field) {
 					case 'fileName':
+						$rootScope.$emit(Command.UPDATE_GPX_FILENAME, { gpx: rowEntity, fileName: newValue});
 						break;
 					case 'name':
+						$rootScope.$emit(Command.UPDATE_GPX_NAME, { gpx: rowEntity, name: newValue});
 						break;
 					case 'desc':
+						$rootScope.$emit(Command.UPDATE_GPX_DESC, { gpx: rowEntity, desc: newValue});
 						break;
 				}
-
-          		// var gpx = model.gpxs.first(function(x){ return (x.id === rowEntity.id); });
-
-
           	});
 	    },
 	};
