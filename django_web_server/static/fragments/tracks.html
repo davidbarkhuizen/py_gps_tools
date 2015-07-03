@@ -22,10 +22,17 @@
 				<div>
 					{{ track.name }}
 				</div>
+				<div class='subtext'>
+					GPX:  {{ model.gpxForTrack(track).label() }}
+				</div>
 				<div>
 					<a href='#' ng-click='unloadTrack(track);'>unload</a>
 					<a href='#' ng-click='exportTrack(track);'>export</a>
-					<a href='#' ng-show='(model.gpxs.length > 1)' ng-click='copyInfo.trackToCopy = track;'>copy to gpx</a>
+					<a href='#'
+						ng-show='(model.gpxs.length > 1)'
+						ng-click='copyInfo.trackToCopy = track;'
+						class='underline'
+						>copy to gpx</a>
 					<span ng-show='(copyInfo.trackToCopy === track)'>					
 						<select
 							ng-model="copyInfo.gpxToCopyTo"
@@ -34,9 +41,6 @@
 						<a href='#' ng-click='copyTrackToGpx();'>copy</a>
 						<a href='#' ng-click='copyInfo.trackToCopy = undefined;'>cancel</a>
 					</span>
-				</div>
-				<div class='subtext'>
-					GPX:  {{ model.gpxForTrack(track).label() }}
 				</div>
 				<br/>
 				<div>
