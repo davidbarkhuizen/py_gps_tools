@@ -250,8 +250,20 @@ a
     text-align:left;
 }
 
-.grid-medium {
+.grid {
     font-size: 15px;
+}
+
+.grid-short {
+    height:150px;
+}
+
+.grid-medium {
+    height:300px;
+}
+
+.grid-long {
+    height:450px;
 }
 
 /* -------------------------------------------------------*/

@@ -1,5 +1,7 @@
 var Event = Object.freeze({
 
+	DATA_MODEL_CHANGED : guid(),
+
 	DEBUG_ERROR : guid(),
 
 	GPX_FILE_IMPORT_SUCCEEDED : guid(),
@@ -27,8 +29,14 @@ var Command = Object.freeze({
 
 	COPY_WAYPOINTS_TO_GPX : guid(),
 	
+	// GPX
+	//
 	LOAD_GPX : guid(),
 	UNLOAD_GPX : guid(),
+	// EDIT
+	UPDATE_GPX_FILENAME : guid(),
+	UPDATE_GPX_NAME : guid(),
+	UPDATE_GPX_DESC : guid(),
 
 	UPDATE_WAYPOINT_NAME : guid(),
 
@@ -41,10 +49,11 @@ var Command = Object.freeze({
 
 	// ---------------------------------------------------------
 
-	EXPORT_WAYPOINTS : guid(),
-	EXPORT_MAP : guid(),
+	EXPORT_GPX : guid(),	
 	EXPORT_TRACKS : guid(),
+	EXPORT_WAYPOINTS : guid(),
 
+	EXPORT_MAP : guid(), // TODO how do these differ ?
 	EXPORT_CANVAS : guid(),
 
 	GOTO_VIEW : guid(),

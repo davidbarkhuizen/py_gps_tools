@@ -1,4 +1,4 @@
-var GPXMapsControllers = angular.module('GPXMapsControllers', ['ui.grid', 'ui.grid.selection']);
+var GPXMapsControllers = angular.module('GPXMapsControllers', ['ui.grid', 'ui.grid.selection', 'ui.grid.edit']);
 
 var commonDependencies = [ '$rootScope', '$scope', '$http', '$timeout']; 
 

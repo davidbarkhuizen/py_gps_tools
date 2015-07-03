@@ -63,6 +63,12 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 		gpxs.forEach(function(gpx){ $scope.unloadGpx(gpx); });
 	};
 
+	// EXPORT
+
+	$scope.exportGpx = function(gpx) {
+		$rootScope.$emit(Command.EXPORT_GPX, { gpx: gpx });
+	};
+
 	// GRID -----------------------
 
 	$scope.selectGpx = function(id) {
@@ -84,11 +90,29 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 		$timeout($scope.selectFirstGridRow, 0);
 	};
 
-	var unloadIconSrcRef = '/static/img/icon/delete_16.png';
+	// GRID UNLOAD
+	//
+	var unloadIconSrcRef = '/static/img/icon/black_button/button_black_delete_16.png';
 	var unloadIconImgTemplate = '<img ng-src="' + unloadIconSrcRef + '">';
-	var unloadCellTemplate = '<div style="padding-top:5px;"><a href="#" ng-click="grid.appScope.unloadGpx(row.entity)" ">' + unloadIconImgTemplate + '</a></div>';
+	var unloadCellTemplate = '<div style="padding-top:5px;"><a href="#" title="unload" ng-click="grid.appScope.unloadGpx(row.entity)" ">' + unloadIconImgTemplate + '</a></div>';
+
+	// GRID EXPORT
+	//
+	var exportIconSrcRef = '/static/img/icon/black_button/button_black_down_16.png';
+	var exportIconImgTemplate = '<img ng-src="' + exportIconSrcRef + '">';
+	var exportCellTemplate = '<div style="padding-top:5px;"><a href="#" title="export" ng-click="grid.appScope.exportGpx(row.entity)" ">' + exportIconImgTemplate + '</a></div>';
 
 	$scope.gridApi = undefined;
+
+	$scope.updateGpxFileName = function(gpx, newFileName) {
+		$rootScope.$emit(Command.UPDATE_GPX_FILENAME, { gpx: gpx, fileName: newFileName });
+	};
+	$scope.updateGpxName = function(gpx, newName) {
+		$rootScope.$emit(Command.UPDATE_GPX_NAME, { gpx: gpx, name: newName });
+	};
+	$scope.updateGpxDesc = function(gpx, newDesc) {
+		$rootScope.$emit(Command.UPDATE_GPX_DESC, { gpx: gpx, desc: newDesc });
+	};
 
 	$scope.gridOptions = {
 
@@ -102,25 +126,45 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 		columnDefs: [
 			{ 	
 				field: 'id', 
-				width: '80', 
+				width: '40', 
 				cellTemplate: unloadCellTemplate,
-				headerCellTemplate: '<span>unload</span>',
+				headerCellTemplate: '<span></span>',
 				enableSorting: false, 
 				enableHiding: false,
 				enableFiltering: false,
+				enableCellEdit: false,
+			},
+			{ 	
+				field: 'id', 
+				width: '40', 
+				cellTemplate: exportCellTemplate,
+				headerCellTemplate: '<span></span>',
+				enableSorting: false, 
+				enableHiding: false,
+				enableFiltering: false,
+				enableCellEdit: false,
 			},
 			{
 				field: 'fileName',
+				width: '300',
 				enableHiding: false,
 				enableFiltering: false,				
-				headerCellTemplate: '<span>file name</span>',
+				headerCellTemplate: '<span>File</span>',
 				cellTooltip: true,
 			},
 			{
 				field: 'name',
+				width:'300',
 				enableHiding: false,
 				enableFiltering: false,
-				headerCellTemplate: '<span>metadata name</span>',
+				headerCellTemplate: '<span>Name</span>',
+				cellTooltip: true,
+			},
+			{
+				field: 'desc',
+				enableHiding: false,
+				enableFiltering: false,
+				headerCellTemplate: '<span>Description</span>',
 				cellTooltip: true,
 			},
 			{
@@ -128,30 +172,27 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 				enableHiding: false,
 				enableFiltering: false,
 				width:'100',
-				headerCellTemplate: '<span>waypoint<br/>count</span>',
+				headerCellTemplate: '<span>Waypoints</span>',
 				cellTemplate: '<span>{{ row.entity.waypoints.length }}</span>',
+				enableCellEdit: false,
 			},
 			{
 				name: 'trackCount',
 				enableHiding: false,
 				enableFiltering: false,
 				width:'100',
-				headerCellTemplate: '<span>track<br/>count</span>',
+				headerCellTemplate: '<span>Tracks</span>',
 				cellTemplate: '<span>{{ row.entity.tracks.length }}</span>',
-			},
-			{
-				name: 'trackNames',
-				enableHiding: false,
-				enableFiltering: false,
-				headerCellTemplate: '<span>track names</span>',
-				cellTemplate: "<span title={{row.entity.track_names_concat()}}>{{ row.entity.track_names_concat() }}</span>",
-			},
+				enableCellEdit: false,
+			}
 		],
 
 		onRegisterApi: function(gridApi) {
 
 			$scope.gridApi = gridApi;
 
+			// selection.on.rowSelectionChanged
+			//
 			gridApi.selection.on.rowSelectionChanged($scope, function(row){
 
 				if ((row === undefined) || (row.entity.id == null) || (row.entity.id === undefined))
@@ -159,6 +200,29 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 
 				$scope.selectGpx(row.entity.id);
 			});
+
+			// edit.on.afterCellEdit
+			//
+          	gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
+	            
+          		var editable = ['fileName', 'name', 'desc'];
+
+          		if (editable.indexOf(colDef.field) == -1)
+          			return;
+
+      			switch (colDef.field) {
+					case 'fileName':
+						break;
+					case 'name':
+						break;
+					case 'desc':
+						break;
+				}
+
+          		// var gpx = model.gpxs.first(function(x){ return (x.id === rowEntity.id); });
+
+
+          	});
 	    },
 	};
 }

@@ -9,6 +9,8 @@ function GpxEditorController($rootScope, $scope, $http, $timeout) {
 		$rootScope.$emit(Event.GPX_EDITED);
 	});
 
+	// WAYPOINTS -----------------------------------------------------------
+
 	// COPY_WAYPOINTS_TO_GPX
 	// 
 	$scope.copyWaypointsToGpx = function(waypoints, gpx) {
@@ -26,7 +28,6 @@ function GpxEditorController($rootScope, $scope, $http, $timeout) {
 		$rootScope.$emit(Event.WAYPOINT_EDITED);
 	};
 	$rootScope.$on(Command.UPDATE_WAYPOINT_NAME, function(evt, data) {
-
 		$scope.updateWaypointName(data.waypoint, data.name);
 	});
 
@@ -38,9 +39,10 @@ function GpxEditorController($rootScope, $scope, $http, $timeout) {
 		$rootScope.$emit(Event.WAYPOINT_DELETED, waypoint);
 	};
 	$rootScope.$on(Command.DELETE_WAYPOINT, function(evt, waypoint) {
-
 		$scope.deleteWaypoint(waypoint);
 	});
+
+	// TRACKS -----------------------------------------------------------
 
 	// UNLOAD_TRACK
 	//
@@ -50,7 +52,6 @@ function GpxEditorController($rootScope, $scope, $http, $timeout) {
 		$rootScope.$emit(Event.TRACKS_UNLOADED, track);
 	};
 	$rootScope.$on(Command.UNLOAD_TRACK, function(evt, track) {
-
 		$scope.unloadTrack(track);
 	});
 
@@ -62,9 +63,10 @@ function GpxEditorController($rootScope, $scope, $http, $timeout) {
 		$rootScope.$emit(Event.GPX_EDITED);	
 	};
 	$rootScope.$on(Command.COPY_TRACK_TO_GPX, function(evt, data) {
-
 		$scope.copyTrackToGpx(data.track, data.gpx);
 	});
+
+	// GPX -----------------------------------------------------------
 
 	// UNLOAD_GPX
 	//
@@ -74,7 +76,39 @@ function GpxEditorController($rootScope, $scope, $http, $timeout) {
 		$rootScope.$emit(Event.GPXS_UNLOADED);
 	};
 	$rootScope.$on(Command.UNLOAD_GPX, function(evt, gpx) {
-
 		$scope.unloadGPX(gpx);
+	});
+
+	// ------------------------------------------------
+	// EDIT GPX
+
+	// UPDATE_GPX_FILENAME
+	//
+	$scope.updateGpxFileName = function(gpx, fileName) {
+		gpxEditor.updateGpxFileName(gpx, fileName);
+		$rootScope.$emit(Event.DATA_MODEL_CHANGED);
+	};
+	$rootScope.$on(Command.UPDATE_GPX_FILENAME, function(evt, data) {
+		$scope.updateGpxFileName(data.gpx, data.fileName);
+	});
+
+	// UPDATE_GPX_NAME
+	//
+	$scope.updateGpxName = function(gpx, name) {
+		gpxEditor.updateGpxName(gpx, name);
+		$rootScope.$emit(Event.DATA_MODEL_CHANGED);
+	};
+	$rootScope.$on(Command.UPDATE_GPX_NAME, function(evt, data) {
+		$scope.updateGpxName(data.gpx, data.name);
+	});
+
+	// UPDATE_GPX_DESC
+	//
+	$scope.updateGpxDesc = function(gpx, desc) {
+		gpxEditor.updateGpxDesc(gpx, desc);
+		$rootScope.$emit(Event.DATA_MODEL_CHANGED);
+	};
+	$rootScope.$on(Command.UPDATE_GPX_DESC, function(evt, data) {
+		$scope.updateGpxDesc(data.gpx, data.desc);
 	});
 }

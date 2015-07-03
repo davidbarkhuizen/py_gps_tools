@@ -283,6 +283,10 @@ function GPX(xml, fileName) {
 	this.waypoint_count = function() {
 		return that.waypoints.length;
 	};
+
+	this.toXml = function() {
+		return new XMLSerializer().serializeToString(that.xmlDOM);
+	};
 }
 
 // --------------------------------------------------------------------------

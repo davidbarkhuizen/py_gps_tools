@@ -43,7 +43,7 @@ function GpxExportController($rootScope, $scope, $http) {
 	$scope.exportWaypointSetAsGpx = function(waypoints, fileName) {
 		fileName = (fileName === undefined) ? 'gpxmaps.net.waypoints.gpx' : fileName;
 		
-		var xml = waypointsToGpx(waypoints);
+		var xml = waypointsToGpxs(waypoints);
 		$scope.exportXML(xml, fileName);
 	};
 
@@ -105,4 +105,19 @@ function GpxExportController($rootScope, $scope, $http) {
 	$scope.exportAllTracks = function() {
 		$scope.exportTracks(tracks);
 	};
+
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// GPX
+
+	$scope.exportGpx = function(gpx, fileName) {
+		fileName = (fileName === undefined) ? gpx.fileName : fileName;
+		fileName = (fileName === undefined) ? 'gpxmaps.net.new.gpx' : fileName;
+
+		var xml = gpx.toXml();
+		$scope.exportXML(xml, fileName);
+	};
+
+	$rootScope.$on(Command.EXPORT_GPX, function(evt, data) {
+		$scope.exportGpx(data.gpx, data.fileName);
+	});
 };
