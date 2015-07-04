@@ -1,8 +1,8 @@
-function GPXEditor(gpxs) {
+function GPXEditor(model) {
 
 	var that = this;
 
-	this.gpxs = gpxs;
+	this.gpxs = model.gpxs;
 
 	this.getUnusedTrackColour = function() {
 
@@ -43,7 +43,7 @@ function GPXEditor(gpxs) {
 
 	this.gpxForTrack = function(track) {
 
-		for(i = 0; i < that.gpxs.length; i++) {
+		for(var i = 0; i < that.gpxs.length; i++) {
 			var gpx = that.gpxs[i];
 
 			if (gpx.tracks.indexOf(track) !== -1)
@@ -117,7 +117,9 @@ function GPXEditor(gpxs) {
 
 		var gpx = this.gpxForWaypoint(waypoint);
 		waypoint.node.parentNode.removeChild(waypoint.node);
-		gpx.waypoints.removeWhere(function(x){ return (x === waypoint); });
+
+		if (model.selectedPoint === waypoint)
+			model.selectedPoint = undefined;
 
 		gpx.edited = true;
 	};

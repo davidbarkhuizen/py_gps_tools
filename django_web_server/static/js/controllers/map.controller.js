@@ -1225,14 +1225,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	// RE-DRAW TRIGGERS
 	//
 	$scope.redrawTriggers = [
-		Event.TRACK_LOADED,
-		Event.TRACKS_UNLOADED,
-		Event.WAYPOINTS_LOADED,
-		Event.WAYPOINTS_UNLOADED,
-		Event.WAYPOINT_EDITED,
-		Event.WAYPOINT_DELETED,
-		Event.GPX_EDITED,
-		Event.GPXS_UNLOADED,
+		Event.DATA_MODEL_CHANGED,
 		];
 
 	// register

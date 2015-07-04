@@ -13,26 +13,13 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 			var gpx = new GPX(data.xml, data.file_name);
 			gpx.id = data.id;
 			gpxEditor.loadGPX(gpx);
-
-			$rootScope.$emit(Event.GPX_LOADED);
-
-			if (gpx.tracks.length > 0) {
-				$rootScope.$emit(Event.TRACK_LOADED);
-			}
-
-			if (gpx.waypoints.length > 0) {
-				$rootScope.$emit(Event.WAYPOINTS_LOADED);
-			}
+			$rootScope.$emit(Event.DATA_MODEL_CHANGED);
 
 			// select 1st row
 			//
 			if (($scope.model.selectedGpx == undefined) || (model.gpxs.contains($scope.model.selectedGpx) == false)) {
 				$scope.selectFirstGridRowDelayed();
 			}
-
-			// change view
-			//
-			$rootScope.$emit(Command.GOTO_VIEW, Views.GPX);
 		};
 
 		var failFn = function(status){

@@ -6,7 +6,7 @@ function GpxEditorController($rootScope, $scope, $http, $timeout) {
 	$rootScope.$on(Command.DELETE_TRKSEG_SECTION, function(evt, data) {
 
 		gpxEditor.deleteTrackSegmentSection(data.pathSelectionType, data.endPoints);
-		$rootScope.$emit(Event.GPX_EDITED);
+		$rootScope.$emit(Event.DATA_MODEL_CHANGED);
 	});
 
 	// WAYPOINTS -----------------------------------------------------------
@@ -25,7 +25,7 @@ function GpxEditorController($rootScope, $scope, $http, $timeout) {
 	$scope.updateWaypointName = function(waypoint, name) {
 
 		gpxEditor.updateWaypointName(waypoint, name);
-		$rootScope.$emit(Event.WAYPOINT_EDITED);
+		$rootScope.$emit(Event.DATA_MODEL_CHANGED);
 	};
 	$rootScope.$on(Command.UPDATE_WAYPOINT_NAME, function(evt, data) {
 		$scope.updateWaypointName(data.waypoint, data.name);
@@ -36,7 +36,7 @@ function GpxEditorController($rootScope, $scope, $http, $timeout) {
 	$scope.deleteWaypoint = function(waypoint) {	
 
 		gpxEditor.deleteWaypoint(waypoint);
-		$rootScope.$emit(Event.WAYPOINT_DELETED, waypoint);
+		$rootScope.$emit(Event.DATA_MODEL_CHANGED);
 	};
 	$rootScope.$on(Command.DELETE_WAYPOINT, function(evt, waypoint) {
 		$scope.deleteWaypoint(waypoint);
@@ -49,7 +49,7 @@ function GpxEditorController($rootScope, $scope, $http, $timeout) {
 	$scope.unloadTrack = function(track) {	
 
 		gpxEditor.deleteTrack(track);
-		$rootScope.$emit(Event.TRACKS_UNLOADED, track);
+		$rootScope.$emit(Event.DATA_MODEL_CHANGED);
 	};
 	$rootScope.$on(Command.UNLOAD_TRACK, function(evt, track) {
 		$scope.unloadTrack(track);
@@ -60,7 +60,7 @@ function GpxEditorController($rootScope, $scope, $http, $timeout) {
 	$scope.copyTrackToGpx = function(track, gpx) {
 
 		gpxEditor.copyTrackToGpx(track, gpx);
-		$rootScope.$emit(Event.GPX_EDITED);	
+		$rootScope.$emit(Event.DATA_MODEL_CHANGED);	
 	};
 	$rootScope.$on(Command.COPY_TRACK_TO_GPX, function(evt, data) {
 		$scope.copyTrackToGpx(data.track, data.gpx);
@@ -73,7 +73,7 @@ function GpxEditorController($rootScope, $scope, $http, $timeout) {
 	$scope.unloadGPX = function(gpx) {
 
 		gpxEditor.unloadGPX(gpx);
-		$rootScope.$emit(Event.GPXS_UNLOADED);
+		$rootScope.$emit(Event.DATA_MODEL_CHANGED);
 	};
 	$rootScope.$on(Command.UNLOAD_GPX, function(evt, gpx) {
 		$scope.unloadGPX(gpx);

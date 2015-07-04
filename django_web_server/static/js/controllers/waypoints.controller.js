@@ -77,22 +77,15 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 	};
 
 	// ---------------------------------------
-	// WAYPOINT_DELETED
 
-	$rootScope.$on(Event.WAYPOINT_DELETED, function(evt, waypoint) {
+	$rootScope.$on(Event.DATA_MODEL_CHANGED, function(evt) {
 
-		if ($scope.model.selectedPoint == waypoint) {
-			
-			var waypoints = $scope.model.getWaypoints(); 
+		var waypoints = model.getWaypoints();
 
-			$scope.model.selectedPoint = (waypoints.length > 0)
-				? waypoints[0]
-				: undefined;
+		if ((model.selectedPoint === undefined) || (model.selectedPoint === null) &&  (waypoints.length > 0)) {
+
+			$scope.selectFirstGridRowDelayed();
 		}
-	});
-
-	$rootScope.$on(Event.WAYPOINTS_LOADED, function(evt, data){
-		$scope.selectFirstGridRowDelayed();
 	});
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-

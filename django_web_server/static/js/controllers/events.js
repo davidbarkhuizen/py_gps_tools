@@ -7,22 +7,7 @@ var Event = Object.freeze({
 	GPX_FILE_IMPORT_SUCCEEDED : guid(),
 	GPX_FILE_IMPORT_PROCESS_COMPLETED : guid(),
 
-	GPX_LOADED : guid(),
-	GPXS_UNLOADED : guid(),
-
-	TRACK_LOADED : guid(),
-	TRACKS_UNLOADED : guid(),
-
-	TRACK_SELECTED : guid(),
 	MAP_SELECTION_BEGUN : guid(),
-
-	WAYPOINTS_LOADED : guid(),
-	WAYPOINTS_UNLOADED : guid(),
-
-	WAYPOINT_EDITED : guid(),
-	WAYPOINT_DELETED : guid(),
-
-	GPX_EDITED : guid(),
 });
 
 var Command = Object.freeze({
@@ -65,16 +50,4 @@ var Command = Object.freeze({
 	//
 	EXPORT_MAP : guid(), // TODO how do these differ ?
 	EXPORT_CANVAS : guid(),
-
-
-
-	// ---------------------------------------------------------
-
-
-
-
-
-
-
-
 });

@@ -1,7 +1,7 @@
 function GodController($rootScope, $scope, $http, $timeout) {
 
 	$scope.model = new DataModel();
-	$scope.gpxEditor = new GPXEditor($scope.model.gpxs);
+	$scope.gpxEditor = new GPXEditor($scope.model);
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// VIEWS	
@@ -69,13 +69,6 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	// GPX IMPORT - EXPORT
 
 	$rootScope.$on(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED, function(evt) {
-	});
-
-	// -------------------------------------------------------------------
-	// TRACK
-
-	$rootScope.$on(Event.TRACK_LOADED, function (evt) {
-		$scope.view = Views.MAP;
 	});
 
 	// -------------------------------------------------------------------

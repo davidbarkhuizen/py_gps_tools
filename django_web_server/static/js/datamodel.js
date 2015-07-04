@@ -47,6 +47,23 @@ function DataModel() {
 		return tracks;
 	};
 
+	// GPX --------------------------------
+
+	this.gpxIdIsLoaded = function(id) {
+
+		if (id === undefined) {
+			return false;
+		}
+
+		for(var i = 0; i < that.gpxs.length; i++) {
+			if (that.gpxs[i].id == id) {
+				return true;
+			}
+		}
+
+		return false;
+	};
+
 	this.otherGpxsForTrack = function(track) {
 
 		var otherGpxs = [];

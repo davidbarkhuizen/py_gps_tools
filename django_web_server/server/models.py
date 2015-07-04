@@ -23,9 +23,6 @@ class Gpx(models.Model):
 
 	def to_gpx_info(self):
 
-		print('dog')
-		print(self.time)
-
 		return { 'id' : self.id,
 			'file_name' : self.file_name,
 			'name' : self.name,

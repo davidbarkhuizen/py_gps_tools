@@ -15,6 +15,10 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 		});
 	};
 
+	$scope.gotoGpx = function() {
+		$rootScope.$emit(Command.GOTO_VIEW, Views.GPX);
+	};
+
 	// -------------------------------------------------
 	// GRID
 
@@ -27,11 +31,16 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 		$timeout($scope.selectFirstGridRow, 0);
 	};
 
-	var loadIconSrcRef = '/static/img/icon/black_button/button_black_plus_16.png'; // '/static/img/icon/green_plus_16.png';
-	var loadIconImgTemplate = '<img ng-src="' + loadIconSrcRef + '">';
-	var loadCellTemplate = '<div style="padding-top:5px;"><a href="#" title="load" ng-click="grid.appScope.loadGpx(row.entity.id)" ">' + loadIconImgTemplate + '</a></div>';
+	var loadIconSrcRef = '/static/img/icon/black_button/button_black_plus_16.png';
+	var loadAnchorTemplate = '<a href="#" title="load" ng-show="(grid.appScope.model.gpxIdIsLoaded(row.entity.id) === false)" ng-click="grid.appScope.loadGpx(row.entity.id)" "><img ng-src="|||0|||"></a>'
+		.replace('|||0|||', loadIconSrcRef);
 
-	var blankHeaderTemplate = '';
+	var loadedIconSrcRef = '/static/img/icon/black_button/button_black_play_16.png';
+	var loadedAnchorTemplate = '<a href="#" title="go to" ng-show="(grid.appScope.model.gpxIdIsLoaded(row.entity.id) === true)" ng-click="grid.appScope.gotoGpx(row.entity);" "><img ng-src="|||0|||"></a>'
+		.replace('|||0|||', loadedIconSrcRef);
+
+	var actionCellTemplate =  '<div style="padding-top:5px;">|||0|||</div>'
+		.replace('|||0|||', loadAnchorTemplate + loadedAnchorTemplate);
 
 	$scope.gridApi = undefined;
 	$scope.gridOptions = {      
@@ -54,8 +63,8 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
         		name: '',
 				field: 'id', 
 				width: '80', 
-				cellTemplate: loadCellTemplate,
-				headerCellTemplate: '<br/>load',
+				cellTemplate: actionCellTemplate,
+				headerCellTemplate: '<span></span>',
 				enableSorting: false, 
 				enableHiding: false,
 				enableFiltering: false,
