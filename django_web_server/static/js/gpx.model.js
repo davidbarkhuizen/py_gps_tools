@@ -238,7 +238,7 @@ function GPX(xml, fileName) {
 
 		var metadata = that.getMetaDataNode();
 		if (metadata === undefined)
-			return;
+			that.name = undefined;
 
 		that.name = getChildNodeText(metadata, 'name');
 	};

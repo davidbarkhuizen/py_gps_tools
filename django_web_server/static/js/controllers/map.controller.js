@@ -1244,7 +1244,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		
 		$scope.draw($scope.exportContext, width, height, true);
 		
-		var fileName = tracks[0].name.replace(' ', '') + '.png';
+		var fileName = model.getTracks()[0].name.replace(' ', '') + '.png';
 		var data = { canvas : $scope.exportCanvas, fileName : fileName };	
 		
 		$rootScope.$emit(Command.EXPORT_CANVAS, data);

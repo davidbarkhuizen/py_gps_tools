@@ -96,7 +96,7 @@ function GpxExportController($rootScope, $scope, $http) {
 	};
 
 	$scope.exportAllTracks = function() {
-		$scope.exportTracks(tracks);
+		$scope.exportTracks(model.getTracks());
 	};
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-

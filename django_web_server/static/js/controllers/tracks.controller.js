@@ -168,7 +168,7 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 				width: '300',
 				enableHiding: false,
 				enableFiltering: false,
-				cellTemplate: '<span title="{{grid.appScope.model.gpxForTrack(row.entity).label()}}">{{ grid.appScope.model.gpxForTrack(row.entity).label() }}</span>',
+				cellTemplate: '<span title="{{ grid.appScope.model.gpxForTrack(row.entity).label() }}">{{ grid.appScope.model.gpxForTrack(row.entity).label() }}</span>',
 				enableCellEdit: false,
 			},
 			{

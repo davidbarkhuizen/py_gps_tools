@@ -6,18 +6,18 @@
 
 	<br/>
 	<div class='header'>
-		loaded waypoints ({{ model.getWaypoints().length }})
+		waypoints ({{ model.getWaypoints().length }})
 	</div>
 	<a href='#' class='underline' ng-click='exportAllWaypoints();'
-		>export all as .GPX</a>
+		>export</a>
 	<a href='#' class='underline' ng-click='exportAllWaypointsAsTxt();'
-		>export all as .TXT</a>
+		>export as .TXT</a>
 
 	<!-- COPY ALL TO .GPX -->
 	<a href='#' class='underline'
 		ng-show='(model.gpxs.length > 1)'
 		ng-click='copyInfo.showCopyAll = true;'
-		>copy all to .GPX</a>
+		>copy to .GPX</a>
 	<span ng-show='(copyInfo.showCopyAll === true)'>		
 		<select
 			ng-model="copyInfo.gpxToCopyTo"
