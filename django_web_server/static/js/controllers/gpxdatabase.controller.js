@@ -27,7 +27,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 		$timeout($scope.selectFirstGridRow, 0);
 	};
 
-	var loadIconSrcRef = '/static/img/icon/black_button/button_black_play_16.png'; // '/static/img/icon/green_plus_16.png';
+	var loadIconSrcRef = '/static/img/icon/black_button/button_black_plus_16.png'; // '/static/img/icon/green_plus_16.png';
 	var loadIconImgTemplate = '<img ng-src="' + loadIconSrcRef + '">';
 	var loadCellTemplate = '<div style="padding-top:5px;"><a href="#" title="load" ng-click="grid.appScope.loadGpx(row.entity.id)" ">' + loadIconImgTemplate + '</a></div>';
 

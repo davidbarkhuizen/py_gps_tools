@@ -32,7 +32,7 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 
 			// change view
 			//
-			$rootScope.$emit(Command.GOTO_VIEW, Views.LOADED_GPXS);
+			$rootScope.$emit(Command.GOTO_VIEW, Views.GPX);
 		};
 
 		var failFn = function(status){
@@ -92,7 +92,7 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 
 	// GRID UNLOAD
 	//
-	var unloadIconSrcRef = '/static/img/icon/black_button/button_black_delete_16.png';
+	var unloadIconSrcRef = '/static/img/icon/black_button/button_black_minus_16.png';
 	var unloadIconImgTemplate = '<img ng-src="' + unloadIconSrcRef + '">';
 	var unloadCellTemplate = '<div style="padding-top:5px;"><a href="#" title="unload" ng-click="grid.appScope.unloadGpx(row.entity)" ">' + unloadIconImgTemplate + '</a></div>';
 

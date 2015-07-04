@@ -27,22 +27,27 @@
 		ng-show='showContextMenu()'
 		>
 		<a href='#'
+			class='underline'
 			ng-click='cancelSelection()'
 			ng-class='(isSelected() == true) ? "active" : "inactive" '
 			>cancel selection</a>
 		<a href='#'
+			class='underline'
 			ng-click='zoomIn()'
 			ng-class='(canZoomIn() == true) ? "active" : "inactive" '
 			>zoom in</a>
 		<a href='#'
+			class='underline'
 			ng-click='zoomOut()'
 			ng-class='(canZoomOut() == true) ? "active" : "inactive" '
 			>zoom out</a>
 		<a href='#'
+			class='underline'
 			ng-click='areaSelectWaypoints()'
 			ng-class='showMapSelectionArea ? "active" : "inactive" '
-			>edit waypoints</a>
+			>select waypoints</a>
 		<a href='#'
+			class='underline'
 			ng-click='editTrack_AreaSelected()'
 			ng-class='showMapSelectionArea ? "active" : "inactive" '
 			>edit track</a>

@@ -5,7 +5,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 	$scope.dateValToTimeString = dateValToTimeString;
 
-	// COPY
+	// COPY ONE, ALL TO GPX ------------------------------------------
 
 	$scope.copyInfo = {
 		showCopyAll: false,
@@ -38,6 +38,9 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 		$scope.copyInfo.showCopyToGpx = false;
 	};
 
+	// COPY SINGLE WAYPOINT TO CLIPBOARD ------------------------------------------
+	//
+
 	$scope.copySelectedWaypointCoordinatesToClipBoard = function() {
 		
 		if (($scope.model.selectedPoint === null) || ($scope.model.selectedPoint === undefined))
@@ -47,13 +50,50 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 		copyToClipboard(s);
 	}
 
+	// SELECT ------------------------------------------
+	//
+	$rootScope.$on(Command.SELECT_WAYPOINTS, function(evt, waypoints) { 
+		$scope.selectGridRowsForWaypoints(waypoints); 
+	});
+
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	// SELECT
+	// EXPORT
 
-	$scope.selectWaypoint = function(waypoint) {
-
-		$scope.model.selectedPoint = waypoint;
+	$scope.exportAllWaypoints = function(fileName) {
+		var data = { waypoints : $scope.model.waypoints, fileName : fileName, format : 'GPX' };
+		$rootScope.$emit(Command.EXPORT_WAYPOINTS, data);
 	};
+
+	$scope.exportAllWaypointsAsTxt = function(fileName) {
+		var data = { waypoints : $scope.model.waypoints, fileName : fileName, format : 'TXT' };
+		$rootScope.$emit(Command.EXPORT_WAYPOINTS, data);
+	};
+
+	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+	// DELETE
+
+	$scope.delete = function(waypoint) {
+		$rootScope.$emit(Command.DELETE_WAYPOINT, waypoint);
+	};
+
+	// ---------------------------------------
+	// WAYPOINT_DELETED
+
+	$rootScope.$on(Event.WAYPOINT_DELETED, function(evt, waypoint) {
+
+		if ($scope.model.selectedPoint == waypoint) {
+			
+			var waypoints = $scope.model.getWaypoints(); 
+
+			$scope.model.selectedPoint = (waypoints.length > 0)
+				? waypoints[0]
+				: undefined;
+		}
+	});
+
+	$rootScope.$on(Event.WAYPOINTS_LOADED, function(evt, data){
+		$scope.selectFirstGridRowDelayed();
+	});
 
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// GRID
@@ -69,6 +109,15 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 		$timeout($scope.selectFirstGridRow, 0);
 	};
 
+	$scope.selectGridRowsForWaypoints = function(waypoints) {
+
+		$scope.gridApi.selection.clearSelectedRows();
+
+		waypoints.forEach(function(x){
+			$scope.gridApi.selection.toggleRowSelection(x);
+		});
+	};
+
 	// DELETE WAYPOINT
 	//
 	var deleteIconSrcRef = '/static/img/icon/black_button/button_black_delete_16.png';
@@ -80,7 +129,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 		data: $scope.$parent.model.getWaypoints(),
 
 		enableRowSelection: true,
-		multiSelect:false,
+		//multiSelect:false,
 		enableSelectionBatchEvent: false, // single event only
 		enableRowHeaderSelection: false, // no header, click row to select
 
@@ -147,7 +196,12 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 			// selection.on.rowSelectionChanged
 			//
 			gridApi.selection.on.rowSelectionChanged($scope, function(row){
-				$scope.selectWaypoint(row.entity);
+
+				// update model
+				//
+				model.selectedPoint = ((row !== undefined) && (row !== null))
+					? row.entity
+					: null;
 			});
 
 			// edit.on.afterCellEdit
@@ -167,47 +221,5 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 	    },
 	};
 
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	// EDIT
-
-	// $rootScope.$emit(Command.UPDATE_WAYPOINT_NAME, { waypoint: $scope.model.selectedPoint, name: $scope.editCopy.name});
-
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	// DELETE
-
-	$scope.delete = function(waypoint) {
-		$rootScope.$emit(Command.DELETE_WAYPOINT, waypoint);
-	};
-
-	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-	// EXPORT
-
-	$scope.exportAllWaypoints = function(fileName) {
-		var data = { waypoints : $scope.model.waypoints, fileName : fileName, format : 'GPX' };
-		$rootScope.$emit(Command.EXPORT_WAYPOINTS, data);
-	};
-
-	$scope.exportAllWaypointsAsTxt = function(fileName) {
-		var data = { waypoints : $scope.model.waypoints, fileName : fileName, format : 'TXT' };
-		$rootScope.$emit(Command.EXPORT_WAYPOINTS, data);
-	};
-
-	// DATA MODEL CHANGED
-
-	$rootScope.$on(Event.WAYPOINT_DELETED, function(evt, waypoint) {
-
-		if ($scope.model.selectedPoint == waypoint) {
-			
-			var waypoints = $scope.model.getWaypoints(); 
-
-			$scope.model.selectedPoint = (waypoints.length > 0)
-				? waypoints[0]
-				: undefined;
-		}
-	});
-
-	$rootScope.$on(Event.WAYPOINTS_LOADED, function(evt, data){
-
-		$scope.selectFirstGridRowDelayed();
-	});
+	// ----------
 }

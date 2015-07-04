@@ -61,8 +61,6 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	// -----------------------------------------------------------
 
-	var filteredWaypoints = $scope.$parent.model.filteredWaypoints; 
-
 	$scope.canvasWaypoints = [];
 	$scope.latLonViewPorts = [];
 
@@ -549,8 +547,11 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.areaSelectWaypoints = function() {
 
+		// DEBUG
+		//
 		if ($scope.selectionPoints.length !== 2) {
-			throw '$scope.selectionPoints.length !== 2';
+			console.log('$scope.selectionPoints.length !== 2:  ', $scope.selectionPoints.length);
+			return;
 		}
 
 		// determine selection area
@@ -577,17 +578,10 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		};
 
 		var inside = [];
-		waypoints.forEach(function(x) { if (isInside(x)) inside.push(x); });
+		model.getWaypoints().forEach(function(x) { if (isInside(x)) inside.push(x); });
 
-		// update model: filteredWaypoints, selectedPoint
-
-		filteredWaypoints.length = 0;
-		inside.forEach(function(x){ filteredWaypoints.push(x); });
-	
-		if (filteredWaypoints.length)
-			$scope.$parent.model.selectedPoint = filteredWaypoints[0];
-
-		$rootScope.$emit(Command.GOTO_VIEW, Views.LOADED_WAYPOINTS);
+		$rootScope.$emit(Command.SELECT_WAYPOINTS, inside);
+		$rootScope.$emit(Command.GOTO_VIEW, Views.WAYPOINT);
 	};
 
 	// -----------------------------------------------------------

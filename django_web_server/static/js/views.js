@@ -1,19 +1,18 @@
 var Views = Object.freeze({
+
 	DEBUG : guid(),
+
 	HOME : guid(),
+	HELP : guid(),
+	ACCOUNT	: guid(),
 
 	IMPORT : guid(), 
-	EXPORT : guid(),
-
 	GPX_DATABASE : guid(),
 
+	GPX : guid(),
+	TRACK : guid(), 
+	WAYPOINT : guid(),
 	MAP : guid(),
-	LOADED_GPXS : guid(),
-	LOADED_TRACKS : guid(), 
 	ELEVATION : guid(),
-	LOADED_WAYPOINTS : guid(),
-
-	HELP : guid(),
-
-	ACCOUNT	: guid(),
+	EXPORT : guid(),
 });	

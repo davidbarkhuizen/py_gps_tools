@@ -2,11 +2,15 @@ function DataModel() {
 
 	var that = this;
 
+	// GPXINFO -----------------------------------------------------------------
+	//
 	this.gpxinfos = [];
 	that.selectedGpxinfo = null;
 
 	this.gpxs = [];
 	this.selectedGpx = undefined;
+
+	// WAYPOINT -----------------------------------------------------------------
 
 	var waypoints = [];
 	this.getWaypoints = function(){
@@ -21,9 +25,12 @@ function DataModel() {
 		collated.forEach(function(waypoint){ waypoints.push(waypoint); });
 		return waypoints;
 	};
-	this.filteredWaypoints = [];
 
+	// TODO - refactor to list
+	//
 	this.selectedPoint = undefined;
+
+	// TRACKS -----------------------------------------------------------------
 
 	var tracks = [];
 	this.getTracks = function() {

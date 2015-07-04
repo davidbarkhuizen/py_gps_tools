@@ -1,5 +1,5 @@
 <div
-	ng-show='view == Views.LOADED_GPXS'
+	ng-show='view == Views.GPX'
 	ng-controller='GpxController'
 	id='GpxContainer'
 	>
@@ -15,8 +15,8 @@
 	<div>
 		<a href="#" ng-click='gotoView(Views.GPX_DATABASE)' class='underline'>my gpxs</a>
 		<a href="#" ng-click='gotoView(Views.MAP)'>map</a>
-		<a href="#" ng-click='gotoView(Views.LOADED_TRACKS)'>tracks</a>
-		<a href="#" ng-click='gotoView(Views.LOADED_WAYPOINTS)'>waypoints</a>		
+		<a href="#" ng-click='gotoView(Views.TRACK)'>tracks</a>
+		<a href="#" ng-click='gotoView(Views.WAYPOINT)'>waypoints</a>		
 	</div>
 
 	<div id='SelectedGpx' style='text-align:left;margin:20px'>
