@@ -115,7 +115,7 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 	//
 	var deleteIconSrcRef = '/static/img/icon/black_button/button_black_delete_16.png';
 	var deleteIconImgTemplate = '<img ng-src="' + deleteIconSrcRef + '">';
-	var deleteCellTemplate = '<div style="padding-top:5px;"><a href="#" title="delete" ng-click="grid.appScope.delete(row.entity)" ">' + deleteIconImgTemplate + '</a></div>';
+	var deleteCellTemplate = '<div style="padding-top:5px;"><a href="#" title="delete waypoint" ng-click="grid.appScope.delete(row.entity)" ">' + deleteIconImgTemplate + '</a></div>';
 
 	$scope.gridOptions = {
 

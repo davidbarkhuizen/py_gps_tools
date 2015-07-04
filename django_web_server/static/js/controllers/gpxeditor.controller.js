@@ -44,15 +44,15 @@ function GpxEditorController($rootScope, $scope, $http, $timeout) {
 
 	// TRACKS -----------------------------------------------------------
 
-	// UNLOAD_TRACK
+	// DELET_TRACK
 	//
-	$scope.unloadTrack = function(track) {	
+	$scope.deleteTrack = function(track) {	
 
 		gpxEditor.deleteTrack(track);
 		$rootScope.$emit(Event.DATA_MODEL_CHANGED);
 	};
-	$rootScope.$on(Command.UNLOAD_TRACK, function(evt, track) {
-		$scope.unloadTrack(track);
+	$rootScope.$on(Command.DELETE_TRACK, function(evt, track) {
+		$scope.deleteTrack(track);
 	});
 
 	// COPY TRACK

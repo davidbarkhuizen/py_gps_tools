@@ -170,6 +170,9 @@ function Track(trk) {
 		var secs = Math.floor(secsMS / secsToMS);
 
 		that.durationString = days + ' days ' + hours + ' hours ' + mins + ' minutes ' + secs + ' seconds';
+
+		var hoursToMS = 1000.0 * 60.0 * 60.0;
+		that.durationTotalHours = durationMS / hoursToMS;
 	};
 
 	calcTrackStats();

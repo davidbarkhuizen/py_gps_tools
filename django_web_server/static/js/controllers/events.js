@@ -37,7 +37,7 @@ var Command = Object.freeze({
 
 	// TRACK
 	//
-	UNLOAD_TRACK : guid(),
+	DELETE_TRACK : guid(),
 	EXPORT_TRACKS : guid(),
 	//
 	COPY_TRACK_TO_GPX : guid(),
