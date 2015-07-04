@@ -47,6 +47,8 @@ function DataModel() {
 		return tracks;
 	};
 
+	this.selectedTrack = null;
+
 	// GPX --------------------------------
 
 	this.gpxIdIsLoaded = function(id) {

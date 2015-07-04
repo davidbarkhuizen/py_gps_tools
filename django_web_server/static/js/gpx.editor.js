@@ -131,12 +131,13 @@ function GPXEditor(model) {
 		var gpx = this.gpxForTrack(track);
 
 		// xml
-		//
 		track.node.parentNode.removeChild(track.node);
 
 		// model
-		//
 		gpx.tracks.removeWhere(function(x){ return (x == track); });
+
+		if (model.selectedTrack === track)
+			model.selectedTrack = null;
 
 		gpx.edited = true;
 	};

@@ -4,13 +4,86 @@
 
 	<br/>
 	<div class='header'>
-		loaded tracks ({{ model.getTracks().length }})
+		tracks ({{ model.getTracks().length }})
 	</div>
 	<div>	
-		<a href='#' ng-click='exportAllTracks();' class='underline'>export all</a>
+		<a href='#' ng-click='exportAllTracks();' class='underline'
+		>export all</a>
 	</div>
 	<div>
-		<a href="#" ng-click='gotoView(Views.GPX_DATABASE);' class='underline'>my gpxs</a>
+		<a href="#" ng-click='gotoView(Views.GPX_DATABASE);' class='underline'
+		>my gpxs</a>
+	</div>
+
+	<br/>
+
+	<div id='SelectedTrack'>
+		<div>
+			<div>
+				{{ (model.selectedTrack !== null) 
+					? model.selectedTrack.name 
+					: 'no track loaded' 
+				}}
+			</div>
+			<div>
+				{{ (model.selectedTrack !== null)
+					? model.selectedTrack.minMaxTime.min.toDateString()
+					: '-'
+				}}
+			</div>
+			<div>
+				{{ (model.selectedTrack.totalDistanceM / 1000.0).toFixed(2) }} km,
+				{{ model.selectedTrack.durationTotalHours.toFixed(2) }} hours,
+				{{ model.selectedTrack.minMaxEle.min.toFixed(0) }} - {{ model.selectedTrack.minMaxEle.max.toFixed(0) }} MSL
+			</div>
+			<div ng-show="(model.selectedTrack === null)">
+			-
+			</div>
+		</div>
+
+		<!-- ACTION -->
+		<div ng-show="(model.selectedTrack !== null)">
+			<a href='#' ng-click='deleteTrack(model.selectedTrack);'>delete</a>
+			<a href='#' ng-click='exportTrack(model.selectedTrack);'>export</a>
+			<a href='#'
+				ng-show='(model.gpxs.length > 1)'
+				ng-click='copyInfo.trackToCopy = model.selectedTrack;'
+				class='underline'
+				>copy to gpx</a>
+			<span ng-show='(copyInfo.trackToCopy === model.selectedTrack)'>					
+				<select
+					ng-model="copyInfo.gpxToCopyTo"
+					ng-options="gpx as gpx.label() for gpx in model.otherGpxsForTrack(model.selectedTrack)">
+				</select>
+				<a href='#' ng-click='copyTrackToGpx();'>copy</a>
+				<a href='#' ng-click='copyInfo.trackToCopy = undefined;'>cancel</a>
+			</span>
+		</div>
+
+		<br/>
+
+		<!-- DETAIL -->
+		<div>
+			<div>
+				{{ model.selectedTrack !== null
+					? model.selectedTrack.periodString
+					: '&nbsp;' 
+				}}
+			</div>
+		</div>
+
+		<br/>
+
+		<!-- SEGMENTS -->
+		<div>
+			{{ model.selectedTrack.segments.length }} Track Segments
+			<div ng-repeat='segment in model.selectedTrack.segments'>
+				{{ model.selectedTrack.segments.indexOf(segment) + 1 }} - {{ segment.points.length }} points
+			</div>
+			<div ng-show="(model.selectedTrack.segments.length == 0)">
+				no track segments
+			</div>
+		</div>
 	</div>
 
 	<br/>
@@ -19,52 +92,7 @@
 		ui-grid="gridOptions"
 		ui-grid-selection
 		ui-grid-edit
-		class="grid grid-medium"
+		class="grid grid-short"
 		id='TrackGrid'
 	></div>
-
-<!-- 	<div ng-show='model.getTracks().length > 0'>
-		<div class='list'>
-			<div ng-repeat="track in model.getTracks()" style='color:{{track.colour}};'>
-				<hr ng-show='model.getTracks().indexOf(track) !== 0' style='width:50%;'/>
-				<div>
-					{{ track.name }}
-				</div>
-				<div class='subtext'>
-					GPX:  {{ model.gpxForTrack(track).label() }}
-				</div>
-				<div>
-					<a href='#' ng-click='deleteTrack(track);'>delete</a>
-					<a href='#' ng-click='exportTrack(track);'>export</a>
-					<a href='#'
-						ng-show='(model.gpxs.length > 1)'
-						ng-click='copyInfo.trackToCopy = track;'
-						class='underline'
-						>copy to gpx</a>
-					<span ng-show='(copyInfo.trackToCopy === track)'>					
-						<select
-							ng-model="copyInfo.gpxToCopyTo"
-							ng-options="gpx as gpx.label() for gpx in model.otherGpxsForTrack(track)">
-	    				</select>
-						<a href='#' ng-click='copyTrackToGpx();'>copy</a>
-						<a href='#' ng-click='copyInfo.trackToCopy = undefined;'>cancel</a>
-					</span>
-				</div>
-				<br/>
-				<div>
-					Total Distance:  {{ (track.totalDistanceM / 1000.0).toFixed(2) }} km
-				</div>
-				<div>
-					Vertical Range:  {{ track.eleDiff.toFixed(0) }} m (between {{ track.minMaxEle.min.toFixed(0) }} m and {{ track.minMaxEle.max.toFixed(0) }} m)
-				</div>
-				Duration:  {{ track.durationString }}
-				<br/>
-				{{ track.segments.length }} Track Segments
-				<div ng-repeat='segment in track.segments'>
-					{{ track.segments.indexOf(segment) + 1 }} - {{ segment.points.length }} points
-				</div>
-			</div>
-		</div>
-	</div> -->
-
 </div>

@@ -1,8 +1,10 @@
 function TracksController($rootScope, $scope, $http, $timeout) {
 
+	var model = $scope.$parent.model;
 	$scope.model = $scope.$parent.model;
 
 	// DELETE
+
 	$scope.deleteTrack = function(track) {
  		$rootScope.$emit(Command.DELETE_TRACK, track);
  	};
@@ -51,6 +53,57 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 		$rootScope.$emit(Command.EXPORT_TRACKS, { ids : ids });
 	};
 
+	// SELECT
+
+	$scope.selectFirstGridRow = function() {
+		$scope.gridApi.selection.clearSelectedRows();
+		$scope.gridApi.selection.selectRow($scope.gridOptions.data[0]);
+	};
+	$scope.selectFirstGridRowDelayed = function() {
+		$timeout($scope.selectFirstGridRow, 0);
+	};
+
+	$rootScope.$on(Event.DATA_MODEL_CHANGED, function(evt){
+
+		// console.dir($scope.gridApi.selection);
+
+		var tracks = model.getTracks();
+		var alreadySelectedTracks = $scope.gridApi.selection.getSelectedRows();
+
+		if ((model.selectedTrack !== undefined) && (model.selectedTrack !== null)) {
+
+			// selected track no longer exists
+			// 
+			if (tracks.indexOf(model.selectedTrack) == -1) {
+				
+				model.selectedTrack = null;
+				$scope.selectFirstGridRowDelayed();
+			}
+			else {
+
+				// already selected
+				//
+				if (alreadySelectedTracks.indexOf(model.selectedTrack) !== -1)
+					return;
+
+				// not yet selected
+				//
+				$timeout(function() {
+
+					$scope.gridApi.selection.clearSelectedRows();
+					$scope.gridApi.selection.toggleRowSelection(model.selectedTrack);
+				}, 0);
+
+				return;
+			}
+		} 
+		// update selection
+		//
+		else {			
+			$scope.selectFirstGridRowDelayed();
+		}
+	});
+
 	// --------------------------------------------------------------------
 	// GRID
 
@@ -71,11 +124,6 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 
 		enableFiltering: false,
 
-		// {{ track.segments.length }} Track Segments
-		// <div ng-repeat='segment in track.segments'>
-		// 	{{ track.segments.indexOf(segment) + 1 }} - {{ segment.points.length }} points
-		// </div>
-
 		columnDefs: [
 			{ 	
 				name: 'delete',
@@ -89,7 +137,7 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 			},
 			{
 				name: 'gpx',
-				width: '150',
+				width: '300',
 				enableHiding: false,
 				enableFiltering: false,
 				cellTemplate: '<span title="{{grid.appScope.model.gpxForTrack(row.entity).label()}}">{{ grid.appScope.model.gpxForTrack(row.entity).label() }}</span>',
@@ -102,6 +150,7 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 				enableFiltering: false,
 				enableCellEdit: true,
 				cellTooltip: true,
+				headerCellTemplate: '<span>Track Name</span>',
 			},
 			{
 				name: 'SegmentCount',
@@ -141,7 +190,7 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 				name: 'MinElevation',
 				enableHiding: false,
 				enableFiltering: false,
-				headerCellTemplate: '<span>Min Ele<br/>m</span>',
+				headerCellTemplate: '<span>Min Ele<br/>MSL</span>',
 				cellTemplate: '<span>{{ row.entity.minMaxEle.min.toFixed(0) }}</span>',
 				enableCellEdit: false,
 			},
@@ -149,10 +198,43 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 				name: 'MaxElevation',
 				enableHiding: false,
 				enableFiltering: false,
-				headerCellTemplate: '<span>Max Ele<br/>m</span>',
+				headerCellTemplate: '<span>Max Ele<br/>MSL</span>',
 				cellTemplate: '<span>{{ row.entity.minMaxEle.max.toFixed(0) }}</span>',
 				enableCellEdit: false,
 			},
-		]
+		],
+
+		onRegisterApi: function(gridApi) {
+
+			$scope.gridApi = gridApi;
+
+			// selection.on.rowSelectionChanged
+			//
+			gridApi.selection.on.rowSelectionChanged($scope, function(row){
+
+				// update model
+				//
+				model.selectedTrack = ((row !== undefined) && (row !== null))
+					? row.entity
+					: null;
+			});
+
+			// edit.on.afterCellEdit
+			//
+          	gridApi.edit.on.afterCellEdit($scope,function(rowEntity, colDef, newValue, oldValue){
+	            
+	            /*
+          		var editable = ['name'];
+          		if (editable.indexOf(colDef.field) == -1)
+          			return;
+
+      			switch (colDef.field) {
+					case 'name':
+						$rootScope.$emit(Command.UPDATE_WAYPOINT_NAME, { waypoint: rowEntity, name: newValue });
+						break;
+				}
+				*/
+          	});
+	    },
 	};
 };
