@@ -81,13 +81,13 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 	//
 	var unloadIconSrcRef = '/static/img/icon/black_button/button_black_minus_16.png';
 	var unloadIconImgTemplate = '<img ng-src="' + unloadIconSrcRef + '">';
-	var unloadCellTemplate = '<div style="padding-top:5px;"><a href="#" title="unload" ng-click="grid.appScope.unloadGpx(row.entity)" ">' + unloadIconImgTemplate + '</a></div>';
+	var unloadCellTemplate = '<div style="padding-top:5px;"><a href="#" title="unload gpx" ng-click="grid.appScope.unloadGpx(row.entity)" ">' + unloadIconImgTemplate + '</a></div>';
 
 	// GRID EXPORT
 	//
 	var exportIconSrcRef = '/static/img/icon/black_button/button_black_down_16.png';
 	var exportIconImgTemplate = '<img ng-src="' + exportIconSrcRef + '">';
-	var exportCellTemplate = '<div style="padding-top:5px;"><a href="#" title="export" ng-click="grid.appScope.exportGpx(row.entity)" ">' + exportIconImgTemplate + '</a></div>';
+	var exportCellTemplate = '<div style="padding-top:5px;"><a href="#" title="export gpx" ng-click="grid.appScope.exportGpx(row.entity)" ">' + exportIconImgTemplate + '</a></div>';
 
 	$scope.gridApi = undefined;
 

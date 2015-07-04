@@ -20,7 +20,6 @@ var Command = Object.freeze({
 	//
 	LOAD_GPX : guid(),
 	UNLOAD_GPX : guid(),
-	EXPORT_GPX : guid(),	
 	//
 	UPDATE_GPX_FILENAME : guid(),
 	UPDATE_GPX_NAME : guid(),
@@ -28,26 +27,25 @@ var Command = Object.freeze({
 
 	// WAYPOINT
 	//
-	LOAD_WAYPOINTS : guid(),	
-	EXPORT_WAYPOINTS : guid(),
-	//
 	UPDATE_WAYPOINT_NAME : guid(),
 	COPY_WAYPOINTS_TO_GPX : guid(),
 	SELECT_WAYPOINTS : guid(),
 
 	// TRACK
 	//
+	UPDATE_TRACK_NAME : guid(),
 	DELETE_TRACK : guid(),
-	EXPORT_TRACKS : guid(),
-	//
 	COPY_TRACK_TO_GPX : guid(),
 
 	// TRACK SEGMENT
 	//
 	DELETE_TRKSEG_SECTION : guid(),
 
-	// MAP
+	// EXPORT
 	//
-	EXPORT_MAP : guid(), // TODO how do these differ ?
+	EXPORT_GPX : guid(),	
+	EXPORT_TRACKS : guid(),
+	EXPORT_WAYPOINTS : guid(),
+	EXPORT_MAP : guid(),
 	EXPORT_CANVAS : guid(),
 });

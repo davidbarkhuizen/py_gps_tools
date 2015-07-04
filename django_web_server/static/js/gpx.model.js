@@ -54,7 +54,12 @@ function Track(trk) {
 
 	var that = this;
 
-	this.name = getChildNodeText(trk, 'name');
+	this.parseName = function() {
+		that.name = getChildNodeText(trk, 'name');
+	};
+
+	that.parseName();
+	
 	this.cmt = getChildNodeText(trk, 'cmt');
 	this.desc = getChildNodeText(trk, 'desc');
 	this.src = getChildNodeText(trk, 'src');

@@ -126,6 +126,18 @@ function GPXEditor(model) {
 
 	// TRACKS ------------------------------------------------
 
+	this.updateTrackName = function(track, newName) {
+
+		setChildNodeText(track.node, 'name', newName);
+		track.parseName();
+
+		var gpx = that.gpxForTrack(track);
+
+		track.edited = true;
+		gpx.edited = true;
+	};
+
+
 	this.deleteTrack = function(track) {
 
 		var gpx = this.gpxForTrack(track);

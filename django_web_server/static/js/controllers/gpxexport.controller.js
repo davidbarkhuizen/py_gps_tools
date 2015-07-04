@@ -85,17 +85,11 @@ function GpxExportController($rootScope, $scope, $http) {
 	// TRACK
 
 	$rootScope.$on(Command.EXPORT_TRACKS, function(evt, data) {
-
-		var matchingTracks = data.ids.map(function(id) {
-			return tracks.first(function(track){ return track.id == data.id; });
-		});		
-			
-		$scope.exportTracks(tracks, data.fileName);			
+		$scope.exportTracks(data.tracks, data.fileName);			
 	});		
 
 	$scope.exportTracks = function(tracks, fileName) {
-
-		fileName = (fileName === undefined) ? 'GPXMaps.track.gpx' : fileName;
+		fileName = (fileName === undefined) ? 'gpxmaps.net.tracks.gpx' : fileName;
 		
 		var xml = tracksToGpx(tracks);
 		$scope.exportXML(xml, fileName);

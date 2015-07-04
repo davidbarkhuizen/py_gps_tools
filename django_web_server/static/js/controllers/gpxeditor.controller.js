@@ -44,7 +44,18 @@ function GpxEditorController($rootScope, $scope, $http, $timeout) {
 
 	// TRACKS -----------------------------------------------------------
 
-	// DELET_TRACK
+ 	// UPDATE_TRACK_NAME
+ 	//
+	$scope.updateTrackName = function(track, name) {
+
+		gpxEditor.updateTrackName(track, name);
+		$rootScope.$emit(Event.DATA_MODEL_CHANGED);
+	};
+	$rootScope.$on(Command.UPDATE_TRACK_NAME, function(evt, data) {
+		$scope.updateTrackName(data.track, data.name);
+	});
+
+	// DELETE_TRACK
 	//
 	$scope.deleteTrack = function(track) {	
 
