@@ -66,16 +66,21 @@ def blank_metadata():
 
     return { 'name' : None, 'desc' : None, 'time' : None }
 
-def parse_metadata(find, findall):
+def parse_metadata(find, findall, ns):
     '''
     '''
+    node = None
+    try:
+        node = findall('metadata')[0] 
+    except Exception, e:
+        return
 
     metadata = blank_metadata()
 
     # time
 
     try:
-        metadata_time_string = find('metadata/time').text
+        metadata_time_string = node.find('time').text
         metadata_time = datetime.datetime.strptime(metadata_time_string, DATE_TIME_FORMAT)    
         metadata['time'] = metadata_time
     except Exception, e:
@@ -87,7 +92,7 @@ def parse_metadata(find, findall):
 
     for field in simpleFields:
         try:
-            metadata[field] = find('metadata/' + field).text
+            metadata[field] = node.find(field).text
         except Exception, e:
             pass
 
@@ -182,7 +187,7 @@ def parse_gpx_xml_to_domain_model(xml_string, log = def_log_fn):
     def find(path): return x.find(path)
     def findall(path): return x.findall(path)
 
-    metadata = parse_metadata(find, findall)
+    metadata = parse_metadata(find, findall, ns)
     tracks = parse_tracks(find, findall, ns)
     waypoints = parse_waypoints(find, findall, ns)
 
