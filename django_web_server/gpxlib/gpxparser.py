@@ -174,7 +174,7 @@ def parse_waypoints(find, findall, ns):
 
     return waypoints 
 
-def parse_gpx_xml(xml_string, log = def_log_fn):
+def parse_gpx_xml_to_domain_model(xml_string, log = def_log_fn):
 
     x = X(xml_string)
     ns = x.ns

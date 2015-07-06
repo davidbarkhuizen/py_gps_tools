@@ -8,6 +8,8 @@
 				ng-class="view == Views.HOME ? 'nav-active' : 'nav-inactive'"
 				>home</a>
 			
+			<span class='nav-inactive'>|</span>
+
 			<a href='#' 
 				ng-click="gotoView(Views.IMPORT);"
 				ng-class="view == Views.IMPORT ? 'nav-active' : 'nav-inactive'"
@@ -22,14 +24,14 @@
 			<span class='nav-inactive'>|</span>					
 
 			<a href='#' 
-				ng-click="gotoView(Views.MAP);"
-				ng-class="view == Views.MAP ? 'nav-active' : 'nav-inactive'"
-				>map</a>
-
-			<a href='#' 
 				ng-click="gotoView(Views.GPX);"
 				ng-class="view == Views.GPX ? 'nav-active' : 'nav-inactive'"
 				>gpx</a>
+
+			<a href='#' 
+				ng-click="gotoView(Views.MAP);"
+				ng-class="view == Views.MAP ? 'nav-active' : 'nav-inactive'"
+				>map</a>
 			
 			<a href='#' 
 				ng-click="gotoView(Views.TRACK);"

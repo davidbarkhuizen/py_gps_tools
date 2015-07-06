@@ -1,7 +1,7 @@
 from server.models import Gpx
 from server.models import Waypoint
 
-from gpxlib.gpxparser import parse_gpx_xml
+from gpxlib.gpxparser import parse_gpx_xml_to_domain_model
 
 from hfx import success
 
@@ -23,7 +23,7 @@ def get(request, params):
     if (model == None):
         return failure('could not find track with id = %s' % id)    
 
-    gpx = parse_gpx_xml(model.xml)
+    gpx = parse_gpx_xml_to_domain_model(model.xml)
     track_dict = gpx.tracks[0].to_dict(id)    
     data = { 'track' : track_dict }
     

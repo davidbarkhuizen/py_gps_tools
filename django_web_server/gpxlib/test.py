@@ -1,6 +1,6 @@
 import unittest
 
-from gpxparser import parse_gpx_xml
+from gpxparser import parse_gpx_xml_to_domain_model
 
 metadata_only = '''
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
@@ -122,7 +122,7 @@ class GpxTests(unittest.TestCase):
 	 
 	def test_parse_metadata_only(self):
 		xml = clean_xml(metadata_only)
-		gpx = parse_gpx_xml(xml)
+		gpx = parse_gpx_xml_to_domain_model(xml)
 
 		metadata_keys = gpx.metadata.keys()
 		self.assertEqual(len(metadata_keys), 3)
@@ -133,13 +133,13 @@ class GpxTests(unittest.TestCase):
 
 	def test_parse_multiple_tracks(self):
 		xml = clean_xml(multiple_tracks)
-		gpx = parse_gpx_xml(xml)
+		gpx = parse_gpx_xml_to_domain_model(xml)
 
 		self.assertEqual(len(gpx.tracks), 2)
 
 	def test_parse_waypoints(self):
 		xml = clean_xml(waypoints_only)
-		gpx = parse_gpx_xml(xml)
+		gpx = parse_gpx_xml_to_domain_model(xml)
 
 		self.assertEqual(len(gpx.waypoints), 2)
 		self.assertNotEqual(gpx.waypoints[0].lat, gpx.waypoints[1].lat) 

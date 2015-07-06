@@ -1,6 +1,6 @@
 from hfx import success, failure
 
-from gpxlib.gpxparser import parse_gpx_xml
+from gpxlib.gpxparser import parse_gpx_xml_to_domain_model
 
 from server.models import Gpx
 from server.models import Waypoint
@@ -12,9 +12,10 @@ def routing(request, qs):
 	
 	if request.method == 'POST':
 		return post(request, request.POST)
-
 	if request.method == 'GET':
 		return get(request, request.GET)
+	if request.method == 'PATCH':
+		return patch(request, request.PATCH)
 
 	raise Exception('unsupported HTTP method:  ' + request.method)
 
@@ -34,67 +35,73 @@ def post(request, params):
 		return failure('already imported')
 
 	try:
-		gpx = parse_gpx_xml(xml)
+		gpx = parse_gpx_xml_to_domain_model(xml)
 	except Exception, e:
 		return failure('not a valid gpx file')
 
-	# TODO                                                                                       vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-	# need to update track with default name from gpx file if none present in meta-data
-	# assuming only 1 track, otherwise gpx file name 1, gpx file name 2, etc...
-
-	track_names_concat = '|'.join([track.name for track in gpx.tracks]) if (len(gpx.tracks) > 0) else None
-
-	dbGPX = Gpx(xml = xml, 
-		file_name = file_name,
-
-		name = gpx.metadata['name'],
-		desc = gpx.metadata['desc'],
-		time = gpx.metadata['time'],
-
-		track_count = len(gpx.tracks),
-		waypoint_count = len(gpx.waypoints),
-		track_names_concat = track_names_concat
-		)
-
-	dbGPX.save()
-
-	# create waypoints
-	#
-	for incoming_way_point in gpx.waypoints:
-
-		wp = Waypoint(gpx = dbGPX,
-			name = incoming_way_point.name.strip(),
-			lat = incoming_way_point.lat, 
-			lon = incoming_way_point.lon, 
-			ele = incoming_way_point.ele, 
-			time = incoming_way_point.time
-			)
-
-		if (Waypoint.objects.filter(lat=wp.lat, lon=wp.lon, ele=wp.ele).exists()):	
-			print('%s already exists, skipping' % wp.name)
-			continue
-
-		wp.save()
-		print('created point %s' % wp.name)
+	dbModel = Gpx()
+	dbModel.xml = xml
+	dbModel.file_name = file_name
+	dbModel.update_from_domain_model(gpx)
 	
-	return success(None)
+	dbModel.save()
+
+	return success('gpx created')
 
 def get(request, params):
 
-    id = params['id']
-    model = Gpx.objects.get(id=id)    
-    if (model == None):
-        return failure('could not find gpx with id = %s' % id)    
+	id_key = 'id'
+	if id_key not in params.keys():
+		return failure('no id') 
+	id = params[id_key]
 
-    gpx = parse_gpx_xml(model.xml)
+	model = Gpx.objects.get(id=id)    
+	if (model == None):
+		return failure('could not find gpx with id = %s' % id)    
 
-    tracks = [track.to_dict() for track in gpx.tracks]     
-    waypoints = [waypoint.to_dict() for waypoint in gpx.waypoints]
+	gpx = parse_gpx_xml_to_domain_model(model.xml)
 
-    info = model.to_gpx_info()
+	tracks = [track.to_dict() for track in gpx.tracks]     
+	waypoints = [waypoint.to_dict() for waypoint in gpx.waypoints]
 
-    data = { 'id' : id, 'file_name' : model.file_name, 
-    	'name' : info['name'], 'desc' : info['desc'],
-    	'tracks' : tracks, 'waypoints' : waypoints, 'xml' : model.xml  }
-    
-    return success(data)
+	info = model.to_gpx_info()
+
+	data = { 'id' : id, 'file_name' : model.file_name, 'xml' : model.xml  }
+	
+	return success(data)
+
+def patch(request, params):
+
+	id_key = 'id'
+	if id_key not in params.keys():
+		return failure('no id') 
+	id = params[id]
+
+	file_name_key = 'fileName'
+	if file_name_key not in params.keys():
+		return failure('no file name') 
+	file_name = params[file_name_key]
+
+	xml_key = 'xml'
+	if xml_key not in params.keys():
+		return failure('no xml payload') 
+	xml = params[xml_key]
+
+	try:
+		gpx = parse_gpx_xml_to_domain_model(xml)
+	except Exception, e:
+		return failure('not a valid gpx file')
+
+	# retrieve
+	#
+	dbModel = Gpx.objects.get(id=id)    
+	if (dbModel == None):
+		return failure('could not find gpx with id = %s' % id)    
+
+	dbModel.xml = xml
+	dbModel.file_name = file_name
+	updateDBModelFromDomainModel(dbModel, domainModel)
+
+	dbModel.save()
+
+	return success('gpx updated')

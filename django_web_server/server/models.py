@@ -33,6 +33,17 @@ class Gpx(models.Model):
 			'waypoint_count' : self.waypoint_count
 		}
 
+	def update_from_domain_model(self, domain_model):
+
+		track_names_concat = '|'.join([track.name for track in domain_model.tracks]) if (len(domain_model.tracks) > 0) else None
+
+		self.name = domain_model.metadata['name']
+		self.desc = domain_model.metadata['desc']
+		self.time = domain_model.metadata['time']
+		self.track_count = len(domain_model.tracks)
+		self.waypoint_count = len(domain_model.waypoints)
+		self.track_names_concat = track_names_concat
+
 class Waypoint(models.Model):
 
 	class Meta:
