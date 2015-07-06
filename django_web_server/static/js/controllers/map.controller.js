@@ -791,6 +791,8 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 	$scope.drawTrackVertices = function(colorString, r) {
 
+		var tracks = model.getTracks();
+
 		$scope.context.beginPath();
 		$scope.context.fillStyle = colorString;
 

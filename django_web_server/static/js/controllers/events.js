@@ -12,6 +12,10 @@ var Event = Object.freeze({
 
 var Command = Object.freeze({
 
+	// MODAL
+	//
+	OPEN_UNSAVED_CHANGES_MODAL : guid(),
+
 	// NAVIGATION
 	//
 	GOTO_VIEW : guid(),

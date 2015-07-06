@@ -1,0 +1,20 @@
+<div id='Modal' 	ng-controller='ModalController'>
+	<div class='modal-overlay' ng-show='(showModal == true)'>
+		<div class='modal-container'>
+			<div class='modal-content'>
+				<div>
+					{{ modalTitle }}
+				</div>
+				<br/>
+				<div>
+					<a href='#' ng-click='onCancel();'
+						>cancel</a>
+					<a href='#' ng-click='click1();'
+						>{{ button1Text }}</a>
+					<a href='#' ng-click='click2();'
+						>{{ button2Text }}</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

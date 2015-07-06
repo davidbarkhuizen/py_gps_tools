@@ -27,7 +27,9 @@ function GPXEditor(model) {
 		});
 
 		return tracks;	
-	};			
+	};
+
+	// ---------------------------------------------------------			
 
 	this.gpxForWaypoint = function(waypoint) {
 
@@ -97,6 +99,9 @@ function GPXEditor(model) {
 
 				var newWaypoint = new Point(wpt);
 				gpx.waypoints.push(newWaypoint);
+
+				newWaypoint.edited = true;
+				gpx.edited = true;
 			});
 	};
 
@@ -164,6 +169,9 @@ function GPXEditor(model) {
 		var newTrack = new Track(trk);
 		newTrack.colour = that.getUnusedTrackColour();
 		toGpx.tracks.push(newTrack);
+
+		newTrack.edited = true;
+		toGpx.edited = true;
 	};
 
 	// TRACKS SEGMENT ------------------------------------------------
@@ -235,6 +243,12 @@ function GPXEditor(model) {
 				break;
 		}
 
+		// XML
+
+		trkptsToRemove.forEach(function(trkpt){
+			trkseg.removeChild(trkpt);						
+		});
+
 		// MODEL
 
 		var pointsToRemove = [];
@@ -244,24 +258,26 @@ function GPXEditor(model) {
 			}
 		});
 
+		var track, gpx;
+		if (pointsToRemove.length > 0) {
+			track = this.trackForSegment(segment);
+			gpx = this.gpxForTrack(track);
+		}
+
+		var atLeastOnePointRemoved = false;
+
 		pointsToRemove.forEach(function(point){
+
 			segment.points.remove(point);
+			
+			segment.edited = true;
+			track.edited = true;
+			gpx.edited = true;
+
+			atLeastOnePointRemoved = true;
 		});
 
-		// XML
-
-		trkptsToRemove.forEach(function(trkpt){
-			trkseg.removeChild(trkpt);						
-		});
-
-		// mark gpx as edited
-
-		var track = that.trackForSegment(segment);
-		var gpx = that.gpxForTrack(track);
-
-		gpx.edited = true;
-
-	    if (segment.points.length == 0)
+	    if ((atLeastOnePointRemoved == true) && (segment.points.length == 0))
 	    	that.deleteTrackSegment(segment);
 	};
 
@@ -278,6 +294,7 @@ function GPXEditor(model) {
 
 		track.segments.remove(segment);
 
+		track.edited = true;
 		gpx.edited = true;
 	};
 
@@ -307,16 +324,22 @@ function GPXEditor(model) {
 		that.gpxs.push(gpx);
 	}
 
+	// FILENAME
+	// 
 	this.updateGpxFileName = function(gpx, fileName) {		
 		gpx.fileName = fileName;
 		gpx.edited = true;
 	};
 
+	// NAME
+	//
 	this.updateGpxName = function(gpx, name) {
 		gpx.createUpdateMetaDataNameNode(name);
 		gpx.edited = true;
 	};
 
+	// DESC
+	//
 	this.updateGpxDesc = function(gpx, desc) {
 		gpx.createUpdateMetaDataDescNode(desc);
 		gpx.edited = true;

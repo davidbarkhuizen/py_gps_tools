@@ -75,7 +75,7 @@ def patch(request, params):
 	id_key = 'id'
 	if id_key not in params.keys():
 		return failure('no id') 
-	id = params[id]
+	id = params[id_key]
 
 	file_name_key = 'fileName'
 	if file_name_key not in params.keys():
@@ -100,7 +100,7 @@ def patch(request, params):
 
 	dbModel.xml = xml
 	dbModel.file_name = file_name
-	updateDBModelFromDomainModel(dbModel, domainModel)
+	dbModel.update_from_domain_model(gpx)
 
 	dbModel.save()
 

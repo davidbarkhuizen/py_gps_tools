@@ -23,7 +23,7 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 		};
 
 		var failFn = function(status){
-			console.log('fail');
+			console.log('fail', status);
 		};
 
 		httpGET($http, 'gpx', { 'id' : id }, successFn, failFn, $scope.globalDebug);
@@ -56,6 +56,50 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 		$rootScope.$emit(Command.EXPORT_GPX, { gpx: gpx });
 	};
 
+	// SAVE / DISCARD CHANGES
+
+	$scope.saveGpx = function(gpx) {
+
+		var successFn = function(data) {
+			gpx.setEditedFalse();	
+		};
+
+		var failFn = function(status) {
+			console.log('save gpx failed', status);
+		};
+
+		httpPATCH(
+			$http, 
+			'gpx', { 
+				'id' : gpx.id, 
+				fileName: gpx.fileName, 
+				xml: gpx.toXml() 
+			}, 
+			successFn, 
+			failFn, 
+			$scope.globalDebug
+			);
+	};
+
+	$scope.discardChanges = function(gpx) {
+	
+		$scope.unloadGpx(gpx);
+
+		if ((gpx.id !== null) && (gpx.id !== undefined))
+			$scope.loadGpx(gpx.id); 
+	};
+
+	$scope.saveOrDiscardChanges = function(gpx) {
+		$rootScope.$emit(Command.OPEN_UNSAVED_CHANGES_MODAL, {
+			onSave: function(){ 
+				$scope.saveGpx(gpx); 
+			},
+			onDiscard: function(){ 
+				$scope.discardChanges(gpx);
+			}
+		});
+	};
+
 	// GRID -----------------------
 
 	$scope.selectGpx = function(id) {
@@ -77,17 +121,28 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 		$timeout($scope.selectFirstGridRow, 0);
 	};
 
-	// GRID UNLOAD
-	//
-	var unloadIconSrcRef = '/static/img/icon/black_button/button_black_minus_16.png';
-	var unloadIconImgTemplate = '<img ng-src="' + unloadIconSrcRef + '">';
-	var unloadCellTemplate = '<div style="padding-top:5px;"><a href="#" title="unload gpx" ng-click="grid.appScope.unloadGpx(row.entity)" ">' + unloadIconImgTemplate + '</a></div>';
-
 	// GRID EXPORT
 	//
 	var exportIconSrcRef = '/static/img/icon/black_button/button_black_down_16.png';
 	var exportIconImgTemplate = '<img ng-src="' + exportIconSrcRef + '">';
 	var exportCellTemplate = '<div style="padding-top:5px;"><a href="#" title="export gpx" ng-click="grid.appScope.exportGpx(row.entity)" ">' + exportIconImgTemplate + '</a></div>';
+
+	// UNLOAD, SAVE CHANGES
+
+	// UNLOAD
+	//
+	var unloadIconSrcRef = '/static/img/icon/black_button/button_black_minus_16.png';
+	var unloadAnchorTemplate = '<a href="#" title="unload gpx" ng-show="(row.entity.edited == false)" ng-click="grid.appScope.unloadGpx(row.entity)" "><img ng-src="|||0|||"></a>'
+		.replace('|||0|||', unloadIconSrcRef);
+
+	// SAVE OR DISCARD CHANGES
+	//
+	var saveOrDiscardChangesIconSrcRef = '/static/img/icon/black_button/button_black_bang_16.png';
+	var saveOrDiscardChangesAnchorTemplate = '<a href="#" title="unsaved changes" ng-show="(row.entity.edited == true)" ng-click="grid.appScope.saveOrDiscardChanges(row.entity);" "><img ng-src="|||0|||"></a>'
+		.replace('|||0|||', saveOrDiscardChangesIconSrcRef);
+
+	var actionCellTemplate =  '<div style="padding-top:5px;">|||0|||</div>'
+		.replace('|||0|||', unloadAnchorTemplate + saveOrDiscardChangesAnchorTemplate);
 
 	$scope.gridApi = undefined;
 
@@ -114,7 +169,7 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 			{ 	
 				field: 'id', 
 				width: '40', 
-				cellTemplate: unloadCellTemplate,
+				cellTemplate: actionCellTemplate,
 				headerCellTemplate: '<span></span>',
 				enableSorting: false, 
 				enableHiding: false,

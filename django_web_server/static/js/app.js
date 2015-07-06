@@ -5,6 +5,9 @@ var commonDependencies = [ '$rootScope', '$scope', '$http', '$timeout'];
 var controllers = [
 	['GodController', [GodController]],
 
+	['ModalController', [ModalController]],
+
+
 	['GpxImportController', [GpxImportController]],
 	['GpxExportController', [GpxExportController]],
 

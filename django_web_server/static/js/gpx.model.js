@@ -1,4 +1,7 @@
 function Point(pt) {
+
+	this.edited = false;
+
 	/*
 	<trkpt lat="-25.9381111711" lon="27.5921234395">
 		<ele>1329.16</ele>
@@ -37,6 +40,8 @@ function Segment(trkseg) {
 		<trkpt/>
 	</trkseg>
 	*/
+	this.edited = false;
+
 	this.node = trkseg;
 
 	this.points = [];	
@@ -50,6 +55,9 @@ function Segment(trkseg) {
 }
 
 function Track(trk) {
+
+	this.edited = false;
+
 	this.node = trk;
 
 	var that = this;
@@ -206,6 +214,23 @@ var GpxXml = Object.freeze({
 function GPX(xml, fileName) {
 
 	var that = this;
+
+	this.edited = false;
+	this.setEditedFalse = function() {
+		that.edited = false;
+		
+		that.tracks.forEach(function(track){
+			track.edited = false;
+
+			track.segments.forEach(function(segment){
+				segment.edited = false;
+			});
+		});
+
+		that.waypoints.forEach(function(waypoint){
+			waypoint.edited = false;
+		});
+	};
 
 	this.fileName = fileName;
 
