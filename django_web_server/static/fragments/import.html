@@ -26,7 +26,7 @@
 					<button ng-click="browseFiles();">browse</button>
 					<br/>
 					<br/>						
-					<div class='medium-short-list'>
+					<div class='list fixed-height-300'>
 						<div ng-repeat='file in browsedFiles'>
 							{{ file.name  }}
 						</div>
@@ -46,7 +46,7 @@
 				<h4>
 					importing ({{ fileQueue.length }})
 				</h4>
-				<div class='short-list'>
+				<div class='list fixed-height-200'>
 					<div ng-repeat='file in fileQueue'>
 						{{ file.name  }}
 					</div>
@@ -54,7 +54,7 @@
 				<h4>
 					failed ({{ failedImports.length }})
 				</h4>
-				<div class='tiny-list action-required'>
+				<div class='list fixed-height-100 action-required'>
 					<div ng-repeat='file in failedImports'>
 						<span title='{{ file.importFailureMessage }}'>{{ file.name  }}</span>
 					</div>
@@ -66,7 +66,7 @@
 				<h4>
 					imported ({{ successfulImports.length }})
 				</h4>
-				<div class='list'>
+				<div class='list fixed-height-300'>
 					<div ng-repeat='file in successfulImports'>
 						<span class='no-action-required'>{{ file.name  }}</span>
 					</div>

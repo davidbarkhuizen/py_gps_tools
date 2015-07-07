@@ -1,3 +1,8 @@
+.red { color:red; }
+
+/* -----------------------------------------------------------*/
+/* LAYOUT */
+
 html, body {
     height: 100%;
     width: 100%;
@@ -5,15 +10,74 @@ html, body {
     padding: 0;
     margin: 0;
 
-	font-family: courier !important;
+    font-family: courier !important;
     font-size: 20px;
     font-weight: bold;
 }
 
+.wrapper {
+    display: table;
+    width: 100%;
+    height: 100%;
+}
+
+.wrapper > div {
+    display: table-row;
+}
+
+.wrapper > div > div {
+    display: table-cell;
+}
+
+/* ----------------------------------------------------------------------*/
+/* NAVBAR */
+
+.navbar {
+    width:100%;
+    color:white;
+    background:darkblue;
+}
+
+.navbar-inner {
+    vertical-align:'middle';
+    padding:5px;
+}
+
+.navbar-select {
+    color:black;
+    background:white;
+
+    font-family: courier !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+}
+
+.navbar-inner > div > .nav-active 
+{
+    color:white;
+}
+
+.navbar-inner > div > .nav-inactive
+{
+    color:lightgrey;
+}
+
+.navbar-inner > div > a.nav-inactive
+{
+    text-decoration: none;
+}
+
+/* -----------------------------------------------------------*/
+/* VIEWPORT */
+
+.viewport {
+    width:100%;
+    height:100%;
+    text-align: center;
+}
+
 /* -----------------------------------------------------------*/
 /* MODAL */
-
-/* http://adamalbrecht.com/2013/12/12/creating-a-simple-modal-dialog-directive-in-angular-js/ */
 
 .modal-overlay {
     position:absolute;
@@ -60,7 +124,57 @@ html, body {
 }
 
 /* -----------------------------------------------------------*/
+/* MAP */
 
+/* LAYER Z-INDICES */
+
+#mapContainer {
+    position: relative;
+}
+
+.map-canvas {
+    z-index: 1;
+    display:inline-block;
+}
+
+.map-selection-area {
+    z-index: 2;
+    position: absolute;
+}
+
+.map-context-menu {
+    z-index: 3;
+    position: absolute;
+}
+
+.right-overlay-menu {
+    z-index: 4;
+    position: absolute;
+}
+
+/* STYLING */
+
+/* ORANGE RECTANGULAR SELECT */
+.map-selection-area {    
+
+    -webkit-box-shadow:inset 0px 0px 0px 5px orange;
+    -moz-box-shadow:inset 0px 0px 0px 5px orange;
+    box-shadow:inset 0px 0px 0px 5px orange;
+}
+
+.right-overlay-menu {
+    text-align:right;
+}
+
+/* -------------------------------------------------------*/
+
+a {
+    color:purple;
+    text-decoration: none;
+}
+
+/* -----------------------------------------------------------*/
+/* TEXT */
 
 .text {
     font-size: 20px;
@@ -68,11 +182,6 @@ html, body {
 
 .subtext {
     font-size: 15px;
-}
-
-a 
-{
-    text-decoration: none;
 }
 
 .underline {
@@ -87,75 +196,8 @@ a
     font-size: 23.4px !important;
 }
 
-.wrapper {
-    display: table;
-    width: 100%;
-    height: 100%;
-}
-.wrapper > div {
-    display: table-row;
-}
-.wrapper > div > div {
-    display: table-cell;
-}
-
-.navbar {
-    width:100%;
-	color:white;
-	background:darkblue;
-}
-
-.navbar-inner {
-	vertical-align:'middle';
-	padding:5px;
-}
-
-.navbar-select {
-    color:black;
-    background:white;
-
-    font-family: courier !important;
-    font-size: 20px !important;
-    font-weight: bold !important;
-}
-
-.viewport {
-	width:100%;
-	height:100%;
-	text-align: center;
-}
-
-.dashed-line-text-input {
-
-    text-align: center !important;
-
-    font-family: courier !important;
-	font-size:20px;
-    font-weight: bold;
-    text-align: left;
-
-    margin-bottom: 5px;
-
-    border-color: lightgrey !important;
-    border:none;
-    border-bottom: dashed;
-}
-
-
-.long-list {
-	width:95%;
-
-    overflow:scroll;
-    overflow-y:scroll;
-    overflow-x:hidden;
-    min-height: 500px;
-    max-height: 500px;
-
-    text-align: left;
-
-    padding-left:10px;
-    padding-right:10px;
-}
+/* -----------------------------------------------------------*/
+/* LIST */
 
 .list {
     width:95%;
@@ -163,71 +205,42 @@ a
     overflow:scroll;
     overflow-y:scroll;
     overflow-x:hidden;
+
+    text-align: left;
+
+    padding-left:10px;
+    padding-right:10px;
+}
+
+/* ----- FIXED HEIGHT ---------------------------------------------------*/
+
+.fixed-height-500 {
+    min-height: 500px;
+    max-height: 500px;
+}
+
+.fixed-height-450 {
     min-height: 450px;
     max-height: 450px;
-
-    text-align: left;
-
-    padding-left:10px;
-    padding-right:10px;
 }
 
-
-.medium-short-list {
-    width:95%;
-
-    overflow:scroll;
-    overflow-y:scroll;
-    overflow-x:hidden;
+.fixed-height-300 {
     min-height: 300px;
     max-height: 300px;
-
-    text-align: left;
-
-    padding-left:10px;
-    padding-right:10px;
 }
 
-.short-list {
-    width:95%;
-
-    overflow:scroll;
-    overflow-y:scroll;
-    overflow-x:hidden;
-    min-height: 200px;
-    max-height: 200px;
+.fixed-height-200 {
+    min-height: 300px;
+    max-height: 300px;
 }
 
-
-.tiny-list {
-    width:95%;
-
-    overflow:scroll;
-    overflow-y:scroll;
-    overflow-x:hidden;
+.fixed-height-100 {
     min-height: 100px;
     max-height: 100px;
 }
 
-a 
-{
-    color:purple;
-}
-
-.navbar-inner > div > .nav-active 
-{
-    color:white;
-}
-
-.navbar-inner > div > .nav-inactive
-{
-    color:lightgrey;
-}
-
-.navbar-inner > div > a.nav-inactive
-{
-    text-decoration: none;
-}
+/* ----------------------------------------------------------------------*/
+/* COLOURS */
 
 .active {
     color:purple;
@@ -249,51 +262,6 @@ a
     color:blue;
 }
 
-/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-/* MAP LAYERS / Z-INDICES */
-
-#mapContainer {
-    position: relative;
-}
-
-/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
-/* Z-INDEX & POSITIONING */
-
-.map-canvas {
-    z-index: 1;
-    display:inline-block;
-}
-
-.map-selection-area {
-    z-index: 2;
-    position: absolute;
-}
-
-.map-context-menu {
-    z-index: 3;
-    position: absolute;
-}
-
-/* MUTUALLY EXCLUSIVE RIGHT MENUS */ 
-
-.right-overlay-menu {
-    z-index: 4;
-    position: absolute;
-}
-
-/* -------------------------------------------------------*/
-/* MAP SELECTION AREA */
-
-.map-selection-area {    
-
-    -webkit-box-shadow:inset 0px 0px 0px 5px orange;
-    -moz-box-shadow:inset 0px 0px 0px 5px orange;
-    box-shadow:inset 0px 0px 0px 5px orange;
-}
-
-.right-overlay-menu {
-    text-align:right;
-}
 
 /* -------------------------------------------------------*/
 /* GRID */
@@ -319,5 +287,3 @@ a
 }
 
 /* -------------------------------------------------------*/
-
-.red { color:red; }
