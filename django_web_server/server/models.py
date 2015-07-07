@@ -37,9 +37,6 @@ class Gpx(models.Model):
 
 		track_names_concat = '|'.join([track.name for track in domain_model.tracks]) if (len(domain_model.tracks) > 0) else None
 
-		print('name', domain_model.metadata['name'])
-		print('desc', domain_model.metadata['desc'])
-
 		self.name = domain_model.metadata['name']
 		self.desc = domain_model.metadata['desc']
 		self.time = domain_model.metadata['time']

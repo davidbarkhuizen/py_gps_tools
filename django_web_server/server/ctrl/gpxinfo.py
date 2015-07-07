@@ -13,7 +13,4 @@ def get(request):
 
 	infos = [gpx.to_gpx_info() for gpx in Gpx.objects.all().order_by('time')]
 
-	for i in infos:
-		print(i)
-
 	return success({ 'gpxinfos' : infos })
