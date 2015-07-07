@@ -6,10 +6,14 @@
 
 	<div ng-show='(model.getTracks().length == 0)'>
 		<br/>
-		<span>no tracks loaded</span>
+		<div class='header'>
+			elevation
+		</div>
+		<div>
+			<a href="#" ng-click='gotoView(Views.GPX_DATABASE);'>my gpx</a>
+		</div>
 		<br/>
-		<br/>
-		<a href="#" ng-click='gotoView(Views.GPX_DATABASE);'>track database</a>
+		<div>no tracks loaded</div>
 	</div>
 
 	<canvas
