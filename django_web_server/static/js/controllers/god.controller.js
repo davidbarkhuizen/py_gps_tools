@@ -14,7 +14,7 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	
 		var bindWindow = function () {
 
-			// focus on element marked with ? attribute 
+			// focus on element marked with data-focus-element attribute 
 			// 
 			$scope.giveActiveViewFocus();
 
@@ -64,12 +64,6 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	// Controller Element Doc Ids
 	//
 	$scope.fileInputId = 'ImportGpxFileInput';
-
-	// -------------------------------------------------------------------
-	// GPX IMPORT - EXPORT
-
-	$rootScope.$on(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED, function(evt) {
-	});
 
 	// -------------------------------------------------------------------
 	// DEBUG

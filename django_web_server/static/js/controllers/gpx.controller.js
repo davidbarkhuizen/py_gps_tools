@@ -61,7 +61,8 @@ function GpxController($rootScope, $scope, $http, $timeout) {
 	$scope.saveGpx = function(gpx) {
 
 		var successFn = function(data) {
-			gpx.setEditedFalse();	
+			gpx.setEditedFalse();
+			$timeout(function() { $rootScope.$emit(Event.SERVER_UPDATED); }, 500);			
 		};
 
 		var failFn = function(status) {

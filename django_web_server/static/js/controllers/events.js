@@ -1,12 +1,8 @@
 var Event = Object.freeze({
 
-	DATA_MODEL_CHANGED : guid(),
-
 	DEBUG_ERROR : guid(),
-
-	GPX_FILE_IMPORT_SUCCEEDED : guid(),
-	GPX_FILE_IMPORT_PROCESS_COMPLETED : guid(),
-
+	SERVER_UPDATED : guid(),
+	DATA_MODEL_CHANGED : guid(),
 	MAP_SELECTION_BEGUN : guid(),
 });
 
@@ -34,6 +30,7 @@ var Command = Object.freeze({
 	UPDATE_WAYPOINT_NAME : guid(),
 	COPY_WAYPOINTS_TO_GPX : guid(),
 	SELECT_WAYPOINTS : guid(),
+	// DELETE_WAYPOINT
 
 	// TRACK
 	//

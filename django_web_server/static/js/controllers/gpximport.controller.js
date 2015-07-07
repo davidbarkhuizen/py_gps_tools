@@ -32,17 +32,14 @@ function GpxImportController($rootScope, $scope, $http, $timeout) {
 			};
 
 			var next = function() {
-		    	if ($scope.fileQueue.length == 0) {
-		    		$rootScope.$emit(Event.GPX_FILE_IMPORT_PROCESS_COMPLETED);
-	    		}
-		    	else {
+		    	if ($scope.fileQueue.length > 0) {
 		    		$scope.uploadNextFile();
-		    	}
+	    		}
 			};
 
 			var successFn = function(data, status, headers, config) {
 
-				$rootScope.$emit(Event.GPX_FILE_IMPORT_SUCCEEDED);
+				$rootScope.$emit(Event.SERVER_UPDATED);
 				$scope.successfulImports.push(file);
 				next();
 			};

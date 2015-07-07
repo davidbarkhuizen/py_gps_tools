@@ -77,8 +77,6 @@ function TracksController($rootScope, $scope, $http, $timeout) {
 
 	$rootScope.$on(Event.DATA_MODEL_CHANGED, function(evt){
 
-		// console.dir($scope.gridApi.selection);
-
 		var tracks = model.getTracks();
 		var alreadySelectedTracks = $scope.gridApi.selection.getSelectedRows();
 

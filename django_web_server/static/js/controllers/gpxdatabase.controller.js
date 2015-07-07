@@ -1,10 +1,9 @@
 function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
+	$scope.model = $scope.$parent.model;
 	$scope.dateValToTimeString = dateValToTimeString;
 
-	$scope.model = $scope.$parent.model;
-
-	$scope.selectGpx = function(id) {
+	$scope.selectGpxInfo = function(id) {
 
 		if ((id == null) || (id === undefined))
 			return;
@@ -142,17 +141,9 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 				if ((row === undefined) || (row.entity.id == null) || (row.entity.id === undefined))
 					return;
 
-				$scope.selectGpx(row.entity.id);
+				$scope.selectGpxInfo(row.entity.id);
 			});
 	    },
-	};
-
-	// -------------------------------------------------
-
-	$scope.gpxIsLoaded = function(id) {
-
-		var isLoaded = ($scope.model.gpxs.countWhere(function(x) { return (x.id == id); }) > 0); 
-		return isLoaded;
 	};
 
 	// load -------------------------------------------
@@ -162,20 +153,34 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 		var successFn = function(data) { 
 			
 			$scope.model.gpxinfos.length = 0;
-			data.gpxinfos.forEach(function(x) { $scope.model.gpxinfos.push(x); });
+			
+			data.gpxinfos.forEach(function(x) { 
+				$scope.model.gpxinfos.push(x); 
+			});
+			
 			data.gpxinfos.sort(function(a, b) { 
 				return a.file_name.localeCompare(b.file_name); 
 			});
 
-			$scope.gridOptions.data = $scope.model.gpxinfos;
+
+			if (($scope.model.selectedGpxinfo !== undefined) && ($scope.model.selectedGpxinfo !== null)) {
+
+				for(var i = 0; i < $scope.model.gpxinfos.length; i++) {
+
+					if ($scope.model.gpxinfos[i].id == $scope.model.selectedGpxinfo.id) {
+						$scope.model.selectedGpxinfo = $scope.model.gpxinfos[i];
+
+						$timeout(function() {
+							$scope.gridApi.selection.clearSelectedRows();
+							$scope.gridApi.selection.toggleRowSelection($scope.model.selectedGpxinfo);
+						}, 10);
+								
+						return;
+					}
+				}
+			}
 
 			$scope.selectFirstGridRowDelayed();
-
-			// select 1st row
-			//
-			if (($scope.model.selectedGpxinfo == undefined) || ($scope.model.gpxinfos.contains($scope.model.selectedGpxinfo) == false)) {
-				$scope.selectFirstGridRowDelayed();
-			}
 		};
 		
 		var errorFn = function(error){
@@ -185,7 +190,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 		httpGET($http, 'gpxinfos', null, successFn, null, errorFn)
 	};
 
-	$rootScope.$on(Event.GPX_FILE_IMPORT_SUCCEEDED, function(evt){
+	$rootScope.$on(Event.SERVER_UPDATED, function(evt){
 		$scope.loadGpxinfos();
 	});
 
@@ -193,7 +198,7 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 	// UI COMMANDS
 
 	$scope.loadGpx = function(id) {
-		if ($scope.gpxIsLoaded(id) == true)
+		if ($scope.model.gpxIdIsLoaded(id) == true)
 			return;
 
 		$rootScope.$emit(Command.LOAD_GPX, id);		
