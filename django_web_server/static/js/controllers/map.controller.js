@@ -7,6 +7,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	// OPTIONS
 
 	$scope.PlotTypes = Object.freeze({
+
 		ELEVATION : 'elevation',
 		PATH : 'path',
 		POINTS : 'points'
@@ -69,9 +70,12 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	// CONTEXT MENU
 
 	$scope.showContextMenu = function() {
+
 		var state = ($scope.haveSelection() || ($scope.canZoomOut()));
+
 		if (state == false)
 			ngHide($scope.contextMenu);
+
 		return state;
 	};
 
@@ -214,6 +218,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	$scope.showEditTrackMenu = false;
 
 	$scope.cancelEditTrack = function() {
+
 		$scope.selectedSegmentTrack = null;
 		$scope.selectedSegment = null;
 		$scope.selectedSegmentSectionPoints.length = 0;
@@ -477,7 +482,18 @@ function MapController($rootScope, $scope, $http, $timeout) {
 
 		$scope.selecting = false;
 
-		$scope.openContextMenu();
+		var zeroArea = 
+			(
+			($scope.selectionPoints[0].x == $scope.selectionPoints[1].x)
+			&&
+			($scope.selectionPoints[0].y == $scope.selectionPoints[1].y)
+			);
+
+		if (zeroArea) {
+			$scope.selectionPoints.length = 0;
+		} else {
+			$scope.openContextMenu();	
+		}		
 	};	
 
 	$scope.onMouseMove = function(mousePos) {
