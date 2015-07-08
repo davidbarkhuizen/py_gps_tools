@@ -21,9 +21,9 @@ function GodController($rootScope, $scope, $http, $timeout) {
 			// ui-grids only display correctly after this event if
 			// initially rendered off-screen
 			//
-			var evt = document.createEvent('HTMLEvents');
-			evt.initEvent('resize', true, false);
-			window.dispatchEvent(evt);
+			//var evt = document.createEvent('HTMLEvents');
+			//evt.initEvent('resize', true, false);
+			//window.dispatchEvent(evt);
 		};
 
 		$timeout(bindWindow, 100);
