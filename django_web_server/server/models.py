@@ -37,14 +37,9 @@ class Gpx(models.Model):
 
 		# METADATA
 
-		if (domain_model.metadata is not None):
-			self.name = domain_model.metadata['name']
-			self.desc = domain_model.metadata['desc']
-			self.time = domain_model.metadata['time']
-		else:
-			self.name = ''
-			self.desc = ''
-			self.time = None
+		self.name = domain_model.metadata['name']
+		self.desc = domain_model.metadata['desc']
+		self.time = domain_model.metadata['time']
 
 		# TRACK
 

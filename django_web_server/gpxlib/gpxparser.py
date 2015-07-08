@@ -69,18 +69,18 @@ def blank_metadata():
 def parse_metadata(find, findall, ns):
     '''
     '''
+    metadata = blank_metadata()
+
     node = None
     try:
         node = findall('metadata')[0] 
     except Exception, e:
-        return
-
-    metadata = blank_metadata()
+        return metadata
 
     # time
 
     try:
-        metadata_time_string = node.find('time').text
+        metadata_time_string = node.find(ns + 'time').text
         metadata_time = datetime.datetime.strptime(metadata_time_string, DATE_TIME_FORMAT)    
         metadata['time'] = metadata_time
     except Exception, e:
@@ -165,13 +165,19 @@ def parse_waypoints(find, findall, ns):
 
     xml_waypoints = findall('wpt')
 
-    for xml_waypoint in xml_waypoints:       
-          
-        name = str(xml_waypoint.find(ns + 'name').text)
+    for xml_waypoint in xml_waypoints:  
+         
+        name_node = xml_waypoint.find(ns + 'name')
+        name = str(name_node.text) if name_node is not None else ''
+
         lat = float(xml_waypoint.get('lat'))
         lon = float(xml_waypoint.get('lon'))
-        elevation = float(xml_waypoint.find(ns + 'ele').text)
-        time = parseGarmin11DateTimeString(xml_waypoint.find(ns + 'time').text)
+
+        ele_node = xml_waypoint.find(ns + 'ele')
+        elevation = float(ele_node.text) if ele_node is not None else ''
+
+        time_node = xml_waypoint.find(ns + 'time')
+        time = parseGarmin11DateTimeString(time_node.text) if time_node is not None else None
         
         waypoint = Waypoint(name, lat, lon, elevation, time)
         
@@ -187,8 +193,14 @@ def parse_gpx_xml_to_domain_model(xml_string, log = def_log_fn):
     def find(path): return x.find(path)
     def findall(path): return x.findall(path)
 
+    metadata = None
+    tracks = []
+    waypoints = []
+
     metadata = parse_metadata(find, findall, ns)
     tracks = parse_tracks(find, findall, ns)
     waypoints = parse_waypoints(find, findall, ns)
 
-    return GPX(metadata, tracks, waypoints)
+    domain_model = GPX(metadata, tracks, waypoints)
+
+    return domain_model

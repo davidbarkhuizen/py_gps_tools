@@ -7,4 +7,5 @@ class Point(object):
         self.time = time
 
     def __str__(self):
-        return '%f|%f|%f|%s' % (self.lat, self.lon, self.ele, self.time.isoformat())
+    	time_str = self.time.isoformat() if self.time is not None else ''
+        return '%f|%f|%f|%s' % (self.lat, self.lon, self.ele, time_str)

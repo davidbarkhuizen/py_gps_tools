@@ -46,7 +46,7 @@
 				<h4>
 					importing ({{ fileQueue.length }})
 				</h4>
-				<div class='list fixed-height-200'>
+				<div class='list fixed-height-100'>
 					<div ng-repeat='file in fileQueue'>
 						{{ file.name  }}
 					</div>
@@ -54,7 +54,7 @@
 				<h4>
 					failed ({{ failedImports.length }})
 				</h4>
-				<div class='list fixed-height-100 action-required'>
+				<div class='list fixed-height-200 action-required'>
 					<div ng-repeat='file in failedImports'>
 						<span title='{{ file.importFailureMessage }}'>{{ file.name  }}</span>
 					</div>

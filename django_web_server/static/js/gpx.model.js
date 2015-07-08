@@ -13,7 +13,13 @@ function Point(pt) {
 	this.lat = parseFloat(pt.getAttribute('lat'));
 	this.lon = parseFloat(pt.getAttribute('lon'));
 	this.ele = parseFloat(getChildNodeText(pt, 'ele'));
-	this.time = parseGPX11DateTimeString(getChildNodeText(pt, 'time'));
+
+	var timeNodeText = getChildNodeText(pt, 'time');
+	
+	this.time = (timeNodeText == undefined)
+		? undefined
+		: parseGPX11DateTimeString(timeNodeText);
+	
 	this.name = getChildNodeText(pt, 'name')
 
 	// track/segment stat
@@ -150,20 +156,22 @@ function Track(trk) {
 		that.midEle = 0.5 * (that.minMaxEle.max + that.minMaxEle.min);
 
 		that.periodString = '';
-		if (that.minMaxTime.max.toDateString() == that.minMaxTime.min.toDateString()) {
-			// same day
-			that.periodString = that.minMaxTime.max.toDateString();
-			that.periodString = that.periodString + ':  ' + toShortTimeString(that.minMaxTime.min) + ' - ' + toShortTimeString(that.minMaxTime.max);
+		if ((that.minMaxTime.max !== undefined) && (that.minMaxTime.min !== undefined)) {
+			if (that.minMaxTime.max.toDateString() == that.minMaxTime.min.toDateString()) {
+				// same day
+				that.periodString = that.minMaxTime.max.toDateString();
+				that.periodString = that.periodString + ':  ' + toShortTimeString(that.minMaxTime.min) + ' - ' + toShortTimeString(that.minMaxTime.max);
 
-		} else {
-			// different days
-			var from = that.minMaxTime.min.toDateString()  + ' ' + toShortTimeString(that.minMaxTime.min);
-			var to = that.minMaxTime.max.toDateString()  + ' ' + toShortTimeString(that.minMaxTime.max);
-			that.periodString = from + ' - ' + to;
+			} else {
+				// different days
+				var from = that.minMaxTime.min.toDateString()  + ' ' + toShortTimeString(that.minMaxTime.min);
+				var to = that.minMaxTime.max.toDateString()  + ' ' + toShortTimeString(that.minMaxTime.max);
+				that.periodString = from + ' - ' + to;
+			}
+
+			var offSet = that.minMaxTime.min.getTimezoneOffset();
+			that.periodString = that.periodString + ' (UTC ' + (offSet <= 0 ? "+" : "-") + (Math.abs(offSet)).toString() + ' mins)';
 		}
-
-		var offSet = that.minMaxTime.min.getTimezoneOffset();
-		that.periodString = that.periodString + ' (UTC ' + (offSet <= 0 ? "+" : "-") + (Math.abs(offSet)).toString() + ' mins)';
 
 		var durationMS = that.minMaxTime.max - that.minMaxTime.min;
 

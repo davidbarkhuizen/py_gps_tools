@@ -78,12 +78,53 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
 
 	// ---------------------------------------
 
-	$rootScope.$on(Event.DATA_MODEL_CHANGED, function(evt) {
+	// $rootScope.$on(Event.DATA_MODEL_CHANGED, function(evt) {
+
+	// 	var waypoints = model.getWaypoints();
+
+	// 	$scope.gridOptions.data = waypoints;
+
+	// 	if (((model.selectedPoint === undefined) || (model.selectedPoint === null)) && (waypoints.length > 0)) {
+
+	// 		$scope.selectFirstGridRowDelayed();
+	// 	}
+	// });
+
+	$rootScope.$on(Event.DATA_MODEL_CHANGED, function(evt){
 
 		var waypoints = model.getWaypoints();
+		var alreadySelectedWaypoints = $scope.gridApi.selection.getSelectedRows();
 
-		if ((model.selectedPoint === undefined) || (model.selectedPoint === null) &&  (waypoints.length > 0)) {
+		if ((model.selectedPoint !== undefined) && (model.selectedPoint !== null)) {
 
+			// selected track no longer exists
+			// 
+			if (waypoints.indexOf(model.selectedPoint) == -1) {
+				
+				model.selectedPoint = null;
+				$scope.selectFirstGridRowDelayed();
+			}
+			else {
+
+				// already selected
+				//
+				if (alreadySelectedWaypoints.indexOf(model.selectedPoint) !== -1)
+					return;
+
+				// not yet selected
+				//
+				$timeout(function() {
+
+					$scope.gridApi.selection.clearSelectedRows();
+					$scope.gridApi.selection.toggleRowSelection(model.selectedPoint);
+				}, 0);
+
+				return;
+			}
+		} 
+		// update selection
+		//
+		else {			
 			$scope.selectFirstGridRowDelayed();
 		}
 	});

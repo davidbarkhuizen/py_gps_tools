@@ -121,7 +121,12 @@ function GPXEditor(model) {
 	this.deleteWaypoint = function(waypoint) {
 
 		var gpx = this.gpxForWaypoint(waypoint);
+
+		// XML
 		waypoint.node.parentNode.removeChild(waypoint.node);
+
+		// MODEL
+		gpx.waypoints.removeWhere(function(x){ return (x == waypoint); });
 
 		if (model.selectedPoint === waypoint)
 			model.selectedPoint = undefined;

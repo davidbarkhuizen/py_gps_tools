@@ -21,6 +21,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 			scaleBarLocation : Corner.BOTTOM_RIGHT,
 			plotType : $scope.PlotTypes.PATH,
 			showWaypoints : 'true',
+			clusterWaypoints : 'true',
 			showCompass : 'true',
 
 			pathSelectionType : $scope.PathSelectionTypes.BETWEEN,
@@ -1082,7 +1083,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	    context.stroke();
 	};
 
-	$scope.drawWaypoints = function(context, canvasWaypoints, size, color, font, fontSize) {
+	$scope.drawWaypoints = function(context, canvasWaypoints, size, color, font, fontSize, cluster) {
 
 		var clusterFn = function(wp1, wp2) {
 
@@ -1097,7 +1098,9 @@ function MapController($rootScope, $scope, $http, $timeout) {
 			return result;
 		};
 
-		var clusters = clusterPoints(canvasWaypoints, clusterFn);
+		var clusters = (cluster == true)
+			? clusterPoints(canvasWaypoints, clusterFn)
+			: canvasWaypoints.map(function(x){ return [x]; });
 
 		for(var c = 0; c < clusters.length; c++) {
 
@@ -1194,7 +1197,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 		// WAYPOINTS
 		//
 		if ($scope.mapOptions.showWaypoints == 'true') {
-			$scope.drawWaypoints(context, $scope.canvasWaypoints, 10, Colour.BLACK, $scope.mapOptions.font, 15);
+			$scope.drawWaypoints(context, $scope.canvasWaypoints, 10, Colour.BLACK, $scope.mapOptions.font, 15, $scope.mapOptions.clusterWaypoints);
 		}
 
 		// PLOT TITLE

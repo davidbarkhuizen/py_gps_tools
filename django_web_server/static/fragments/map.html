@@ -82,14 +82,14 @@
 			<br/>
 
 			<div>
-				<span class='bold'>waypoints</span>
+				<span class='bold'>show waypoints</span>
 				<br/>
 				<input
 					ng-model="mapOptions.showWaypoints"
 					value="true"
 					type="radio"
 					ng-change='onOptionChange();'
-					>show
+					>true
 				</input>
 				<br/>
 				<input
@@ -97,7 +97,29 @@
 					value="false"
 					type="radio"
 					ng-change='onOptionChange();'
-					>hide
+					>false
+				</input>
+			</div>
+
+			<br/>
+
+			<div>
+				<span class='bold'>cluster waypoints</span>
+				<br/>
+				<input
+					ng-model="mapOptions.clusterWaypoints"
+					value="true"
+					type="radio"
+					ng-change='onOptionChange();'
+					>true
+				</input>
+				<br/>
+				<input
+					ng-model="mapOptions.clusterWaypoints"
+					value="false"
+					type="radio"
+					ng-change='onOptionChange();'
+					>false
 				</input>
 			</div>
 

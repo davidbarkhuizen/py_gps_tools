@@ -43,7 +43,7 @@ def post(request, params):
 	dbModel.xml = xml
 	dbModel.file_name = file_name
 	dbModel.update_from_domain_model(gpx)
-	
+
 	dbModel.save()
 
 	return success('gpx created')
@@ -60,12 +60,7 @@ def get(request, params):
 		return failure('could not find gpx with id = %s' % id)    
 
 	gpx = parse_gpx_xml_to_domain_model(model.xml)
-
-	tracks = [track.to_dict() for track in gpx.tracks]     
-	waypoints = [waypoint.to_dict() for waypoint in gpx.waypoints]
-
-	info = model.to_gpx_info()
-
+	
 	data = { 'id' : id, 'file_name' : model.file_name, 'xml' : model.xml  }
 	
 	return success(data)
@@ -92,6 +87,9 @@ def patch(request, params):
 	except Exception, e:
 		return failure('not a valid gpx file')
 
+	print('gxx metadata')
+	print(gpx.metadata)
+
 	# retrieve
 	#
 	dbModel = Gpx.objects.get(id=id)    
@@ -101,6 +99,8 @@ def patch(request, params):
 	dbModel.xml = xml
 	dbModel.file_name = file_name
 	dbModel.update_from_domain_model(gpx)
+
+	print(dbModel.to_gpx_info())
 
 	dbModel.save()
 
