@@ -209,8 +209,16 @@ a {
 
     text-align: left;
 
+    /*
     padding-left:10px;
     padding-right:10px;
+    */
+}
+
+/* ------------------ */
+
+.width-1200 {
+    width: 1200px !important;;
 }
 
 /* ----- FIXED HEIGHT ---------------------------------------------------*/
@@ -233,6 +241,11 @@ a {
 .fixed-height-200 {
     min-height: 200px;
     max-height: 200px;
+}
+
+.fixed-height-150 {
+    min-height: 150px;
+    max-height: 150px;
 }
 
 .fixed-height-100 {
@@ -288,3 +301,20 @@ a {
 }
 
 /* -------------------------------------------------------*/
+
+.height-300 {
+    height:300px;
+}
+
+
+/* -------------------------------------------------------*/
+
+.margin-left-20 {
+    margin-left: 20px;
+}
+
+/* -------------------------------------------------------*/
+
+.text-left {
+    text-align: left;
+}

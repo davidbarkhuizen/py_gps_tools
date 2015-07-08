@@ -5,17 +5,21 @@
 	>
 
 	<br/>
-	<div class='header'>
-		my .GPX files ({{ model.gpxinfos.length  }})
-	</div>
 
 	<div>
-		<a href="#" ng-click='gotoView(Views.IMPORT)'>import</a>
-		<a href="#" ng-click='gotoView(Views.GPX)' class='underline'>gpx</a>
-		<a href="#" ng-click='gotoView(Views.MAP)'>map</a>
+		<div class='header'>
+			my .GPX files ({{ model.gpxinfos.length  }})
+		</div>
+		<div>
+			<br/>
+		</div>
 	</div>
+	
+	<br/>
 
-	<div id='SelectedGpxinfo' style='text-align:left;margin:20px'>
+	<div id='SelectedGpxinfo' 
+		class='list fixed-height-150 width-1200 margin-left-20 text-left'
+		>
 		<div>
 			file name:
 			<span>{{ model.selectedGpxinfo.file_name }} </span>
@@ -46,9 +50,12 @@
 		</div>
 	</div>
 
+	<br/>
+
 	<div
 		ui-grid="gridOptions"
-		ui-grid-selection
-		class="grid grid-medium"
+		ui-grid-selection		
+		style='margin-left:20px;'
+		class="grid grid-medium width-1200 height-300"
 	></div>
 </div>
