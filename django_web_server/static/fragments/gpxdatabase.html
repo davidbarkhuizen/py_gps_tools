@@ -2,27 +2,20 @@
 	ng-show='view == Views.GPX_DATABASE'
 	ng-controller='GpxDatabaseController'
 	id='GpxDatabaseContainer'
-	class='max-height'
-	style='position:relative;'
 	>
 
 	<br/>
-
-	<div>
-		<div class='header'>
-			my .GPX files ({{ model.gpxinfos.length  }})
-		</div>
-
-		<div>
-			<a href="#" ng-click='gotoView(Views.IMPORT)'>import</a>
-			<a href="#" ng-click='gotoView(Views.GPX)' class='underline'>gpx</a>
-			<a href="#" ng-click='gotoView(Views.MAP)'>map</a>
-		</div>
+	<div class='header'>
+		my .GPX files ({{ model.gpxinfos.length  }})
 	</div>
 
-	<div id='SelectedGpxinfo'
-		class='list fixed-height-150'
-		style='text-align:left;margin:20px'>
+	<div>
+		<a href="#" ng-click='gotoView(Views.IMPORT)'>import</a>
+		<a href="#" ng-click='gotoView(Views.GPX)' class='underline'>gpx</a>
+		<a href="#" ng-click='gotoView(Views.MAP)'>map</a>
+	</div>
+
+	<div id='SelectedGpxinfo' style='text-align:left;margin:20px'>
 		<div>
 			file name:
 			<span>{{ model.selectedGpxinfo.file_name }} </span>
@@ -56,6 +49,6 @@
 	<div
 		ui-grid="gridOptions"
 		ui-grid-selection
-		class="grid height-300"
+		class="grid grid-medium"
 	></div>
 </div>
