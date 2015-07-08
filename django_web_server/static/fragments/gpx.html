@@ -1,8 +1,6 @@
-<div
+<div id='GpxContainer'
 	ng-show='view == Views.GPX'
-	ng-controller='GpxController'
-	id='GpxContainer'
-	>
+	ng-controller='GpxController'>
 
 	<br/>
 
@@ -17,7 +15,8 @@
 
 	<br/>
 
-	<div id='SelectedGpxinfo' class='list fixed-height-150 width-1200 margin-left-20 text-left'>
+	<div id='SelectedGpxinfo' 
+		class='list fixed-height-150 width-1200 margin-left-20 text-left'>
 		<div>
 			file name:
 			<span>{{ model.selectedGpx.fileName }} </span>

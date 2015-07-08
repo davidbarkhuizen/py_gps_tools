@@ -4,40 +4,53 @@
 	ng-show='view == Views.EXPORT'
 	>
 
-	<h3>
-		export
-	</h3>
+	<br/>
 
 	<div>
-		<div>
-			map
+		<div class='header'>
+			export
 		</div>
-		<div ng-show='model.getTracks().length > 0'>
-			<a href='#' ng-click='exportMap();'>export</a>
+		<div>
+			<br/>
 		</div>
 	</div>
 
 	<br/>
 
-	<div>
-		<div>
-			waypoints
-		</div>
-		<div ng-show='model.getWaypoints().length > 0'>
-			<a href='#' ng-click='exportAllWaypoints();'>export all</a>
-		</div>
-	</div>
+	<div class='list fixed-height-500 width-1200 margin-left-20 text-left'>
 
-	<br/>
-
-	<div>
 		<div>
-			tracks
+			<div>
+				map
+			</div>
+			<div ng-show='model.getTracks().length > 0'>
+				<a href='#' ng-click='exportMap();'>export</a>
+			</div>
 		</div>
-		<div ng-show='model.getTracks().length > 0'>
-			<a href='#' ng-click='exportAllTracks();'>export all</a>
+
+		<br/>
+
+		<div>
+			<div>
+				waypoints
+			</div>
+			<div ng-show='model.getWaypoints().length > 0'>
+				<a href='#' ng-click='exportAllWaypoints();'>export all</a>
+			</div>
 		</div>
-	</div>
+
+		<br/>
+
+		<div>
+			<div>
+				tracks
+			</div>
+			<div ng-show='model.getTracks().length > 0'>
+				<a href='#' ng-click='exportAllTracks();'>export all</a>
+			</div>
+		</div>
+
+	</div>	
 
 	<a ng-show='false' id='GpxDownloadLink'>download .gpx</a>
 	<a ng-show='false' id='PngDownloadLink'>download .png</a>

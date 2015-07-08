@@ -5,32 +5,37 @@
 	>
 
 	<br/>
-	<div class='header'>
-		waypoints ({{ model.getWaypoints().length }})
+
+	<div>
+		<div class='header'>
+			waypoints ({{ model.getWaypoints().length }})
+		</div>
+		<div>
+			<a href='#' class='underline' ng-click='exportAllWaypoints();'
+				>export</a>
+			<a href='#' class='underline' ng-click='exportAllWaypointsAsTxt();'
+				>export as .TXT</a>
+
+			<!-- COPY ALL TO .GPX -->
+			<a href='#' class='underline'
+				ng-show='(model.gpxs.length > 1)'
+				ng-click='copyInfo.showCopyAll = true;'
+				>copy to .GPX</a>
+			<span ng-show='(copyInfo.showCopyAll === true)'>		
+				<select
+					ng-model="copyInfo.gpxToCopyTo"
+					ng-options="gpx as gpx.label() for gpx in model.gpxs">
+				</select>
+				<a href='#' ng-click='copyAllToGpx();'>copy</a>
+				<a href='#' ng-click='copyInfo.showCopyAll = false;'>cancel</a>
+			</span>
+		</div>
 	</div>
-	<a href='#' class='underline' ng-click='exportAllWaypoints();'
-		>export</a>
-	<a href='#' class='underline' ng-click='exportAllWaypointsAsTxt();'
-		>export as .TXT</a>
-
-	<!-- COPY ALL TO .GPX -->
-	<a href='#' class='underline'
-		ng-show='(model.gpxs.length > 1)'
-		ng-click='copyInfo.showCopyAll = true;'
-		>copy to .GPX</a>
-	<span ng-show='(copyInfo.showCopyAll === true)'>		
-		<select
-			ng-model="copyInfo.gpxToCopyTo"
-			ng-options="gpx as gpx.label() for gpx in model.gpxs">
-		</select>
-		<a href='#' ng-click='copyAllToGpx();'>copy</a>
-		<a href='#' ng-click='copyInfo.showCopyAll = false;'>cancel</a>
-	</span>
 
 	<br/>
-	<br/>
 
-	<div id='SelectedWaypoint'>
+	<div id='SelectedWaypoint'
+		class='list fixed-height-150 width-1200 margin-left-20 text-left'>
 		<div>
 			<div class='header'>
 				{{ (model.selectedPoint === undefined) ? "no point selected" : model.selectedPoint.name }}
@@ -82,6 +87,8 @@
 		ui-grid="gridOptions"
 		ui-grid-selection
 		ui-grid-edit
-		class="grid grid-medium"
+		style='margin-left:20px;'
+		class="grid grid-medium width-1200 height-300"
+		id='WaypointGrid'
 	></div>
 </div>

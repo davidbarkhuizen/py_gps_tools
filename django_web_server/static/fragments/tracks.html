@@ -3,21 +3,20 @@
 	ng-controller='TracksController'>
 
 	<br/>
-	<div class='header'>
-		tracks ({{ model.getTracks().length }})
-	</div>
-	<div>	
-		<a href='#' ng-click='exportAllTracks();' class='underline'
-		>export all</a>
-	</div>
-	<div>
-		<a href="#" ng-click='gotoView(Views.GPX_DATABASE);' class='underline'
-		>my gpxs</a>
-	</div>
 
+	<div>
+		<div class='header'>
+			tracks ({{ model.getTracks().length }})
+		</div>
+		<div>
+			<a href='#' ng-click='exportAllTracks();' class='underline'>export all</a>
+		</div>
+	</div>
+	
 	<br/>
 
-	<div id='SelectedTrack'>
+	<div id='SelectedTrack'
+		class='list fixed-height-150 width-1200 margin-left-20 text-left'>
 		<div>
 			<div>
 				{{ (model.selectedTrack !== null) 
@@ -92,7 +91,8 @@
 		ui-grid="gridOptions"
 		ui-grid-selection
 		ui-grid-edit
-		class="grid grid-short"
+		style='margin-left:20px;'
+		class="grid grid-medium width-1200 height-300"
 		id='TrackGrid'
 	></div>
 </div>
