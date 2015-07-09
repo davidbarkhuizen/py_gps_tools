@@ -217,6 +217,20 @@ a {
 
 /* ------------------ */
 
+.width-100 {
+    width: 100px !important;
+}
+
+.width-200 {
+    width: 200px !important;
+}
+
+.width-300 {
+    min-width: 300px !important;
+    width: 300px !important;
+    max-width: 300px !important;
+}
+
 .width-1200 {
     width: 1200px !important;
 }

@@ -2,6 +2,15 @@ function DataModel() {
 
 	var that = this;
 
+	this.user = {
+		email : '',
+		password : '',
+	};
+
+	this.userIsAuthenticated = function() {
+		return false;
+	};
+
 	// GPXINFO -----------------------------------------------------------------
 	//
 	this.gpxinfos = [];

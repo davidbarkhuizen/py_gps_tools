@@ -1,5 +1,29 @@
 from django.db import models
 
+class User(models.Model):
+
+	class Meta:
+		db_table = "User"
+
+	email				 	= models.CharField(max_length=1024)
+	password 			 	= models.CharField(max_length=1024)
+
+class ProspectiveUser(models.Model):
+
+	class Meta:
+		db_table = "ProspectiveUser"
+
+	timestamp					= models.DateTimeField()
+	guid						= models.CharField(max_length=36)
+
+	email				 		= models.CharField(max_length=1024)
+	password 			 		= models.CharField(max_length=1024)
+
+	guid_email_try_count		= models.IntegerField(default=0)
+	guid_email_sent_timestamp	= models.DateTimeField(null=True)
+
+	User 						= models.ForeignKey(User)
+
 class Gpx(models.Model):
 
 	class Meta:

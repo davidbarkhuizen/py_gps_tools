@@ -24,7 +24,15 @@ function dateValToTimeString(dateVal) {
 	} catch (e) {
 		return '';
 	}
-};
+}
+
+function stringIsNotBlank(target) {
+	
+	if ((typeof target === 'string') || (target instanceof String))
+		target = target.trim();
+	
+	return ([undefined, null, ''].indexOf(target) == -1);
+}
 
 function getChildNodeText(element, nodeName) {
 
@@ -121,7 +129,7 @@ function clearFileInput(id) {
 
 function focusOnId(id) {
 	document.getElementById(id).focus();
-};
+}
 
 function ngHide(element) {
 	if (element.className.toUpperCase().indexOf('NG-HIDE') == -1) {

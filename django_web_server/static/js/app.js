@@ -4,9 +4,9 @@ var commonDependencies = [ '$rootScope', '$scope', '$http', '$timeout'];
 
 var controllers = [
 	['GodController', [GodController]],
-
 	['ModalController', [ModalController]],
 
+	['UserController', [UserController]],
 
 	['GpxImportController', [GpxImportController]],
 	['GpxExportController', [GpxExportController]],
@@ -20,7 +20,6 @@ var controllers = [
 	['MapController', [MapController]],
 	['WaypointsController', [WaypointsController]],
 	['HelpController', [HelpController]],
-	['AccountController', [AccountController]],
 ];
 
 controllers.forEach(function(ctrl) { 

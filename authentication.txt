@@ -11,7 +11,7 @@ WHEN USER IS NOT AUTHENTICATED
 	=> handle failure logic in client code
 
 to register
--- via account page (label = login/signup when unauth, account when auth)
+-- via user page (label = login/signup when unauth, account when auth)
 -- email address and 2 x password - 24 hour validity
 -- signupuser created - NOT A FULL USER => separate tables
 -- send email with registration token link
@@ -20,5 +20,10 @@ to register
 (maybe have an intermediate page that stuffs the cookie into the browser - bad sec?)
 
 login
--- via account page
+-- via user page
 -- persistent auth via cookie (1 week lifetime)
+
+
+// USER CONTROLLER
+- get = user info, none at the moment, don't implement ?
+- post = create
