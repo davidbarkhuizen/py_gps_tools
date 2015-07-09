@@ -51,33 +51,3 @@ class Gpx(models.Model):
 		# WAYPOINT
 		
 		self.waypoint_count = len(domain_model.waypoints)
-
-
-class Waypoint(models.Model):
-
-	class Meta:
-		db_table = "Waypoint"
-
-	gpx = models.ForeignKey(Gpx)
-
-	name 	= models.CharField(max_length=1024)
-	lat 	= models.DecimalField(max_digits=9, decimal_places=6)
-	lon 	= models.DecimalField(max_digits=9, decimal_places=6)
-	ele 	= models.DecimalField(max_digits=12, decimal_places=6)
-	time 	= models.DateTimeField(null=True)
-	# TODO sym Flag, Blue
-
-	def __str__(self):
-		return '%s (%f %f) @ %f m [%t]' % (self.name, self.lat, self.lon, self.ele, self.time)
-
-	def to_dict(self):
-		
-		return { 
-				'id' : self.id, 
-				'gpx' : self.gpx.id,
-				'name' : self.name, 
-				'lat' : str(self.lat), 
-				'lon' : str(self.lon),
-				'ele' :  str(self.ele), 
-				'time' : self.time.isoformat() 
-			}
