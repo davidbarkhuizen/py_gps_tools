@@ -1,0 +1,24 @@
+
+HTTPS ?
+htf ?
+
+WHEN USER IS NOT AUTHENTICATED
+- he gets access to a set of shared demo files
+-- i.e he has get access to the gpx controller, with access to a demo set of gpx
+- he cannot persist state
+
+-- check for authentication failure @ http fx level (hfx)
+	=> handle failure logic in client code
+
+to register
+-- via account page (label = login/signup when unauth, account when auth)
+-- email address and 2 x password - 24 hour validity
+-- signupuser created - NOT A FULL USER => separate tables
+-- send email with registration token link
+-- click on link => hit server with guid
+-- if guid is valid, create full user, and return redirect to app (not auto-login)
+(maybe have an intermediate page that stuffs the cookie into the browser - bad sec?)
+
+login
+-- via account page
+-- persistent auth via cookie (1 week lifetime)
