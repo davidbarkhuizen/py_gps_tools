@@ -3,7 +3,6 @@ from hfx import success, failure
 from gpxlib.gpxparser import parse_gpx_xml_to_domain_model
 
 from server.models import Gpx
-from server.models import Waypoint
 
 # exception formatting
 import traceback
