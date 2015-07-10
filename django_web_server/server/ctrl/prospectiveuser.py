@@ -1,6 +1,7 @@
+import uuid
 from hfx import success, failure
 
-from server.models import ProspectiveUser
+from server.models import ProspectiveUser, User
 
 def routing(request, qs):
 	
@@ -19,49 +20,53 @@ def routing(request, qs):
 #
 def post(request, params):
 
-	file_name_key = 'fileName'
-	if file_name_key not in params.keys():
-		return failure('no file name') 
-	file_name = params[file_name_key]
+	email = 'email'
+	if email not in params.keys():
+		return failure('email') 
+	file_name = params[email]
 
-	xml_key = 'xml'
-	if xml_key not in params.keys():
-		return failure('no xml payload') 
-	xml = params[xml_key]
+	password = 'password'
+	if password not in params.keys():
+		return failure('password') 
+	xml = params[password]
 
-	if Gpx.objects.filter(xml=xml).exists() == True:
-		return failure('already imported')
+	# ---------------------------------------------------
+	# ALREADY EXISTS
 
-	try:
-		gpx = parse_gpx_xml_to_domain_model(xml)
-	except Exception, e:
-		return failure('not a valid gpx file')
+	if ProspectiveUser.objects.filter(email=email).exists() == True:
+		existing_prospective_user = ProspectiveUser.objects.get(email=email)
 
-	dbModel = Gpx()
-	dbModel.xml = xml
-	dbModel.file_name = file_name
-	dbModel.update_from_domain_model(gpx)
+		if existing_prospective_user.user is not None:
+			return failure('a confirmed user with this email already exists')
+		else:
+			lines = [
+				'a user with this email has been created',
+				'but has not yet been confirmed',
+				'check your email for a confirmation message',
+				'click the confirmation link inside'
+				];
+			return failure('\n'.join(lines))
 
-	dbModel.save()
+	# ---------------------------------------------------
 
-	return success('gpx created')
+	# validate
+	# - email
+	# - password
+
+	unassigned_uuid = None
+	while (unassigned_uuid is None):
+
+		candidate_uuid = uuid.uuid4()
+		if not ProspectiveUser.objects.filter(uuid=candidate_uuid).exists():
+			unassigned_uuid = candidate_uuid
+
+	new_pu = ProspectiveUser(email=email, password=password, uuid=unassigned_uuid)
+	new_pu.save()
+
+	return success('user registered.  click on email link to confirm.')
 
 # confirm prospective user
 # unauth
 #
 def get(request, params):
-
-	id_key = 'id'
-	if id_key not in params.keys():
-		return failure('no id') 
-	id = params[id_key]
-
-	model = Gpx.objects.get(id=id)    
-	if (model == None):
-		return failure('could not find gpx with id = %s' % id)    
-
-	gpx = parse_gpx_xml_to_domain_model(model.xml)
-	
-	data = { 'id' : id, 'file_name' : model.file_name, 'xml' : model.xml  }
-	
-	return success(data)
+	raise 'NYE'

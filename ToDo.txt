@@ -1,3 +1,9 @@
+
+PYTHON CONTROLLERS
+- generic parameter retrieval logic, with checking and exception throwing
+
+--- ---- --- --- --- --- ---
+
 EXPORT
 
 create export controller, view, html

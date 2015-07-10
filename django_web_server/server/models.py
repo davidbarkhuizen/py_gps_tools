@@ -1,3 +1,5 @@
+from datetime import datetime 
+
 from django.db import models
 
 class User(models.Model):
@@ -13,8 +15,8 @@ class ProspectiveUser(models.Model):
 	class Meta:
 		db_table = "ProspectiveUser"
 
-	timestamp					= models.DateTimeField()
-	guid						= models.CharField(max_length=36)
+	timestamp					= models.DateTimeField(default=datetime.now)
+	uuid						= models.CharField(max_length=36)
 
 	email				 		= models.CharField(max_length=1024)
 	password 			 		= models.CharField(max_length=1024)
@@ -22,7 +24,7 @@ class ProspectiveUser(models.Model):
 	guid_email_try_count		= models.IntegerField(default=0)
 	guid_email_sent_timestamp	= models.DateTimeField(null=True)
 
-	User 						= models.ForeignKey(User)
+	user 						= models.ForeignKey(User, null=True)
 
 class Gpx(models.Model):
 

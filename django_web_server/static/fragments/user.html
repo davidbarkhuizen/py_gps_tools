@@ -17,7 +17,7 @@
 
 	<br/>
 
-	<div id='SignUp'>
+	<div id='RegisterProspectiveUser' ng-show='(prospectiveUserRegistered == false)'>
 		<div class='header'>
 			join gpxmaps.net
 		</div>
@@ -56,6 +56,37 @@
 				ng-show='(model.userIsAuthenticated() == false) && (prospectiveUser.infoIsValid() == true)'>
 				join
 			</a>
+		</div>
+
+		<div id='UserRegistrationAttemptFailedErrorMessage'
+			ng-show='(userRegistrationAttemptFailed == true)'
+			>
+			<br/>
+
+			<div class='red'>
+				<div ng-repeat='line in userRegistrationAttemptFailureErrorMessage'>
+					{{ line }}				
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id='ProspectiveUserRegistered' ng-show='(prospectiveUserRegistered == true)'>
+		<div>
+			your user has been registered.
+			<br/>
+			a confirmation email will be sent to {{ prospectiveUser.email }}
+			<br/>
+			<br/>
+			when you receive the email, click on the link inside
+			<br/>
+			or paste the link address into your browser
+			<br/>
+			in order to confirm your user
+			<br/>
+		 	gpxsmaps.net should open up in your browser, confirming your user
+			<br/>
+			click on user, and select login
 		</div>
 	</div>
 </div>
