@@ -20,15 +20,15 @@ def routing(request, qs):
 #
 def post(request, params):
 
-	email = 'email'
-	if email not in params.keys():
+	email_key = 'email'
+	if email_key not in params.keys():
 		return failure('email') 
-	file_name = params[email]
+	email = params[email_key]
 
-	password = 'password'
-	if password not in params.keys():
+	password_key = 'password'
+	if password_key not in params.keys():
 		return failure('password') 
-	xml = params[password]
+	password = params[password_key]
 
 	# ---------------------------------------------------
 	# ALREADY EXISTS

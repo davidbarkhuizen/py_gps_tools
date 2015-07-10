@@ -5,7 +5,7 @@ from django.db import models
 class User(models.Model):
 
 	class Meta:
-		db_table = "User"
+		db_table = "user"
 
 	email				 	= models.CharField(max_length=1024)
 	password 			 	= models.CharField(max_length=1024)
@@ -13,7 +13,7 @@ class User(models.Model):
 class ProspectiveUser(models.Model):
 
 	class Meta:
-		db_table = "ProspectiveUser"
+		db_table = "prospectiveuser"
 
 	timestamp					= models.DateTimeField(default=datetime.now)
 	uuid						= models.CharField(max_length=36)
@@ -21,15 +21,15 @@ class ProspectiveUser(models.Model):
 	email				 		= models.CharField(max_length=1024)
 	password 			 		= models.CharField(max_length=1024)
 
-	guid_email_try_count		= models.IntegerField(default=0)
-	guid_email_sent_timestamp	= models.DateTimeField(null=True)
+	uuid_email_try_count		= models.IntegerField(default=0)
+	uuid_email_sent_timestamp	= models.DateTimeField(null=True)
 
 	user 						= models.ForeignKey(User, null=True)
 
 class Gpx(models.Model):
 
 	class Meta:
-		db_table = "Gpx"
+		db_table = "gpx"
 
 	file_name			= models.CharField(max_length=1024)
 	xml 				= models.TextField()

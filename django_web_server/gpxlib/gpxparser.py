@@ -187,6 +187,17 @@ def parse_waypoints(find, findall, ns):
 
 def parse_gpx_xml_to_domain_model(xml_string, log = def_log_fn):
 
+    gpx = None
+    try:
+        gpx = parse_gpx_xml(xml_string)
+    except UnicodeEncodeError, e:
+        xml_string = xml_string.encode('utf8')
+        gpx = parse_gpx_xml_to_domain_model(xml_string)
+
+    return gpx
+
+def parse_gpx_xml(xml_string, log = def_log_fn):
+
     x = X(xml_string)
     ns = x.ns
 

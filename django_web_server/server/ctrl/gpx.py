@@ -33,10 +33,7 @@ def post(request, params):
 	if Gpx.objects.filter(xml=xml).exists() == True:
 		return failure('already imported')
 
-	try:
-		gpx = parse_gpx_xml_to_domain_model(xml)
-	except Exception, e:
-		return failure('not a valid gpx file')
+	gpx = parse_gpx_xml_to_domain_model(xml)
 
 	dbModel = Gpx()
 	dbModel.xml = xml
@@ -58,8 +55,6 @@ def get(request, params):
 	if (model == None):
 		return failure('could not find gpx with id = %s' % id)    
 
-	gpx = parse_gpx_xml_to_domain_model(model.xml)
-	
 	data = { 'id' : id, 'file_name' : model.file_name, 'xml' : model.xml  }
 	
 	return success(data)

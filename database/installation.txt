@@ -47,6 +47,10 @@ postgres=# \q
 # make authenticated TCP psql connect to database gpxmapsnet, with user orm
 $ psql -d gpxmapsnet -U orm -h localhost
 
+# grant schema access to user orm 
+$ psql -d gpxmapsnet -U postgres -h localhost
+postgres=# GRANT usage on schema public to orm;
+
 # install python package
 $ sudo apt-get install python-psycopg2
 
@@ -60,3 +64,6 @@ DATABASES = {
         'HOST' : 'localhost'
     }
 }
+
+# list all tables
+postgres=# \dt
