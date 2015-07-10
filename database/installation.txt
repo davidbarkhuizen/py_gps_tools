@@ -1,0 +1,62 @@
+
+
+PostgreSQL Python tutorial
+http://zetcode.com/db/postgresqlpythontutorial/
+
+
+# install packags using apt-get
+$ sudo apt-get install postgresql
+
+# check status of db server
+$ /etc/init.d/postgresql status
+$ service postgresql status
+
+# if server is not running, then issue start service command
+$ sudo service postgresql start
+
+# e.g. of stop service command
+$ sudo service postgresql stop
+
+# create admin user orm
+$ sudo -u postgres createuser orm
+
+# create database gpxmaps with owner of user orm
+$ sudo -u postgres createdb gpxmapsnet -O orm
+
+# change to user postgres, log in to db
+$ sudo -u postgres psql
+
+# set password for user posgres
+postgres=# \password
+...
+
+# to quit psql console
+# \q
+# or
+# ctrl + d
+
+# connect to master with user postgres
+$ psql -U postgres -h localhost
+
+# set password for user orm to 'password'
+postgres=# alter user orm with password 'password';
+
+# quit postgres
+postgres=# \q
+
+# make authenticated TCP psql connect to database gpxmapsnet, with user orm
+$ psql -d gpxmapsnet -U orm -h localhost
+
+# install python package
+$ sudo apt-get install python-psycopg2
+
+# settings.py
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'gpxmapsnet',
+        'USER' : 'orm',
+        'PASSWORD' : 'password',
+        'HOST' : 'localhost'
+    }
+}

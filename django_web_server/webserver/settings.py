@@ -54,8 +54,11 @@ WSGI_APPLICATION = 'webserver.wsgi.application'
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/home/david/data/websites/gpxmapsnet/gpxmapsnet.db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'gpxmapsnet',
+        'USER' : 'orm',
+        'PASSWORD' : 'password',
+        'HOST' : 'localhost'
     }
 }
 
