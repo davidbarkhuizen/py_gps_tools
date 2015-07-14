@@ -37,7 +37,7 @@ class DBConnection(object):
 		def execute(sql):
 			q = connection.cursor()
 			q.execute(sql)          
-			self.connection.commit()
+			connection.commit()
 
 		def close():
 			if connection is not None:

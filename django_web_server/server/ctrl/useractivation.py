@@ -1,8 +1,11 @@
+from datetime import datetime
 import sys
 import uuid
-from fx.httpfx import success, failure, mandatory_parameters, init_routing
+from fx.httpfx import success, failure, mandatory_parameters, init_routing, html
 
 from server.models import User
+
+from django.http import HttpResponse
 
 @mandatory_parameters(['email', 'password'])
 def post(request, params):
@@ -43,10 +46,20 @@ def post(request, params):
 
 	return success('user registered.  click on email link to confirm.')
 
-# confirm prospective user
-# unauth
-#
+@mandatory_parameters(['uuid'])
 def get(request, params):
-	raise 'NYE'
+	
+	uuid = params['uuid']
+	if User.objects.filter(uuid=uuid).exists() == True:
+		user = User.objects.get(uuid=uuid)
+		
+		if user.activation_token_confirmed is None:
+			user.activation_token_confirmed = datetime.now()
+			user.save()
+			return html('user confirmed. login.', user.email)
+		else:
+			return html('user already confirmed. you can already login.', user.email)
+	else:
+		return html('failed', 'unknown user')
 
 init_routing(sys.modules[__name__], __name__)

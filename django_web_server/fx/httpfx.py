@@ -5,6 +5,31 @@ import json
 
 JSON_MIMETYPE = 'application/json'
 
+html_template = '''
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>gpxmaps.net</title>
+	</head>
+	<body>
+	<div>
+		<h3>
+			{0}
+		</h3>
+		<para>
+			{1}
+		</para>
+	</div>
+	</body>
+</html>
+'''
+
+def html(header, para):
+
+	html = html_template.format(header, para)
+	return HttpResponse(html)
+
 def success(data):
 
 	envelope = { 

@@ -1,5 +1,5 @@
 from smtpclient import SMTPClient
-from dal.prospectiveuser import ProspectiveUser
+from dal.user import User
 
 class EmailSender(object):
 	
@@ -15,7 +15,7 @@ class EmailSender(object):
 		# render emails
 		#
 		emails = []
-		for email_uuid in ProspectiveUser.select_emailuuid_where_useridisnull_retrycountlessthan(max_retry_count):
+		for email_uuid in User.select_emailuuid_for_undistributed(max_retry_count):
 
 			uuid = email_uuid['uuid']
 			to_addr = email_uuid['email']
@@ -26,20 +26,28 @@ class EmailSender(object):
 			email['to_addr'] = to_addr
 
 			email['subject'] = 'confirm gpxmaps.net'
-			email['html'] = '<a href="{0}">click here to confirm your user @ gpxmaps.net</a>'.format(uuid)
-			email['text'] = 'http://gpxmaps/net/confirm?uuid={0}'.format(uuid)
+
+			url = 'http://www.gpxmaps.net/useractivation/?uuid={0}'.format(uuid)
+
+			email['html'] = '<a href="{0}">click here to confirm your user @ gpxmaps.net</a>'.format(url)
+			email['text'] = 'click thus link to confirm your user @ gpxmaps.net:  {0}'.format(url)
 			
 			emails.append(email)
 
-		for email in emails:
-			print(email['text'])
-
 		# send emails
 		#
-		'''
 		from_addr = self.smtp_login
 		mail_client = SMTPClient()
 		mail_client.init(self.smtp_addr, self.smtp_port, self.smtp_login, self.smtp_password)
-		mail_client.send_smtpmails(emails)
+		
+		for email in emails:
+			try:
+				# mail_client.send_smtpmails([email])
+				print(email['text'])
+				pass
+			except:
+				User.increment_activation_token_distribution_try_acount_for_email(email['to_addr'])
+				continue
+			User.set_activation_token_distributed_for_email(email['to_addr'])
+
 		mail_client.terminate()
-		'''
