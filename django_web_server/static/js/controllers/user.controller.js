@@ -51,6 +51,6 @@ function UserController($rootScope, $scope, $http, $timeout) {
 		    $rootScope.$emit(Event.DEBUG_ERROR, error);
 		};
 
-		httpPOST($http, 'prospectiveuser', data, successFn, failureFn, errorFn);
+		httpPOST($http, 'useractivation', data, successFn, failureFn, errorFn);
 	};
 }

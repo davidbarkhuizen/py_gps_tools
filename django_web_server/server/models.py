@@ -1,3 +1,7 @@
+from os import urandom
+import binascii
+import hashlib
+
 from datetime import datetime 
 from django.db import models
 
@@ -7,14 +11,50 @@ class User(models.Model):
 		db_table = "user"
 
 	email				 			= models.CharField(max_length=1024, unique=True, null=False)
-	password_hash_salt				= models.CharField(max_length=16)
-	password_hash		 			= models.CharField(max_length=64, null=False)
-	active 							= models.BooleanField(default=True, null=False)
+	salt							= models.CharField(max_length=32, null=False)
+	hash		 					= models.CharField(max_length=64, null=False)
+	active 							= models.BooleanField(default=False, null=False)
 
-	activation_token				= models.CharField(max_length=36, unique=True)
+	uuid				= models.CharField(max_length=36, unique=True)
 	activation_token_distribution_try_acount = models.IntegerField(default=0, null=False) 
 	activation_token_distributed	= models.DateField(null=True)
 	activation_token_confirmed		= models.DateField(null=True)
+
+	def set_salt(self):
+		self.salt = binascii.hexlify(urandom(16)).upper()
+		# bytearray(array_alpha)		
+
+	def salt_password(self, password):
+		return self.salt + password
+
+	def set_hash(self, password):
+		
+		self.set_salt()
+
+		m = hashlib.sha256()
+		salted = self.salt_password(password) 
+		m.update(salted)
+		hex_digest = m.hexdigest()
+
+		self.hash = hex_digest
+
+	def hash_matches(self, password):
+
+		m = hashlib.sha256()
+		salted = self.salt_password(password) 
+		m.update(salted)
+		hex_digest = m.hexdigest()
+
+		return (self.hash == hex_digest)
+
+	@classmethod
+	def construct(cls, email, password, uuid):
+
+		user = User(email=email, uuid=uuid)
+		user.set_salt()
+		user.set_hash(password)
+
+		return user
 
 class Gpx(models.Model):
 
