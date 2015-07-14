@@ -1,36 +1,16 @@
 import sys
-from fx.httpfx import success, failure, init_routing
+from fx.httpfx import success, failure, mandatory_parameters, init_routing
 from gpxfx.gpxparser import parse_gpx_xml_to_domain_model
 from server.models import Gpx
 
 # exception formatting
 import traceback
 
+@mandatory_parameters(['fileName', 'xml'])
 def post(request, params):
 
-	file_name_key = 'fileName'
-	if file_name_key not in params.keys():
-		return failure('no file name') 
-	file_name = params[file_name_key]
-
-	xml_key = 'xml'
-	if xml_key not in params.keys():
-		return failure('no xml payload') 
-	xml = params[xml_key]
-
-	# --------------------------
-
-	email_key = 'email'
-	password_key = 'password'
-
-	failed_on_missing_parameters = fail_on_missing_parameters(params, [email_key, password_key])
-	if failed_on_missing_parameters:
-		return failed_on_missing_parameters
-
-	email = params[email_key]
-	password = params[password_key]
-
-
+	file_name = params['fileName']
+	xml = params['xml']
 
 	# --------------------------
 
@@ -52,15 +32,10 @@ def post(request, params):
 
 	return success('gpx created')
 
+@mandatory_parameters(['id'])
 def get(request, params):
 
-	print('params')
-	print(params)
-
-	id_key = 'id'
-	if id_key not in params.keys():
-		return failure('no id') 
-	id = params[id_key]
+	id = params['id']
 
 	model = Gpx.objects.get(id=id)    
 	if (model == None):
@@ -73,27 +48,21 @@ def get(request, params):
 def patch(request, params):
 
 	id_key = 'id'
-	if id_key not in params.keys():
-		return failure('no id') 
-	id = params[id_key]
-
 	file_name_key = 'fileName'
-	if file_name_key not in params.keys():
-		return failure('no file name') 
-	file_name = params[file_name_key]
-
 	xml_key = 'xml'
-	if xml_key not in params.keys():
-		return failure('no xml payload') 
+
+	failed_on_missing_parameters = fail_on_missing_parameters(params, [id_key, file_name_key, xml_key])
+	if failed_on_missing_parameters:
+		return failed_on_missing_parameters
+
+	id = params[id_key]
+	file_name = params[file_name_key]
 	xml = params[xml_key]
 
 	try:
 		gpx = parse_gpx_xml_to_domain_model(xml)
 	except Exception, e:
 		return failure('not a valid gpx file')
-
-	print('gxx metadata')
-	print(gpx.metadata)
 
 	# retrieve
 	#
@@ -104,8 +73,6 @@ def patch(request, params):
 	dbModel.xml = xml
 	dbModel.file_name = file_name
 	dbModel.update_from_domain_model(gpx)
-
-	print(dbModel.to_gpx_info())
 
 	dbModel.save()
 

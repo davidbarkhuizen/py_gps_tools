@@ -29,11 +29,27 @@ def fail_on_missing_parameters(parameters, keys):
 	present_keys = parameters.keys()
 	missing_keys = [key for key in keys if key not in present_keys]
 
-	if len(missing) == 0:
+	if len(missing_keys) == 0:
 		return
 
 	msg = 'missing parameters:  ' + ','.join(missing_keys)
 	return failure(msg)
+
+def mandatory_parameters(mandatory_params):
+
+	def fails_on_missing_mandatory_parameters(f):
+
+		def wrap(request, params):
+
+			failed_on_missing_mandatory_parameters = fail_on_missing_parameters(params, mandatory_params)			
+			if (failed_on_missing_mandatory_parameters):
+				return failed_on_missing_mandatory_parameters
+			else:
+				return f(request, params)
+
+		return wrap
+
+	return fails_on_missing_mandatory_parameters
 
 def init_routing(controller_module, controller_module_name):
 

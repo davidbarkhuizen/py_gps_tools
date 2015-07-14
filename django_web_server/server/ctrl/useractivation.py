@@ -1,23 +1,14 @@
 import sys
 import uuid
-from fx.httpfx import success, failure, fail_on_missing_parameters, init_routing
+from fx.httpfx import success, failure, mandatory_parameters, init_routing
 
 from server.models import User
 
-# create prospective user
-# unauth
-#
+@mandatory_parameters(['email', 'password'])
 def post(request, params):
 
-	email_key = 'email'
-	password_key = 'password'
-
-	failed_on_missing_parameters = fail_on_missing_parameters(params, [email_key, password_key])
-	if failed_on_missing_parameters:
-		return failed_on_missing_parameters
-
-	email = params[email_key]
-	password = params[password_key]
+	email = params['email']
+	password = params['password']
 
 	# ---------------------------------------------------
 	# ALREADY EXISTS
