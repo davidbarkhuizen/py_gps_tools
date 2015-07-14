@@ -1,19 +1,8 @@
+import sys
 import uuid
-from hfx import success, failure
+from fx.httpfx import success, failure, fail_on_missing_parameters, init_routing
 
-from server.models import ProspectiveUser, User
-
-def routing(request, qs):
-	
-	if request.method == 'POST':
-		return post(request, request.POST)
-	if request.method == 'GET':
-		return get(request, request.GET)
-
-	# if request.method == 'PATCH':
-	# 	return patch(request, request.PATCH)
-
-	raise Exception('unsupported HTTP method:  ' + request.method)
+from server.models import User
 
 # create prospective user
 # unauth
@@ -21,26 +10,26 @@ def routing(request, qs):
 def post(request, params):
 
 	email_key = 'email'
-	if email_key not in params.keys():
-		return failure('email') 
-	email = params[email_key]
-
 	password_key = 'password'
-	if password_key not in params.keys():
-		return failure('password') 
+
+	failed_on_missing_parameters = fail_on_missing_parameters(params, [email_key, password_key])
+	if failed_on_missing_parameters:
+		return failed_on_missing_parameters
+
+	email = params[email_key]
 	password = params[password_key]
 
 	# ---------------------------------------------------
 	# ALREADY EXISTS
 
-	if ProspectiveUser.objects.filter(email=email).exists() == True:
-		existing_prospective_user = ProspectiveUser.objects.get(email=email)
+	if User.objects.filter(email=email).exists() == True:
+		existing_prospective_user = User.objects.get(email=email)
 
-		if existing_prospective_user.user is not None:
-			return failure('a confirmed user with this email already exists')
+		if existing_prospective_user.activation_token_confirmed is not None:
+			return failure('an active user with this email already exists')
 		else:
 			lines = [
-				'a user with this email has been created',
+				'a user with this email has been registered',
 				'but has not yet been confirmed',
 				'check your email for a confirmation message',
 				'click the confirmation link inside'
@@ -70,3 +59,5 @@ def post(request, params):
 #
 def get(request, params):
 	raise 'NYE'
+
+init_routing(sys.modules[__name__], __name__)

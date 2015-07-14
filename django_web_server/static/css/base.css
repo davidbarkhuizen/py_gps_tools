@@ -197,6 +197,10 @@ a {
     font-size: 23.4px !important;
 }
 
+.center-text {
+    text-align: center;
+}
+
 /* -----------------------------------------------------------*/
 /* LIST */
 

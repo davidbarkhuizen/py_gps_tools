@@ -1,16 +1,10 @@
-from hfx import success
-
+import sys
+from fx.httpfx import success, init_routing
 from server.models import Gpx
 
-def routing(request, qs):
-
-	if request.method == 'GET':
-		return get(request)
-
-	raise Error(request.method)
-
-def get(request):
+def get(request, qs):
 
 	infos = [gpx.to_gpx_info() for gpx in Gpx.objects.all().order_by('time')]
-
 	return success({ 'gpxinfos' : infos })
+
+init_routing(sys.modules[__name__], __name__)

@@ -6,24 +6,15 @@ class User(models.Model):
 	class Meta:
 		db_table = "user"
 
-	email				 	= models.CharField(max_length=1024)
-	password 			 	= models.CharField(max_length=1024)
+	email				 			= models.CharField(max_length=1024, unique=True, null=False)
+	password_hash_salt				= models.CharField(max_length=16)
+	password_hash		 			= models.CharField(max_length=64, null=False)
+	active 							= models.BooleanField(default=True, null=False)
 
-class ProspectiveUser(models.Model):
-
-	class Meta:
-		db_table = "prospectiveuser"
-
-	timestamp					= models.DateTimeField(default=datetime.now)
-	uuid						= models.CharField(max_length=36)
-
-	email				 		= models.CharField(max_length=1024)
-	password 			 		= models.CharField(max_length=1024)
-
-	uuid_email_try_count		= models.IntegerField(default=0)
-	uuid_email_sent_timestamp	= models.DateTimeField(null=True)
-
-	user 						= models.ForeignKey(User, null=True)
+	activation_token				= models.CharField(max_length=36, unique=True)
+	activation_token_distribution_try_acount = models.IntegerField(default=0, null=False) 
+	activation_token_distributed	= models.DateField(null=True)
+	activation_token_confirmed		= models.DateField(null=True)
 
 class Gpx(models.Model):
 

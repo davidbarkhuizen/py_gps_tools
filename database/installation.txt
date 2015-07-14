@@ -67,3 +67,35 @@ DATABASES = {
 
 # list all tables
 postgres=# \dt
+
+# ##############################################################################
+INIT DATABASE
+
+# LOGIN
+$ psql -U postgres -h localhost
+
+# DROP DATABASE
+postgres=# drop database gpxmapsnet;
+
+# QUIT PSQL
+postgres=# \q
+
+# (RE)CREATE DB
+$ sudo -u postgres createdb gpxmapsnet -O orm
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

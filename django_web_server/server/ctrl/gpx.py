@@ -1,22 +1,10 @@
-from hfx import success, failure
-
-from gpxlib.gpxparser import parse_gpx_xml_to_domain_model
-
+import sys
+from fx.httpfx import success, failure, init_routing
+from gpxfx.gpxparser import parse_gpx_xml_to_domain_model
 from server.models import Gpx
 
 # exception formatting
 import traceback
-
-def routing(request, qs):
-	
-	if request.method == 'POST':
-		return post(request, request.POST)
-	if request.method == 'GET':
-		return get(request, request.GET)
-	if request.method == 'PATCH':
-		return patch(request, request.PATCH)
-
-	raise Exception('unsupported HTTP method:  ' + request.method)
 
 def post(request, params):
 
@@ -30,10 +18,30 @@ def post(request, params):
 		return failure('no xml payload') 
 	xml = params[xml_key]
 
+	# --------------------------
+
+	email_key = 'email'
+	password_key = 'password'
+
+	failed_on_missing_parameters = fail_on_missing_parameters(params, [email_key, password_key])
+	if failed_on_missing_parameters:
+		return failed_on_missing_parameters
+
+	email = params[email_key]
+	password = params[password_key]
+
+
+
+	# --------------------------
+
 	if Gpx.objects.filter(xml=xml).exists() == True:
 		return failure('already imported')
 
-	gpx = parse_gpx_xml_to_domain_model(xml)
+	gpx = None
+	try:
+		gpx = parse_gpx_xml_to_domain_model(xml)
+	except Exception, e:
+		return failure('invalid gpx')
 
 	dbModel = Gpx()
 	dbModel.xml = xml
@@ -45,6 +53,9 @@ def post(request, params):
 	return success('gpx created')
 
 def get(request, params):
+
+	print('params')
+	print(params)
 
 	id_key = 'id'
 	if id_key not in params.keys():
@@ -99,3 +110,5 @@ def patch(request, params):
 	dbModel.save()
 
 	return success('gpx updated')
+
+init_routing(sys.modules[__name__], __name__)
