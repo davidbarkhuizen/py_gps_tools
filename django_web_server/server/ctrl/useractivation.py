@@ -5,8 +5,6 @@ from fx.httpfx import success, failure, mandatory_parameters, init_routing, html
 
 from server.models import User
 
-from django.http import HttpResponse
-
 @mandatory_parameters(['email', 'password'])
 def post(request, params):
 

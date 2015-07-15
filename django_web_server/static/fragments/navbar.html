@@ -60,10 +60,15 @@
 		</div>
 
 		<div style='float:right;'>
-			<a href='#' 
-				ng-click="gotoView(Views.USER);"
-				ng-class="view == Views.USER ? 'nav-active' : 'nav-inactive'"
-				>user</a>
+			<a href='#'
+				ng-click="gotoView(Views.USER_ACTIVATION);"
+				class='underline'
+				ng-class="view == Views.USER_ACTIVATION ? 'nav-active' : 'nav-inactive'"
+				>sign up</a>
+			<a href='#'
+				ng-click="gotoView(Views.LOGIN);"
+				ng-class="view == Views.LOGIN ? 'nav-active' : 'nav-inactive'"
+				>login</a>
 		</div>
 		
 		<div style='clear:both;'>

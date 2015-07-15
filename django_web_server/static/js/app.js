@@ -6,7 +6,8 @@ var controllers = [
 	['GodController', [GodController]],
 	['ModalController', [ModalController]],
 
-	['UserController', [UserController]],
+	['UserActivationController', [UserActivationController]],
+	['LoginController', [LoginController]],
 
 	['GpxImportController', [GpxImportController]],
 	['GpxExportController', [GpxExportController]],

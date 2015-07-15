@@ -1,0 +1,52 @@
+<div id='LoginFragment' 
+	ng-show='view == Views.LOGIN'
+	ng-controller='LoginController'						
+	style='vertical-align:top;width:100%;text-align: center;'
+	>
+
+	<br/>
+
+	<div>
+		<div class='header'>
+			login
+		</div>
+		<div>
+			<br/>
+		</div>
+	</div>
+
+	<br/>
+
+	<div>
+		<div>
+			<div>
+				email address
+			</div>
+			<input
+				type="text"
+				name="email"
+				ng-model="userCredentials.email"
+				required>
+		</div>
+		<div>
+			<div>
+				password
+			</div>
+			<div>
+				<input
+					type="password"
+					name="password"
+					ng-model="userCredentials.password"
+					required>
+			</div>
+		</div>
+		<br/>
+		<div>
+			<a href='#'
+				ng-click='login()'
+				ng-show='(userCredentials.infoIsValid() == true)'>
+				login
+			</a>
+		</div>
+	</div>
+</div>

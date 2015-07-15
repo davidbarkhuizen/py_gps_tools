@@ -1,4 +1,4 @@
-function UserController($rootScope, $scope, $http, $timeout) {
+function UserActivationController($rootScope, $scope, $http, $timeout) {
 
 	$scope.model = $scope.$parent.model;
 

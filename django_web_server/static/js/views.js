@@ -4,7 +4,8 @@ var Views = Object.freeze({
 
 	HOME 			: guid(),
 	HELP 			: guid(),
-	USER 			: guid(),
+	USER_ACTIVATION	: guid(),
+	LOGIN			: guid(),
 
 	IMPORT 			: guid(), 
 	GPX_DATABASE 	: guid(),

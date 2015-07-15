@@ -1,6 +1,6 @@
-<div id='UserContainer' 
-	ng-show='view == Views.USER'
-	ng-controller='UserController'						
+<div id='UserActivationFragment' 
+	ng-show='view == Views.USER_ACTIVATION'
+	ng-controller='UserActivationController'						
 	style='vertical-align:top;width:100%;text-align: center;'
 	>
 
@@ -8,7 +8,7 @@
 
 	<div>
 		<div class='header'>
-			user
+			sign up with gpxmaps.net
 		</div>
 		<div>
 			<br/>
@@ -17,9 +17,11 @@
 
 	<br/>
 
-	<div id='RegisterProspectiveUser' ng-show='(prospectiveUserRegistered == false)'>
-		<div class='header'>
-			join gpxmaps.net
+	<div ng-show='(prospectiveUserRegistered == false)'>
+		<div>
+			enter your email address and a strong password below
+			<br/>
+			then hit join
 		</div>
 		<br/>
 		<div>
@@ -80,13 +82,11 @@
 			<br/>
 			when you receive the email, click on the link inside
 			<br/>
-			or paste the link address into your browser
+			or paste the link into your browsers address bar
 			<br/>
 			in order to confirm your user
 			<br/>
-		 	gpxsmaps.net should open up in your browser, confirming your user
-			<br/>
-			click on user, and select login
+		 	gpxsmaps.net should open up in your browser
 		</div>
 	</div>
 </div>

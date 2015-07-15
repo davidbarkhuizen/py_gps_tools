@@ -111,3 +111,7 @@ function httpPATCH($http, controller, data, onSuccess, onFailure, onError) {
 
 	http($http, request, onSuccess, onFailure, onError);
 }
+
+function authenticate($http, email, password) {
+
+}
