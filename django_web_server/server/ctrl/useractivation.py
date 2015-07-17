@@ -53,6 +53,7 @@ def get(request, params):
 		
 		if user.activation_token_confirmed is None:
 			user.activation_token_confirmed = datetime.now()
+			user.active = True
 			user.save()
 			return html('user confirmed. login.', user.email)
 		else:

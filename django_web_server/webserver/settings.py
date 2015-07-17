@@ -43,7 +43,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'middleware.xhttpmethodoverride.XHttpMethodOverride'
+    'middleware.xhttpmethodoverride.XHttpMethodOverride',
+    'middleware.auth.Auth'
 )
 
 ROOT_URLCONF = 'webserver.urls'

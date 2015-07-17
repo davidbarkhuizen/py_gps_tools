@@ -5,6 +5,8 @@ import hashlib
 from datetime import datetime 
 from django.db import models
 
+from fx.httpfx import AuthenticationException
+
 class User(models.Model):
 
 	class Meta:
@@ -13,12 +15,16 @@ class User(models.Model):
 	email				 			= models.CharField(max_length=1024, unique=True, null=False)
 	salt							= models.CharField(max_length=32, null=False)
 	hash		 					= models.CharField(max_length=64, null=False)
-	active 							= models.BooleanField(default=False, null=False)
 
-	uuid				= models.CharField(max_length=36, unique=True)
+	active 							= models.BooleanField(default=False, null=False)
+	
+	uuid							= models.CharField(max_length=36, unique=True)
 	activation_token_distribution_try_acount = models.IntegerField(default=0, null=False) 
 	activation_token_distributed	= models.DateField(null=True)
 	activation_token_confirmed		= models.DateField(null=True)
+
+	cookie_value					= models.CharField(max_length=64, unique=True, null=True)
+	cookie_date						= models.DateField(null=True)
 
 	def set_salt(self):
 		self.salt = binascii.hexlify(urandom(16)).upper()
@@ -47,6 +53,14 @@ class User(models.Model):
 
 		return (self.hash == hex_digest)
 
+	def update_cookie(self):
+
+		self.cookie_value = binascii.hexlify(urandom(16)).upper()
+		self.cookie_key = binascii.hexlify(urandom(16)).upper()
+		self.cookie_date = datetime.now()
+
+		self.save()
+
 	@classmethod
 	def construct(cls, email, password, uuid):
 
@@ -56,10 +70,28 @@ class User(models.Model):
 
 		return user
 
+	@classmethod
+	def login(cls, email, password):
+
+		user = User.objects.get(email=email)
+		
+		# TODO
+		# change to complex return typ
+		# eliminate conditional exception-based logic 
+		#
+		if ((user == None) or (user.active == False) or (not user.hash_matches(password))):
+			raise AuthenticationException('invalid username or password, or user is inactive')
+
+		user.update_cookie()
+
+		return user
+
 class Gpx(models.Model):
 
 	class Meta:
 		db_table = "gpx"
+
+	user                = models.ForeignKey(User)
 
 	file_name			= models.CharField(max_length=1024)
 	xml 				= models.TextField()

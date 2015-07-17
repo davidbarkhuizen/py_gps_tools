@@ -30,6 +30,24 @@ def html(header, para):
 	html = html_template.format(header, para)
 	return HttpResponse(html)
 
+class AuthenticationException(Exception):
+	def __init__(self, msg):
+		Exception.__init__(self, msg)
+
+def set_auth_cookie(cookie_value, lifetime_in_hours = 24):
+
+	envelope = { 
+		'status' : 'ok', 
+		'data' : 'authenticated for %i hours' % lifetime_in_hours 
+		}
+
+	json_string = json.dumps(envelope)
+	response = HttpResponse(json_string, mimetype=JSON_MIMETYPE)
+
+	max_age_seconds = lifetime_in_hours * 60 * 60
+	response.set_cookie("auth", value=cookie_value, max_age=max_age_seconds)
+	return response
+
 def success(data):
 
 	envelope = { 
@@ -91,12 +109,6 @@ def init_routing(controller_module, controller_module_name):
 		implementation[verb_name] = getattr(controller_module, attr_name) 		
 
 	def routing_fn(request, qs):
-
-		print('in routing_fn')
-		print('request')
-		print(request)
-		print('qs')
-		print(qs)
 
 		verb_name = request.method.upper()
 

@@ -1,5 +1,5 @@
 import sys
-from fx.httpfx import success, failure, authenticate, mandatory_parameters, init_routing, html
+from fx.httpfx import success, failure, mandatory_parameters, init_routing, html, AuthenticationException, set_auth_cookie
 
 from server.models import User
 
@@ -9,12 +9,17 @@ def post(request, params):
 	email = params['email']
 	password = params['password']
 
-	# confirm that user exist and is active
-	# create random session auth token, store in db
-	# set user as logged in on server
-	# return session auth token
+	user = None
+	try:
+		user = User.login(email, password)
+	except AuthenticationException, ae:
+		print(ae)
+		raise ae
 
-	# client will then set browser cookie with session auth token
+	if (user.cookie_key is None) or (user.cookie_value is None):
+		raise AuthenticationException('missing cookie')
+
+	return set_auth_cookie(user.cookie_value) 
 
 	# for each call, auth is checked is middleware
 	# 	session auth token is extracted from cookie
@@ -33,7 +38,5 @@ def post(request, params):
 	# 		if test call is unsuccessful, then view is set to login
 	#   if no cookie is found, then either go to my gpx, or go to signup
 
-
-	return authenticate()
 
 init_routing(sys.modules[__name__], __name__)

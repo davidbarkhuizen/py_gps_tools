@@ -112,6 +112,17 @@ function httpPATCH($http, controller, data, onSuccess, onFailure, onError) {
 	http($http, request, onSuccess, onFailure, onError);
 }
 
-function authenticate($http, email, password) {
+// TODO - THIS SHOULD PROBABLY BE A LOGIN CONTROLLER METHOD
+//
+function login($http, email, password, onSuccess, onFailure, onError) {
 
+	var request = 
+	{
+		method: 'POST',
+		headers: getPOSTHeaders(),		
+		url: buildUrlRoot("login"),
+		data: { email:email, password:password }
+	};
+
+	http($http, request, onSuccess, onFailure, onError);
 }
