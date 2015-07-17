@@ -48,6 +48,19 @@ def set_auth_cookie(cookie_value, lifetime_in_hours = 24):
 	response.set_cookie("auth", value=cookie_value, max_age=max_age_seconds)
 	return response
 
+def invalidate_auth_cookie():
+
+	envelope = { 
+		'status' : 'ok', 
+		'data' : 'auth cookie invalidated' 
+		}
+
+	json_string = json.dumps(envelope)
+	response = HttpResponse(json_string, mimetype=JSON_MIMETYPE)
+
+	response.set_cookie("auth", value='invalid', max_age=5)
+	return response
+
 def success(data):
 
 	envelope = { 
@@ -96,7 +109,7 @@ def mandatory_parameters(mandatory_params):
 
 def init_routing(controller_module, controller_module_name):
 
-	supported_verbs = ['GET', 'POST', 'PATCH']
+	supported_verbs = ['GET', 'POST', 'PATCH', 'DELETE']
 
 	controller_attr_names = [str(a) for a in dir(controller_module)]
 	implemented_verb_names = [x.upper() for x in controller_attr_names if x.upper() in supported_verbs]

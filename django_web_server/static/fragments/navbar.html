@@ -61,14 +61,21 @@
 
 		<div style='float:right;'>
 			<a href='#'
+				ng-show='(model.user.authenticated == false)'
 				ng-click="gotoView(Views.USER_ACTIVATION);"
 				class='underline'
 				ng-class="view == Views.USER_ACTIVATION ? 'nav-active' : 'nav-inactive'"
 				>sign up</a>
 			<a href='#'
+				ng-show="(model.user.authenticated == false)"
 				ng-click="gotoView(Views.LOGIN);"
 				ng-class="view == Views.LOGIN ? 'nav-active' : 'nav-inactive'"
 				>login</a>
+			<a href='#'
+				ng-show="(model.user.authenticated == true)"
+				ng-click="gotoView(Views.LOGOUT);"
+				ng-class="view == Views.LOGOUT ? 'nav-active' : 'nav-inactive'"
+				>logout</a>	
 		</div>
 		
 		<div style='clear:both;'>

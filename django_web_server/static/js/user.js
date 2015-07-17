@@ -1,9 +1,11 @@
-function UserCredentials() {
+function User() {
 
 	var that = this;
 
 	this.email = '';
 	this.password = '';
+
+	this.authenticated = false;
 
 	this.minimumPasswordLength = 8;
 

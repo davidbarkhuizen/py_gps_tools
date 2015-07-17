@@ -1,7 +1,14 @@
 import sys
-from fx.httpfx import success, failure, mandatory_parameters, init_routing, html, AuthenticationException, set_auth_cookie
+from fx.httpfx import success, failure, mandatory_parameters, init_routing, html, AuthenticationException, set_auth_cookie, invalidate_auth_cookie
 
 from server.models import User
+
+def get(request, params):
+
+	if (request.user is None):
+		return failure('not authenticated')
+	else:
+		return success(request.user.email)
 
 @mandatory_parameters(['email', 'password'])
 def post(request, params):
@@ -38,5 +45,15 @@ def post(request, params):
 	# 		if test call is unsuccessful, then view is set to login
 	#   if no cookie is found, then either go to my gpx, or go to signup
 
+def delete(request, params):
+
+	auth_cookie = None
+	try:
+		auth_cookie = request.COOKIES['auth'] 
+	except:
+		return failure('no auth token') 
+
+	user = User.invalidate_cookie(auth_cookie)
+	return invalidate_auth_cookie()
 
 init_routing(sys.modules[__name__], __name__)

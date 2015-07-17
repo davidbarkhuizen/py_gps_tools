@@ -86,6 +86,20 @@ class User(models.Model):
 
 		return user
 
+	@classmethod
+	def invalidate_cookie(cls, cookie_value):
+
+		if not User.objects.filter(cookie_value=cookie_value).exists():
+			raise AuthenticationException('no matching user for auth token')  
+
+		user = User.objects.get(cookie_value=cookie_value)
+
+		user.cookie_value = None
+		user.cookie_date = None
+		user.save()
+
+		return user
+
 class Gpx(models.Model):
 
 	class Meta:

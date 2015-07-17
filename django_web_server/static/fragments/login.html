@@ -1,14 +1,17 @@
 <div id='LoginFragment' 
-	ng-show='view == Views.LOGIN'
-	ng-controller='LoginController'						
+	ng-show='((view == Views.LOGIN) || (view == Views.LOGOUT))'
+	ng-controller='LoginController'
 	style='vertical-align:top;width:100%;text-align: center;'
 	>
 
 	<br/>
 
 	<div>
-		<div class='header'>
+		<div class='header' ng-show='(view == Views.LOGIN)'>
 			login
+		</div>
+		<div class='header' ng-show='(view == Views.LOGOUT)'>
+			logout
 		</div>
 		<div>
 			<br/>
@@ -17,7 +20,7 @@
 
 	<br/>
 
-	<div>
+	<div ng-show='(view == Views.LOGIN)'>
 		<div>
 			<div>
 				email address
@@ -25,7 +28,7 @@
 			<input
 				type="text"
 				name="email"
-				ng-model="userCredentials.email"
+				ng-model="model.user.email"
 				required>
 		</div>
 		<div>
@@ -36,7 +39,7 @@
 				<input
 					type="password"
 					name="password"
-					ng-model="userCredentials.password"
+					ng-model="model.user.password"
 					required>
 			</div>
 		</div>
@@ -44,9 +47,16 @@
 		<div>
 			<a href='#'
 				ng-click='login()'
-				ng-show='(userCredentials.infoIsValid() == true)'>
+				ng-show='(model.user.infoIsValid() == true)'>
 				login
 			</a>
 		</div>
+	</div>
+
+	<div ng-show='(view == Views.LOGOUT)'>
+		<a href='#'
+			ng-click='logout()'>
+			logout {{ model.user.email }}
+		</a>
 	</div>
 </div>

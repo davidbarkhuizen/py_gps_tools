@@ -2,10 +2,7 @@ function DataModel() {
 
 	var that = this;
 
-	this.user = {
-		email : '',
-		password : '',
-	};
+	this.user = new User();
 
 	this.userIsAuthenticated = function() {
 		return false;
