@@ -79,7 +79,9 @@ function LoginController($rootScope, $scope, $http, $timeout) {
 			return;
 
 		var loginSucceeded = function(msg) {
-			$scope.loginAttemptFailed = true;
+			$scope.loginAttemptFailed = false;
+			$scope.loginAttemptFailureErrorMessage.length = 0;
+
 			model.user.password = '';			
 			$scope.updateAuthenticationState();
 		}

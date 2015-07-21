@@ -132,3 +132,36 @@ def init_routing(controller_module, controller_module_name):
 			return implementation[verb_name](request, getattr(request, verb_name))
 
 	controller_module.routing = routing_fn
+
+# --------------------------------------------------------
+
+def authenticated():
+
+	def fails_on_not_authenticated(f):
+
+		def wrap(request, params):
+
+			if (request.user is None):
+				return failure('not authenticated')
+			else:
+				return f(request, params)
+
+		return wrap
+
+	return fails_on_not_authenticated
+
+
+def not_authenticated():
+
+	def fails_on_authenticated(f):
+
+		def wrap(request, params):
+
+			if (request.user is not None):
+				return failure('authenticated')
+			else:
+				return f(request, params)
+
+		return wrap
+
+	return fails_on_authenticated

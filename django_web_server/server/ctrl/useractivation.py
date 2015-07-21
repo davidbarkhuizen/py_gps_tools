@@ -1,12 +1,16 @@
 from datetime import datetime
 import sys
 import uuid
-from fx.httpfx import success, failure, mandatory_parameters, init_routing, html
+from fx.httpfx import success, failure, mandatory_parameters, init_routing, html, not_authenticated
 
 from server.models import User
 
+@not_authenticated()
 @mandatory_parameters(['email', 'password'])
 def post(request, params):
+	'''
+	register user
+	'''
 
 	email = params['email']
 	password = params['password']
@@ -44,8 +48,12 @@ def post(request, params):
 
 	return success('user registered.  click on email link to confirm.')
 
+@not_authenticated()
 @mandatory_parameters(['uuid'])
 def get(request, params):
+	'''
+	activate user
+	'''
 	
 	uuid = params['uuid']
 	if User.objects.filter(uuid=uuid).exists() == True:
