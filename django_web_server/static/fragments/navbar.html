@@ -73,7 +73,7 @@
 				>login</a>
 			<a href='#'
 				ng-show="(model.user.authenticated == true)"
-				ng-click="gotoView(Views.LOGOUT);"
+				ng-click="logout();"
 				ng-class="view == Views.LOGOUT ? 'nav-active' : 'nav-inactive'"
 				>logout</a>	
 		</div>

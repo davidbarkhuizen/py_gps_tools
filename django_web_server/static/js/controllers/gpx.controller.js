@@ -267,4 +267,14 @@ function GpxController($rootScope, $scope, $http, $timeout) {
           	});
 	    },
 	};
+
+	// -------------------------
+
+	$rootScope.$on(Event.AUTH_STATE_CHANGED, function(evt, data){
+		$scope.unloadAll();
+	});
+
+	$rootScope.$on(Command.SAVE_GPX, function(evt, gpx){
+		$scope.saveGpx(gpx);
+	});
 }

@@ -254,6 +254,4 @@ function WaypointsController($rootScope, $scope, $http, $timeout) {
           	});
 	    },
 	};
-
-	// ----------
 }

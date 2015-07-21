@@ -51,6 +51,18 @@
 				login
 			</a>
 		</div>
+
+		<div id='LoginAttemptFailedErrorMessage'
+			ng-show='(loginAttemptFailed == true)'
+			>
+			<br/>
+
+			<div class='red'>
+				<div ng-repeat='line in loginAttemptFailureErrorMessage'>
+					{{ line }}				
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<div ng-show='(view == Views.LOGOUT)'>

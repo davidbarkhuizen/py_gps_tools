@@ -45,19 +45,12 @@ def get(request, params):
 	
 	return success(data)
 
+@mandatory_parameters(['id', 'fileName', 'xml'])
 def patch(request, params):
 
-	id_key = 'id'
-	file_name_key = 'fileName'
-	xml_key = 'xml'
-
-	failed_on_missing_parameters = fail_on_missing_parameters(params, [id_key, file_name_key, xml_key])
-	if failed_on_missing_parameters:
-		return failed_on_missing_parameters
-
-	id = params[id_key]
-	file_name = params[file_name_key]
-	xml = params[xml_key]
+	id = params['id']
+	file_name = params['fileName']
+	xml = params['xml']
 
 	try:
 		gpx = parse_gpx_xml_to_domain_model(xml)

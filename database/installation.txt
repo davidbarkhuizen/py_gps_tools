@@ -3,7 +3,6 @@
 PostgreSQL Python tutorial
 http://zetcode.com/db/postgresqlpythontutorial/
 
-
 # install packags using apt-get
 $ sudo apt-get install postgresql
 

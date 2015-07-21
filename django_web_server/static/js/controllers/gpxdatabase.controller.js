@@ -206,6 +206,10 @@ function GpxDatabaseController($rootScope, $scope, $http, $timeout) {
 
 	// ----------------------------------------------
 
+	$rootScope.$on(Event.AUTH_STATE_CHANGED, function(evt, data){
+		$scope.loadGpxinfos();
+	});
+
 	// INIT
 	//
 	$scope.loadGpxinfos();

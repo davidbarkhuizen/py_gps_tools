@@ -73,6 +73,9 @@ class User(models.Model):
 	@classmethod
 	def login(cls, email, password):
 
+		if not User.objects.filter(email=email).exists():
+			raise AuthenticationException('invalid username or password, or user is inactive')
+
 		user = User.objects.get(email=email)
 		
 		# TODO
@@ -105,7 +108,7 @@ class Gpx(models.Model):
 	class Meta:
 		db_table = "gpx"
 
-	user                = models.ForeignKey(User)
+	user                = models.ForeignKey(User, null=True)
 
 	file_name			= models.CharField(max_length=1024)
 	xml 				= models.TextField()

@@ -20,8 +20,7 @@ def post(request, params):
 	try:
 		user = User.login(email, password)
 	except AuthenticationException, ae:
-		print(ae)
-		raise ae
+		return failure(str(ae))
 
 	if (user.cookie_key is None) or (user.cookie_value is None):
 		raise AuthenticationException('missing cookie')

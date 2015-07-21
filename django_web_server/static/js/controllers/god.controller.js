@@ -3,6 +3,10 @@ function GodController($rootScope, $scope, $http, $timeout) {
 	$scope.model = new DataModel();
 	$scope.gpxEditor = new GPXEditor($scope.model);
 
+	$scope.logout = function() {
+		$rootScope.$emit(Command.LOGOUT);
+	};
+
 	// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 	// VIEWS	
 

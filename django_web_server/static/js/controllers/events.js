@@ -4,9 +4,13 @@ var Event = Object.freeze({
 	SERVER_UPDATED : guid(),
 	DATA_MODEL_CHANGED : guid(),
 	MAP_SELECTION_BEGUN : guid(),
+
+	AUTH_STATE_CHANGED : guid(),
 });
 
 var Command = Object.freeze({
+
+	LOGOUT : guid(),
 
 	// MODAL
 	//
@@ -20,6 +24,7 @@ var Command = Object.freeze({
 	//
 	LOAD_GPX : guid(),
 	UNLOAD_GPX : guid(),
+	SAVE_GPX : guid(),
 	//
 	UPDATE_GPX_FILENAME : guid(),
 	UPDATE_GPX_NAME : guid(),

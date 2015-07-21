@@ -97,4 +97,30 @@ function DataModel() {
 
 		return matchingGpx;
 	};
+
+	this.isEdited = function() {
+
+		for(var g = 0; g < that.gpxs.length; g++) {
+			var gpx = that.gpxs[g];
+			
+			if (gpx.edited == true)
+				return true;
+
+			for(var t = 0; t < gpx.tracks.length; t++) {
+				var track = gpx.tracks[t];
+
+				if (track.edited == true)
+					return true;
+			}
+
+			for(var w = 0; w < gpx.waypoints.length; w++) {
+				var waypoint = gpx.waypoints[w];
+
+				if (waypoint.edited == true)
+					return true;
+			}			
+		}
+
+		return false;
+	};
 }
