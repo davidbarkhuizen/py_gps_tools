@@ -30,6 +30,12 @@ def html(header, para):
 	html = html_template.format(header, para)
 	return HttpResponse(html)
 
+def html404(request = None):
+	header = '404'
+	para = ['page not found']
+	html = html_template.format(header, para)
+	return HttpResponse(html)
+
 class AuthenticationException(Exception):
 	def __init__(self, msg):
 		Exception.__init__(self, msg)
