@@ -3,10 +3,18 @@ from fx.httpfx import success, failure, mandatory_parameters, init_routing, html
 
 from server.models import User
 
+from os import urandom
+import binascii
+
 def get(request, params):
 	'''
 	returns success if authenticated, failure if not
 	'''
+
+	request.META.update({
+        "CSRF_COOKIE_USED": True,
+        "CSRF_COOKIE": binascii.hexlify(urandom(16)).upper(),
+    })
 
 	if (request.user is None):
 		return failure('not authenticated')
