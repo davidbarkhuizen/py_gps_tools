@@ -82,6 +82,22 @@ postgres=# \q
 # (RE)CREATE DB
 $ sudo -u postgres createdb gpxmapsnet -O orm
 
+# ##############################################################################
+
+sudo echo -e "{
+  \"django_secret_key\" : \"5t^$1ig@+e5rmizoktq25g^8#ooiimi%)fm3vtuzacxi)hki=%",
+
+  \"db_host\" : \"localhost\",
+  \"database\" : \"gpxmapsnet\",
+  \"db_user\" : \"gpxmapsnet\",
+  \"db_password\" : \"database_password\",
+
+  \"smtp_addr\" : \"\",
+  \"smtp_port\" : 666,
+  \"smtp_login\" : \"\", 
+  \"smtp_password\" : \"\"
+}" | sudo tee credentials.json
+
 
 
 

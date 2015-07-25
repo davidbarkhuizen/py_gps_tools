@@ -53,7 +53,9 @@ function ElevationPlotController($rootScope, $scope, $http, $timeout) {
 		if (tracks.length == 0)
 			return;
 
-		[width, height] = $scope.getCanvasDimensions();
+		var dims = $scope.getCanvasDimensions();
+		var width = dims[0];
+		var height = dims[1];
 
 		var track = tracks[0]; // TODO all tracks to common scale
 		var context = $scope.context;

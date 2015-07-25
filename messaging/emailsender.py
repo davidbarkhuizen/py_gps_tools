@@ -15,7 +15,9 @@ class EmailSender(object):
 		# render emails
 		#
 		emails = []
-		for email_uuid in User.select_emailuuid_for_undistributed(max_retry_count):
+
+		email_uuids = User.select_emailuuid_for_undistributed(max_retry_count)
+		for email_uuid in email_uuids:
 
 			uuid = email_uuid['uuid']
 			to_addr = email_uuid['email']
@@ -34,20 +36,21 @@ class EmailSender(object):
 			
 			emails.append(email)
 
-		# send emails
-		#
-		from_addr = self.smtp_login
-		mail_client = SMTPClient()
-		mail_client.init(self.smtp_addr, self.smtp_port, self.smtp_login, self.smtp_password)
-		
-		for email in emails:
-			try:
-				# mail_client.send_smtpmails([email])
-				print(email['text'])
-				pass
-			except:
-				User.increment_activation_token_distribution_try_acount_for_email(email['to_addr'])
-				continue
-			User.set_activation_token_distributed_for_email(email['to_addr'])
+		if len(emails) > 0:
 
-		mail_client.terminate()
+			# send emails
+			#
+			from_addr = self.smtp_login
+			mail_client = SMTPClient()
+			mail_client.init(self.smtp_addr, self.smtp_port, self.smtp_login, self.smtp_password)
+			
+			for email in emails:
+				User.increment_activation_token_distribution_try_count_for_email(email['to_addr'])
+				try:
+					print('%s - %s' % (email['to_addr'], email['text']))
+					mail_client.send_smtpmails([email])
+				except:
+					continue
+				User.set_activation_token_distributed_for_email(email['to_addr'])
+
+			mail_client.terminate()

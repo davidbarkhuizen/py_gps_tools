@@ -9,16 +9,16 @@ class User(object):
 		db.terminate()
 
 	@classmethod
-	def increment_activation_token_distribution_try_acount_for_email(cls, email):
+	def increment_activation_token_distribution_try_count_for_email(cls, email):
 
 		sql = '''
-		update 'user'
+		update "user"
 		set activation_token_distribution_try_acount = activation_token_distribution_try_acount + 1
 		where email = '{0}'
-		;'''.format(str(max_retry_count))
+		;'''.format(str(email))
 
 		db_connxn = DBConnection.get_connection()
-		db_connxn.execute()
+		db_connxn.execute(sql)
 		db_connxn.close()
 
 	@classmethod
@@ -40,13 +40,19 @@ class User(object):
 		sql = '''
 		select email, uuid 
 		from "user" as u
-		where ((u.activation_token_distributed is null) and (u.activation_token_distribution_try_acount < {0}))
+		where
+			(
+			(u.activation_token_distributed is null)
+			and
+			(u.activation_token_distribution_try_acount < {0})
+			)
 		;'''.format(str(max_retry_count))
 
 		db_connxn = DBConnection.get_connection()
 
 		data = []
-		for row in db_connxn.fetchall(sql):
+		rows = db_connxn.fetchall(sql)
+		for row in rows:
 			
 			email = row[0]
 			uuid = row[1]
