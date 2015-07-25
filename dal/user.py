@@ -39,13 +39,13 @@ class User(object):
 	def select_emailuuid_for_undistributed(cls, max_retry_count = 3):
 
 		sql = '''
-		select u.email, u.uuid 
-		from "user" as u
+		select email, uuid 
+		from "user"
 		where
 			(
-			(u.activation_token_distributed is null)
+			(activation_token_distributed is null)
 			and
-			(u.activation_token_distribution_try_count < {0})
+			(activation_token_distribution_try_count < {0})
 			)
 		;'''.format(str(max_retry_count))
 
