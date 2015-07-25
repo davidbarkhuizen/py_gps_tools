@@ -14,7 +14,7 @@ class User(object):
 		sql = '''
 		update "user"
 		set activation_token_distribution_try_acount = activation_token_distribution_try_acount + 1
-		where email = '{0}'
+		where (email = "{0}")
 		;'''.format(str(email))
 
 		db_connxn = DBConnection.get_connection()
@@ -26,8 +26,8 @@ class User(object):
 
 		sql = '''
 		update "user"
-		set "activation_token_distributed" = now()
-		where ("email" = '{0}') 
+		set activation_token_distributed = now()
+		where ("email" = "{0}") 
 		;'''.format(email)
 
 		db_connxn = DBConnection.get_connection()
@@ -38,7 +38,7 @@ class User(object):
 	def select_emailuuid_for_undistributed(cls, max_retry_count = 3):
 
 		sql = '''
-		select email, uuid 
+		select u.email, u.uuid 
 		from "user" as u
 		where
 			(
