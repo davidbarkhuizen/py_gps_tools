@@ -19,7 +19,7 @@ class User(models.Model):
 	active 							= models.BooleanField(default=False, null=False)
 	
 	uuid							= models.CharField(max_length=36, unique=True)
-	activation_token_distribution_try_acount = models.IntegerField(default=0, null=False) 
+	activation_token_distribution_try_count = models.IntegerField(default=0, null=False) 
 	activation_token_distributed	= models.DateField(null=True)
 	activation_token_confirmed		= models.DateField(null=True)
 
