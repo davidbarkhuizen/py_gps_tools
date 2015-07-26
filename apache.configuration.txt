@@ -30,8 +30,17 @@ $ sudo cp -r /home/david/code/gpxmaps/py_gps_tools/django_web_server/* /var/www/
 
 '''
 <VirtualHost *:80>
+	Redirect permanent / https://gpxmaps.net/
+
+	ServerAdmin gpxmaps.net@gmail.com
+	ServerName gpxmaps.net
+	ServerAlias www.gpxmaps.net
+</VirtualHost>
+
+<VirtualHost *:443>
 
 	ServerName gpxmaps.net
+	ServerAlias www.gpxmaps.net
 	DocumentRoot /var/www/gpxmapsnet/django
 
 	<Directory /var/www/gpxmapsnet/django>
@@ -60,6 +69,11 @@ $ sudo cp -r /home/david/code/gpxmaps/py_gps_tools/django_web_server/* /var/www/
 
 	ErrorLog ${APACHE_LOG_DIR}/error.log
 	CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+	SSLEngine on
+    SSLOptions +StrictRequire
+    SSLCertificateFile /etc/ssl/certs/gpxmaps.net.2048.cert
+    SSLCertificateKeyFile /etc/ssl/private/gpxmaps.net.2048.pvt.key
 </VirtualHost>
 '''
 
@@ -79,3 +93,32 @@ import django.core.handlers.wsgi
 application = django.core.handlers.wsgi.WSGIHandler()
 '''
 
+SSL --------------------------------------------
+
+# activate SSL
+$ sudo a2enmod ssl
+
+# generate 2048 bit RSA private-public key pair
+$ sudo openssl genrsa -out gpxmaps.net.2048.pem 2048
+(if "unable to write 'random state'", then run "$ sudo rm ~/.rnd")
+
+# extract private key
+$ sudo openssl rsa -in gpxmaps.net.2048.pem -out gpxmaps.net.2048.pvt.key
+
+# generate certificate signing request
+$ sudo openssl req -new > gpxmaps.net.2048.csr
+
+Country Name (2 letter code) [AU]:za
+State or Province Name (full name) [Some-State]:gauteng
+Locality Name (eg, city) []:vaal marina
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:www.gpxmaps.net
+Organizational Unit Name (eg, section) []:infosec
+Common Name (e.g. server FQDN or YOUR name) []:www.gpxmaps.net
+Email Address []:gpxmaps.net@gmail.com
+Challenge Password:[leave blank]
+
+# sign certificate
+$ sudo openssl x509 -in gpxmaps.net.2048.csr -out gpxmaps.net.2048.cert -req -signkey  gpxmaps.net.2048.pvt.key -days 90
+
+sudo cp gpxmaps.net.2048.cert /etc/ssl/certs/
+sudo cp gpxmaps.net.2048.pvt.key /etc/ssl/private/
