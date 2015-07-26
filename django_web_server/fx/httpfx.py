@@ -18,14 +18,23 @@ html_template = '''
 		<title>gpxmaps.net</title>
 	</head>
 	<body>
-	<div>
-		<h3>
-			{0}
-		</h3>
-		<para>
-			{1}
-		</para>
-	</div>
+		<div>
+			<h2>
+				<a href="http://www.gpxmaps.net">gpxmaps.net</a>
+			</h2>
+		</div>
+		<div>
+			<h3>
+				{0}
+			</h3>
+			<para>
+				{1}
+			</para>
+		</div>
+		<br/>
+		<div>
+			<a href="http://www.gpxmaps.net">gpxmaps.net</a>
+		</div>
 	</body>
 </html>
 '''
