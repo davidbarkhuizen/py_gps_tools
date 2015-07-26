@@ -1,6 +1,7 @@
 var Views = Object.freeze({
 
 	DEBUG 			: guid(),
+	FUNCTIONALITY   : guid(),
 
 	HOME 			: guid(),
 	HELP 			: guid(),

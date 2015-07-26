@@ -4,10 +4,6 @@ function DataModel() {
 
 	this.user = new User();
 
-	this.userIsAuthenticated = function() {
-		return false;
-	};
-
 	// GPXINFO -----------------------------------------------------------------
 	//
 	this.gpxinfos = [];

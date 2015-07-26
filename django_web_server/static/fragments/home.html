@@ -2,12 +2,12 @@
 	id='HomeContainer'
 	class='home'
 	ng-show='view == Views.HOME'
-	style='vertical-align:middle;float:middle;'
+	style='vertical-align:middle;text-align:center;'
 	>
 
 	<br/>
 
-	<div class='header'>
+	<div class='header' style='color:darkblue;'>
 		gpxmaps.net
 	</div>
 	<div>
@@ -25,67 +25,50 @@
 	<br/>
 
 	<div>
-		<a href="#" class='underline' ng-click='gotoView(Views.IMPORT);'>import gpx files</a>
+		<div  ng-show='model.user.authenticated == true'>
+			<a href="#" class='underline' ng-click='gotoView(Views.IMPORT);'
+				>import gpx files</a>
+			<br/>
+			<a href="#" class='underline' ng-click='gotoView(Views.GPX_DATABASE);'
+				>my gpx files</a>
+		</div>
+		<div ng-show='model.user.authenticated == false'>
+			<a href="#" 
+				class='underline' ng-click='gotoView(Views.USER_ACTIVATION);'
+				>sign-up</a>
+			<br/>
+			<a href="#"			
+				class='underline' ng-click='gotoView(Views.USER_ACTIVATION);'
+				>login</a>
+		</div>
+	</div>
+
+	<br/>
+	<br/>
+
+	<div style='padding-left:100px;padding-right:100px;'>
+		<div class='header'>
+			gpxmaps.net is currently in alpha
+		</div>
+		
 		<br/>
-		<a href="#" class='underline' ng-click='gotoView(Views.GPX_DATABASE);'>my gpx files</a>
+		
+		<div>
+			no guarantees with respect to (but not limited to)
+			<br/>
+			privacy, provision of service or data security
+			<br/>
+			whatsoever are made
+		</div>
+		
+		<br/>
+
+		<div>
+			request support / report problems / provide input
+			<br/>
+			via email
+			<br/>
+			to gpxsmaps.net at gmail.com
+		</div>
 	</div>
-
-	<br/>
-	<br/>
-
-	<div class='subtext'>
-		<ul>
-			<span class='bold'>Global Positioning System (GPS)</span>
-			<li>
-				<a href='https://en.wikipedia.org/wiki/Global_Positioning_System' target='_blank'
-					>Global Positioning System @ Wikipedia</a>
-			</li>
-			<li>
-				<a href='http://www.topografix.com/gpx.asp' target='_blank'
-					>GPX @ TopoGrafix</a>
-			</li>
-			<li>
-				<a href='http://www.topografix.com/GPX/1/1/' target='_blank'
-					>GPX 1.1 Schema Documentation @ TopoGrafix</a>	
-			</li>
-		</ul>
-
-		<ul>
-			<span class='bold'>GPX File Format</span>
-			<li>
-				<a href='https://en.wikipedia.org/wiki/GPS_Exchange_Format' target='_blank'
-					>GPS Exchange Format @ Wikipedia</a>
-			</li>
-			<li>
-				<a href='http://www.topografix.com/gpx.asp' target='_blank'
-					>GPX @ TopoGrafix</a>
-			</li>
-			<li>
-				<a href='http://www.topografix.com/GPX/1/1/' target='_blank'
-					>GPX 1.1 Schema Documentation @ TopoGrafix</a>	
-			</li>
-		</ul>
-
-		<ul>
-			<span class='bold'>Online Tools</span>
-			<li>
-				<a href='http://www.gpsvisualizer.com/' target='_blank'
-					>gpsvisualizer.com</a>
-			</li>
-		</ul>
-						
-		<ul>
-			<span class='bold'>OEMS / GPS Device Manufacturers</span>
-			<li>
-				<a href='http://www.garmin.com/' target='_blank'
-					>garmin.com</a>
-			</li>
-			<li>
-				<a href='http://tomtom.com' target='_blank'
-					>tomtom.com</a>
-			</li>
-		</ul>
-	</div>
-
-
 </div>

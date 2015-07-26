@@ -55,7 +55,7 @@
 		<div>
 			<a href='#'
 				ng-click='registerProspectiveUser()'
-				ng-show='(model.userIsAuthenticated() == false) && (prospectiveUser.infoIsValid() == true)'>
+				ng-show='(model.user.authenticated == false) && (prospectiveUser.infoIsValid() == true)'>
 				join
 			</a>
 		</div>
