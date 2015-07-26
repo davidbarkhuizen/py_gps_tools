@@ -1,9 +1,14 @@
-# http framework
+# python-django REST-style HTTP framework
+# 2015 david.barkhuizen
 
 from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.conf import settings
+
 import json
 
 JSON_MIMETYPE = 'application/json'
+APPLICATION_ENTRY_POINT = settings.APPLICATION_ENTRY_POINT
 
 html_template = '''
 <!DOCTYPE html>
@@ -171,3 +176,6 @@ def not_authenticated():
 		return wrap
 
 	return fails_on_authenticated
+
+def redirect_to_entrypoint(request):
+	return redirect(APPLICATION_ENTRY_POINT) 

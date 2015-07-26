@@ -2,8 +2,10 @@ import os
 import json
 
 credentials = json.load(open('/var/www/gpxmapsnet/credentials.json'))
+config = json.load(open('/var/www/gpxmapsnet/config.json'))
 
 SECRET_KEY = credentials['django_secret_key']
+APPLICATION_ENTRY_POINT = config['application_entry_point']
 
 DEBUG = True
 TEMPLATE_DEBUG = True
