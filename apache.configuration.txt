@@ -18,11 +18,11 @@ Could not reliably determine the server's fully qualified domain name, using 127
 => ? FIX HOW ?
 
 - CREATE SITE ROOT DIRECTORY
-@ /var/www/gpxmapsnet/django
+@ /var/www/gpxmapsnet/django_web_server
 http://unix.stackexchange.com/questions/47436/why-is-the-root-directory-on-a-web-server-put-by-default-in-var-www
 
 - COPY SERVER SUBTREE TO SITE ROOT 
-$ sudo cp -r /home/david/code/gpxmaps/py_gps_tools/django_web_server/* /var/www/gpxmapsnet/django/
+$ sudo cp -r whatever/py_gps_tools/* /var/www/gpxmapsnet/
 
 - EDIT APACHE2 CONFIGS
 
@@ -31,19 +31,15 @@ $ sudo cp -r /home/david/code/gpxmaps/py_gps_tools/django_web_server/* /var/www/
 '''
 <VirtualHost *:80>
 	Redirect permanent / https://gpxmaps.net/
-
-	ServerAdmin gpxmaps.net@gmail.com
-	ServerName gpxmaps.net
-	ServerAlias www.gpxmaps.net
 </VirtualHost>
 
 <VirtualHost *:443>
 
 	ServerName gpxmaps.net
 	ServerAlias www.gpxmaps.net
-	DocumentRoot /var/www/gpxmapsnet/django
+	DocumentRoot /var/www/gpxmapsnet/django_web_server
 
-	<Directory /var/www/gpxmapsnet/django>
+	<Directory /var/www/gpxmapsnet/django_web_server>
 	    Order allow,deny
 	    Allow from all
 	</Directory>
@@ -51,14 +47,14 @@ $ sudo cp -r /home/david/code/gpxmaps/py_gps_tools/django_web_server/* /var/www/
 	WSGIDaemonProcess gpxmaps_net processes=2 threads=15 display-name=%{GROUP}
 	WSGIProcessGroup gpxmaps_net
 
-	WSGIScriptAlias / /var/www/gpxmapsnet/django/webserver/wsgi.py
+	WSGIScriptAlias / /var/www/gpxmapsnet/django_web_server/webserver/wsgi.py
 
 	# Alias /robots.txt /path/to/mysite.com/static/robots.txt
 	# Alias /favicon.ico /path/to/mysite.com/static/favicon.ico
 
-	Alias /static/ /var/www/gpxmapsnet/django/static/
+	Alias /static/ /var/www/gpxmapsnet/django_web_server/static/
 
-	<Directory /var/www/gpxmapsnet/django/static/>
+	<Directory /var/www/gpxmapsnet/django_web_server/static/>
 		Order deny,allow
 		Allow from all
 	</Directory>
@@ -77,13 +73,13 @@ $ sudo cp -r /home/david/code/gpxmaps/py_gps_tools/django_web_server/* /var/www/
 </VirtualHost>
 '''
 
-@ /var/www/gpxmapsnet/django/webserver/wsgi.py
+@ /var/www/gpxmapsnet/django_web_server/webserver/wsgi.py
 
 '''
 import os
 import sys
 
-path = '/var/www/gpxmapsnet/django'
+path = '/var/www/gpxmapsnet/django_web_server'
 if path not in sys.path:
     sys.path.insert(0, path)
 
