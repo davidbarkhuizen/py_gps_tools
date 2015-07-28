@@ -18,7 +18,7 @@ function User() {
 		// PASSWORD
 
 		var passwordIsNotBlank = stringIsNotBlank(that.password); 
-		var passwordLengthIsOk = (that.password.length >= that.minimumPasswordLength);
+		var passwordLengthIsOk = ((that.password !== undefined) && (that.password.length >= that.minimumPasswordLength));
 		var passwordIsValid = (passwordIsNotBlank && passwordLengthIsOk);
 
 		// ---------
