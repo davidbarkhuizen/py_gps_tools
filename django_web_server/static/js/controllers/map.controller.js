@@ -1114,7 +1114,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 			return result;
 		};
 
-		var clusters = (cluster == true)
+		var clusters = (cluster === 'true')
 			? clusterPoints(canvasWaypoints, clusterFn)
 			: canvasWaypoints.map(function(x){ return [x]; });
 
@@ -1143,8 +1143,15 @@ function MapController($rootScope, $scope, $http, $timeout) {
 				// concat names
 				//
 				var s = '';
+				var usedNames = [];
 				for (var i = 0; i < cluster.length; i++) {
-					s = s + cluster[i].name  + ' | ';
+					var name = cluster[i].name;
+					if (usedNames.indexOf(name) !== -1) {
+						continue;
+					}
+
+					s = s + name + ' | ';
+					usedNames.push(name);
 				};
 				s = s.slice(0, s.length - 3);
 				name = s;
