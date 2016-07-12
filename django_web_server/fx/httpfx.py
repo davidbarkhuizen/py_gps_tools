@@ -62,7 +62,7 @@ def set_auth_cookie(cookie_value, lifetime_in_hours = 24):
 		}
 
 	json_string = json.dumps(envelope)
-	response = HttpResponse(json_string, mimetype=JSON_MIMETYPE)
+	response = HttpResponse(json_string, content_type=JSON_MIMETYPE)
 
 	max_age_seconds = lifetime_in_hours * 60 * 60
 	response.set_cookie("auth", value=cookie_value, max_age=max_age_seconds)
@@ -76,7 +76,7 @@ def invalidate_auth_cookie():
 		}
 
 	json_string = json.dumps(envelope)
-	response = HttpResponse(json_string, mimetype=JSON_MIMETYPE)
+	response = HttpResponse(json_string, content_type=JSON_MIMETYPE)
 
 	response.set_cookie("auth", value='invalid', max_age=5)
 	return response
@@ -89,7 +89,7 @@ def success(data):
 		}
 
 	json_string = json.dumps(envelope)
-	return HttpResponse(json_string, mimetype=JSON_MIMETYPE)
+	return HttpResponse(json_string, content_type=JSON_MIMETYPE)
 
 def failure(message):
 
@@ -98,7 +98,7 @@ def failure(message):
 		}
 	
 	json_string = json.dumps(envelope)
-	return HttpResponse(json_string, mimetype=JSON_MIMETYPE)
+	return HttpResponse(json_string, content_type=JSON_MIMETYPE)
 
 def fail_on_missing_parameters(parameters, keys):
 
