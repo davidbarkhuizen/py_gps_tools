@@ -548,12 +548,7 @@ function MapController($rootScope, $scope, $http, $timeout) {
 	
 	$scope.onMouseUp = function(evt) {
 
-		if (evt.buttons == 1) {
-			$scope.onLeftClickUp($scope.getMousePos(evt));
-		}
-		else if (evt.buttons == 2) {
-			// undo last zoom
-		}
+		$scope.onLeftClickUp($scope.getMousePos(evt));
 	};
 
 	$scope.canvas.addEventListener('mouseup', $scope.onMouseUp, false);

@@ -98,7 +98,20 @@ sudo echo -e "{
   \"smtp_password\" : \"\"
 }" | sudo tee credentials.json
 
+# ##############################################################################
 
+# select * from table user
+# 'select * from user' returns the contents of the built-in postgres user table
+postgres=# select uid from "user";
+
+# get UUID of user with email xxx
+gpxmapsnet=# select uuid from "user" where email = 'xxx';
+
+select uuid from "user" where email = 'admin';
+
+manually activate user with UUID = yyy by pointing browser to
+
+/useractivation?uuid=yyy
 
 
 
